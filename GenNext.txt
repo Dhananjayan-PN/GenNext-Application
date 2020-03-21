@@ -1,0 +1,16 @@
+
+-> Initially Array of Colleges based on interest. Interest Inventory.
+-> College Details- Show previous year essays, prompts, etc.
+-> Counselling.
+-> College Interest Icon.
+
+-> COLORS:
+------------
+Blue, and White.
+
+2 VIEWS:
+--------------
+1) Student.
+2) Colleges- 150 Universities.
+
+
