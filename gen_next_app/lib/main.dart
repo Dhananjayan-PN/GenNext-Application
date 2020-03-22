@@ -5,11 +5,13 @@ void main() {
   runApp(
     MaterialApp(
       home: Scaffold(
-        backgroundColor: Colors.grey[300],
+        backgroundColor: Colors.grey[250],
         appBar: AppBar(
-          title: Text('GenNext'),
+          title: Image(
+            image: AssetImage('images/gennextlonglogo.png'),
+          ),
           leading: IconButton(
-            icon: Icon(Icons.arrow_drop_down_circle),
+            icon: Icon(Icons.view_headline),
             color: Colors.black,
             onPressed: () {},
           ),
