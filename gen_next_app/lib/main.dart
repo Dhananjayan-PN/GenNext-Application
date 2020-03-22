@@ -8,7 +8,10 @@ void main() {
         backgroundColor: Colors.grey[300],
         appBar: AppBar(
           title: Center(
-            child: Text("GenNext Application"),
+            child: Text(
+              "GenNext Application",
+              style: TextStyle(color: Colors.black),
+            ),
           ),
           leading: IconButton(
             icon: Icon(Icons.arrow_drop_down_circle),
