@@ -5,7 +5,7 @@ void main() {
   runApp(
     MaterialApp(
       home: Scaffold(
-        backgroundColor: Colors.grey[350],
+        backgroundColor: Colors.grey[300],
         appBar: AppBar(
           title: Center(
             child: Text("GenNext Application"),
