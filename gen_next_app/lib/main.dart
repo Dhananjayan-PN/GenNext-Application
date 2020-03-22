@@ -5,17 +5,17 @@ void main() {
   runApp(
     MaterialApp(
       home: Scaffold(
-        backgroundColor: Colors.blueGrey,
+        backgroundColor: Colors.grey[350],
         appBar: AppBar(
           title: Center(
             child: Text("GenNext Application"),
           ),
           leading: IconButton(
             icon: Icon(Icons.arrow_drop_down_circle),
-            color: Colors.black87,
+            color: Colors.black,
             onPressed: () {},
           ),
-          backgroundColor: Colors.blueAccent,
+          backgroundColor: Colors.cyanAccent[400],
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.notifications),
