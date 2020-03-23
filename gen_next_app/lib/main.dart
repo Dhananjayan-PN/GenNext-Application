@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-String name = 'Jake Adamas';
+String name = 'Jake Adams';
 String emailid = 'jake.adams@gmail.com';
 
 final navlistelements = [
@@ -64,7 +64,13 @@ class HomeScreen extends StatelessWidget {
                 backgroundColor: Colors.cyan[50],
                 radius: 30,
               ),
-              onDetailsPressed: () {}, //Take to Profile Page...implement later
+              onDetailsPressed: () {
+                Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) => ProfileScreen()));
+              }, //Take to Profile Page...implement later
             ),
             new Column(children: navlist)
           ],
@@ -139,7 +145,13 @@ class ProfileScreen extends StatelessWidget {
                 backgroundColor: Colors.cyan[50],
                 radius: 30,
               ),
-              onDetailsPressed: () {}, //Take to Profile Page...implement later
+              onDetailsPressed: () {
+                Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) => ProfileScreen()));
+              }, //Take to Profile Page...implement later
             ),
             new Column(children: navlist)
           ],
@@ -214,7 +226,13 @@ class YourUniversitiesScreen extends StatelessWidget {
                 backgroundColor: Colors.cyan[50],
                 radius: 30,
               ),
-              onDetailsPressed: () {}, //Take to Profile Page...implement later
+              onDetailsPressed: () {
+                Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) => ProfileScreen()));
+              }, //Take to Profile Page...implement later
             ),
             new Column(children: navlist)
           ],
@@ -289,7 +307,13 @@ class CompletedApplicationsScreen extends StatelessWidget {
                 backgroundColor: Colors.cyan[50],
                 radius: 30,
               ),
-              onDetailsPressed: () {}, //Take to Profile Page...implement later
+              onDetailsPressed: () {
+                Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) => ProfileScreen()));
+              }, //Take to Profile Page...implement later
             ),
             new Column(children: navlist)
           ],
@@ -364,7 +388,13 @@ class PendingApplicationsScreen extends StatelessWidget {
                 backgroundColor: Colors.cyan[50],
                 radius: 30,
               ),
-              onDetailsPressed: () {}, //Take to Profile Page...implement later
+              onDetailsPressed: () {
+                Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) => ProfileScreen()));
+              }, //Take to Profile Page...implement later
             ),
             new Column(children: navlist)
           ],
@@ -439,7 +469,13 @@ class ScheduleScreen extends StatelessWidget {
                 backgroundColor: Colors.cyan[50],
                 radius: 30,
               ),
-              onDetailsPressed: () {}, //Take to Profile Page...implement later
+              onDetailsPressed: () {
+                Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) => ProfileScreen()));
+              }, //Take to Profile Page...implement later
             ),
             new Column(children: navlist)
           ],
@@ -514,7 +550,13 @@ class SignOutScreen extends StatelessWidget {
                 backgroundColor: Colors.cyan[50],
                 radius: 30,
               ),
-              onDetailsPressed: () {}, //Take to Profile Page...implement later
+              onDetailsPressed: () {
+                Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) => ProfileScreen()));
+              }, //Take to Profile Page...implement later
             ),
             new Column(children: navlist)
           ],
