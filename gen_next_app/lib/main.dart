@@ -11,65 +11,86 @@ class MyApp extends StatelessWidget {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
-    return MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.grey[250],
-        drawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              DrawerHeader(
-                child: Text('Drawer Header'),
-                decoration: BoxDecoration(
-                  color: Colors.cyanAccent[200],
-                ),
+    return MaterialApp(home: new HomeScreen());
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  // This is the Homepage Widget
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      backgroundColor: Colors.grey[250],
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              child: Text('Jake Adams'),
+              decoration: BoxDecoration(
+                color: Colors.cyanAccent[400],
+                image: DecorationImage(image: AssetImage('images/profile.png')),
               ),
-              ListTile(
-                title: Text('Item 1'),
-                onTap: () {
-                  // Update the state of the app.
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                title: Text('Item 2'),
-                onTap: () {
-                  // Update the state of the app.
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
-        ),
-        appBar: AppBar(
-          title: Image(
-            image: AssetImage('images/gennextlonglogo.png'),
-          ),
-          backgroundColor: Colors.cyanAccent[400],
-          iconTheme: new IconThemeData(color: Colors.black),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.notifications),
-              color: Colors.black87,
-              onPressed: () {},
+            ),
+            ListTile(
+              title: Text('Your Universities'),
+              onTap: () {
+                // Update the state of the app.
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: Text('Completed Applications'),
+              onTap: () {
+                // Update the state of the app.
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: Text('Pending Application'),
+              onTap: () {
+                // Update the state of the app.
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: Text('Counselling Schedule'),
+              onTap: () {
+                // Update the state of the app.
+                Navigator.pop(context);
+              },
             ),
           ],
         ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Image(
-                image: AssetImage('images/doggo.png'),
-              ),
-              Text(
-                'Our Application is under development\nCome back soon!',
-                style: TextStyle(color: Colors.black, fontSize: 20),
-                textAlign: TextAlign.center,
-              ),
-            ],
+      ),
+      appBar: AppBar(
+        title: Image(
+          image: AssetImage('images/gennextlonglogo.png'),
+        ),
+        backgroundColor: Colors.cyanAccent[400],
+        iconTheme: new IconThemeData(color: Colors.black),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.notifications),
+            color: Colors.black87,
+            onPressed: () {},
           ),
+        ],
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Image(
+              image: AssetImage('images/doggo.png'),
+            ),
+            Text(
+              'Our Application is under development\nCome back soon!',
+              style: TextStyle(color: Colors.black, fontSize: 20),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
       ),
     );
