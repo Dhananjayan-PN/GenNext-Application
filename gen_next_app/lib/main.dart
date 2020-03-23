@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
 }
 
 class HomeScreen extends StatelessWidget {
-  // This is the Homepage Widget
+  // This widget defines the homepage of the application
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -33,6 +33,12 @@ class HomeScreen extends StatelessWidget {
                   image: AssetImage('images/profile.png'),
                 ),
               ),
+            ),
+            ListTile(
+              title: Text('Home'),
+              onTap: () {
+                Navigator.pop(context);
+              },
             ),
             ListTile(
               title: Text('Your Profile'),
