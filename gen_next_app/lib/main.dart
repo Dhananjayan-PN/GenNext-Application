@@ -57,7 +57,9 @@ class HomeScreen extends StatelessWidget {
                 Navigator.pop(context);
                 Navigator.push(
                   context,
-                  new MaterialPageRoute(builder: (context) => ProfileScreen()),
+                  new MaterialPageRoute(
+                    builder: (context) => ProfileScreen(),
+                  ),
                 );
               },
             ),
@@ -97,11 +99,11 @@ class HomeScreen extends StatelessWidget {
             ListTile(
               title: Text('Counselling Schedule'),
               onTap: () {
+                Navigator.pop(context);
                 Navigator.push(
                   context,
                   new MaterialPageRoute(builder: (context) => ScheduleScreen()),
                 );
-                Navigator.pop(context);
               },
             ),
             ListTile(
@@ -228,11 +230,11 @@ class ProfileScreen extends StatelessWidget {
             ListTile(
               title: Text('Counselling Schedule'),
               onTap: () {
+                Navigator.pop(context);
                 Navigator.push(
                   context,
                   new MaterialPageRoute(builder: (context) => ScheduleScreen()),
                 );
-                Navigator.pop(context);
               },
             ),
             ListTile(
@@ -360,11 +362,11 @@ class YourUniversitiesScreen extends StatelessWidget {
             ListTile(
               title: Text('Counselling Schedule'),
               onTap: () {
+                Navigator.pop(context);
                 Navigator.push(
                   context,
                   new MaterialPageRoute(builder: (context) => ScheduleScreen()),
                 );
-                Navigator.pop(context);
               },
             ),
             ListTile(
@@ -492,11 +494,11 @@ class CompletedApplicationsScreen extends StatelessWidget {
             ListTile(
               title: Text('Counselling Schedule'),
               onTap: () {
+                Navigator.pop(context);
                 Navigator.push(
                   context,
                   new MaterialPageRoute(builder: (context) => ScheduleScreen()),
                 );
-                Navigator.pop(context);
               },
             ),
             ListTile(
@@ -775,7 +777,7 @@ class ScheduleScreen extends StatelessWidget {
       ),
       appBar: AppBar(
         title: Text(
-          'Pending Application',
+          'Counselling Schedule',
           style: TextStyle(color: Colors.black, fontSize: 20),
         ),
         backgroundColor: Colors.cyanAccent[400],
