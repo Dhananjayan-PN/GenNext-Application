@@ -5,6 +5,16 @@ import 'package:flutter/services.dart';
 String name = 'Jake Adamas';
 String emailid = 'jake.adams@gmail.com';
 
+final navlistelements = [
+  ['Home', HomeScreen()],
+  ['Your Profile', ProfileScreen()],
+  ['Your Universities', YourUniversitiesScreen()],
+  ['Completed Applications', CompletedApplicationsScreen()],
+  ['Pending Applications', PendingApplicationsScreen()],
+  ['Counselling Schedule', ScheduleScreen()],
+  ['Sign Out', SignOutScreen()]
+];
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -22,6 +32,21 @@ class HomeScreen extends StatelessWidget {
   // This widget defines the homepage of the application
   @override
   Widget build(BuildContext context) {
+    List<Widget> navlist = [];
+    for (var i = 0; i < navlistelements.length; i++) {
+      var element = navlistelements[i];
+      navlist.add(
+        new ListTile(
+          title: Text(element[0]),
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.push(context,
+                new MaterialPageRoute(builder: (context) => element[1]));
+          },
+        ),
+      );
+    }
+
     return new Scaffold(
       backgroundColor: Colors.grey[250],
       drawer: Drawer(
@@ -41,78 +66,7 @@ class HomeScreen extends StatelessWidget {
               ),
               onDetailsPressed: () {}, //Take to Profile Page...implement later
             ),
-            ListTile(
-              title: Text('Home'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(builder: (context) => HomeScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Your Profile'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                    builder: (context) => ProfileScreen(),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Your Universities'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                      builder: (context) => YourUniversitiesScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Completed Applications'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                      builder: (context) => CompletedApplicationsScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Pending Applications'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                      builder: (context) => PendingApplicationsScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Counselling Schedule'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(builder: (context) => ScheduleScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Sign Out'),
-              onTap: () {
-                // Update the state of the app.
-                Navigator.pop(context);
-              },
-            ),
+            new Column(children: navlist)
           ],
         ),
       ),
@@ -153,6 +107,21 @@ class HomeScreen extends StatelessWidget {
 class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    List<Widget> navlist = [];
+    for (var i = 0; i < navlistelements.length; i++) {
+      var element = navlistelements[i];
+      navlist.add(
+        new ListTile(
+          title: Text(element[0]),
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.push(context,
+                new MaterialPageRoute(builder: (context) => element[1]));
+          },
+        ),
+      );
+    }
+
     return new Scaffold(
       backgroundColor: Colors.grey[250],
       drawer: Drawer(
@@ -172,78 +141,7 @@ class ProfileScreen extends StatelessWidget {
               ),
               onDetailsPressed: () {}, //Take to Profile Page...implement later
             ),
-            ListTile(
-              title: Text('Home'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(builder: (context) => HomeScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Your Profile'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                    builder: (context) => ProfileScreen(),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Your Universities'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                      builder: (context) => YourUniversitiesScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Completed Applications'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                      builder: (context) => CompletedApplicationsScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Pending Applications'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                      builder: (context) => PendingApplicationsScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Counselling Schedule'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(builder: (context) => ScheduleScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Sign Out'),
-              onTap: () {
-                // Update the state of the app.
-                Navigator.pop(context);
-              },
-            ),
+            new Column(children: navlist)
           ],
         ),
       ),
@@ -285,6 +183,20 @@ class ProfileScreen extends StatelessWidget {
 class YourUniversitiesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    List<Widget> navlist = [];
+    for (var i = 0; i < navlistelements.length; i++) {
+      var element = navlistelements[i];
+      navlist.add(
+        new ListTile(
+          title: Text(element[0]),
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.push(context,
+                new MaterialPageRoute(builder: (context) => element[1]));
+          },
+        ),
+      );
+    }
     return new Scaffold(
       backgroundColor: Colors.grey[250],
       drawer: Drawer(
@@ -304,78 +216,7 @@ class YourUniversitiesScreen extends StatelessWidget {
               ),
               onDetailsPressed: () {}, //Take to Profile Page...implement later
             ),
-            ListTile(
-              title: Text('Home'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(builder: (context) => HomeScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Your Profile'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                    builder: (context) => ProfileScreen(),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Your Universities'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                      builder: (context) => YourUniversitiesScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Completed Applications'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                      builder: (context) => CompletedApplicationsScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Pending Applications'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                      builder: (context) => PendingApplicationsScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Counselling Schedule'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(builder: (context) => ScheduleScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Sign Out'),
-              onTap: () {
-                // Update the state of the app.
-                Navigator.pop(context);
-              },
-            ),
+            new Column(children: navlist)
           ],
         ),
       ),
@@ -417,6 +258,20 @@ class YourUniversitiesScreen extends StatelessWidget {
 class CompletedApplicationsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    List<Widget> navlist = [];
+    for (var i = 0; i < navlistelements.length; i++) {
+      var element = navlistelements[i];
+      navlist.add(
+        new ListTile(
+          title: Text(element[0]),
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.push(context,
+                new MaterialPageRoute(builder: (context) => element[1]));
+          },
+        ),
+      );
+    }
     return new Scaffold(
       backgroundColor: Colors.grey[250],
       drawer: Drawer(
@@ -436,78 +291,7 @@ class CompletedApplicationsScreen extends StatelessWidget {
               ),
               onDetailsPressed: () {}, //Take to Profile Page...implement later
             ),
-            ListTile(
-              title: Text('Home'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(builder: (context) => HomeScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Your Profile'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                    builder: (context) => ProfileScreen(),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Your Universities'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                      builder: (context) => YourUniversitiesScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Completed Applications'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                      builder: (context) => CompletedApplicationsScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Pending Applications'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                      builder: (context) => PendingApplicationsScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Counselling Schedule'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(builder: (context) => ScheduleScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Sign Out'),
-              onTap: () {
-                // Update the state of the app.
-                Navigator.pop(context);
-              },
-            ),
+            new Column(children: navlist)
           ],
         ),
       ),
@@ -549,6 +333,20 @@ class CompletedApplicationsScreen extends StatelessWidget {
 class PendingApplicationsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    List<Widget> navlist = [];
+    for (var i = 0; i < navlistelements.length; i++) {
+      var element = navlistelements[i];
+      navlist.add(
+        new ListTile(
+          title: Text(element[0]),
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.push(context,
+                new MaterialPageRoute(builder: (context) => element[1]));
+          },
+        ),
+      );
+    }
     return new Scaffold(
       backgroundColor: Colors.grey[250],
       drawer: Drawer(
@@ -568,78 +366,7 @@ class PendingApplicationsScreen extends StatelessWidget {
               ),
               onDetailsPressed: () {}, //Take to Profile Page...implement later
             ),
-            ListTile(
-              title: Text('Home'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(builder: (context) => HomeScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Your Profile'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                    builder: (context) => ProfileScreen(),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Your Universities'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                      builder: (context) => YourUniversitiesScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Completed Applications'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                      builder: (context) => CompletedApplicationsScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Pending Applications'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                      builder: (context) => PendingApplicationsScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Counselling Schedule'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(builder: (context) => ScheduleScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Sign Out'),
-              onTap: () {
-                // Update the state of the app.
-                Navigator.pop(context);
-              },
-            ),
+            new Column(children: navlist)
           ],
         ),
       ),
@@ -681,6 +408,20 @@ class PendingApplicationsScreen extends StatelessWidget {
 class ScheduleScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    List<Widget> navlist = [];
+    for (var i = 0; i < navlistelements.length; i++) {
+      var element = navlistelements[i];
+      navlist.add(
+        new ListTile(
+          title: Text(element[0]),
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.push(context,
+                new MaterialPageRoute(builder: (context) => element[1]));
+          },
+        ),
+      );
+    }
     return new Scaffold(
       backgroundColor: Colors.grey[250],
       drawer: Drawer(
@@ -700,78 +441,82 @@ class ScheduleScreen extends StatelessWidget {
               ),
               onDetailsPressed: () {}, //Take to Profile Page...implement later
             ),
-            ListTile(
-              title: Text('Home'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(builder: (context) => HomeScreen()),
-                );
-              },
+            new Column(children: navlist)
+          ],
+        ),
+      ),
+      appBar: AppBar(
+        title: Text(
+          'Counselling Schedule',
+          style: TextStyle(color: Colors.black, fontSize: 20),
+        ),
+        backgroundColor: Colors.cyanAccent[400],
+        iconTheme: new IconThemeData(color: Colors.black),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.notifications),
+            color: Colors.black87,
+            onPressed: () {},
+          ),
+        ],
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Image(
+              image: AssetImage('images/doggo.png'),
             ),
-            ListTile(
-              title: Text('Your Profile'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                    builder: (context) => ProfileScreen(),
-                  ),
-                );
-              },
+            Text(
+              'Our Application is under development\nCome back soon!',
+              style: TextStyle(color: Colors.black, fontSize: 20),
+              textAlign: TextAlign.center,
             ),
-            ListTile(
-              title: Text('Your Universities'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                      builder: (context) => YourUniversitiesScreen()),
-                );
-              },
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class SignOutScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> navlist = [];
+    for (var i = 0; i < navlistelements.length; i++) {
+      var element = navlistelements[i];
+      navlist.add(
+        new ListTile(
+          title: Text(element[0]),
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.push(context,
+                new MaterialPageRoute(builder: (context) => element[1]));
+          },
+        ),
+      );
+    }
+    return new Scaffold(
+      backgroundColor: Colors.grey[250],
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            new UserAccountsDrawerHeader(
+              decoration: BoxDecoration(color: Colors.cyanAccent[400]),
+              accountName: new Text(name,
+                  style: TextStyle(color: Colors.black, fontSize: 18)),
+              accountEmail: new Text(emailid,
+                  style: TextStyle(color: Colors.black, fontSize: 12)),
+              currentAccountPicture: CircleAvatar(
+                backgroundImage: AssetImage('images/profile.png'),
+                backgroundColor: Colors.cyan[50],
+                radius: 30,
+              ),
+              onDetailsPressed: () {}, //Take to Profile Page...implement later
             ),
-            ListTile(
-              title: Text('Completed Applications'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                      builder: (context) => CompletedApplicationsScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Pending Applications'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(
-                      builder: (context) => PendingApplicationsScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Counselling Schedule'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  new MaterialPageRoute(builder: (context) => ScheduleScreen()),
-                );
-              },
-            ),
-            ListTile(
-              title: Text('Sign Out'),
-              onTap: () {
-                // Update the state of the app.
-                Navigator.pop(context);
-              },
-            ),
+            new Column(children: navlist)
           ],
         ),
       ),
