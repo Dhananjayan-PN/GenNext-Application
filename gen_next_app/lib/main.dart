@@ -21,21 +21,21 @@ class MyApp extends StatelessWidget {
               DrawerHeader(
                 child: Text('Drawer Header'),
                 decoration: BoxDecoration(
-                  color: Colors.blue,
+                  color: Colors.cyanAccent[200],
                 ),
               ),
               ListTile(
                 title: Text('Item 1'),
                 onTap: () {
                   // Update the state of the app.
-                  // ...
+                  Navigator.pop(context);
                 },
               ),
               ListTile(
                 title: Text('Item 2'),
                 onTap: () {
                   // Update the state of the app.
-                  // ...
+                  Navigator.pop(context);
                 },
               ),
             ],
