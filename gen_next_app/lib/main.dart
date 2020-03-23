@@ -25,19 +25,27 @@ class HomeScreen extends StatelessWidget {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            DrawerHeader(
-              child: Text('Jake Adams'),
-              decoration: BoxDecoration(
-                color: Colors.cyanAccent[400],
-                image: DecorationImage(
-                  image: AssetImage('images/profile.png'),
-                ),
+            new UserAccountsDrawerHeader(
+              decoration: BoxDecoration(color: Colors.cyanAccent[400]),
+              accountName: new Text("Jake Adams",
+                  style: TextStyle(color: Colors.black, fontSize: 18)),
+              accountEmail: new Text("jake.adams@gmail.com",
+                  style: TextStyle(color: Colors.black, fontSize: 12)),
+              currentAccountPicture: CircleAvatar(
+                backgroundImage: AssetImage('images/profile.png'),
+                backgroundColor: Colors.cyan[50],
+                radius: 30,
               ),
+              onDetailsPressed: () {}, //Take to Profile Page...implement later
             ),
             ListTile(
               title: Text('Home'),
               onTap: () {
                 Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  new MaterialPageRoute(builder: (context) => HomeScreen()),
+                );
               },
             ),
             ListTile(
@@ -118,3 +126,13 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
+
+//class ProfileScreen extends StatelessWidget {}
+
+//class YourUniversitiesScreen extends StatelessWidget {}
+
+//class CompletedApplicationsScreen extends StatelessWidget {}
+
+//class PendingApplicationsScreen extends StatelessWidget {}
+
+//class ScheduleScreen extends StatelessWidget {}
