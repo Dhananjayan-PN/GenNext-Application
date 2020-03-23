@@ -29,8 +29,17 @@ class HomeScreen extends StatelessWidget {
               child: Text('Jake Adams'),
               decoration: BoxDecoration(
                 color: Colors.cyanAccent[400],
-                image: DecorationImage(image: AssetImage('images/profile.png')),
+                image: DecorationImage(
+                  image: AssetImage('images/profile.png'),
+                ),
               ),
+            ),
+            ListTile(
+              title: Text('Your Profile'),
+              onTap: () {
+                // Update the state of the app.
+                Navigator.pop(context);
+              },
             ),
             ListTile(
               title: Text('Your Universities'),
@@ -47,7 +56,7 @@ class HomeScreen extends StatelessWidget {
               },
             ),
             ListTile(
-              title: Text('Pending Application'),
+              title: Text('Pending Applications'),
               onTap: () {
                 // Update the state of the app.
                 Navigator.pop(context);
@@ -55,6 +64,13 @@ class HomeScreen extends StatelessWidget {
             ),
             ListTile(
               title: Text('Counselling Schedule'),
+              onTap: () {
+                // Update the state of the app.
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: Text('Sign Out'),
               onTap: () {
                 // Update the state of the app.
                 Navigator.pop(context);
