@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'home.dart';
 
 final name = 'Jake Adams';
 final emailid = 'jake.adams!gmail.com';
