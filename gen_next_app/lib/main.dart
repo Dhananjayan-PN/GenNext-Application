@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'home.dart';
 
-String name = 'Jake Adams';
-String emailid = 'jake.adams@gmail.com';
-
+final name = 'Jake Adams';
+final emailid = 'jake.adams!gmail.com';
 final navlistelements = [
   ['Home', HomeScreen()],
   ['Your Profile', ProfileScreen()],
@@ -12,7 +12,7 @@ final navlistelements = [
   ['Completed Applications', CompletedApplicationsScreen()],
   ['Pending Applications', PendingApplicationsScreen()],
   ['Counselling Schedule', ScheduleScreen()],
-  ['Sign Out', SignOutScreen()]
+  ['Sign Out', SignOutScreen()],
 ];
 
 void main() => runApp(MyApp());
@@ -28,8 +28,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomeScreen extends StatelessWidget {
-  // This widget defines the homepage of the application
+class NavDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Widget> navlist = [];
@@ -47,35 +46,41 @@ class HomeScreen extends StatelessWidget {
       );
     }
 
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          new UserAccountsDrawerHeader(
+            decoration: BoxDecoration(color: Colors.cyanAccent[400]),
+            accountName: new Text(name,
+                style: TextStyle(color: Colors.black, fontSize: 18)),
+            accountEmail: new Text(emailid,
+                style: TextStyle(color: Colors.black, fontSize: 12)),
+            currentAccountPicture: CircleAvatar(
+              backgroundImage: AssetImage('images/profile.png'),
+              backgroundColor: Colors.cyan[50],
+              radius: 30,
+            ),
+            onDetailsPressed: () {
+              Navigator.pop(context);
+              Navigator.push(context,
+                  new MaterialPageRoute(builder: (context) => ProfileScreen()));
+            }, //Take to Profile Page...implement later
+          ),
+          new Column(children: navlist)
+        ],
+      ),
+    );
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  // This widget defines the homepage of the application
+  @override
+  Widget build(BuildContext context) {
     return new Scaffold(
       backgroundColor: Colors.grey[250],
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            new UserAccountsDrawerHeader(
-              decoration: BoxDecoration(color: Colors.cyanAccent[400]),
-              accountName: new Text(name,
-                  style: TextStyle(color: Colors.black, fontSize: 18)),
-              accountEmail: new Text(emailid,
-                  style: TextStyle(color: Colors.black, fontSize: 12)),
-              currentAccountPicture: CircleAvatar(
-                backgroundImage: AssetImage('images/profile.png'),
-                backgroundColor: Colors.cyan[50],
-                radius: 30,
-              ),
-              onDetailsPressed: () {
-                Navigator.pop(context);
-                Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                        builder: (context) => ProfileScreen()));
-              }, //Take to Profile Page...implement later
-            ),
-            new Column(children: navlist)
-          ],
-        ),
-      ),
+      drawer: NavDrawer(),
       appBar: AppBar(
         title: Image(
           image: AssetImage('images/gennextlonglogo.png'),
@@ -113,50 +118,9 @@ class HomeScreen extends StatelessWidget {
 class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    List<Widget> navlist = [];
-    for (var i = 0; i < navlistelements.length; i++) {
-      var element = navlistelements[i];
-      navlist.add(
-        new ListTile(
-          title: Text(element[0]),
-          onTap: () {
-            Navigator.pop(context);
-            Navigator.push(context,
-                new MaterialPageRoute(builder: (context) => element[1]));
-          },
-        ),
-      );
-    }
-
     return new Scaffold(
       backgroundColor: Colors.grey[250],
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            new UserAccountsDrawerHeader(
-              decoration: BoxDecoration(color: Colors.cyanAccent[400]),
-              accountName: new Text(name,
-                  style: TextStyle(color: Colors.black, fontSize: 18)),
-              accountEmail: new Text(emailid,
-                  style: TextStyle(color: Colors.black, fontSize: 12)),
-              currentAccountPicture: CircleAvatar(
-                backgroundImage: AssetImage('images/profile.png'),
-                backgroundColor: Colors.cyan[50],
-                radius: 30,
-              ),
-              onDetailsPressed: () {
-                Navigator.pop(context);
-                Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                        builder: (context) => ProfileScreen()));
-              }, //Take to Profile Page...implement later
-            ),
-            new Column(children: navlist)
-          ],
-        ),
-      ),
+      drawer: NavDrawer(),
       appBar: AppBar(
         title: Text(
           'Your Profile',
@@ -195,49 +159,9 @@ class ProfileScreen extends StatelessWidget {
 class YourUniversitiesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    List<Widget> navlist = [];
-    for (var i = 0; i < navlistelements.length; i++) {
-      var element = navlistelements[i];
-      navlist.add(
-        new ListTile(
-          title: Text(element[0]),
-          onTap: () {
-            Navigator.pop(context);
-            Navigator.push(context,
-                new MaterialPageRoute(builder: (context) => element[1]));
-          },
-        ),
-      );
-    }
     return new Scaffold(
       backgroundColor: Colors.grey[250],
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            new UserAccountsDrawerHeader(
-              decoration: BoxDecoration(color: Colors.cyanAccent[400]),
-              accountName: new Text(name,
-                  style: TextStyle(color: Colors.black, fontSize: 18)),
-              accountEmail: new Text(emailid,
-                  style: TextStyle(color: Colors.black, fontSize: 12)),
-              currentAccountPicture: CircleAvatar(
-                backgroundImage: AssetImage('images/profile.png'),
-                backgroundColor: Colors.cyan[50],
-                radius: 30,
-              ),
-              onDetailsPressed: () {
-                Navigator.pop(context);
-                Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                        builder: (context) => ProfileScreen()));
-              }, //Take to Profile Page...implement later
-            ),
-            new Column(children: navlist)
-          ],
-        ),
-      ),
+      drawer: NavDrawer(),
       appBar: AppBar(
         title: Text(
           'Your Universities',
@@ -276,49 +200,9 @@ class YourUniversitiesScreen extends StatelessWidget {
 class CompletedApplicationsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    List<Widget> navlist = [];
-    for (var i = 0; i < navlistelements.length; i++) {
-      var element = navlistelements[i];
-      navlist.add(
-        new ListTile(
-          title: Text(element[0]),
-          onTap: () {
-            Navigator.pop(context);
-            Navigator.push(context,
-                new MaterialPageRoute(builder: (context) => element[1]));
-          },
-        ),
-      );
-    }
     return new Scaffold(
       backgroundColor: Colors.grey[250],
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            new UserAccountsDrawerHeader(
-              decoration: BoxDecoration(color: Colors.cyanAccent[400]),
-              accountName: new Text(name,
-                  style: TextStyle(color: Colors.black, fontSize: 18)),
-              accountEmail: new Text(emailid,
-                  style: TextStyle(color: Colors.black, fontSize: 12)),
-              currentAccountPicture: CircleAvatar(
-                backgroundImage: AssetImage('images/profile.png'),
-                backgroundColor: Colors.cyan[50],
-                radius: 30,
-              ),
-              onDetailsPressed: () {
-                Navigator.pop(context);
-                Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                        builder: (context) => ProfileScreen()));
-              }, //Take to Profile Page...implement later
-            ),
-            new Column(children: navlist)
-          ],
-        ),
-      ),
+      drawer: NavDrawer(),
       appBar: AppBar(
         title: Text(
           'Completed Applications',
@@ -357,56 +241,16 @@ class CompletedApplicationsScreen extends StatelessWidget {
 class PendingApplicationsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    List<Widget> navlist = [];
-    for (var i = 0; i < navlistelements.length; i++) {
-      var element = navlistelements[i];
-      navlist.add(
-        new ListTile(
-          title: Text(element[0]),
-          onTap: () {
-            Navigator.pop(context);
-            Navigator.push(context,
-                new MaterialPageRoute(builder: (context) => element[1]));
-          },
-        ),
-      );
-    }
     return new Scaffold(
       backgroundColor: Colors.grey[250],
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            new UserAccountsDrawerHeader(
-              decoration: BoxDecoration(color: Colors.cyanAccent[400]),
-              accountName: new Text(name,
-                  style: TextStyle(color: Colors.black, fontSize: 18)),
-              accountEmail: new Text(emailid,
-                  style: TextStyle(color: Colors.black, fontSize: 12)),
-              currentAccountPicture: CircleAvatar(
-                backgroundImage: AssetImage('images/profile.png'),
-                backgroundColor: Colors.cyan[50],
-                radius: 30,
-              ),
-              onDetailsPressed: () {
-                Navigator.pop(context);
-                Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                        builder: (context) => ProfileScreen()));
-              }, //Take to Profile Page...implement later
-            ),
-            new Column(children: navlist)
-          ],
-        ),
-      ),
+      drawer: NavDrawer(),
       appBar: AppBar(
         title: Text(
-          'Pending Application',
+          'Pending Applications',
           style: TextStyle(color: Colors.black, fontSize: 20),
         ),
         backgroundColor: Colors.cyanAccent[400],
-        iconTheme: new IconThemeData(color: Colors.black),
+        iconTheme: IconThemeData(color: Colors.black),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.notifications),
@@ -438,49 +282,9 @@ class PendingApplicationsScreen extends StatelessWidget {
 class ScheduleScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    List<Widget> navlist = [];
-    for (var i = 0; i < navlistelements.length; i++) {
-      var element = navlistelements[i];
-      navlist.add(
-        new ListTile(
-          title: Text(element[0]),
-          onTap: () {
-            Navigator.pop(context);
-            Navigator.push(context,
-                new MaterialPageRoute(builder: (context) => element[1]));
-          },
-        ),
-      );
-    }
     return new Scaffold(
       backgroundColor: Colors.grey[250],
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            new UserAccountsDrawerHeader(
-              decoration: BoxDecoration(color: Colors.cyanAccent[400]),
-              accountName: new Text(name,
-                  style: TextStyle(color: Colors.black, fontSize: 18)),
-              accountEmail: new Text(emailid,
-                  style: TextStyle(color: Colors.black, fontSize: 12)),
-              currentAccountPicture: CircleAvatar(
-                backgroundImage: AssetImage('images/profile.png'),
-                backgroundColor: Colors.cyan[50],
-                radius: 30,
-              ),
-              onDetailsPressed: () {
-                Navigator.pop(context);
-                Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                        builder: (context) => ProfileScreen()));
-              }, //Take to Profile Page...implement later
-            ),
-            new Column(children: navlist)
-          ],
-        ),
-      ),
+      drawer: NavDrawer(),
       appBar: AppBar(
         title: Text(
           'Counselling Schedule',
@@ -519,52 +323,12 @@ class ScheduleScreen extends StatelessWidget {
 class SignOutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    List<Widget> navlist = [];
-    for (var i = 0; i < navlistelements.length; i++) {
-      var element = navlistelements[i];
-      navlist.add(
-        new ListTile(
-          title: Text(element[0]),
-          onTap: () {
-            Navigator.pop(context);
-            Navigator.push(context,
-                new MaterialPageRoute(builder: (context) => element[1]));
-          },
-        ),
-      );
-    }
     return new Scaffold(
       backgroundColor: Colors.grey[250],
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            new UserAccountsDrawerHeader(
-              decoration: BoxDecoration(color: Colors.cyanAccent[400]),
-              accountName: new Text(name,
-                  style: TextStyle(color: Colors.black, fontSize: 18)),
-              accountEmail: new Text(emailid,
-                  style: TextStyle(color: Colors.black, fontSize: 12)),
-              currentAccountPicture: CircleAvatar(
-                backgroundImage: AssetImage('images/profile.png'),
-                backgroundColor: Colors.cyan[50],
-                radius: 30,
-              ),
-              onDetailsPressed: () {
-                Navigator.pop(context);
-                Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                        builder: (context) => ProfileScreen()));
-              }, //Take to Profile Page...implement later
-            ),
-            new Column(children: navlist)
-          ],
-        ),
-      ),
+      drawer: NavDrawer(),
       appBar: AppBar(
         title: Text(
-          'Counselling Schedule',
+          'Sign Out',
           style: TextStyle(color: Colors.black, fontSize: 20),
         ),
         backgroundColor: Colors.cyanAccent[400],
