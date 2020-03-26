@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "468240832714",
+    "firebase_url": "https://gennext-application.firebaseio.com",
+    "project_id": "gennext-application",
+    "storage_bucket": "gennext-application.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:468240832714:android:eb5278230580315d45bc33",
+        "android_client_info": {
+          "package_name": "com.gennexteducation.gennextapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "468240832714-7luafjkbchiojdsd0qpl6fjcfmrg6g17.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAuF3odQGWEahSXUPYnEqTQ-hPtfrp_KrQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "468240832714-7luafjkbchiojdsd0qpl6fjcfmrg6g17.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "468240832714-glsfkjdamsl18f99oeq9f8tb76q00l4n.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.gennexteducation.gennextapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

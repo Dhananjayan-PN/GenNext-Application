@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'login.dart';
 
 final name = 'Jake Adams';
 final emailid = 'jake.adams!gmail.com';
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
-    return MaterialApp(home: new HomeScreen());
+    return MaterialApp(home: new LoginPage());
   }
 }
 
