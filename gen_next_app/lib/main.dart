@@ -75,9 +75,10 @@ class NavDrawer extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (BuildContext context) => CustomDialog(
-                  title: "Sign Out",
-                  description: "Are you sure you want to sign out?",
-                  buttonText: "Okay",
+                  title: "Sign Out ?",
+                  description:
+                      "Are you sure you want to sign out?\nTap outside the box to stay back",
+                  buttonText: "Sign Out",
                 ),
               );
             },
@@ -88,23 +89,15 @@ class NavDrawer extends StatelessWidget {
   }
 }
 
-//Following two classes are for the custom dialog screen that can be used for any dialog
-class Consts {
-  Consts._();
-
-  static const double padding = 16.0;
-  static const double avatarRadius = 66.0;
-}
+//Following class is for the custom dialog screen that can be used from anywhere
 
 class CustomDialog extends StatelessWidget {
   final String title, description, buttonText;
-  final Image image;
 
   CustomDialog({
     @required this.title,
     @required this.description,
     @required this.buttonText,
-    this.image,
   });
 
   dialogContent(BuildContext context) {
@@ -112,16 +105,15 @@ class CustomDialog extends StatelessWidget {
       children: <Widget>[
         Container(
           padding: EdgeInsets.only(
-            top: Consts.avatarRadius + Consts.padding,
-            bottom: Consts.padding,
-            left: Consts.padding,
-            right: Consts.padding,
+            top: 24,
+            bottom: 16,
+            left: 16,
+            right: 16,
           ),
-          margin: EdgeInsets.only(top: Consts.avatarRadius),
           decoration: new BoxDecoration(
             color: Colors.white,
             shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.circular(Consts.padding),
+            borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
                 color: Colors.black26,
@@ -152,8 +144,13 @@ class CustomDialog extends StatelessWidget {
               Align(
                 alignment: Alignment.bottomRight,
                 child: FlatButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(9.0),
+                      side: BorderSide(color: Colors.cyan[600])),
+                  color: Colors.cyanAccent[400],
+                  splashColor: Colors.blueAccent,
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    Navigator.pop(context);
                     Navigator.push(
                         context,
                         new MaterialPageRoute(
@@ -173,9 +170,10 @@ class CustomDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(Consts.padding),
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: Colors.cyan[600]),
       ),
-      elevation: 0.0,
+      elevation: 2.0,
       backgroundColor: Colors.transparent,
       child: dialogContent(context),
     );
