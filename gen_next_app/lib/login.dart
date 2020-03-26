@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'main.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class LoginPage extends StatefulWidget {
 
@@ -20,16 +19,21 @@ class _LoginPageState extends State<LoginPage>{
 
     if (form.validate()){
       form.save();
-      print("Email: $_email, Password: $_password");
+      if (_email=="gennext@edu.com"){
+        if(_password=="gennext"){
+          Navigator.push(context,
+                new MaterialPageRoute(builder: (context) => HomeScreen()));
+        } else {
+          print("Invalid");
+        }
+      } else {
+        print("Invalid");
+      }
     } else {
       print("Form Is Invalid");
     }
   }
 
-  void registration() {
-
-  }
-  
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -62,23 +66,9 @@ class _LoginPageState extends State<LoginPage>{
                 new RaisedButton(
                   color: Colors.blueGrey,
                   child: new Text(
-                    'Login', 
-                    style: GoogleFonts.b612(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w800,
-                    ),
+                    'Login'
                   ),
                   onPressed: validateAndSave, 
-                ),
-                new FlatButton(
-                  child: new Text(
-                    'Not Registered Yet? Register.',
-                    style: GoogleFonts.b612Mono(
-                      fontSize: 28,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  onPressed: registration,              
                 ),
               ],
             ),
