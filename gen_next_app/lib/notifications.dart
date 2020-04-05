@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
-final notifications = ['You are late'];
+final notifications = ['You are late', 'you are a loser'];
+
+int newNotifications = notifications.length;
 
 class BodyBuilder extends StatefulWidget {
   @override
@@ -34,21 +36,15 @@ class BodyBuilderState extends State<BodyBuilder> {
         itemCount: notifications.length,
         itemBuilder: (context, index) {
           return Dismissible(
-            key: Key(notifications[index]),
+            key: Key('$index' + '$notifications[index]'),
             background: Container(child: Icon(Icons.delete), color: Colors.red[400]),
             child: ListTile(
               title: Text(notifications[index]),
             ),
             onDismissed: (direction) {
               notifications.removeAt(index);
-              Scaffold.of(context).showSnackBar(
-                SnackBar(
-                  content: Text("Notification Dismissed"),
-                ),
-              );
-              if (notifications.length == 0) {
-                setState(() {});
-              }
+              setState(() {});
+              //Scaffold.of(context).showSnackBar(SnackBar(content: Text("Notification Dismissed"),),);
             },
           );
         },

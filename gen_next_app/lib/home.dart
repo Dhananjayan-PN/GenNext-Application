@@ -2,6 +2,67 @@ import 'package:flutter/material.dart';
 import 'main.dart';
 import 'notifications.dart';
 
+class HomeAppBar extends StatefulWidget with PreferredSizeWidget {
+  @override
+  State<StatefulWidget> createState() => HomeAppBarState();
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+}
+
+class HomeAppBarState extends State<HomeAppBar> {
+  int counter = newNotifications;
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      title: Image(
+        image: AssetImage('images/gennextlonglogo.png'),
+      ),
+      backgroundColor: Colors.cyanAccent[400],
+      iconTheme: new IconThemeData(color: Colors.indigo[900]),
+      actions: <Widget>[
+        // Using Stack to show Notification Badge
+        new Stack(
+          children: <Widget>[
+            new IconButton(
+                icon: Icon(Icons.notifications),
+                onPressed: () {
+                  setState(() {
+                    counter = 0;
+                    newNotifications = 0;
+                    Navigator.push(context, new MaterialPageRoute(builder: (context) => NotificationScreen()));
+                  });
+                }),
+            counter != 0
+                ? new Positioned(
+                    right: 11,
+                    top: 11,
+                    child: new Container(
+                      padding: EdgeInsets.all(2),
+                      decoration: new BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      constraints: BoxConstraints(
+                        minWidth: 14,
+                        minHeight: 14,
+                      ),
+                      child: Text(
+                        '$counter',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 8,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  )
+                : new Container()
+          ],
+        ),
+      ],
+    );
+  }
+}
+
 class HomeScreen extends StatelessWidget {
   // This widget defines the homepage of the application
   @override
@@ -9,22 +70,7 @@ class HomeScreen extends StatelessWidget {
     return new Scaffold(
       backgroundColor: Colors.grey[250],
       drawer: NavDrawer(),
-      appBar: AppBar(
-        title: Image(
-          image: AssetImage('images/gennextlonglogo.png'),
-        ),
-        backgroundColor: Colors.cyanAccent[400],
-        iconTheme: new IconThemeData(color: Colors.indigo[900]),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.notifications),
-            color: Colors.indigo[900],
-            onPressed: () {
-              Navigator.push(context, new MaterialPageRoute(builder: (context) => NotificationScreen()));
-            },
-          ),
-        ],
-      ),
+      appBar: HomeAppBar(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

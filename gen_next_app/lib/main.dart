@@ -98,8 +98,8 @@ class NavDrawer extends StatelessWidget {
 
 class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   final String titletext;
-  @override
   CustomAppBar(this.titletext);
+  @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
   Widget build(BuildContext context) {
     return AppBar(
@@ -109,15 +109,6 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
       ),
       backgroundColor: Colors.cyanAccent[400],
       iconTheme: new IconThemeData(color: Colors.indigo[900]),
-      actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.notifications),
-          color: Colors.indigo[900],
-          onPressed: () {
-            Navigator.push(context, new MaterialPageRoute(builder: (context) => NotificationScreen()));
-          },
-        ),
-      ],
     );
   }
 }
