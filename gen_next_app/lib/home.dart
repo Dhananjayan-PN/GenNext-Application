@@ -23,7 +23,8 @@ class HomeAppBarState extends State<HomeAppBar> {
         new Stack(
           children: <Widget>[
             new IconButton(
-                icon: Icon(Icons.notifications),
+                icon: Icon(Icons.notifications, size: 28),
+                alignment: Alignment.bottomLeft,
                 onPressed: () {
                   setState(() {
                     counter = 0;

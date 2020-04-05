@@ -19,7 +19,7 @@ class BodyBuilderState extends State<BodyBuilder> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Icon(
-              Icons.sentiment_satisfied,
+              Icons.thumb_up,
               size: 45,
             ),
             Text(' '),
