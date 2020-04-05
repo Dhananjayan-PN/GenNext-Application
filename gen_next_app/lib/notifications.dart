@@ -1,7 +1,61 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
 
-final notifications = ["App is under development. Come back soon!"];
+final notifications = ['You are late'];
+
+class BodyBuilder extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => BodyBuilderState();
+}
+
+class BodyBuilderState extends State<BodyBuilder> {
+  @override
+  Widget build(BuildContext context) {
+    if (notifications.length == 0) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Icon(
+              Icons.sentiment_satisfied,
+              size: 45,
+            ),
+            Text(' '),
+            Text(
+              "You're all caught up !",
+              style: TextStyle(color: Colors.grey[800], fontSize: 18),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
+    } else {
+      return ListView.builder(
+        itemCount: notifications.length,
+        itemBuilder: (context, index) {
+          return Dismissible(
+            key: Key(notifications[index]),
+            background: Container(child: Icon(Icons.delete), color: Colors.red[400]),
+            child: ListTile(
+              title: Text(notifications[index]),
+            ),
+            onDismissed: (direction) {
+              notifications.removeAt(index);
+              Scaffold.of(context).showSnackBar(
+                SnackBar(
+                  content: Text("Notification Dismissed"),
+                ),
+              );
+              if (notifications.length == 0) {
+                setState(() {});
+              }
+            },
+          );
+        },
+      );
+    }
+  }
+}
 
 class NotificationScreen extends StatelessWidget {
   @override
@@ -24,15 +78,6 @@ class NotificationScreen extends StatelessWidget {
           backgroundColor: Colors.cyanAccent[400],
           iconTheme: new IconThemeData(color: Colors.indigo[900]),
         ),
-        body: ListView.builder(
-          itemCount: notifications.length,
-          itemBuilder: (context, index) {
-            return Card(
-              child: ListTile(
-                title: Text(notifications[index]),
-              ),
-            );
-          },
-        ));
+        body: BodyBuilder());
   }
 }
