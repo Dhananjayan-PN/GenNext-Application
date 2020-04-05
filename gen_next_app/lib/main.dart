@@ -6,14 +6,14 @@ import 'home.dart';
 import 'schedule.dart';
 
 final name = 'Jake Adams';
-final emailid = 'jake.adams!gmail.com';
+final emailid = 'jake.adams@gmail.com';
 final navlistelements = [
-  ['Home', HomeScreen()],
-  ['Your Profile', ProfileScreen()],
-  ['Your Universities', YourUniversitiesScreen()],
-  ['Completed Applications', CompletedApplicationsScreen()],
-  ['Pending Applications', PendingApplicationsScreen()],
-  ['Counselling Schedule', ScheduleScreen()]
+  ['Home', HomeScreen(), Icons.home],
+  ['Your Profile', ProfileScreen(), Icons.account_box],
+  ['Your Universities', YourUniversitiesScreen(), Icons.account_balance],
+  ['Completed Applications', CompletedApplicationsScreen(), Icons.assignment_turned_in],
+  ['Pending Applications', PendingApplicationsScreen(), Icons.assignment_late],
+  ['Counselling Schedule', ScheduleScreen(), Icons.date_range]
 ];
 
 void main() => runApp(MyApp());
@@ -35,15 +35,23 @@ class NavDrawer extends StatelessWidget {
     List<Widget> navlist = [];
     for (var i = 0; i < navlistelements.length; i++) {
       var element = navlistelements[i];
-      navlist.add(
-        new ListTile(
-          title: Text(element[0]),
-          onTap: () {
-            Navigator.pop(context);
-            Navigator.push(context,
-                new MaterialPageRoute(builder: (context) => element[1]));
-          },
+      navlist.add(new ListTile(
+        leading: Icon(
+          element[2],
+          size: 26,
+          color: Colors.indigo[900],
         ),
+        title: Text(
+          element[0],
+          style: TextStyle(color: Colors.black, fontSize: 16.5),
+        ),
+        onTap: () {
+          Navigator.pop(context);
+          Navigator.push(context, new MaterialPageRoute(builder: (context) => element[1]));
+        },
+      ));
+      navlist.add(
+        Divider(),
       );
     }
 
@@ -53,10 +61,8 @@ class NavDrawer extends StatelessWidget {
         children: <Widget>[
           new UserAccountsDrawerHeader(
             decoration: BoxDecoration(color: Colors.cyanAccent[400]),
-            accountName: new Text(name,
-                style: TextStyle(color: Colors.black, fontSize: 18)),
-            accountEmail: new Text(emailid,
-                style: TextStyle(color: Colors.black, fontSize: 12)),
+            accountName: new Text(name, style: TextStyle(color: Colors.black, fontSize: 18)),
+            accountEmail: new Text(emailid, style: TextStyle(color: Colors.black, fontSize: 12)),
             currentAccountPicture: CircleAvatar(
               backgroundImage: AssetImage('images/profile.png'),
               backgroundColor: Colors.cyan[50],
@@ -64,27 +70,51 @@ class NavDrawer extends StatelessWidget {
             ),
             onDetailsPressed: () {
               Navigator.pop(context);
-              Navigator.push(context,
-                  new MaterialPageRoute(builder: (context) => ProfileScreen()));
+              Navigator.push(context, new MaterialPageRoute(builder: (context) => ProfileScreen()));
             }, //Take to Profile Page...implement later
           ),
           new Column(children: navlist),
           new ListTile(
-            title: Text('Sign Out'),
+            leading: Icon(Icons.power_settings_new, size: 26, color: Colors.red[600]),
+            title: Text('Sign Out', style: TextStyle(color: Colors.black, fontSize: 16.5)),
             onTap: () {
               showDialog(
                 context: context,
                 builder: (BuildContext context) => CustomDialog(
                   title: "Sign Out ?",
-                  description:
-                      "Are you sure you want to sign out?\nTap outside the box to stay back",
+                  description: "Are you sure you want to sign out?\nTap outside the box to stay back",
                   buttonText: "Sign Out",
                 ),
               );
             },
           ),
+          Divider(),
         ],
       ),
+    );
+  }
+}
+
+class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
+  final String titletext;
+  @override
+  CustomAppBar(this.titletext);
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  Widget build(BuildContext context) {
+    return AppBar(
+      title: Text(
+        titletext,
+        style: TextStyle(color: Colors.black, fontSize: 20),
+      ),
+      backgroundColor: Colors.cyanAccent[400],
+      iconTheme: new IconThemeData(color: Colors.indigo[900]),
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.notifications),
+          color: Colors.indigo[900],
+          onPressed: () {},
+        ),
+      ],
     );
   }
 }
@@ -144,17 +174,12 @@ class CustomDialog extends StatelessWidget {
               Align(
                 alignment: Alignment.bottomRight,
                 child: FlatButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(9.0),
-                      side: BorderSide(color: Colors.cyan[600])),
+                  shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(9.0), side: BorderSide(color: Colors.cyan[600])),
                   color: Colors.cyanAccent[400],
                   splashColor: Colors.blueAccent,
                   onPressed: () {
                     Navigator.pop(context);
-                    Navigator.push(
-                        context,
-                        new MaterialPageRoute(
-                            builder: (context) => LoginPage()));
+                    Navigator.push(context, new MaterialPageRoute(builder: (context) => LoginPage()));
                   },
                   child: Text(buttonText),
                 ),
@@ -186,21 +211,7 @@ class ProfileScreen extends StatelessWidget {
     return new Scaffold(
       backgroundColor: Colors.grey[250],
       drawer: NavDrawer(),
-      appBar: AppBar(
-        title: Text(
-          'Your Profile',
-          style: TextStyle(color: Colors.black, fontSize: 20),
-        ),
-        backgroundColor: Colors.cyanAccent[400],
-        iconTheme: new IconThemeData(color: Colors.black),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.notifications),
-            color: Colors.black87,
-            onPressed: () {},
-          ),
-        ],
-      ),
+      appBar: CustomAppBar('Your Profile'),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -227,21 +238,7 @@ class YourUniversitiesScreen extends StatelessWidget {
     return new Scaffold(
       backgroundColor: Colors.grey[250],
       drawer: NavDrawer(),
-      appBar: AppBar(
-        title: Text(
-          'Your Universities',
-          style: TextStyle(color: Colors.black, fontSize: 20),
-        ),
-        backgroundColor: Colors.cyanAccent[400],
-        iconTheme: new IconThemeData(color: Colors.black),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.notifications),
-            color: Colors.black87,
-            onPressed: () {},
-          ),
-        ],
-      ),
+      appBar: CustomAppBar('Your Universities'),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -268,21 +265,7 @@ class CompletedApplicationsScreen extends StatelessWidget {
     return new Scaffold(
       backgroundColor: Colors.grey[250],
       drawer: NavDrawer(),
-      appBar: AppBar(
-        title: Text(
-          'Completed Applications',
-          style: TextStyle(color: Colors.black, fontSize: 20),
-        ),
-        backgroundColor: Colors.cyanAccent[400],
-        iconTheme: new IconThemeData(color: Colors.black),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.notifications),
-            color: Colors.black87,
-            onPressed: () {},
-          ),
-        ],
-      ),
+      appBar: CustomAppBar('Completed Applications'),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -309,21 +292,7 @@ class PendingApplicationsScreen extends StatelessWidget {
     return new Scaffold(
       backgroundColor: Colors.grey[250],
       drawer: NavDrawer(),
-      appBar: AppBar(
-        title: Text(
-          'Pending Applications',
-          style: TextStyle(color: Colors.black, fontSize: 20),
-        ),
-        backgroundColor: Colors.cyanAccent[400],
-        iconTheme: IconThemeData(color: Colors.black),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.notifications),
-            color: Colors.black87,
-            onPressed: () {},
-          ),
-        ],
-      ),
+      appBar: CustomAppBar('Pending Application'),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

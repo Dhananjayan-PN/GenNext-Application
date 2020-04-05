@@ -13,11 +13,11 @@ class HomeScreen extends StatelessWidget {
           image: AssetImage('images/gennextlonglogo.png'),
         ),
         backgroundColor: Colors.cyanAccent[400],
-        iconTheme: new IconThemeData(color: Colors.black),
+        iconTheme: new IconThemeData(color: Colors.indigo[900]),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.notifications),
-            color: Colors.black87,
+            color: Colors.indigo[900],
             onPressed: () {},
           ),
         ],
