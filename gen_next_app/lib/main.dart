@@ -4,8 +4,9 @@ import 'package:flutter/services.dart';
 import 'login.dart';
 import 'home.dart';
 import 'schedule.dart';
+import 'notifications.dart';
 
-final name = 'Jake Adams';
+var name = 'Jake Adams';
 final emailid = 'jake.adams@gmail.com';
 final navlistelements = [
   ['Home', HomeScreen(), Icons.home],
@@ -112,7 +113,9 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
         IconButton(
           icon: Icon(Icons.notifications),
           color: Colors.indigo[900],
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(context, new MaterialPageRoute(builder: (context) => NotificationScreen()));
+          },
         ),
       ],
     );

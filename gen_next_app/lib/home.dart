@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'main.dart';
+import 'notifications.dart';
 
 class HomeScreen extends StatelessWidget {
   // This widget defines the homepage of the application
@@ -18,7 +19,9 @@ class HomeScreen extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.notifications),
             color: Colors.indigo[900],
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context, new MaterialPageRoute(builder: (context) => NotificationScreen()));
+            },
           ),
         ],
       ),
