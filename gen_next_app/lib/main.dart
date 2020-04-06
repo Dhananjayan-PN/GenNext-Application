@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:page_transition/page_transition.dart';
 import 'login.dart';
 import 'home.dart';
 import 'schedule.dart';
@@ -48,7 +49,7 @@ class NavDrawer extends StatelessWidget {
         ),
         onTap: () {
           Navigator.pop(context);
-          Navigator.push(context, new MaterialPageRoute(builder: (context) => element[1]));
+          Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: element[1]));
         },
       ));
       navlist.add(
@@ -71,7 +72,7 @@ class NavDrawer extends StatelessWidget {
             ),
             onDetailsPressed: () {
               Navigator.pop(context);
-              Navigator.push(context, new MaterialPageRoute(builder: (context) => ProfileScreen()));
+              Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: ProfileScreen()));
             }, //Take to Profile Page...implement later
           ),
           new Column(children: navlist),
@@ -173,7 +174,7 @@ class CustomDialog extends StatelessWidget {
                   splashColor: Colors.blueAccent,
                   onPressed: () {
                     Navigator.pop(context);
-                    Navigator.push(context, new MaterialPageRoute(builder: (context) => LoginPage()));
+                    Navigator.push(context, PageTransition(type: PageTransitionType.upToDown, child: LoginPage()));
                   },
                   child: Text(buttonText),
                 ),

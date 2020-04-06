@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import 'package:page_transition/page_transition.dart';
 import 'main.dart';
 import 'notifications.dart';
 
@@ -29,7 +31,7 @@ class HomeAppBarState extends State<HomeAppBar> {
                   setState(() {
                     counter = 0;
                     newNotifications = 0;
-                    Navigator.push(context, new MaterialPageRoute(builder: (context) => NotificationScreen()));
+                    Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: NotificationScreen()));
                   });
                 }),
             counter != 0
