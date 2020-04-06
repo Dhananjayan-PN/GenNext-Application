@@ -32,38 +32,51 @@ class BodyBuilderState extends State<BodyBuilder> {
         ),
       );
     } else {
-      return ListView.builder(
-        itemCount: notifications.length,
-        itemBuilder: (context, index) {
-          return Dismissible(
-            key: Key('$index' + '$notifications[index]'),
-            background: Container(child: Icon(Icons.delete), color: Colors.red[400]),
-            child: Card(
-              elevation: 8,
-              child: InkWell(
-                splashColor: Colors.cyan[400],
-                onTap: () {
-                  //Take to the page containing information regarding notification
-                },
-                child: ListTile(
-                  title: Text(notifications[index]),
-                ),
-              ),
-            ),
-            onDismissed: (direction) {
-              notifications.removeAt(index);
-              setState(() {});
-              Scaffold.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    "Notification Dismissed",
-                    textAlign: TextAlign.center,
+      return Center(
+        child: Column(
+          children: <Widget>[
+            ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemCount: notifications.length,
+              itemBuilder: (context, index) {
+                return Dismissible(
+                  key: Key('$index' + '$notifications[index]'),
+                  background: Container(child: Icon(Icons.delete), color: Colors.red[400]),
+                  child: Card(
+                    elevation: 8,
+                    child: InkWell(
+                      splashColor: Colors.cyan[400],
+                      onTap: () {
+                        //Take to the page containing information regarding notification
+                      },
+                      child: ListTile(
+                        title: Text(notifications[index]),
+                      ),
+                    ),
                   ),
-                ),
-              );
-            },
-          );
-        },
+                  onDismissed: (direction) {
+                    notifications.removeAt(index);
+                    setState(() {});
+                    Scaffold.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          "Notification Dismissed",
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+            Text(
+              '\nSwipe on a notification to dismiss',
+              style: TextStyle(fontSize: 11, color: Colors.black.withAlpha(99)),
+              textAlign: TextAlign.center,
+            )
+          ],
+        ),
       );
     }
   }
