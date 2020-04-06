@@ -10,7 +10,7 @@ class HomeAppBar extends StatefulWidget with PreferredSizeWidget {
 }
 
 class HomeAppBarState extends State<HomeAppBar> {
-  int counter = newNotifications;
+  int counter = notifications.length;
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -28,8 +28,6 @@ class HomeAppBarState extends State<HomeAppBar> {
                 alignment: Alignment.bottomLeft,
                 onPressed: () {
                   setState(() {
-                    counter = 0;
-                    newNotifications = 0;
                     Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: NotificationScreen()));
                   });
                 }),

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-//import 'package:page_transition/page_transition.dart';
+import 'package:page_transition/page_transition.dart';
+import 'home.dart';
 
 final notifications = ['Are you future ready?'];
-
-int newNotifications = notifications.length;
 
 class BodyBuilder extends StatefulWidget {
   @override
@@ -83,6 +82,7 @@ class NotificationScreen extends StatelessWidget {
               ),
               onPressed: () {
                 Navigator.pop(context);
+                Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: HomeScreen()));
               }),
           title: Text(
             'Notifications',
