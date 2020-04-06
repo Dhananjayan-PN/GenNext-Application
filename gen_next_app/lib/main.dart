@@ -27,7 +27,10 @@ class MyApp extends StatelessWidget {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
-    return MaterialApp(home: new LoginPage());
+    return MaterialApp(
+      home: new LoginPage(),
+      debugShowCheckedModeBanner: false,
+    );
   }
 }
 
