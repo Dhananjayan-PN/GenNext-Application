@@ -40,6 +40,7 @@ class BodyBuilderState extends State<BodyBuilder> {
             key: Key('$index' + '$notifications[index]'),
             background: Container(child: Icon(Icons.delete), color: Colors.red[400]),
             child: Card(
+              elevation: 8,
               child: InkWell(
                 splashColor: Colors.cyan[400],
                 onTap: () {
@@ -53,7 +54,14 @@ class BodyBuilderState extends State<BodyBuilder> {
             onDismissed: (direction) {
               notifications.removeAt(index);
               setState(() {});
-              //Scaffold.of(context).showSnackBar(SnackBar(content: Text("Notification Dismissed"),),);
+              Scaffold.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    "Notification Dismissed",
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              );
             },
           );
         },
