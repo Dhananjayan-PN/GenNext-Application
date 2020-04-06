@@ -39,8 +39,16 @@ class BodyBuilderState extends State<BodyBuilder> {
           return Dismissible(
             key: Key('$index' + '$notifications[index]'),
             background: Container(child: Icon(Icons.delete), color: Colors.red[400]),
-            child: ListTile(
-              title: Text(notifications[index]),
+            child: Card(
+              child: InkWell(
+                splashColor: Colors.cyan[400],
+                onTap: () {
+                  //Take to the page containing information regarding notification
+                },
+                child: ListTile(
+                  title: Text(notifications[index]),
+                ),
+              ),
             ),
             onDismissed: (direction) {
               notifications.removeAt(index);
