@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'home.dart';
 
-
 class PendingApplicationsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

@@ -4,7 +4,6 @@ import '../main.dart';
 import 'notifications.dart';
 import 'profile.dart';
 
-
 class NavDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
