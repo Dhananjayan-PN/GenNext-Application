@@ -64,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ],
-                    color: Color(0xff00b5cc),
+                    color: Color(0xff00b0c9),
                     borderRadius: BorderRadius.circular(25),
                   ),
                   child: Align(
