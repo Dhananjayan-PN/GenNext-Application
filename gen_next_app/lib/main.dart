@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
 import 'login.dart';
-import 'home.dart';
-import 'schedule.dart';
-import 'notifications.dart';
+import 'student/home.dart';
+import 'student/schedule.dart';
 
 var name = 'Jake Adams';
 final emailid = 'jake.adams@gmail.com';
 final navlistelements = [
-  ['Home', HomeScreen(), Icons.home],
+  ['Home', StudentHomeScreen(), Icons.home],
   ['Your Profile', ProfileScreen(), Icons.account_box],
   ['Your Universities', YourUniversitiesScreen(), Icons.account_balance],
   ['Completed Applications', CompletedApplicationsScreen(), Icons.assignment_turned_in],

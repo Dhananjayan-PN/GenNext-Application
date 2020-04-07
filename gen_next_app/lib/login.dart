@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'home.dart';
+import 'student/home.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -17,13 +17,14 @@ class _LoginPageState extends State<LoginPage> {
 
     if (form.validate()) {
       form.save();
-      if (_email == "gennext@edu.com") {
-        if (_password == "gennext") {
-          Navigator.push(context,
-              new MaterialPageRoute(builder: (context) => HomeScreen()));
-        } else {
-          print("Invalid");
-        }
+      if (_email == "jake.adams@gmail.com" && _password == 'gennext') {
+        Navigator.push(context, new MaterialPageRoute(builder: (context) => StudentHomeScreen()));
+      }
+      if (_email == "counsellor@gennext.edu" && _password == 'gennext') {
+        //counsellor view
+      }
+      if (_email == "university@gennext.edu" && _password == 'gennext') {
+        //university view
       } else {
         print("Invalid");
       }
@@ -37,10 +38,7 @@ class _LoginPageState extends State<LoginPage> {
     return new Scaffold(
       body: new Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Colors.white, Colors.blue]),
+          gradient: LinearGradient(begin: Alignment.topLeft, end: Alignment.bottomRight, colors: [Colors.white, Colors.blue]),
         ),
         child: Container(
             padding: EdgeInsets.all(16.0),
@@ -51,15 +49,13 @@ class _LoginPageState extends State<LoginPage> {
                 children: <Widget>[
                   new TextFormField(
                     decoration: InputDecoration(labelText: "Email"),
-                    validator: (value) =>
-                        value.isEmpty ? 'Enter a valid Email ID' : null,
+                    validator: (value) => value.isEmpty ? 'Enter a valid Email ID' : null,
                     onSaved: (value) => _email = value,
                   ),
                   new TextFormField(
                     decoration: InputDecoration(labelText: "Password"),
                     obscureText: true,
-                    validator: (value) =>
-                        value.isEmpty ? 'Enter a valid Email ID' : null,
+                    validator: (value) => value.isEmpty ? 'Enter a valid Email ID' : null,
                     onSaved: (value) => _password = value,
                   ),
                   new RaisedButton(

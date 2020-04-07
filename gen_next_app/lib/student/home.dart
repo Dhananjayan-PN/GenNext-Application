@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'main.dart';
+import '../main.dart';
 import 'notifications.dart';
 
 class HomeAppBar extends StatefulWidget with PreferredSizeWidget {
@@ -63,7 +63,7 @@ class HomeAppBarState extends State<HomeAppBar> {
   }
 }
 
-class HomeScreen extends StatelessWidget {
+class StudentHomeScreen extends StatelessWidget {
   // This widget defines the homepage of the application
   @override
   Widget build(BuildContext context) {

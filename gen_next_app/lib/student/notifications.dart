@@ -95,7 +95,7 @@ class NotificationScreen extends StatelessWidget {
               ),
               onPressed: () {
                 Navigator.pop(context);
-                Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: HomeScreen()));
+                Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: StudentHomeScreen()));
               }),
           title: Text(
             'Notifications',
