@@ -40,14 +40,52 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(begin: Alignment.topRight, end: Alignment.bottomLeft, colors: [Colors.blueGrey[500], Colors.cyan[500]]),
+          gradient: LinearGradient(begin: Alignment.bottomLeft, end: Alignment.topRight, colors: [Colors.cyan[500], Colors.blueGrey[600]]),
         ),
         child: ListView(
           children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: 70, right: 90, left: 0, bottom: 10),
+              child: Transform.scale(
+                scale: 1.2,
+                child: Container(
+                  alignment: Alignment.centerLeft,
+                  height: 45,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.cyan[900],
+                        blurRadius: 8.0, // has the effect of softening the shadow
+                        spreadRadius: 0.1, // has the effect of extending the shadow
+                        offset: Offset(
+                          5.0, // horizontal, move right 10
+                          5.0, // vertical, move down 10
+                        ),
+                      ),
+                    ],
+                    color: Color(0xff00b5cc),
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Are you future ready ?  ',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      textAlign: TextAlign.right,
+                    ),
+                  ),
+                ),
+              ),
+            ),
             Row(
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(top: 60, left: 10),
+                  padding: const EdgeInsets.only(top: 20, left: 5),
                   child: RotatedBox(
                       quarterTurns: -1,
                       child: Text(
@@ -59,28 +97,19 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       )),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 30.0, left: 10.0),
-                  child: Container(
-                    height: 200,
-                    width: 200,
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          height: 50,
-                        ),
-                        Image.asset('images/gennextlonglogo.png', width: 800, fit: BoxFit.fitWidth),
-                        Text(
-                          'Are you future ready?',
-                          style: TextStyle(
-                            fontSize: 21,
-                            color: Colors.white,
-                          ),
-                          textAlign: TextAlign.left,
-                        ),
-                      ],
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5, left: 5),
+                      child: Image.asset(
+                        'images/gennextlonglogo-3.png',
+                        height: 90,
+                        width: 245,
+                        fit: BoxFit.fill,
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ],
             ),
@@ -89,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.only(top: 50, left: 50, right: 50),
+                    padding: const EdgeInsets.only(top: 40, left: 50, right: 50),
                     child: Container(
                       height: 60,
                       width: MediaQuery.of(context).size.width,
@@ -145,7 +174,7 @@ class _LoginPageState extends State<LoginPage> {
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.cyan[800],
+                      color: Colors.cyan[900],
                       blurRadius: 10.0, // has the effect of softening the shadow
                       spreadRadius: 1.0, // has the effect of extending the shadow
                       offset: Offset(
