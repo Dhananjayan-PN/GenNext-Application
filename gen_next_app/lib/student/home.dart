@@ -3,6 +3,19 @@ import 'package:page_transition/page_transition.dart';
 import '../main.dart';
 import 'notifications.dart';
 import 'profile.dart';
+import 'youruniversities.dart';
+import 'completedapps.dart';
+import 'pendingapps.dart';
+import 'schedule.dart';
+
+final navlistelements = [
+  ['Home', StudentHomeScreen(), Icons.home],
+  ['Your Profile', ProfileScreen(), Icons.account_box],
+  ['Your Universities', YourUniversitiesScreen(), Icons.account_balance],
+  ['Completed Applications', CompletedApplicationsScreen(), Icons.assignment_turned_in],
+  ['Pending Applications', PendingApplicationsScreen(), Icons.assignment_late],
+  ['Counselling Schedule', ScheduleScreen(), Icons.date_range]
+];
 
 class NavDrawer extends StatelessWidget {
   @override

@@ -3,23 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
 import 'login.dart';
-import 'student/home.dart';
-import 'student/schedule.dart';
-import 'student/profile.dart';
-import 'student/youruniversities.dart';
-import 'student/completedapps.dart';
-import 'student/pendingapps.dart';
 
 var name = 'Jake Adams';
 final emailid = 'jake.adams@gmail.com';
-final navlistelements = [
-  ['Home', StudentHomeScreen(), Icons.home],
-  ['Your Profile', ProfileScreen(), Icons.account_box],
-  ['Your Universities', YourUniversitiesScreen(), Icons.account_balance],
-  ['Completed Applications', CompletedApplicationsScreen(), Icons.assignment_turned_in],
-  ['Pending Applications', PendingApplicationsScreen(), Icons.assignment_late],
-  ['Counselling Schedule', ScheduleScreen(), Icons.date_range]
-];
 
 void main() => runApp(MyApp());
 
