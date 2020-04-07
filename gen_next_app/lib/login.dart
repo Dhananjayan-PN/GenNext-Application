@@ -95,14 +95,14 @@ class _LoginPageState extends State<LoginPage> {
                       height: 60,
                       width: MediaQuery.of(context).size.width,
                       child: TextFormField(
-                        validator: (value) => value.isEmpty ? 'Enter a valid Email ID' : null,
+                        validator: (value) {
+                          return value.isEmpty ? 'Enter a valid Email ID' : null;
+                        },
                         onSaved: (value) => _email = value,
                         style: TextStyle(
                           color: Colors.white,
                         ),
                         decoration: InputDecoration(
-                          border: InputBorder.none,
-                          fillColor: Colors.lightBlueAccent,
                           labelText: 'Email',
                           labelStyle: TextStyle(
                             color: Colors.white,
@@ -117,14 +117,15 @@ class _LoginPageState extends State<LoginPage> {
                       height: 60,
                       width: MediaQuery.of(context).size.width,
                       child: TextFormField(
-                        validator: (value) => value.isEmpty ? 'Enter a valid Email ID' : null,
+                        validator: (String value) {
+                          return value.isEmpty ? 'Enter a password' : null;
+                        },
                         onSaved: (value) => _password = value,
                         style: TextStyle(
                           color: Colors.white,
                         ),
                         obscureText: true,
                         decoration: InputDecoration(
-                          border: InputBorder.none,
                           labelText: 'Password',
                           labelStyle: TextStyle(
                             color: Colors.white,
@@ -210,23 +211,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-
-/*<Widget>[
-  TextFormField(
-  decoration: InputDecoration(labelText: "Email"),
-  validator: (value) => value.isEmpty ? 'Enter a valid Email ID' : null,
-  onSaved: (value) => _email = value,
-  ),
-  TextFormField(
-  decoration: InputDecoration(labelText: "Password"),
-  obscureText: true,
-  validator: (value) => value.isEmpty ? 'Enter a valid Email ID' : null,
-  onSaved: (value) => _password = value,
-  ),
-  RaisedButton(
-  color: Colors.cyan[300],
-  child: new Text('Login'),
-  onPressed: validateAndSave,
-  ),
-  ],
-*/
