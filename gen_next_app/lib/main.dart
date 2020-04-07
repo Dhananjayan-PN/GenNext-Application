@@ -5,6 +5,11 @@ import 'package:page_transition/page_transition.dart';
 import 'login.dart';
 import 'student/home.dart';
 import 'student/schedule.dart';
+import 'student/profile.dart';
+import 'student/youruniversities.dart';
+import 'student/completedapps.dart';
+import 'student/pendingapps.dart';
+
 
 var name = 'Jake Adams';
 final emailid = 'jake.adams@gmail.com';
@@ -202,110 +207,6 @@ class CustomDialog extends StatelessWidget {
   }
 }
 
-class ProfileScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      backgroundColor: Colors.grey[250],
-      drawer: NavDrawer(),
-      appBar: CustomAppBar('Your Profile'),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Image(
-              image: AssetImage('images/doggo.png'),
-            ),
-            Text(
-              'Our Application is under development\nCome back soon!',
-              style: TextStyle(color: Colors.black, fontSize: 20),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
-class YourUniversitiesScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      backgroundColor: Colors.grey[250],
-      drawer: NavDrawer(),
-      appBar: CustomAppBar('Your Universities'),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Image(
-              image: AssetImage('images/doggo.png'),
-            ),
-            Text(
-              'Our Application is under development\nCome back soon!',
-              style: TextStyle(color: Colors.black, fontSize: 20),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
-class CompletedApplicationsScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      backgroundColor: Colors.grey[250],
-      drawer: NavDrawer(),
-      appBar: CustomAppBar('Completed Applications'),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Image(
-              image: AssetImage('images/doggo.png'),
-            ),
-            Text(
-              'Our Application is under development\nCome back soon!',
-              style: TextStyle(color: Colors.black, fontSize: 20),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
-class PendingApplicationsScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-      backgroundColor: Colors.grey[250],
-      drawer: NavDrawer(),
-      appBar: CustomAppBar('Pending Application'),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Image(
-              image: AssetImage('images/doggo.png'),
-            ),
-            Text(
-              'Our Application is under development\nCome back soon!',
-              style: TextStyle(color: Colors.black, fontSize: 20),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
