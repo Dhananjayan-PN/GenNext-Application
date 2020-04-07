@@ -62,22 +62,21 @@ class _LoginPageState extends State<LoginPage> {
                 Padding(
                   padding: const EdgeInsets.only(top: 30.0, left: 10.0),
                   child: Container(
-                    //color: Colors.green,
                     height: 200,
                     width: 200,
                     child: Column(
                       children: <Widget>[
                         Container(
-                          height: 60,
+                          height: 50,
                         ),
-                        Center(
-                          child: Text(
-                            'A world of possibility in an app',
-                            style: TextStyle(
-                              fontSize: 24,
-                              color: Colors.white,
-                            ),
+                        Image.asset('images/gennextlonglogo.png', width: 800, fit: BoxFit.fitWidth),
+                        Text(
+                          'Are you future ready?',
+                          style: TextStyle(
+                            fontSize: 21,
+                            color: Colors.white,
                           ),
+                          textAlign: TextAlign.left,
                         ),
                       ],
                     ),
