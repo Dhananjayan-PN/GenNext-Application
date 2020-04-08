@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import '../main.dart';
@@ -18,89 +17,6 @@ final navlistelements = [
   ['Pending Applications', PendingApplicationsScreen(), Icons.assignment_late],
   ['Counselling Schedule', ScheduleScreen(), Icons.date_range]
 ];
-
-class ExitDialog extends StatelessWidget {
-  final String title, description, buttonText;
-
-  ExitDialog({
-    @required this.title,
-    @required this.description,
-    @required this.buttonText,
-  });
-
-  dialogContent(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        Container(
-          padding: EdgeInsets.only(
-            top: 24,
-            bottom: 16,
-            left: 16,
-            right: 16,
-          ),
-          decoration: new BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black26,
-                blurRadius: 10.0,
-                offset: const Offset(0.0, 10.0),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min, // To make the card compact
-            children: <Widget>[
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              SizedBox(height: 16.0),
-              Text(
-                description,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16.0,
-                ),
-              ),
-              SizedBox(height: 24.0),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: FlatButton(
-                  shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(9.0), side: BorderSide(color: Colors.cyan[600])),
-                  color: Colors.cyanAccent[400],
-                  splashColor: Colors.blueAccent,
-                  onPressed: () {
-                    SystemChannels.platform.invokeMethod('SystemNavigator.pop');
-                  },
-                  child: Text(buttonText),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: Colors.cyan[600]),
-      ),
-      elevation: 2.0,
-      backgroundColor: Colors.transparent,
-      child: dialogContent(context),
-    );
-  }
-}
 
 class NavDrawer extends StatelessWidget {
   @override
@@ -213,16 +129,6 @@ class HomeAppBarState extends State<HomeAppBar> {
   }
 
   bool myInterceptor(bool stopDefaultButtonEvent) {
-    print("BACK BUTTON!");
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => ExitDialog(
-        title: "Exit ?",
-        description: "Are you sure you want to exit the app?",
-        buttonText: "Exit",
-      ),
-    );
-
     return true;
   }
 
