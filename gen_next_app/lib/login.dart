@@ -135,7 +135,7 @@ class _LoginPageState extends State<LoginPage> {
           child: ListView(
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.only(top: 70, right: 90, left: 0, bottom: 10),
+                padding: const EdgeInsets.only(top: 70, right: 90, left: 0, bottom: 0),
                 child: Transform.scale(
                   scale: 1.2,
                   child: Container(
@@ -174,7 +174,7 @@ class _LoginPageState extends State<LoginPage> {
               Row(
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.only(top: 20, left: 5),
+                    padding: const EdgeInsets.only(top: 30, left: 5),
                     child: RotatedBox(
                         quarterTurns: -1,
                         child: Text(
@@ -186,19 +186,14 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         )),
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(top: 5, left: 5),
-                        child: Image.asset(
-                          'images/gennextlonglogo-3.png',
-                          height: 90,
-                          width: 245,
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.only(top: 0, left: 0),
+                    child: Image.asset(
+                      'images/gennextlonglogo-3.png',
+                      height: 90,
+                      width: 245,
+                      fit: BoxFit.fill,
+                    ),
                   ),
                 ],
               ),
