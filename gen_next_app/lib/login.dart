@@ -302,7 +302,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       InkWell(
-                        splashColor: Colors.cyan,
+                        splashColor: Colors.blue,
                         onTap: () {
                           Navigator.pushAndRemoveUntil(
                             context,
