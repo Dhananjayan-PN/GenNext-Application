@@ -160,7 +160,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: Align(
                       alignment: Alignment.center,
                       child: Text(
-                        'Are you future ready ?   ',
+                        'Are you future-ready ?   ',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
