@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-//Following class is for the custom dialog screen that can be used from anywhere
+//Following class is a template for the custom dialog screen that can be used from anywhere
 
 class SignOutDialog extends StatelessWidget {
   final String title, description, buttonText;
@@ -82,8 +82,11 @@ class SignOutDialog extends StatelessWidget {
                   color: Colors.cyanAccent[400],
                   splashColor: Colors.blueAccent,
                   onPressed: () {
-                    Navigator.pop(context);
-                    Navigator.push(context, PageTransition(type: PageTransitionType.upToDown, child: LoginPage()));
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      PageTransition(type: PageTransitionType.upToDown, child: LoginPage()),
+                      (Route<dynamic> route) => false,
+                    );
                   },
                   child: Text(buttonText),
                 ),

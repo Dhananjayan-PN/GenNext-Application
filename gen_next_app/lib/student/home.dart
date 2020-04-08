@@ -35,7 +35,11 @@ class NavDrawer extends StatelessWidget {
         ),
         onTap: () {
           Navigator.pop(context);
-          Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: element[1]));
+          Navigator.pushAndRemoveUntil(
+            context,
+            PageTransition(type: PageTransitionType.fade, child: element[1]),
+            (Route<dynamic> route) => false,
+          );
         },
       ));
       navlist.add(
@@ -58,7 +62,11 @@ class NavDrawer extends StatelessWidget {
             ),
             onDetailsPressed: () {
               Navigator.pop(context);
-              Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: ProfileScreen()));
+              Navigator.pushAndRemoveUntil(
+                context,
+                PageTransition(type: PageTransitionType.fade, child: ProfileScreen()),
+                (Route<dynamic> route) => false,
+              );
             }, //Take to Profile Page...implement later
           ),
           new Column(children: navlist),
@@ -70,7 +78,7 @@ class NavDrawer extends StatelessWidget {
                 context: context,
                 builder: (BuildContext context) => SignOutDialog(
                   title: "Sign Out ?",
-                  description: "Are you sure you want to sign out?\nTap outside the box to stay back",
+                  description: "Are you sure you want to sign out?",
                   buttonText: "Sign Out",
                 ),
               );
