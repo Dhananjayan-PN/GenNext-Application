@@ -1,8 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'student/home.dart';
+import 'signup.dart';
 
 class CustomDialog extends StatelessWidget {
   final String title, description, buttonText;
@@ -302,8 +302,14 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       InkWell(
-                        splashColor: Colors.cyan.withAlpha(0),
-                        onTap: () {},
+                        splashColor: Colors.cyan,
+                        onTap: () {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            PageTransition(type: PageTransitionType.rotate, child: SignUpPage()),
+                            (Route<dynamic> route) => false,
+                          );
+                        },
                         child: Text(
                           'Sign Up',
                           style: TextStyle(
