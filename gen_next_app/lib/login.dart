@@ -301,18 +301,21 @@ class _LoginPageState extends State<LoginPage> {
                           color: Colors.white70,
                         ),
                       ),
-                      InkWell(
-                        splashColor: Colors.blue,
-                        onTap: () {
-                          Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: SignUpPage()));
-                        },
-                        child: Text(
-                          'Sign Up',
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
+                      Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          splashColor: Colors.cyan,
+                          onTap: () {
+                            Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: SignUpPage()));
+                          },
+                          child: Text(
+                            'Sign Up',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                            ),
+                            textAlign: TextAlign.left,
                           ),
-                          textAlign: TextAlign.left,
                         ),
                       ),
                     ],

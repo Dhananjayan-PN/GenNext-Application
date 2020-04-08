@@ -51,19 +51,29 @@ class SignUpPageState extends State<SignUpPage> {
                     textAlign: TextAlign.center,
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10),
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.arrow_back,
-                      size: 30,
-                      color: Colors.cyan[100],
+                Row(children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: 10, left: 120),
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.arrow_back,
+                        size: 30,
+                        color: Colors.cyan[100],
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
                     ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
                   ),
-                )
+                  Padding(
+                    padding: EdgeInsets.only(top: 10, left: 0, right: 15),
+                    child: Text(
+                      "BACK",
+                      style: TextStyle(color: Colors.cyan[100], fontSize: 18),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ])
               ],
             )));
   }
