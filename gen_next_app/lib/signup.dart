@@ -98,7 +98,7 @@ class SignUpPageState extends State<SignUpPage> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 300, bottom: 5),
+              padding: EdgeInsets.only(top: 310, bottom: 5),
               child: Row(
                 children: <Widget>[
                   Row(
@@ -171,12 +171,12 @@ class SignUpPageState extends State<SignUpPage> {
               padding: const EdgeInsets.only(top: 300),
               child: Center(
                 child: Text(
-                  'Page 2',
+                  'Page 3',
                 ),
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 300, bottom: 5),
+              padding: EdgeInsets.only(top: 310, bottom: 5),
               child: Row(
                 children: <Widget>[
                   Row(
@@ -249,12 +249,12 @@ class SignUpPageState extends State<SignUpPage> {
               padding: const EdgeInsets.only(top: 300),
               child: Center(
                 child: Text(
-                  'Page 2',
+                  'Page 4',
                 ),
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 300, bottom: 5),
+              padding: EdgeInsets.only(top: 310, bottom: 5),
               child: Row(
                 children: <Widget>[
                   Row(
@@ -287,9 +287,9 @@ class SignUpPageState extends State<SignUpPage> {
                   Row(
                     children: <Widget>[
                       Padding(
-                        padding: EdgeInsets.only(left: 160, right: 0),
+                        padding: EdgeInsets.only(left: 155, right: 0),
                         child: Text(
-                          "NEXT",
+                          "FINISH",
                           style: TextStyle(color: Colors.white70, fontSize: 15),
                           textAlign: TextAlign.center,
                         ),
@@ -304,7 +304,7 @@ class SignUpPageState extends State<SignUpPage> {
                           ),
                           onPressed: () {
                             setState(() {
-                              _selectedIndex += 1;
+                              _selectedIndex += 0;
                             });
                           },
                         ),
