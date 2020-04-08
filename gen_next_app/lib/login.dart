@@ -304,11 +304,7 @@ class _LoginPageState extends State<LoginPage> {
                       InkWell(
                         splashColor: Colors.blue,
                         onTap: () {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            PageTransition(type: PageTransitionType.rotate, child: SignUpPage()),
-                            (Route<dynamic> route) => false,
-                          );
+                          Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: SignUpPage()));
                         },
                         child: Text(
                           'Sign Up',
