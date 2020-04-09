@@ -98,14 +98,15 @@ class SignUpPageState extends State<SignUpPage> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 310, bottom: 5),
+              padding: EdgeInsets.only(top: 320, bottom: 5),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(left: 10),
-                        child: IconButton(
+                  Padding(
+                    padding: EdgeInsets.only(),
+                    child: Row(
+                      children: <Widget>[
+                        IconButton(
                           icon: Icon(
                             Icons.arrow_back,
                             size: 30,
@@ -117,30 +118,24 @@ class SignUpPageState extends State<SignUpPage> {
                             });
                           },
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(0),
-                        child: Text(
+                        Text(
                           "BACK",
-                          style: TextStyle(color: Colors.white70, fontSize: 15),
-                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.white70, fontSize: 13),
+                          textAlign: TextAlign.left,
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                  Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(left: 160, right: 0),
-                        child: Text(
+                  Padding(
+                    padding: EdgeInsets.only(left: 170),
+                    child: Row(
+                      children: <Widget>[
+                        Text(
                           "NEXT",
-                          style: TextStyle(color: Colors.white70, fontSize: 15),
-                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.white70, fontSize: 13),
+                          textAlign: TextAlign.right,
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(right: 10),
-                        child: IconButton(
+                        IconButton(
                           icon: Icon(
                             Icons.arrow_forward,
                             size: 30,
@@ -152,8 +147,8 @@ class SignUpPageState extends State<SignUpPage> {
                             });
                           },
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -176,14 +171,15 @@ class SignUpPageState extends State<SignUpPage> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 310, bottom: 5),
+              padding: EdgeInsets.only(top: 320, bottom: 5),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(left: 10),
-                        child: IconButton(
+                  Padding(
+                    padding: EdgeInsets.only(),
+                    child: Row(
+                      children: <Widget>[
+                        IconButton(
                           icon: Icon(
                             Icons.arrow_back,
                             size: 30,
@@ -195,30 +191,24 @@ class SignUpPageState extends State<SignUpPage> {
                             });
                           },
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(0),
-                        child: Text(
+                        Text(
                           "BACK",
-                          style: TextStyle(color: Colors.white70, fontSize: 15),
-                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.white70, fontSize: 13),
+                          textAlign: TextAlign.left,
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                  Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(left: 160, right: 0),
-                        child: Text(
+                  Padding(
+                    padding: EdgeInsets.only(left: 170),
+                    child: Row(
+                      children: <Widget>[
+                        Text(
                           "NEXT",
-                          style: TextStyle(color: Colors.white70, fontSize: 15),
-                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.white70, fontSize: 13),
+                          textAlign: TextAlign.right,
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(right: 10),
-                        child: IconButton(
+                        IconButton(
                           icon: Icon(
                             Icons.arrow_forward,
                             size: 30,
@@ -230,8 +220,8 @@ class SignUpPageState extends State<SignUpPage> {
                             });
                           },
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -254,14 +244,15 @@ class SignUpPageState extends State<SignUpPage> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 310, bottom: 5),
+              padding: EdgeInsets.only(top: 320, bottom: 5),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(left: 10),
-                        child: IconButton(
+                  Padding(
+                    padding: EdgeInsets.only(),
+                    child: Row(
+                      children: <Widget>[
+                        IconButton(
                           icon: Icon(
                             Icons.arrow_back,
                             size: 30,
@@ -273,30 +264,24 @@ class SignUpPageState extends State<SignUpPage> {
                             });
                           },
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.all(0),
-                        child: Text(
+                        Text(
                           "BACK",
-                          style: TextStyle(color: Colors.white70, fontSize: 15),
-                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.white70, fontSize: 13),
+                          textAlign: TextAlign.left,
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                  Row(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(left: 155, right: 0),
-                        child: Text(
+                  Padding(
+                    padding: EdgeInsets.only(left: 170),
+                    child: Row(
+                      children: <Widget>[
+                        Text(
                           "FINISH",
-                          style: TextStyle(color: Colors.white70, fontSize: 15),
-                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.white70, fontSize: 13),
+                          textAlign: TextAlign.right,
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(right: 10),
-                        child: IconButton(
+                        IconButton(
                           icon: Icon(
                             Icons.arrow_forward,
                             size: 30,
@@ -308,8 +293,8 @@ class SignUpPageState extends State<SignUpPage> {
                             });
                           },
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),
