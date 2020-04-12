@@ -20,12 +20,13 @@ class SignUpPageState extends State<SignUpPage> {
   String _usertype;
   String _firstname;
   String _lastname;
-  DateTime _dob;
   String _username;
   String _email;
+  DateTime _dob;
+  String _country;
   String _password;
   String _confpassword;
-  String _country;
+
   String _degreelevel;
   String _grade;
   String _school;
