@@ -662,7 +662,13 @@ class SignUpPageState extends State<SignUpPage> {
             ],
           ),
         ),
-      ]
+      ],
+      if (_usertype == 'Counsellor') ...[
+
+      ],
+      if (_usertype == 'CollegeRep') ...[
+
+      ],
     ];
 
     return Scaffold(
