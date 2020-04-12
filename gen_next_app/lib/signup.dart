@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:back_button_interceptor/back_button_interceptor.dart';
 //import 'package:page_transition/page_transition.dart';
 //import 'student/home.dart';
 
@@ -11,6 +12,24 @@ class SignUpPage extends StatefulWidget {
 }
 
 class SignUpPageState extends State<SignUpPage> {
+  /*
+  @override
+  void initState() {
+    super.initState();
+    BackButtonInterceptor.add(myInterceptor);
+  }
+
+  @override
+  void dispose() {
+    BackButtonInterceptor.remove(myInterceptor);
+    super.dispose();
+  }
+
+  bool myInterceptor(bool stopDefaultButtonEvent) {
+    return true;
+  } */
+  //remove ^^^ comment in production
+
   final registerFormKey = GlobalKey<FormState>();
   final signupformKey = GlobalKey<FormState>();
   final TextEditingController _pass = TextEditingController();
