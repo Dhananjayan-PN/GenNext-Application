@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
-//import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 //import 'package:page_transition/page_transition.dart';
 //import 'student/home.dart';
 
@@ -12,10 +13,14 @@ class SignUpPage extends StatefulWidget {
 class SignUpPageState extends State<SignUpPage> {
   final signupformKey = GlobalKey<FormState>();
   final TextEditingController _pass = TextEditingController();
-  final TextEditingController _confirmPass = TextEditingController();
+  final TextEditingController _confirmpass = TextEditingController();
   int _selectedIndex = 0;
 
-  String _name;
+  String _usertype;
+  String _firstname;
+  String _lastname;
+  DateTime _dob;
+  String _username;
   String _email;
   String _password;
   String _confpassword;
@@ -60,10 +65,10 @@ class SignUpPageState extends State<SignUpPage> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 60, left: 10, right: 10),
+              padding: EdgeInsets.only(top: 50, left: 10, right: 10),
               child: Text(
-                "Click start to begin your journey with us.\nBear in mind that none of your information\nwill be released without your permission\n"
-                "If you're a counsellor or a college representative looking to use this platform to help students, we're happy to welcome you",
+                "Click start to begin your journey with us.\n"
+                "If you're a counsellor or a college representative looking to use this platform to help students,\nwe're happy to welcome you.",
                 style: TextStyle(color: Colors.white70, fontSize: 15),
                 textAlign: TextAlign.center,
               ),
@@ -118,17 +123,78 @@ class SignUpPageState extends State<SignUpPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Padding(
+                    padding: EdgeInsets.only(top: 30, left: 50, right: 50),
+                    child: Theme(
+                      data: Theme.of(context).copyWith(
+                        canvasColor: Color(0xff19547b),
+                      ),
+                      child: DropdownButton(
+                        style: TextStyle(color: Colors.white),
+                        hint: Text(
+                          "Tell us who you are",
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                        itemHeight: kMinInteractiveDimension,
+                        items: [
+                          DropdownMenuItem(
+                              child: Text(
+                                'Student',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              value: 'Student'),
+                          DropdownMenuItem(
+                              child: Text(
+                                'Counsellor',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              value: 'Counsellor'),
+                          DropdownMenuItem(
+                              child: Text(
+                                'College Representative',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              value: 'CollegeRep'),
+                        ],
+                        value: _usertype,
+                        isExpanded: true,
+                        onChanged: (value) {
+                          setState(() {
+                            _usertype = value;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  Padding(
                     padding: const EdgeInsets.only(top: 30, left: 50, right: 50),
                     child: TextFormField(
                       validator: (value) {
-                        return value.isEmpty ? 'Enter your full name' : null;
+                        return value.isEmpty ? 'Enter your first name' : null;
                       },
-                      onSaved: (value) => _name = value,
+                      onSaved: (value) => _firstname = value,
                       style: TextStyle(
                         color: Colors.white,
                       ),
                       decoration: InputDecoration(
-                        labelText: "Full Name",
+                        labelText: "First Name",
+                        labelStyle: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 30, left: 50, right: 50),
+                    child: TextFormField(
+                      validator: (value) {
+                        return value.isEmpty ? 'Enter your last name' : null;
+                      },
+                      onSaved: (value) => _lastname = value,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                      decoration: InputDecoration(
+                        labelText: "Last Name",
                         labelStyle: TextStyle(
                           color: Colors.white,
                         ),
@@ -147,6 +213,63 @@ class SignUpPageState extends State<SignUpPage> {
                       ),
                       decoration: InputDecoration(
                         labelText: 'Email',
+                        labelStyle: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 30, left: 50, right: 50),
+                    child: DateTimeField(
+                      style: TextStyle(color: Colors.white),
+                      format: DateFormat("MM-dd-yyyy"),
+                      decoration: InputDecoration(
+                        labelText: 'Date of Birth',
+                        labelStyle: TextStyle(color: Colors.white),
+                      ),
+                      onShowPicker: (context, _dob) {
+                        return showDatePicker(
+                            context: context, firstDate: DateTime(1900), initialDate: _dob == null ? DateTime.now() : _dob, lastDate: DateTime(2100));
+                      },
+                      onChanged: (value) {
+                        setState(() {
+                          _dob = value;
+                        });
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 30, left: 50, right: 50),
+                    child: TextFormField(
+                      validator: (String value) {
+                        return value.isEmpty ? 'Enter your country of residence' : null;
+                      },
+                      onSaved: (value) => _country = value,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        labelText: 'Country',
+                        labelStyle: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 30, left: 50, right: 50),
+                    child: TextFormField(
+                      validator: (value) {
+                        return value.isEmpty ? 'Enter desired username' : null;
+                      },
+                      onSaved: (value) => _username = value,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                      decoration: InputDecoration(
+                        labelText: "Username",
                         labelStyle: TextStyle(
                           color: Colors.white,
                         ),
@@ -176,13 +299,13 @@ class SignUpPageState extends State<SignUpPage> {
                   Padding(
                     padding: const EdgeInsets.only(top: 30, left: 50, right: 50),
                     child: TextFormField(
-                      controller: _confirmPass,
+                      controller: _confirmpass,
                       validator: (String value) {
                         if (value.isEmpty) {
                           return "Confirm your password";
                         }
                         if (value != _pass.text) {
-                          _confirmPass.clear();
+                          _confirmpass.clear();
                           return "Passwords don't match";
                         }
                         return null;
@@ -194,25 +317,6 @@ class SignUpPageState extends State<SignUpPage> {
                       obscureText: true,
                       decoration: InputDecoration(
                         labelText: 'Confirm Password',
-                        labelStyle: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 30, left: 50, right: 50),
-                    child: TextFormField(
-                      validator: (String value) {
-                        return value.isEmpty ? 'Enter your country of residence' : null;
-                      },
-                      onSaved: (value) => _country = value,
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        labelText: 'Country',
                         labelStyle: TextStyle(
                           color: Colors.white,
                         ),
