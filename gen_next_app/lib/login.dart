@@ -202,17 +202,18 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   children: <Widget>[
                     Padding(
-                      padding: const EdgeInsets.only(top: 40, left: 50, right: 50),
+                      padding: const EdgeInsets.only(top: 40, left: 30, right: 50),
                       child: TextFormField(
                         validator: (value) {
-                          return value.isEmpty ? 'Enter a valid Email ID' : null;
+                          return value.isEmpty ? 'Enter valid username' : null;
                         },
                         onSaved: (value) => _email = value,
                         style: TextStyle(
                           color: Colors.white,
                         ),
                         decoration: InputDecoration(
-                          labelText: 'Email',
+                          icon: Icon(Icons.person),
+                          labelText: 'Username',
                           labelStyle: TextStyle(
                             color: Colors.white,
                           ),
@@ -220,7 +221,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 20, left: 50, right: 50),
+                      padding: const EdgeInsets.only(top: 20, left: 30, right: 50),
                       child: TextFormField(
                         validator: (String value) {
                           return value.isEmpty ? 'Enter a password' : null;
@@ -231,6 +232,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         obscureText: true,
                         decoration: InputDecoration(
+                          icon: Icon(Icons.vpn_key),
                           labelText: 'Password',
                           labelStyle: TextStyle(
                             color: Colors.white,

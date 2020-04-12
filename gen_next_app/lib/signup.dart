@@ -403,7 +403,7 @@ class SignUpPageState extends State<SignUpPage> {
                             ),
                           ),
                           Icon(
-                            Icons.arrow_forward_ios,
+                            Icons.navigate_next,
                             size: 25,
                             color: Colors.white,
                           ),
