@@ -10,7 +10,7 @@ class SignUpPage extends StatefulWidget {
 }
 
 class SignUpPageState extends State<SignUpPage> {
-  final signupformKey = new GlobalKey<FormState>();
+  final signupformKey = GlobalKey<FormState>();
   final TextEditingController _pass = TextEditingController();
   final TextEditingController _confirmPass = TextEditingController();
   int _selectedIndex = 0;
@@ -20,10 +20,13 @@ class SignUpPageState extends State<SignUpPage> {
   String _password;
   String _confpassword;
   String _country;
+  String _degreelevel;
+  String _grade;
+  String _school;
+  String _major;
 
   void finishAndSave() {}
 
-  @override
   Widget build(BuildContext context) {
     List<Widget> _pageOptions = <Widget>[
       Container(
@@ -221,37 +224,10 @@ class SignUpPageState extends State<SignUpPage> {
             Padding(
               padding: EdgeInsets.only(top: 50, bottom: 5),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.only(),
-                    child: Row(
-                      children: <Widget>[
-                        IconButton(
-                          icon: Icon(
-                            Icons.arrow_back,
-                            size: 30,
-                            color: Colors.white,
-                          ),
-                          onPressed: () {
-                            signupformKey.currentState.reset();
-                            _pass.clear();
-                            _confirmPass.clear();
-                            setState(() {
-                              _selectedIndex -= 1;
-                            });
-                          },
-                        ),
-                        Text(
-                          "BACK",
-                          style: TextStyle(color: Colors.white70, fontSize: 13),
-                          textAlign: TextAlign.left,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 170),
+                    padding: EdgeInsets.only(right: 15),
                     child: Row(
                       children: <Widget>[
                         Text(
@@ -267,8 +243,8 @@ class SignUpPageState extends State<SignUpPage> {
                           ),
                           onPressed: () {
                             setState(() {
-                              final form = signupformKey.currentState;
-                              if (form.validate()) {
+                              if (signupformKey.currentState.validate()) {
+                                print('valid');
                                 _selectedIndex += 1;
                               }
                             });
@@ -287,47 +263,167 @@ class SignUpPageState extends State<SignUpPage> {
         decoration: BoxDecoration(
           gradient: LinearGradient(begin: Alignment.bottomCenter, end: Alignment.topCenter, colors: [Color(0xff36d1dc), Color(0xff19547b)]),
         ),
-        child: Column(
+        child: ListView(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(top: 300),
-              child: Center(
-                child: Text(
-                  'Page 3',
-                ),
+              padding: const EdgeInsets.only(top: 80),
+              child: Text(
+                'Tell us a little more about yourself',
+                style: TextStyle(color: Colors.white, fontSize: 33, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
               ),
             ),
-            Padding(
-              padding: EdgeInsets.only(top: 320, bottom: 5),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+            Form(
+              key: signupformKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.only(),
-                    child: Row(
-                      children: <Widget>[
-                        IconButton(
-                          icon: Icon(
-                            Icons.arrow_back,
-                            size: 30,
+                    padding: EdgeInsets.only(top: 30, left: 50, right: 50),
+                    child: Theme(
+                      data: Theme.of(context).copyWith(
+                        canvasColor: Color(0xff19547b),
+                      ),
+                      child: DropdownButton(
+                        style: TextStyle(color: Colors.white),
+                        hint: Text(
+                          "Select Intended Degree Level",
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                        itemHeight: kMinInteractiveDimension,
+                        items: [
+                          DropdownMenuItem(
+                              child: Text(
+                                'Undergraduate',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              value: 'UG'),
+                          DropdownMenuItem(
+                              child: Text(
+                                'Graduate',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                              value: 'G'),
+                        ],
+                        value: _degreelevel,
+                        isExpanded: true,
+                        onChanged: (value) {
+                          setState(() {
+                            _degreelevel = value;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  if (_degreelevel == 'UG') ...[
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20, left: 50, right: 50),
+                      child: TextFormField(
+                        validator: (value) {
+                          return null;
+                        },
+                        onSaved: (value) => _school = value,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                        decoration: InputDecoration(
+                          labelText: "School",
+                          labelStyle: TextStyle(
                             color: Colors.white,
                           ),
-                          onPressed: () {
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 30, left: 50, right: 50),
+                      child: Theme(
+                        data: Theme.of(context).copyWith(
+                          canvasColor: Color(0xff19547b),
+                        ),
+                        child: DropdownButton(
+                          style: TextStyle(color: Colors.white),
+                          hint: Text(
+                            "Select Grade",
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          itemHeight: kMinInteractiveDimension,
+                          items: [
+                            DropdownMenuItem(
+                                child: Text(
+                                  'Below 9th',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                value: '<9'),
+                            DropdownMenuItem(
+                                child: Text(
+                                  '9th',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                value: '9'),
+                            DropdownMenuItem(
+                                child: Text(
+                                  '10th',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                value: '10'),
+                            DropdownMenuItem(
+                                child: Text(
+                                  '11th',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                value: '11'),
+                            DropdownMenuItem(
+                                child: Text(
+                                  '12th',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                value: '12'),
+                            DropdownMenuItem(
+                                child: Text(
+                                  'Gap Year Student',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                value: 'GY'),
+                          ],
+                          value: _grade,
+                          isExpanded: true,
+                          onChanged: (value) {
                             setState(() {
-                              _selectedIndex -= 1;
+                              _grade = value;
                             });
                           },
                         ),
-                        Text(
-                          "BACK",
-                          style: TextStyle(color: Colors.white70, fontSize: 13),
-                          textAlign: TextAlign.left,
+                      ),
+                    ),
+                  ],
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20, left: 50, right: 50),
+                    child: TextFormField(
+                      validator: (value) {
+                        return null;
+                      },
+                      onSaved: (value) => _major = value,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                      decoration: InputDecoration(
+                        labelText: "Intended Major (Optional)",
+                        labelStyle: TextStyle(
+                          color: Colors.white,
                         ),
-                      ],
+                      ),
                     ),
                   ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 50, bottom: 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.only(left: 170),
+                    padding: EdgeInsets.only(right: 15),
                     child: Row(
                       children: <Widget>[
                         Text(
@@ -343,7 +439,9 @@ class SignUpPageState extends State<SignUpPage> {
                           ),
                           onPressed: () {
                             setState(() {
-                              _selectedIndex += 1;
+                              if (signupformKey.currentState.validate()) {
+                                _selectedIndex += 1;
+                              }
                             });
                           },
                         ),
@@ -373,34 +471,10 @@ class SignUpPageState extends State<SignUpPage> {
             Padding(
               padding: EdgeInsets.only(top: 320, bottom: 5),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.only(),
-                    child: Row(
-                      children: <Widget>[
-                        IconButton(
-                          icon: Icon(
-                            Icons.arrow_back,
-                            size: 30,
-                            color: Colors.white,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _selectedIndex -= 1;
-                            });
-                          },
-                        ),
-                        Text(
-                          "BACK",
-                          style: TextStyle(color: Colors.white70, fontSize: 13),
-                          textAlign: TextAlign.left,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 170),
+                    padding: EdgeInsets.only(right: 15),
                     child: Row(
                       children: <Widget>[
                         Text(
@@ -432,7 +506,7 @@ class SignUpPageState extends State<SignUpPage> {
     ];
 
     return Scaffold(
-      body: _pageOptions.elementAt(_selectedIndex),
+      body: _pageOptions[_selectedIndex],
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(canvasColor: Color(0xff36d1dc)),
         child: BottomNavigationBar(
