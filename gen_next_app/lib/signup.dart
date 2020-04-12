@@ -55,6 +55,10 @@ class SignUpPageState extends State<SignUpPage> {
     //talk to API and register user
   }
 
+  void updateUserInfo() {
+    //talk to api and add personal profile information
+  }
+
   Widget build(BuildContext context) {
     List<Widget> _pageOptions = <Widget>[
       Container(
