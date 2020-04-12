@@ -28,7 +28,7 @@ class SignUpPageState extends State<SignUpPage> {
     List<Widget> _pageOptions = <Widget>[
       Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(begin: Alignment.bottomLeft, end: Alignment.topRight, colors: [Color(0xff36d1dc), Color(0xff19547b)]),
+          gradient: LinearGradient(begin: Alignment.bottomCenter, end: Alignment.topCenter, colors: [Color(0xff36d1dc), Color(0xff19547b)]),
         ),
         child: ListView(
           children: <Widget>[
@@ -285,7 +285,7 @@ class SignUpPageState extends State<SignUpPage> {
       ),
       Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(begin: Alignment.bottomLeft, end: Alignment.topRight, colors: [Color(0xff36d1dc), Color(0xff19547b)]),
+          gradient: LinearGradient(begin: Alignment.bottomCenter, end: Alignment.topCenter, colors: [Color(0xff36d1dc), Color(0xff19547b)]),
         ),
         child: Column(
           children: <Widget>[
@@ -358,7 +358,7 @@ class SignUpPageState extends State<SignUpPage> {
       ),
       Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(begin: Alignment.bottomLeft, end: Alignment.topRight, colors: [Color(0xff36d1dc), Color(0xff19547b)]),
+          gradient: LinearGradient(begin: Alignment.bottomCenter, end: Alignment.topCenter, colors: [Color(0xff36d1dc), Color(0xff19547b)]),
         ),
         child: Column(
           children: <Widget>[
