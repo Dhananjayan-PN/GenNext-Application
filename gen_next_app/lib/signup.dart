@@ -10,19 +10,30 @@ class SignUpPage extends StatefulWidget {
 }
 
 class SignUpPageState extends State<SignUpPage> {
+  final signupformKey = new GlobalKey<FormState>();
+  final TextEditingController _pass = TextEditingController();
+  final TextEditingController _confirmPass = TextEditingController();
   int _selectedIndex = 0;
+
+  String _name;
+  String _email;
+  String _password;
+  String _confpassword;
+  String _country;
+
+  void finishAndSave() {}
 
   @override
   Widget build(BuildContext context) {
     List<Widget> _pageOptions = <Widget>[
       Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(begin: Alignment.bottomLeft, end: Alignment.topRight, colors: [Colors.cyan[300], Colors.blueGrey[800]]),
+          gradient: LinearGradient(begin: Alignment.bottomLeft, end: Alignment.topRight, colors: [Color(0xff36d1dc), Color(0xff19547b)]),
         ),
-        child: Column(
+        child: ListView(
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.only(top: 200),
+              padding: EdgeInsets.only(top: 160),
               child: Text(
                 "Hi there !",
                 style: TextStyle(color: Colors.white, fontSize: 50, fontWeight: FontWeight.w500),
@@ -30,7 +41,7 @@ class SignUpPageState extends State<SignUpPage> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+              padding: EdgeInsets.only(top: 20, left: 10, right: 10),
               child: Text(
                 "Welcome to Gen Next Edu's App !",
                 style: TextStyle(color: Colors.white, fontSize: 23),
@@ -38,7 +49,7 @@ class SignUpPageState extends State<SignUpPage> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 10, left: 20, right: 20),
+              padding: EdgeInsets.only(top: 40, left: 20, right: 20),
               child: Text(
                 "Our goal is to help students like you dash through the college admission process, with the help of our talented team and this feature-packed app",
                 style: TextStyle(color: Colors.white, fontSize: 18),
@@ -46,7 +57,7 @@ class SignUpPageState extends State<SignUpPage> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 50, left: 10, right: 10),
+              padding: EdgeInsets.only(top: 60, left: 10, right: 10),
               child: Text(
                 "Click start to begin your journey with us.\nBear in mind that none of your information\nwill be released without your permission",
                 style: TextStyle(color: Colors.white70, fontSize: 15),
@@ -85,20 +96,130 @@ class SignUpPageState extends State<SignUpPage> {
       ),
       Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(begin: Alignment.bottomLeft, end: Alignment.topRight, colors: [Colors.cyan[300], Colors.blueGrey[800]]),
+          gradient: LinearGradient(begin: Alignment.bottomCenter, end: Alignment.topCenter, colors: [Color(0xff36d1dc), Color(0xff19547b)]),
         ),
-        child: Column(
+        child: ListView(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(top: 300),
-              child: Center(
-                child: Text(
-                  'Page 2',
-                ),
+              padding: const EdgeInsets.only(top: 80),
+              child: Text(
+                'Account Information',
+                style: TextStyle(color: Colors.white, fontSize: 33, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Form(
+              key: signupformKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 30, left: 50, right: 50),
+                    child: TextFormField(
+                      validator: (value) {
+                        return value.isEmpty ? 'Enter your full name' : null;
+                      },
+                      onSaved: (value) => _name = value,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                      decoration: InputDecoration(
+                        labelText: "Full Name",
+                        labelStyle: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 30, left: 50, right: 50),
+                    child: TextFormField(
+                      validator: (value) {
+                        return value.isEmpty ? 'Enter a valid Email ID' : null;
+                      },
+                      onSaved: (value) => _email = value,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                      decoration: InputDecoration(
+                        labelText: 'Email',
+                        labelStyle: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 30, left: 50, right: 50),
+                    child: TextFormField(
+                      controller: _pass,
+                      validator: (String value) {
+                        return value.isEmpty ? 'Enter a password' : null;
+                      },
+                      onSaved: (value) => _password = value,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        labelStyle: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 30, left: 50, right: 50),
+                    child: TextFormField(
+                      controller: _confirmPass,
+                      validator: (String value) {
+                        if (value.isEmpty) {
+                          return "Confirm your password";
+                        }
+                        if (value != _pass.text) {
+                          _confirmPass.clear();
+                          return "Passwords don't match";
+                        }
+                        return null;
+                      },
+                      onSaved: (value) => _confpassword = value,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        labelText: 'Confirm Password',
+                        labelStyle: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 30, left: 50, right: 50),
+                    child: TextFormField(
+                      validator: (String value) {
+                        return value.isEmpty ? 'Enter your country of residence' : null;
+                      },
+                      onSaved: (value) => _country = value,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        labelText: 'Country',
+                        labelStyle: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 320, bottom: 5),
+              padding: EdgeInsets.only(top: 50, bottom: 5),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -113,6 +234,9 @@ class SignUpPageState extends State<SignUpPage> {
                             color: Colors.white,
                           ),
                           onPressed: () {
+                            signupformKey.currentState.reset();
+                            _pass.clear();
+                            _confirmPass.clear();
                             setState(() {
                               _selectedIndex -= 1;
                             });
@@ -143,7 +267,10 @@ class SignUpPageState extends State<SignUpPage> {
                           ),
                           onPressed: () {
                             setState(() {
-                              _selectedIndex += 1;
+                              final form = signupformKey.currentState;
+                              if (form.validate()) {
+                                _selectedIndex += 1;
+                              }
                             });
                           },
                         ),
@@ -158,7 +285,7 @@ class SignUpPageState extends State<SignUpPage> {
       ),
       Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(begin: Alignment.bottomLeft, end: Alignment.topRight, colors: [Colors.cyan[300], Colors.blueGrey[800]]),
+          gradient: LinearGradient(begin: Alignment.bottomLeft, end: Alignment.topRight, colors: [Color(0xff36d1dc), Color(0xff19547b)]),
         ),
         child: Column(
           children: <Widget>[
@@ -231,7 +358,7 @@ class SignUpPageState extends State<SignUpPage> {
       ),
       Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(begin: Alignment.bottomLeft, end: Alignment.topRight, colors: [Colors.cyan[300], Colors.blueGrey[800]]),
+          gradient: LinearGradient(begin: Alignment.bottomLeft, end: Alignment.topRight, colors: [Color(0xff36d1dc), Color(0xff19547b)]),
         ),
         child: Column(
           children: <Widget>[
@@ -307,7 +434,7 @@ class SignUpPageState extends State<SignUpPage> {
     return Scaffold(
       body: _pageOptions.elementAt(_selectedIndex),
       bottomNavigationBar: Theme(
-        data: Theme.of(context).copyWith(canvasColor: Colors.cyan[500]),
+        data: Theme.of(context).copyWith(canvasColor: Color(0xff36d1dc)),
         child: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
@@ -327,7 +454,7 @@ class SignUpPageState extends State<SignUpPage> {
               title: Text(''),
             ),
           ],
-          unselectedItemColor: Colors.cyan[200],
+          unselectedItemColor: Colors.cyan[100],
           currentIndex: _selectedIndex,
           selectedItemColor: Colors.cyan[900],
         ),

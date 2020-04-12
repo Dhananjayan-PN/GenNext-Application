@@ -130,7 +130,7 @@ class _LoginPageState extends State<LoginPage> {
       child: Scaffold(
         body: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(begin: Alignment.bottomLeft, end: Alignment.topRight, colors: [Colors.cyan[300], Colors.blueGrey[800]]),
+            gradient: LinearGradient(begin: Alignment.bottomCenter, end: Alignment.topCenter, colors: [Color(0xff36d1dc), Color(0xff19547b)]),
           ),
           child: ListView(
             children: <Widget>[
@@ -154,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                       ],
-                      color: Color(0xff00b0c9),
+                      color: Color(0xff36d1dc),
                       borderRadius: BorderRadius.circular(25),
                     ),
                     child: Align(
@@ -181,7 +181,7 @@ class _LoginPageState extends State<LoginPage> {
                           'Sign In',
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 38,
+                            fontSize: 45,
                             fontWeight: FontWeight.w900,
                           ),
                         )),
@@ -203,45 +203,37 @@ class _LoginPageState extends State<LoginPage> {
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.only(top: 40, left: 50, right: 50),
-                      child: Container(
-                        height: 60,
-                        width: MediaQuery.of(context).size.width,
-                        child: TextFormField(
-                          validator: (value) {
-                            return value.isEmpty ? 'Enter a valid Email ID' : null;
-                          },
-                          onSaved: (value) => _email = value,
-                          style: TextStyle(
+                      child: TextFormField(
+                        validator: (value) {
+                          return value.isEmpty ? 'Enter a valid Email ID' : null;
+                        },
+                        onSaved: (value) => _email = value,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                        decoration: InputDecoration(
+                          labelText: 'Email',
+                          labelStyle: TextStyle(
                             color: Colors.white,
-                          ),
-                          decoration: InputDecoration(
-                            labelText: 'Email',
-                            labelStyle: TextStyle(
-                              color: Colors.white,
-                            ),
                           ),
                         ),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 20, left: 50, right: 50),
-                      child: Container(
-                        height: 60,
-                        width: MediaQuery.of(context).size.width,
-                        child: TextFormField(
-                          validator: (String value) {
-                            return value.isEmpty ? 'Enter a password' : null;
-                          },
-                          onSaved: (value) => _password = value,
-                          style: TextStyle(
+                      child: TextFormField(
+                        validator: (String value) {
+                          return value.isEmpty ? 'Enter a password' : null;
+                        },
+                        onSaved: (value) => _password = value,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          labelText: 'Password',
+                          labelStyle: TextStyle(
                             color: Colors.white,
-                          ),
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            labelText: 'Password',
-                            labelStyle: TextStyle(
-                              color: Colors.white,
-                            ),
                           ),
                         ),
                       ),
@@ -306,6 +298,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: InkWell(
                           splashColor: Colors.cyan,
                           onTap: () {
+                            formKey.currentState.reset();
                             Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: SignUpPage()));
                           },
                           child: Text(
