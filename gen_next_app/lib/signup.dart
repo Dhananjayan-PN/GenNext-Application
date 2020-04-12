@@ -54,7 +54,7 @@ class SignUpPageState extends State<SignUpPage> {
             Padding(
               padding: EdgeInsets.only(top: 40, left: 20, right: 20),
               child: Text(
-                "Our goal is to help students like you dash through the college admission process, with the help of our talented team and this feature-packed app",
+                "Our goal is to help students dash through the college admission process, with the help of our talented team and this feature-packed app",
                 style: TextStyle(color: Colors.white, fontSize: 18),
                 textAlign: TextAlign.center,
               ),
@@ -62,7 +62,8 @@ class SignUpPageState extends State<SignUpPage> {
             Padding(
               padding: EdgeInsets.only(top: 60, left: 10, right: 10),
               child: Text(
-                "Click start to begin your journey with us.\nBear in mind that none of your information\nwill be released without your permission",
+                "Click start to begin your journey with us.\nBear in mind that none of your information\nwill be released without your permission\n"
+                "If you're a counsellor or a college representative looking to use this platform to help students, we're happy to welcome you",
                 style: TextStyle(color: Colors.white70, fontSize: 15),
                 textAlign: TextAlign.center,
               ),
