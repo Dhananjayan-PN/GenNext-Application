@@ -11,6 +11,7 @@ class SignUpPage extends StatefulWidget {
 }
 
 class SignUpPageState extends State<SignUpPage> {
+  final registerFormKey = GlobalKey<FormState>();
   final signupformKey = GlobalKey<FormState>();
   final TextEditingController _pass = TextEditingController();
   final TextEditingController _confirmpass = TextEditingController();
@@ -30,7 +31,9 @@ class SignUpPageState extends State<SignUpPage> {
   String _school;
   String _major;
 
-  void finishAndSave() {}
+  void registerUser() {
+    //talk to API and register user
+  }
 
   Widget build(BuildContext context) {
     List<Widget> _pageOptions = <Widget>[
@@ -110,7 +113,11 @@ class SignUpPageState extends State<SignUpPage> {
         child: ListView(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(top: 80),
+              padding: EdgeInsets.only(top: 50),
+              child: Icon(Icons.person, size: 55, color: Colors.white),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
               child: Text(
                 'Account Information',
                 style: TextStyle(color: Colors.white, fontSize: 33, fontWeight: FontWeight.bold),
@@ -118,17 +125,26 @@ class SignUpPageState extends State<SignUpPage> {
               ),
             ),
             Form(
-              key: signupformKey,
+              key: registerFormKey,
+              autovalidate: false,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.only(top: 30, left: 50, right: 50),
+                    padding: EdgeInsets.only(top: 30, left: 20, right: 50),
                     child: Theme(
                       data: Theme.of(context).copyWith(
                         canvasColor: Color(0xff19547b),
                       ),
-                      child: DropdownButton(
+                      child: DropdownButtonFormField(
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.person_outline),
+                        ),
+                        icon: Icon(
+                          Icons.arrow_drop_down,
+                          size: 25,
+                          color: Colors.white,
+                        ),
                         style: TextStyle(color: Colors.white),
                         hint: Text(
                           "Tell us who you are",
@@ -156,6 +172,7 @@ class SignUpPageState extends State<SignUpPage> {
                               value: 'CollegeRep'),
                         ],
                         value: _usertype,
+                        validator: (value) => value == null ? 'This field is important' : null,
                         isExpanded: true,
                         onChanged: (value) {
                           setState(() {
@@ -166,7 +183,7 @@ class SignUpPageState extends State<SignUpPage> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 30, left: 50, right: 50),
+                    padding: const EdgeInsets.only(top: 30, left: 60, right: 50),
                     child: TextFormField(
                       validator: (value) {
                         return value.isEmpty ? 'Enter your first name' : null;
@@ -184,7 +201,7 @@ class SignUpPageState extends State<SignUpPage> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 30, left: 50, right: 50),
+                    padding: const EdgeInsets.only(top: 30, left: 60, right: 50),
                     child: TextFormField(
                       validator: (value) {
                         return value.isEmpty ? 'Enter your last name' : null;
@@ -202,64 +219,7 @@ class SignUpPageState extends State<SignUpPage> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 30, left: 50, right: 50),
-                    child: TextFormField(
-                      validator: (value) {
-                        return value.isEmpty ? 'Enter a valid Email ID' : null;
-                      },
-                      onSaved: (value) => _email = value,
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                      decoration: InputDecoration(
-                        labelText: 'Email',
-                        labelStyle: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 30, left: 50, right: 50),
-                    child: DateTimeField(
-                      style: TextStyle(color: Colors.white),
-                      format: DateFormat("MM-dd-yyyy"),
-                      decoration: InputDecoration(
-                        labelText: 'Date of Birth',
-                        labelStyle: TextStyle(color: Colors.white),
-                      ),
-                      onShowPicker: (context, _dob) {
-                        return showDatePicker(
-                            context: context, firstDate: DateTime(1900), initialDate: _dob == null ? DateTime.now() : _dob, lastDate: DateTime(2100));
-                      },
-                      onChanged: (value) {
-                        setState(() {
-                          _dob = value;
-                        });
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 30, left: 50, right: 50),
-                    child: TextFormField(
-                      validator: (String value) {
-                        return value.isEmpty ? 'Enter your country of residence' : null;
-                      },
-                      onSaved: (value) => _country = value,
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        labelText: 'Country',
-                        labelStyle: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 30, left: 50, right: 50),
+                    padding: const EdgeInsets.only(top: 30, left: 60, right: 50),
                     child: TextFormField(
                       validator: (value) {
                         return value.isEmpty ? 'Enter desired username' : null;
@@ -277,7 +237,69 @@ class SignUpPageState extends State<SignUpPage> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 30, left: 50, right: 50),
+                    padding: const EdgeInsets.only(top: 30, left: 20, right: 50),
+                    child: TextFormField(
+                      validator: (value) {
+                        return value.isEmpty ? 'Enter a valid Email ID' : null;
+                      },
+                      onSaved: (value) => _email = value,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                      decoration: InputDecoration(
+                        icon: Icon(Icons.email),
+                        labelText: 'Email',
+                        labelStyle: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 30, left: 20, right: 50),
+                    child: DateTimeField(
+                      validator: (value) {
+                        return value == null ? 'Enter your date of birth' : null;
+                      },
+                      style: TextStyle(color: Colors.white),
+                      format: DateFormat("MM-dd-yyyy"),
+                      decoration: InputDecoration(
+                        icon: Icon(Icons.calendar_today),
+                        labelText: 'Date of Birth',
+                        labelStyle: TextStyle(color: Colors.white),
+                      ),
+                      onShowPicker: (context, _dob) {
+                        return showDatePicker(
+                            context: context, firstDate: DateTime(1900), initialDate: _dob == null ? DateTime.now() : _dob, lastDate: DateTime(2100));
+                      },
+                      onChanged: (value) {
+                        setState(() {
+                          _dob = value;
+                        });
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 30, left: 20, right: 50),
+                    child: TextFormField(
+                      validator: (String value) {
+                        return value.isEmpty ? 'Enter your country of residence' : null;
+                      },
+                      onSaved: (value) => _country = value,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                      decoration: InputDecoration(
+                        icon: Icon(Icons.public),
+                        labelText: 'Country',
+                        labelStyle: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 30, left: 20, right: 50),
                     child: TextFormField(
                       controller: _pass,
                       validator: (String value) {
@@ -289,6 +311,7 @@ class SignUpPageState extends State<SignUpPage> {
                       ),
                       obscureText: true,
                       decoration: InputDecoration(
+                        icon: Icon(Icons.vpn_key),
                         labelText: 'Password',
                         labelStyle: TextStyle(
                           color: Colors.white,
@@ -297,7 +320,7 @@ class SignUpPageState extends State<SignUpPage> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 30, left: 50, right: 50),
+                    padding: const EdgeInsets.only(top: 30, left: 60, right: 50),
                     child: TextFormField(
                       controller: _confirmpass,
                       validator: (String value) {
@@ -332,30 +355,35 @@ class SignUpPageState extends State<SignUpPage> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.only(right: 15),
-                    child: Row(
-                      children: <Widget>[
-                        Text(
-                          "NEXT",
-                          style: TextStyle(color: Colors.white70, fontSize: 13),
-                          textAlign: TextAlign.right,
-                        ),
-                        IconButton(
-                          icon: Icon(
+                    padding: EdgeInsets.only(right: 10),
+                    child: FlatButton(
+                      onPressed: () {
+                        setState(() {
+                          if (registerFormKey.currentState.validate()) {
+                            registerFormKey.currentState.reset();
+                            print('valid');
+                            //registerUser();
+                            _selectedIndex += 1;
+                          }
+                        });
+                      },
+                      child: Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: Text(
+                              "NEXT",
+                              style: TextStyle(color: Colors.white, fontSize: 15),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          Icon(
                             Icons.arrow_forward,
-                            size: 30,
+                            size: 35,
                             color: Colors.white,
                           ),
-                          onPressed: () {
-                            setState(() {
-                              if (signupformKey.currentState.validate()) {
-                                print('valid');
-                                _selectedIndex += 1;
-                              }
-                            });
-                          },
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ],
