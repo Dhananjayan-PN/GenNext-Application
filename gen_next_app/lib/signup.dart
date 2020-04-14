@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-import 'package:back_button_interceptor/back_button_interceptor.dart';
+import 'package:back_button_interceptor/back_button_interceptor.dart'; //will be utilised in prod
 //import 'package:page_transition/page_transition.dart';
 //import 'student/home.dart';
 
@@ -11,7 +11,7 @@ class SignUpPage extends StatefulWidget {
   State<StatefulWidget> createState() => SignUpPageState();
 }
 
-class SignUpPageState extends State<SignUpPage> {
+class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMixin {
   /*
   @override
   void initState() {
@@ -29,6 +29,13 @@ class SignUpPageState extends State<SignUpPage> {
     return true;
   } */
   //remove ^^^ comment in production
+
+  AnimationController _controller;
+  Animation _animation1;
+  Animation _animation2;
+  Animation _animation3;
+  Animation _animation4;
+  Animation _animation5;
 
   final registerFormKey = GlobalKey<FormState>();
   final signupformKey = GlobalKey<FormState>();
@@ -49,7 +56,41 @@ class SignUpPageState extends State<SignUpPage> {
   String _degreelevel;
   String _grade;
   String _school;
+  String _university;
   String _major;
+  List<String> _interests;
+
+  @override
+  void initState() {
+    _controller = AnimationController(vsync: this, duration: Duration(seconds: 12));
+    _animation1 = CurvedAnimation(
+      parent: _controller,
+      curve: Interval(0.0, 0.3, curve: Curves.fastOutSlowIn),
+    );
+    _animation2 = CurvedAnimation(
+      parent: _controller,
+      curve: Interval(0.2, 0.4, curve: Curves.fastOutSlowIn),
+    );
+    _animation3 = CurvedAnimation(
+      parent: _controller,
+      curve: Interval(0.4, 0.6, curve: Curves.fastOutSlowIn),
+    );
+    _animation4 = CurvedAnimation(
+      parent: _controller,
+      curve: Interval(0.6, 0.8, curve: Curves.fastOutSlowIn),
+    );
+    _animation5 = CurvedAnimation(
+      parent: _controller,
+      curve: Interval(0.8, 1.0, curve: Curves.fastOutSlowIn),
+    );
+    _controller.forward();
+  }
+
+  @override
+  dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   void registerUser() {
     //talk to API and register user
@@ -67,65 +108,80 @@ class SignUpPageState extends State<SignUpPage> {
         ),
         child: ListView(
           children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(top: 160),
-              child: Text(
-                "Hi there !",
-                style: TextStyle(color: Colors.white, fontSize: 50, fontWeight: FontWeight.w500),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 20, left: 10, right: 10),
-              child: Text(
-                "Welcome to Gen Next Edu's App !",
-                style: TextStyle(color: Colors.white, fontSize: 23),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 40, left: 20, right: 20),
-              child: Text(
-                "Our goal is to help students dash through the college admission process, with the help of our talented team and this feature-packed app",
-                style: TextStyle(color: Colors.white, fontSize: 18),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 50, left: 10, right: 10),
-              child: Text(
-                "Click start to begin your journey with us.\n"
-                "If you're a counsellor or a college representative looking to use this platform to help students,\nwe're happy to welcome you.",
-                style: TextStyle(color: Colors.white70, fontSize: 15),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            Row(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(top: 30, left: 130),
-                  child: Text(
-                    "START",
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                    textAlign: TextAlign.center,
-                  ),
+            FadeTransition(
+              opacity: _animation1,
+              child: Padding(
+                padding: EdgeInsets.only(top: 160),
+                child: Text(
+                  "Hi there !",
+                  style: TextStyle(color: Colors.white, fontSize: 50, fontWeight: FontWeight.w500),
+                  textAlign: TextAlign.center,
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 30, right: 15),
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.arrow_forward,
-                      size: 30,
-                      color: Colors.white,
+              ),
+            ),
+            FadeTransition(
+              opacity: _animation2,
+              child: Padding(
+                padding: EdgeInsets.only(top: 20, left: 10, right: 10),
+                child: Text(
+                  "Welcome to Gen Next Edu's App !",
+                  style: TextStyle(color: Colors.white, fontSize: 23),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+            FadeTransition(
+              opacity: _animation3,
+              child: Padding(
+                padding: EdgeInsets.only(top: 40, left: 20, right: 20),
+                child: Text(
+                  "Our goal is to help students dash through the college admission process, with the help of our talented team and this feature-packed app",
+                  style: TextStyle(color: Colors.white, fontSize: 18),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+            FadeTransition(
+              opacity: _animation4,
+              child: Padding(
+                padding: EdgeInsets.only(top: 50, left: 10, right: 10),
+                child: Text(
+                  "Click start to begin your journey with us.\n"
+                  "If you're a counsellor or a college representative looking to use this platform to help students,\nwe're happy to welcome you.",
+                  style: TextStyle(color: Colors.white70, fontSize: 15),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+            FadeTransition(
+              opacity: _animation5,
+              child: Row(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: 30, left: 130),
+                    child: Text(
+                      "START",
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                      textAlign: TextAlign.center,
                     ),
-                    onPressed: () {
-                      setState(() {
-                        _selectedIndex += 1;
-                      });
-                    },
                   ),
-                ),
-              ],
+                  Padding(
+                    padding: EdgeInsets.only(top: 30, right: 15),
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.arrow_forward,
+                        size: 30,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _selectedIndex += 1;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -443,7 +499,12 @@ class SignUpPageState extends State<SignUpPage> {
                         data: Theme.of(context).copyWith(
                           canvasColor: Color(0xff19547b),
                         ),
-                        child: DropdownButton(
+                        child: DropdownButtonFormField(
+                          icon: Icon(
+                            Icons.arrow_drop_down,
+                            size: 25,
+                            color: Colors.white,
+                          ),
                           style: TextStyle(color: Colors.white),
                           hint: Text(
                             "Select Intended Degree Level",
@@ -494,56 +555,37 @@ class SignUpPageState extends State<SignUpPage> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 30, left: 50, right: 50),
+                        padding: EdgeInsets.only(top: 20, left: 50, right: 50),
                         child: Theme(
                           data: Theme.of(context).copyWith(
                             canvasColor: Color(0xff19547b),
                           ),
-                          child: DropdownButton(
+                          child: DropdownButtonFormField(
+                            icon: Icon(
+                              Icons.arrow_drop_down,
+                              size: 25,
+                              color: Colors.white,
+                            ),
                             style: TextStyle(color: Colors.white),
                             hint: Text(
                               "Select Grade",
                               style: TextStyle(fontSize: 16),
                             ),
                             itemHeight: kMinInteractiveDimension,
-                            items: [
-                              DropdownMenuItem(
-                                  child: Text(
-                                    'Below 9th',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  value: '<9'),
-                              DropdownMenuItem(
-                                  child: Text(
-                                    '9th',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  value: '9'),
-                              DropdownMenuItem(
-                                  child: Text(
-                                    '10th',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  value: '10'),
-                              DropdownMenuItem(
-                                  child: Text(
-                                    '11th',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  value: '11'),
-                              DropdownMenuItem(
-                                  child: Text(
-                                    '12th',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  value: '12'),
-                              DropdownMenuItem(
-                                  child: Text(
-                                    'Gap Year Student',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  value: 'GY'),
-                            ],
+                            items: <String>['6', '7', '8', '9', '10', '11', '12', 'GY'].map((String value) {
+                              return new DropdownMenuItem<String>(
+                                value: value,
+                                child: value == 'GY'
+                                    ? Text(
+                                        'Gap Year Student',
+                                        style: TextStyle(fontSize: 16),
+                                      )
+                                    : Text(
+                                        value + 'th',
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                              );
+                            }).toList(),
                             value: _grade,
                             isExpanded: true,
                             onChanged: (value) {
@@ -555,8 +597,28 @@ class SignUpPageState extends State<SignUpPage> {
                         ),
                       ),
                     ],
+                    if (_degreelevel == 'G') ...[
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20, left: 50, right: 50),
+                        child: TextFormField(
+                          validator: (value) {
+                            return null;
+                          },
+                          onSaved: (value) => _university = value,
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                          decoration: InputDecoration(
+                            labelText: "University",
+                            labelStyle: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                     Padding(
-                      padding: const EdgeInsets.only(top: 20, left: 50, right: 50),
+                      padding: EdgeInsets.only(top: 20, left: 50, right: 50),
                       child: TextFormField(
                         validator: (value) {
                           return null;
@@ -569,6 +631,37 @@ class SignUpPageState extends State<SignUpPage> {
                           labelText: "Intended Major (Optional)",
                           labelStyle: TextStyle(
                             color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 30, left: 30, right: 30),
+                      child: ListTile(
+                        title: Text('What are your interests ?', style: TextStyle(color: Colors.white, fontSize: 20)),
+                        subtitle: Text('This will help our team recommend majors or get to know more about you if you have an intended major',
+                            style: TextStyle(color: Colors.white54)),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 0, left: 50, right: 50),
+                      child: TextFormField(
+                        validator: (value) {
+                          return null;
+                        },
+                        onSaved: (value) {
+                          _interests = value.split("\n");
+                          print(_interests);
+                        },
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                        maxLines: null,
+                        keyboardType: TextInputType.multiline,
+                        decoration: InputDecoration(
+                          hintText: "Add interests in new lines",
+                          hintStyle: TextStyle(
+                            color: Colors.white70,
                           ),
                         ),
                       ),

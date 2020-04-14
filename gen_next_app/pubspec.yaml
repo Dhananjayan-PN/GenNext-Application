@@ -23,6 +23,7 @@ dependencies:
   back_button_interceptor: ^4.2.3
   gradient_app_bar: ^0.0.1
   datetime_picker_formfield: ^1.0.0
+  http: ^0.12.0+1
 
 
   # The following adds the Cupertino Icons font to your application.
