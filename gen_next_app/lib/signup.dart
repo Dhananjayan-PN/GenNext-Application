@@ -1,10 +1,44 @@
+import 'package:country_currency_pickers/utils/typedefs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:searchable_dropdown/searchable_dropdown.dart';
+import 'package:country_currency_pickers/currency_picker_dropdown.dart';
+import 'package:country_currency_pickers/country.dart';
+import 'package:country_currency_pickers/country_pickers.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
+import 'dart:convert';
 //import 'package:back_button_interceptor/back_button_interceptor.dart'; //will be utilised in prod
 import 'package:page_transition/page_transition.dart';
 import 'student/home.dart';
+
+Future<List<dynamic>> fetchCountries() async {
+  var result = await http.get('https://restcountries.eu/rest/v2/all?fields=name');
+
+  if (result.statusCode == 200) {
+    // If the server did return a 200 OK response,
+    // then parse the JSON.
+    return json.decode(result.body);
+  } else {
+    // If the server did not return a 200 OK response,
+    // then throw an exception.
+    throw Exception('Failed to load album');
+  }
+}
+
+Widget _buildCurrencyDropdownItem(Country country) => Container(
+      child: Row(
+        children: <Widget>[
+          CountryPickerUtils.getDefaultFlagImage(country),
+          SizedBox(
+            width: 8.0,
+          ),
+          Text("${country.currencyCode}"),
+        ],
+      ),
+    );
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -13,18 +47,6 @@ class SignUpPage extends StatefulWidget {
 
 class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMixin {
   /*
-  @override
-  void initState() {
-    super.initState();
-    BackButtonInterceptor.add(myInterceptor);
-  }
-
-  @override
-  void dispose() {
-    BackButtonInterceptor.remove(myInterceptor);
-    super.dispose();
-  }
-
   bool myInterceptor(bool stopDefaultButtonEvent) {
     return true;
   } */
@@ -43,6 +65,7 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
   final TextEditingController _pass = TextEditingController();
   final TextEditingController _confirmpass = TextEditingController();
   ScrollController _scrollController;
+  Future<List<dynamic>> _fetchCountries;
   bool _isOnTop;
   int _selectedIndex = 0;
   int _radioValue = -1;
@@ -66,6 +89,13 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
   String _major;
   List<String> _interests;
   bool _research;
+  List<String> _collegepref;
+  List<String> _countrypref;
+  String _collegetownpref;
+  List<int> _countryprefindexes = [];
+  bool isChecked = false;
+  String _budgetcurrency;
+  int _budgetamount = 40000;
 
   //counsellor account information
 
@@ -74,6 +104,8 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
   @override
   void initState() {
     super.initState();
+    //BackButtonInterceptor.add(myInterceptor);
+    _fetchCountries = fetchCountries();
     _isOnTop = false;
     _scrollController = ScrollController();
     _controller = AnimationController(vsync: this, duration: Duration(seconds: 7));
@@ -102,6 +134,7 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
 
   @override
   dispose() {
+    //BackButtonInterceptor.remove(myInterceptor);
     _scrollController.dispose();
     _controller.dispose();
     super.dispose();
@@ -396,24 +429,72 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                         },
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 30, left: 20, right: 50),
-                      child: TextFormField(
-                        validator: (String value) {
-                          return value.isEmpty ? 'Enter your country of residence' : null;
-                        },
-                        onSaved: (value) => _country = value,
-                        style: TextStyle(
-                          color: Colors.white,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(top: 30, left: 20, right: 10, bottom: 20),
+                          child: Icon(Icons.public, color: Colors.black45),
                         ),
-                        decoration: InputDecoration(
-                          icon: Icon(Icons.public),
-                          labelText: 'Country',
-                          labelStyle: TextStyle(
-                            color: Colors.white,
+                        Flexible(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 30, left: 5, right: 50, bottom: 0),
+                            child: FutureBuilder<List<dynamic>>(
+                              future: _fetchCountries,
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  List<String> countrylist = [];
+                                  List<DropdownMenuItem<String>> countries;
+                                  for (var i = 0; i < snapshot.data.length; i++) {
+                                    countrylist.add(snapshot.data[i]['name']);
+                                  }
+                                  countries = countrylist.map((String value) {
+                                    return new DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(
+                                        value,
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    );
+                                  }).toList();
+                                  return SearchableDropdown.single(
+                                    //menuConstraints: BoxConstraints.tight(Size.fromHeight(350)),
+                                    dialogBox: true,
+                                    menuBackgroundColor: Colors.white,
+                                    icon: Icon(
+                                      Icons.arrow_drop_down,
+                                      size: 25,
+                                      color: Colors.white,
+                                    ),
+                                    items: countries,
+                                    style: TextStyle(color: Colors.white),
+                                    hint: Padding(
+                                      padding: const EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 15),
+                                      child: Text(
+                                        "Country",
+                                        style: TextStyle(color: Colors.white, fontSize: 16),
+                                      ),
+                                    ),
+                                    value: _country,
+                                    searchHint: "Select a country",
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _country = value;
+                                      });
+                                    },
+                                    isExpanded: true,
+                                    validator: (value) => value == null ? 'Select a country' : null,
+                                  );
+                                } else if (snapshot.hasError) {
+                                  return Text("${snapshot.error}");
+                                }
+                                return CircularProgressIndicator();
+                              },
+                            ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 30, left: 20, right: 50),
@@ -528,7 +609,14 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
               FadeTransition(
                 opacity: _animation1,
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 80),
+                  padding: EdgeInsets.only(top: 50),
+                  child: Icon(Icons.bubble_chart, size: 55, color: Colors.white),
+                ),
+              ),
+              FadeTransition(
+                opacity: _animation2,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 5),
                   child: Text(
                     'Tell us a little more about yourself',
                     style: TextStyle(color: Colors.white, fontSize: 33, fontWeight: FontWeight.bold),
@@ -537,7 +625,7 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                 ),
               ),
               FadeTransition(
-                opacity: _animation2,
+                opacity: _animation3,
                 child: Form(
                   key: signupformKey1,
                   child: Column(
@@ -789,7 +877,7 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                 ),
               ),
               FadeTransition(
-                opacity: _animation3,
+                opacity: _animation4,
                 child: Padding(
                   padding: EdgeInsets.only(top: 30, bottom: 20),
                   child: Row(
@@ -802,9 +890,13 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                           onPressed: () {
                             setState(() {
                               if (signupformKey1.currentState.validate()) {
+                                _controller.reset();
+                                _controller.duration = Duration(seconds: 8);
+                                _controller.forward();
                                 print('valid');
                                 //updateUser();
                                 _selectedIndex += 1;
+                                _scrollToTop();
                               }
                             });
                           },
@@ -838,12 +930,19 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
           decoration: BoxDecoration(
             gradient: LinearGradient(begin: Alignment.bottomCenter, end: Alignment.topCenter, colors: [Color(0xff36d1dc), Color(0xff19547b)]),
           ),
-          child: Column(
+          child: ListView(
             children: <Widget>[
               FadeTransition(
                 opacity: _animation1,
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 80),
+                  padding: EdgeInsets.only(top: 50),
+                  child: Icon(Icons.account_balance, size: 55, color: Colors.white),
+                ),
+              ),
+              FadeTransition(
+                opacity: _animation2,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 5),
                   child: Text(
                     "Let's talk about your\ncollege preferences",
                     style: TextStyle(color: Colors.white, fontSize: 33, fontWeight: FontWeight.bold),
@@ -852,14 +951,15 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                 ),
               ),
               FadeTransition(
-                opacity: _animation2,
+                opacity: _animation3,
                 child: Form(
                   key: signupformKey2,
                   child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Padding(
-                        padding: EdgeInsets.only(top: 30, left: 30, right: 30),
+                        padding: EdgeInsets.only(top: 30, left: 20, right: 20),
                         child: ListTile(
                           title: Text('Have any colleges in mind ?', style: TextStyle(color: Colors.white, fontSize: 20)),
                           subtitle: Text("Don't worry if you aren't sure yet, our team will help you find the best ones for you",
@@ -873,8 +973,7 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                             return null;
                           },
                           onSaved: (value) {
-                            _interests = value.split("\n");
-                            print(_interests);
+                            _collegepref = value.split("\n");
                           },
                           style: TextStyle(
                             color: Colors.white,
@@ -887,6 +986,203 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                               color: Colors.white70,
                             ),
                           ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 30, left: 20, right: 20),
+                        child: ListTile(
+                          title: Text('Where would you like to study ?', style: TextStyle(color: Colors.white, fontSize: 20)),
+                          subtitle: Text("Don't worry if you aren't sure yet, we'll help you find the best countries for your interests",
+                              style: TextStyle(color: Colors.white60)),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 0, left: 50, right: 50),
+                        child: FutureBuilder<List<dynamic>>(
+                          future: _fetchCountries,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              List<String> countrylist = [];
+                              List<DropdownMenuItem<String>> countries;
+                              for (var i = 0; i < snapshot.data.length; i++) {
+                                countrylist.add(snapshot.data[i]['name']);
+                              }
+                              countries = countrylist.map((String value) {
+                                return new DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(
+                                    value,
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                );
+                              }).toList();
+                              return SearchableDropdown.multiple(
+                                //menuConstraints: BoxConstraints.tight(Size.fromHeight(350)),
+                                dialogBox: true,
+                                menuBackgroundColor: Colors.white,
+                                icon: Icon(
+                                  Icons.arrow_drop_down,
+                                  size: 25,
+                                  color: Colors.white,
+                                ),
+                                items: countries,
+                                selectedItems: _countryprefindexes,
+                                style: TextStyle(color: Colors.white),
+                                hint: Text(
+                                  "Select countries",
+                                  style: TextStyle(color: Colors.white, fontSize: 16),
+                                ),
+                                searchHint: "Select countries",
+                                onChanged: (value) {
+                                  setState(() {
+                                    _countryprefindexes = value;
+                                  });
+                                },
+                                closeButton: (selectedItems) {
+                                  return (selectedItems.isNotEmpty
+                                      ? "Save ${selectedItems.length == 1 ? '"' + countries[selectedItems.first].value.toString() + '"' : '(' + selectedItems.length.toString() + ')'}"
+                                      : "Save without selection");
+                                },
+                                isExpanded: true,
+                                validator: (value) => value == null ? 'Select at least one' : null,
+                              );
+                            } else if (snapshot.hasError) {
+                              return Text("${snapshot.error}");
+                            }
+                            return CircularProgressIndicator();
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+                        child: ListTile(
+                          title: Text('Any college locale preference ?', style: TextStyle(color: Colors.white, fontSize: 20)),
+                          subtitle: Text("What environment would you like to study in? Select 'Any' if you're okay with any type of college location",
+                              style: TextStyle(color: Colors.white60)),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 0, left: 50, right: 50),
+                        child: Theme(
+                          data: Theme.of(context).copyWith(
+                            canvasColor: Color(0xff19547b),
+                          ),
+                          child: DropdownButtonFormField(
+                            icon: Icon(
+                              Icons.arrow_drop_down,
+                              size: 25,
+                              color: Colors.white,
+                            ),
+                            style: TextStyle(color: Colors.white),
+                            hint: Padding(
+                              padding: const EdgeInsets.all(3.0),
+                              child: Text(
+                                "Select College Town Preference",
+                                style: TextStyle(color: Colors.white, fontSize: 16),
+                              ),
+                            ),
+                            itemHeight: kMinInteractiveDimension,
+                            items: [
+                              DropdownMenuItem(
+                                  child: Text(
+                                    'Large Urban City',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  value: 'Large Urban City'),
+                              DropdownMenuItem(
+                                  child: Text(
+                                    'Suburban City',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  value: 'Suburban City'),
+                              DropdownMenuItem(
+                                  child: Text(
+                                    'Rural Town',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  value: 'Rural Town'),
+                              DropdownMenuItem(
+                                  child: Text(
+                                    'Any',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  value: 'Any'),
+                            ],
+                            value: _collegetownpref,
+                            isExpanded: true,
+                            onChanged: (value) {
+                              setState(() {
+                                _collegetownpref = value;
+                              });
+                            },
+                            validator: (value) {
+                              return value == null ? 'Choose at least one' : null;
+                            },
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+                        child: ListTile(
+                          title: Text('Thought of a budget ?', style: TextStyle(color: Colors.white, fontSize: 20)),
+                          subtitle: Text(
+                              "We will consider this budget when selecting colleges and countries for you."
+                              "\nCheck 'Not Sure' if you don't know yet",
+                              style: TextStyle(color: Colors.white60)),
+                        ),
+                      ),
+                      if (isChecked == false)
+                        Padding(
+                          padding: const EdgeInsets.only(right: 50, left: 50),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              CurrencyPickerDropdown(
+                                initialValue: 'USD',
+                                itemBuilder: _buildCurrencyDropdownItem,
+                                onValuePicked: (Country country) {
+                                  _budgetcurrency = country.currencyCode;
+                                },
+                              ),
+                              Flexible(
+                                child: TextFormField(
+                                  validator: (value) {
+                                    return null;
+                                  },
+                                  onSaved: (value) {
+                                    _budgetamount = int.parse(value);
+                                  },
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                  keyboardType: TextInputType.number,
+                                  decoration: InputDecoration(
+                                    hintText: "Amount",
+                                    hintStyle: TextStyle(
+                                      color: Colors.white70,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 0, right: 80),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Checkbox(
+                              value: isChecked,
+                              onChanged: (value) {
+                                setState(() {
+                                  isChecked = value;
+                                });
+                              },
+                            ),
+                            Text('Not Sure', style: TextStyle(color: Colors.white, fontSize: 16)),
+                          ],
                         ),
                       ),
                     ],
@@ -909,11 +1205,11 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                               if (signupformKey2.currentState.validate()) {
                                 print('valid');
                                 //updateUser();
-                                Navigator.pushAndRemoveUntil(
+                                /*Navigator.pushAndRemoveUntil(
                                   context,
                                   PageTransition(type: PageTransitionType.fade, child: StudentHomeScreen()),
                                   (Route<dynamic> route) => false,
-                                );
+                                );*/
                               }
                             });
                           },
