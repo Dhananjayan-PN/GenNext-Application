@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-import 'package:back_button_interceptor/back_button_interceptor.dart'; //will be utilised in prod
+//import 'package:back_button_interceptor/back_button_interceptor.dart'; //will be utilised in prod
 import 'package:page_transition/page_transition.dart';
 import 'student/home.dart';
 
@@ -38,11 +38,14 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
   Animation _animation5;
 
   final registerFormKey = GlobalKey<FormState>();
-  final signupformKey = GlobalKey<FormState>();
+  final signupformKey1 = GlobalKey<FormState>();
+  final signupformKey2 = GlobalKey<FormState>();
   final TextEditingController _pass = TextEditingController();
   final TextEditingController _confirmpass = TextEditingController();
+  ScrollController _scrollController;
+  bool _isOnTop;
   int _selectedIndex = 0;
-  int _radioValue = 0;
+  int _radioValue = -1;
 
   //basic account information
   String _usertype;
@@ -71,7 +74,9 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: Duration(seconds: 8));
+    _isOnTop = false;
+    _scrollController = ScrollController();
+    _controller = AnimationController(vsync: this, duration: Duration(seconds: 7));
     _animation1 = CurvedAnimation(
       parent: _controller,
       curve: Interval(0.0, 0.3, curve: Curves.fastOutSlowIn),
@@ -97,6 +102,7 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
 
   @override
   dispose() {
+    _scrollController.dispose();
     _controller.dispose();
     super.dispose();
   }
@@ -109,6 +115,11 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
     //talk to api and update personal profile information
   }
 
+  _scrollToTop() {
+    _scrollController.animateTo(_scrollController.position.minScrollExtent, duration: Duration(milliseconds: 1000), curve: Curves.easeIn);
+    setState(() => _isOnTop = true);
+  }
+
   Widget build(BuildContext context) {
     List<Widget> _pageOptions = <Widget>[
       Container(
@@ -116,6 +127,7 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
           gradient: LinearGradient(begin: Alignment.bottomCenter, end: Alignment.topCenter, colors: [Color(0xff36d1dc), Color(0xff19547b)]),
         ),
         child: ListView(
+          controller: _scrollController,
           children: <Widget>[
             FadeTransition(
               opacity: _animation1,
@@ -188,6 +200,7 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                           _controller.duration = Duration(seconds: 6);
                           _controller.forward();
                           _selectedIndex += 1;
+                          _scrollToTop();
                         });
                       },
                     ),
@@ -203,6 +216,7 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
           gradient: LinearGradient(begin: Alignment.bottomCenter, end: Alignment.topCenter, colors: [Color(0xff36d1dc), Color(0xff19547b)]),
         ),
         child: ListView(
+          controller: _scrollController,
           children: <Widget>[
             FadeTransition(
               opacity: _animation1,
@@ -467,10 +481,13 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                         onPressed: () {
                           setState(() {
                             if (registerFormKey.currentState.validate()) {
-                              registerFormKey.currentState.reset();
                               print('valid');
                               //registerUser();
+                              _controller.reset();
+                              _controller.duration = Duration(seconds: 8);
+                              _controller.forward();
                               _selectedIndex += 1;
+                              _scrollToTop();
                             }
                           });
                         },
@@ -506,86 +523,28 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
             gradient: LinearGradient(begin: Alignment.bottomCenter, end: Alignment.topCenter, colors: [Color(0xff36d1dc), Color(0xff19547b)]),
           ),
           child: ListView(
+            controller: _scrollController,
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(top: 80),
-                child: Text(
-                  'Tell us a little more about yourself',
-                  style: TextStyle(color: Colors.white, fontSize: 33, fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
+              FadeTransition(
+                opacity: _animation1,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 80),
+                  child: Text(
+                    'Tell us a little more about yourself',
+                    style: TextStyle(color: Colors.white, fontSize: 33, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
               ),
-              Form(
-                key: signupformKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(top: 30, left: 50, right: 50),
-                      child: Theme(
-                        data: Theme.of(context).copyWith(
-                          canvasColor: Color(0xff19547b),
-                        ),
-                        child: DropdownButtonFormField(
-                          icon: Icon(
-                            Icons.arrow_drop_down,
-                            size: 25,
-                            color: Colors.white,
-                          ),
-                          style: TextStyle(color: Colors.white),
-                          hint: Text(
-                            "Select Intended Degree Level",
-                            style: TextStyle(color: Colors.white, fontSize: 16),
-                          ),
-                          itemHeight: kMinInteractiveDimension,
-                          items: [
-                            DropdownMenuItem(
-                                child: Text(
-                                  'Undergraduate',
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                                value: 'UG'),
-                            DropdownMenuItem(
-                                child: Text(
-                                  'Graduate',
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                                value: 'G'),
-                          ],
-                          value: _degreelevel,
-                          isExpanded: true,
-                          onChanged: (value) {
-                            setState(() {
-                              _degreelevel = value;
-                            });
-                          },
-                          validator: (value) {
-                            return value == null ? 'Selection of degree level is required' : null;
-                          },
-                        ),
-                      ),
-                    ),
-                    if (_degreelevel == 'UG') ...[
+              FadeTransition(
+                opacity: _animation2,
+                child: Form(
+                  key: signupformKey1,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
                       Padding(
-                        padding: const EdgeInsets.only(top: 20, left: 50, right: 50),
-                        child: TextFormField(
-                          validator: (value) {
-                            return value.isEmpty ? 'Enter name of last attended school' : null;
-                          },
-                          onSaved: (value) => _school = value,
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                          decoration: InputDecoration(
-                            labelText: "School",
-                            labelStyle: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 20, left: 50, right: 50),
+                        padding: EdgeInsets.only(top: 30, left: 50, right: 50),
                         child: Theme(
                           data: Theme.of(context).copyWith(
                             canvasColor: Color(0xff19547b),
@@ -598,208 +557,280 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                             ),
                             style: TextStyle(color: Colors.white),
                             hint: Text(
-                              "Select Grade",
-                              style: TextStyle(fontSize: 16, color: Colors.white),
+                              "Select Intended Degree Level",
+                              style: TextStyle(color: Colors.white, fontSize: 16),
                             ),
                             itemHeight: kMinInteractiveDimension,
-                            items: <String>['6', '7', '8', '9', '10', '11', '12', 'GY'].map((String value) {
-                              return new DropdownMenuItem<String>(
-                                value: value,
-                                child: value == 'GY'
-                                    ? Text(
-                                        'Gap Year Student',
-                                        style: TextStyle(fontSize: 16),
-                                      )
-                                    : Text(
-                                        value + 'th',
-                                        style: TextStyle(fontSize: 16),
-                                      ),
-                              );
-                            }).toList(),
-                            value: _grade,
+                            items: [
+                              DropdownMenuItem(
+                                  child: Text(
+                                    'Undergraduate',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  value: 'UG'),
+                              DropdownMenuItem(
+                                  child: Text(
+                                    'Graduate',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  value: 'G'),
+                            ],
+                            value: _degreelevel,
                             isExpanded: true,
                             onChanged: (value) {
                               setState(() {
-                                _grade = value;
+                                _degreelevel = value;
                               });
                             },
                             validator: (value) {
-                              return value == null ? 'Select a grade' : null;
+                              return value == null ? 'Selection of degree level is required' : null;
                             },
                           ),
                         ),
                       ),
-                    ],
-                    if (_degreelevel == 'G') ...[
+                      if (_degreelevel == 'UG') ...[
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20, left: 50, right: 50),
+                          child: TextFormField(
+                            validator: (value) {
+                              return value.isEmpty ? 'Enter name of last attended school' : null;
+                            },
+                            onSaved: (value) => _school = value,
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                            decoration: InputDecoration(
+                              labelText: "School",
+                              labelStyle: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 20, left: 50, right: 50),
+                          child: Theme(
+                            data: Theme.of(context).copyWith(
+                              canvasColor: Color(0xff19547b),
+                            ),
+                            child: DropdownButtonFormField(
+                              icon: Icon(
+                                Icons.arrow_drop_down,
+                                size: 25,
+                                color: Colors.white,
+                              ),
+                              style: TextStyle(color: Colors.white),
+                              hint: Text(
+                                "Select Grade",
+                                style: TextStyle(fontSize: 16, color: Colors.white),
+                              ),
+                              itemHeight: kMinInteractiveDimension,
+                              items: <String>['6', '7', '8', '9', '10', '11', '12', 'GY'].map((String value) {
+                                return new DropdownMenuItem<String>(
+                                  value: value,
+                                  child: value == 'GY'
+                                      ? Text(
+                                          'Gap Year Student',
+                                          style: TextStyle(fontSize: 16),
+                                        )
+                                      : Text(
+                                          value + 'th',
+                                          style: TextStyle(fontSize: 16),
+                                        ),
+                                );
+                              }).toList(),
+                              value: _grade,
+                              isExpanded: true,
+                              onChanged: (value) {
+                                setState(() {
+                                  _grade = value;
+                                });
+                              },
+                              validator: (value) {
+                                return value == null ? 'Select a grade' : null;
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                      if (_degreelevel == 'G') ...[
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20, left: 50, right: 50),
+                          child: TextFormField(
+                            validator: (value) {
+                              return value.isEmpty ? 'Enter name of last attended college' : null;
+                            },
+                            onSaved: (value) => _college = value,
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                            decoration: InputDecoration(
+                              labelText: "Last Attended College",
+                              labelStyle: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                       Padding(
-                        padding: const EdgeInsets.only(top: 20, left: 50, right: 50),
+                        padding: EdgeInsets.only(top: 20, left: 50, right: 50),
                         child: TextFormField(
                           validator: (value) {
-                            return value.isEmpty ? 'Enter name of last attended college' : null;
+                            return null;
                           },
-                          onSaved: (value) => _college = value,
+                          onSaved: (value) => _major = value,
                           style: TextStyle(
                             color: Colors.white,
                           ),
                           decoration: InputDecoration(
-                            labelText: "Last Attended College",
+                            labelText: "Intended Major (Optional)",
                             labelStyle: TextStyle(
                               color: Colors.white,
                             ),
                           ),
                         ),
                       ),
-                    ],
-                    Padding(
-                      padding: EdgeInsets.only(top: 20, left: 50, right: 50),
-                      child: TextFormField(
-                        validator: (value) {
-                          return null;
-                        },
-                        onSaved: (value) => _major = value,
-                        style: TextStyle(
-                          color: Colors.white,
+                      Padding(
+                        padding: EdgeInsets.only(top: 30, left: 30, right: 30),
+                        child: ListTile(
+                          title: Text('What are your interests ?', style: TextStyle(color: Colors.white, fontSize: 20)),
+                          subtitle: Text(
+                              'This will help our team recommend you majors or get to know more about you if you have an intended major'
+                              ' (Min 3)',
+                              style: TextStyle(color: Colors.white60)),
                         ),
-                        decoration: InputDecoration(
-                          labelText: "Intended Major (Optional)",
-                          labelStyle: TextStyle(
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 0, left: 50, right: 50),
+                        child: TextFormField(
+                          validator: (value) {
+                            return value.split('\n').length < 3 ? 'Add at least 3 interests' : null;
+                          },
+                          onSaved: (value) {
+                            _interests = value.split("\n");
+                            print(_interests);
+                          },
+                          style: TextStyle(
                             color: Colors.white,
                           ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 30, left: 30, right: 30),
-                      child: ListTile(
-                        title: Text('What are your interests ?', style: TextStyle(color: Colors.white, fontSize: 20)),
-                        subtitle: Text(
-                            'This will help our team recommend you majors or get to know more about you if you have an intended major'
-                            ' (Min 3)',
-                            style: TextStyle(color: Colors.white60)),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 0, left: 50, right: 50),
-                      child: TextFormField(
-                        validator: (value) {
-                          return value.split('\n').length < 3 ? 'Add at least 3 interests' : null;
-                        },
-                        onSaved: (value) {
-                          _interests = value.split("\n");
-                          print(_interests);
-                        },
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                        maxLines: null,
-                        keyboardType: TextInputType.multiline,
-                        decoration: InputDecoration(
-                          hintText: "Add interests in seperate lines",
-                          hintStyle: TextStyle(
-                            color: Colors.white70,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 30, left: 30, right: 30),
-                      child: ListTile(
-                        title: Text('Are you interested in Research ?', style: TextStyle(color: Colors.white, fontSize: 20)),
-                        subtitle: Text('Let us know if you are interested in undertaking research during the course of your degree',
-                            style: TextStyle(color: Colors.white60)),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 20, right: 60),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Radio(
-                                value: 1,
-                                groupValue: _radioValue,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _radioValue = value;
-                                    switch (_radioValue) {
-                                      case 0:
-                                        _research = false;
-                                        break;
-                                      case 1:
-                                        _research = true;
-                                        break;
-                                    }
-                                  });
-                                },
-                              ),
-                              Text('Yes      ', style: TextStyle(color: Colors.white, fontSize: 16)),
-                              Radio(
-                                value: 0,
-                                groupValue: _radioValue,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _radioValue = value;
-                                    switch (_radioValue) {
-                                      case 0:
-                                        _research = false;
-                                        break;
-                                      case 1:
-                                        _research = true;
-                                        break;
-                                    }
-                                  });
-                                },
-                              ),
-                              Text('No', style: TextStyle(color: Colors.white, fontSize: 16)),
-                            ],
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 30, bottom: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(right: 10),
-                      child: FlatButton(
-                        splashColor: Color(0xff19547b),
-                        onPressed: () {
-                          setState(() {
-                            if (signupformKey.currentState.validate()) {
-                              print('valid');
-                              //registerUser();
-                              _selectedIndex += 1;
-                            }
-                          });
-                        },
-                        child: Row(
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Text(
-                                "NEXT",
-                                style: TextStyle(color: Colors.white, fontSize: 15),
-                                textAlign: TextAlign.center,
-                              ),
+                          maxLines: null,
+                          keyboardType: TextInputType.multiline,
+                          decoration: InputDecoration(
+                            hintText: "Add interests in seperate lines",
+                            hintStyle: TextStyle(
+                              color: Colors.white70,
                             ),
-                            Icon(
-                              Icons.navigate_next,
-                              size: 25,
-                              color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 30, left: 30, right: 30),
+                        child: ListTile(
+                          title: Text('Are you interested in Research ?', style: TextStyle(color: Colors.white, fontSize: 20)),
+                          subtitle: Text('Let us know if you are interested in undertaking research during the course of your degree',
+                              style: TextStyle(color: Colors.white60)),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 20, right: 60),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                Radio(
+                                  value: 1,
+                                  groupValue: _radioValue,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _radioValue = value;
+                                      switch (_radioValue) {
+                                        case 0:
+                                          _research = false;
+                                          break;
+                                        case 1:
+                                          _research = true;
+                                          break;
+                                        default:
+                                          _research = null;
+                                      }
+                                    });
+                                  },
+                                ),
+                                Text('Yes      ', style: TextStyle(color: Colors.white, fontSize: 16)),
+                                Radio(
+                                  value: 0,
+                                  groupValue: _radioValue,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _radioValue = value;
+                                      switch (value) {
+                                        case 0:
+                                          _research = false;
+                                          break;
+                                        case 1:
+                                          _research = true;
+                                          break;
+                                        default:
+                                          _research = null;
+                                      }
+                                    });
+                                  },
+                                ),
+                                Text('No', style: TextStyle(color: Colors.white, fontSize: 16)),
+                              ],
                             ),
                           ],
                         ),
-                      ),
-                    ),
-                  ],
+                      )
+                    ],
+                  ),
                 ),
-              )
+              ),
+              FadeTransition(
+                opacity: _animation3,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 30, bottom: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(right: 10),
+                        child: FlatButton(
+                          splashColor: Color(0xff19547b),
+                          onPressed: () {
+                            setState(() {
+                              if (signupformKey1.currentState.validate()) {
+                                print('valid');
+                                //updateUser();
+                                _selectedIndex += 1;
+                              }
+                            });
+                          },
+                          child: Row(
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  "NEXT",
+                                  style: TextStyle(color: Colors.white, fontSize: 15),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              Icon(
+                                Icons.navigate_next,
+                                size: 25,
+                                color: Colors.white,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -809,57 +840,104 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
           ),
           child: Column(
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(top: 300),
-                child: Center(
+              FadeTransition(
+                opacity: _animation1,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 80),
                   child: Text(
-                    'Page 4',
+                    "Let's talk about your\ncollege preferences",
+                    style: TextStyle(color: Colors.white, fontSize: 33, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
                   ),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(top: 30, bottom: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(right: 10),
-                      child: FlatButton(
-                        splashColor: Color(0xff19547b),
-                        onPressed: () {
-                          setState(() {
-                            if (signupformKey.currentState.validate()) {
-                              signupformKey.currentState.reset();
-                              print('valid');
-                              //updateUser();
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                PageTransition(type: PageTransitionType.fade, child: StudentHomeScreen()),
-                                (Route<dynamic> route) => false,
-                              );
-                            }
-                          });
-                        },
-                        child: Row(
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.all(4.0),
-                              child: Text(
-                                "NEXT",
-                                style: TextStyle(color: Colors.white, fontSize: 15),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                            Icon(
-                              Icons.navigate_next,
-                              size: 25,
-                              color: Colors.white,
-                            ),
-                          ],
+              FadeTransition(
+                opacity: _animation2,
+                child: Form(
+                  key: signupformKey2,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(top: 30, left: 30, right: 30),
+                        child: ListTile(
+                          title: Text('Have any colleges in mind ?', style: TextStyle(color: Colors.white, fontSize: 20)),
+                          subtitle: Text("Don't worry if you aren't sure yet, our team will help you find the best ones for you",
+                              style: TextStyle(color: Colors.white60)),
                         ),
                       ),
-                    ),
-                  ],
+                      Padding(
+                        padding: EdgeInsets.only(top: 0, left: 50, right: 50),
+                        child: TextFormField(
+                          validator: (value) {
+                            return null;
+                          },
+                          onSaved: (value) {
+                            _interests = value.split("\n");
+                            print(_interests);
+                          },
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                          maxLines: null,
+                          keyboardType: TextInputType.multiline,
+                          decoration: InputDecoration(
+                            hintText: "Add universities in seperate lines",
+                            hintStyle: TextStyle(
+                              color: Colors.white70,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              FadeTransition(
+                opacity: _animation4,
+                child: Padding(
+                  padding: EdgeInsets.only(top: 30, bottom: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(right: 10),
+                        child: FlatButton(
+                          splashColor: Color(0xff19547b),
+                          onPressed: () {
+                            setState(() {
+                              if (signupformKey2.currentState.validate()) {
+                                print('valid');
+                                //updateUser();
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  PageTransition(type: PageTransitionType.fade, child: StudentHomeScreen()),
+                                  (Route<dynamic> route) => false,
+                                );
+                              }
+                            });
+                          },
+                          child: Row(
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Text(
+                                  "FINISH",
+                                  style: TextStyle(color: Colors.white, fontSize: 15),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              Icon(
+                                Icons.navigate_next,
+                                size: 25,
+                                color: Colors.white,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               )
             ],
