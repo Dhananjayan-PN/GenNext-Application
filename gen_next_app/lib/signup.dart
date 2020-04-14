@@ -3,8 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart'; //will be utilised in prod
-//import 'package:page_transition/page_transition.dart';
-//import 'student/home.dart';
+import 'package:page_transition/page_transition.dart';
+import 'student/home.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -42,7 +42,9 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
   final TextEditingController _pass = TextEditingController();
   final TextEditingController _confirmpass = TextEditingController();
   int _selectedIndex = 0;
+  int _radioValue = 0;
 
+  //basic account information
   String _usertype;
   String _firstname;
   String _lastname;
@@ -53,16 +55,23 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
   String _password;
   String _confpassword;
 
+  //student account information
   String _degreelevel;
   String _grade;
   String _school;
-  String _university;
+  String _college;
   String _major;
   List<String> _interests;
+  bool _research;
+
+  //counsellor account information
+
+  //collegerep account information
 
   @override
   void initState() {
-    _controller = AnimationController(vsync: this, duration: Duration(seconds: 12));
+    super.initState();
+    _controller = AnimationController(vsync: this, duration: Duration(seconds: 8));
     _animation1 = CurvedAnimation(
       parent: _controller,
       curve: Interval(0.0, 0.3, curve: Curves.fastOutSlowIn),
@@ -97,7 +106,7 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
   }
 
   void updateUserInfo() {
-    //talk to api and add personal profile information
+    //talk to api and update personal profile information
   }
 
   Widget build(BuildContext context) {
@@ -175,6 +184,9 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                       ),
                       onPressed: () {
                         setState(() {
+                          _controller.reset();
+                          _controller.duration = Duration(seconds: 6);
+                          _controller.forward();
                           _selectedIndex += 1;
                         });
                       },
@@ -192,282 +204,297 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
         ),
         child: ListView(
           children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(top: 50),
-              child: Icon(Icons.person, size: 55, color: Colors.white),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 5),
-              child: Text(
-                'Account Information',
-                style: TextStyle(color: Colors.white, fontSize: 33, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
+            FadeTransition(
+              opacity: _animation1,
+              child: Padding(
+                padding: EdgeInsets.only(top: 50),
+                child: Icon(Icons.person, size: 55, color: Colors.white),
               ),
             ),
-            Form(
-              key: registerFormKey,
-              autovalidate: false,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(top: 30, left: 20, right: 50),
-                    child: Theme(
-                      data: Theme.of(context).copyWith(
-                        canvasColor: Color(0xff19547b),
-                      ),
-                      child: DropdownButtonFormField(
-                        decoration: InputDecoration(
-                          icon: Icon(Icons.person),
+            FadeTransition(
+              opacity: _animation2,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 5),
+                child: Text(
+                  'Account Information',
+                  style: TextStyle(color: Colors.white, fontSize: 33, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+            FadeTransition(
+              opacity: _animation3,
+              child: Form(
+                key: registerFormKey,
+                autovalidate: false,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(top: 30, left: 20, right: 50),
+                      child: Theme(
+                        data: Theme.of(context).copyWith(
+                          canvasColor: Color(0xff19547b),
                         ),
-                        icon: Icon(
-                          Icons.arrow_drop_down,
-                          size: 25,
+                        child: DropdownButtonFormField(
+                          decoration: InputDecoration(
+                            icon: Icon(Icons.person),
+                          ),
+                          icon: Icon(
+                            Icons.arrow_drop_down,
+                            size: 25,
+                            color: Colors.white,
+                          ),
+                          style: TextStyle(color: Colors.white),
+                          hint: Text(
+                            "Tell us who you are",
+                            style: TextStyle(color: Colors.white, fontSize: 16),
+                          ),
+                          itemHeight: kMinInteractiveDimension,
+                          items: [
+                            DropdownMenuItem(
+                                child: Text(
+                                  'Student',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                value: 'Student'),
+                            DropdownMenuItem(
+                                child: Text(
+                                  'Counsellor',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                value: 'Counsellor'),
+                            DropdownMenuItem(
+                                child: Text(
+                                  'College Representative',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                value: 'CollegeRep'),
+                          ],
+                          value: _usertype,
+                          validator: (value) => value == null ? 'This field is important' : null,
+                          isExpanded: true,
+                          onChanged: (value) {
+                            setState(() {
+                              _usertype = value;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 30, left: 60, right: 50),
+                      child: TextFormField(
+                        validator: (value) {
+                          return value.isEmpty ? 'Enter your first name' : null;
+                        },
+                        onSaved: (value) => _firstname = value,
+                        style: TextStyle(
                           color: Colors.white,
                         ),
-                        style: TextStyle(color: Colors.white),
-                        hint: Text(
-                          "Tell us who you are",
-                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        decoration: InputDecoration(
+                          labelText: "First Name",
+                          labelStyle: TextStyle(
+                            color: Colors.white,
+                          ),
                         ),
-                        itemHeight: kMinInteractiveDimension,
-                        items: [
-                          DropdownMenuItem(
-                              child: Text(
-                                'Student',
-                                style: TextStyle(fontSize: 16),
-                              ),
-                              value: 'Student'),
-                          DropdownMenuItem(
-                              child: Text(
-                                'Counsellor',
-                                style: TextStyle(fontSize: 16),
-                              ),
-                              value: 'Counsellor'),
-                          DropdownMenuItem(
-                              child: Text(
-                                'College Representative',
-                                style: TextStyle(fontSize: 16),
-                              ),
-                              value: 'CollegeRep'),
-                        ],
-                        value: _usertype,
-                        validator: (value) => value == null ? 'This field is important' : null,
-                        isExpanded: true,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 30, left: 60, right: 50),
+                      child: TextFormField(
+                        validator: (value) {
+                          return value.isEmpty ? 'Enter your last name' : null;
+                        },
+                        onSaved: (value) => _lastname = value,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                        decoration: InputDecoration(
+                          labelText: "Last Name",
+                          labelStyle: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 30, left: 60, right: 50),
+                      child: TextFormField(
+                        validator: (value) {
+                          return value.isEmpty ? 'Enter desired username' : null;
+                        },
+                        onSaved: (value) => _username = value,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                        decoration: InputDecoration(
+                          labelText: "Username",
+                          labelStyle: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 30, left: 20, right: 50),
+                      child: TextFormField(
+                        validator: (value) {
+                          return value.isEmpty ? 'Enter a valid Email ID' : null;
+                        },
+                        onSaved: (value) => _email = value,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.email),
+                          labelText: 'Email',
+                          labelStyle: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 30, left: 20, right: 50),
+                      child: DateTimeField(
+                        validator: (value) {
+                          return value == null ? 'Enter your date of birth' : null;
+                        },
+                        style: TextStyle(color: Colors.white),
+                        format: DateFormat("MM-dd-yyyy"),
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.calendar_today),
+                          labelText: 'Date of Birth',
+                          labelStyle: TextStyle(color: Colors.white),
+                        ),
+                        onShowPicker: (context, _dob) {
+                          return showDatePicker(
+                              context: context,
+                              firstDate: DateTime(1900),
+                              initialDate: _dob == null ? DateTime.now() : _dob,
+                              lastDate: DateTime(2100));
+                        },
                         onChanged: (value) {
                           setState(() {
-                            _usertype = value;
+                            _dob = value;
                           });
                         },
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 30, left: 60, right: 50),
-                    child: TextFormField(
-                      validator: (value) {
-                        return value.isEmpty ? 'Enter your first name' : null;
-                      },
-                      onSaved: (value) => _firstname = value,
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                      decoration: InputDecoration(
-                        labelText: "First Name",
-                        labelStyle: TextStyle(
+                    Padding(
+                      padding: const EdgeInsets.only(top: 30, left: 20, right: 50),
+                      child: TextFormField(
+                        validator: (String value) {
+                          return value.isEmpty ? 'Enter your country of residence' : null;
+                        },
+                        onSaved: (value) => _country = value,
+                        style: TextStyle(
                           color: Colors.white,
                         ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 30, left: 60, right: 50),
-                    child: TextFormField(
-                      validator: (value) {
-                        return value.isEmpty ? 'Enter your last name' : null;
-                      },
-                      onSaved: (value) => _lastname = value,
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                      decoration: InputDecoration(
-                        labelText: "Last Name",
-                        labelStyle: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 30, left: 60, right: 50),
-                    child: TextFormField(
-                      validator: (value) {
-                        return value.isEmpty ? 'Enter desired username' : null;
-                      },
-                      onSaved: (value) => _username = value,
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                      decoration: InputDecoration(
-                        labelText: "Username",
-                        labelStyle: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 30, left: 20, right: 50),
-                    child: TextFormField(
-                      validator: (value) {
-                        return value.isEmpty ? 'Enter a valid Email ID' : null;
-                      },
-                      onSaved: (value) => _email = value,
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                      decoration: InputDecoration(
-                        icon: Icon(Icons.email),
-                        labelText: 'Email',
-                        labelStyle: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 30, left: 20, right: 50),
-                    child: DateTimeField(
-                      validator: (value) {
-                        return value == null ? 'Enter your date of birth' : null;
-                      },
-                      style: TextStyle(color: Colors.white),
-                      format: DateFormat("MM-dd-yyyy"),
-                      decoration: InputDecoration(
-                        icon: Icon(Icons.calendar_today),
-                        labelText: 'Date of Birth',
-                        labelStyle: TextStyle(color: Colors.white),
-                      ),
-                      onShowPicker: (context, _dob) {
-                        return showDatePicker(
-                            context: context, firstDate: DateTime(1900), initialDate: _dob == null ? DateTime.now() : _dob, lastDate: DateTime(2100));
-                      },
-                      onChanged: (value) {
-                        setState(() {
-                          _dob = value;
-                        });
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 30, left: 20, right: 50),
-                    child: TextFormField(
-                      validator: (String value) {
-                        return value.isEmpty ? 'Enter your country of residence' : null;
-                      },
-                      onSaved: (value) => _country = value,
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                      decoration: InputDecoration(
-                        icon: Icon(Icons.public),
-                        labelText: 'Country',
-                        labelStyle: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 30, left: 20, right: 50),
-                    child: TextFormField(
-                      controller: _pass,
-                      validator: (String value) {
-                        return value.isEmpty ? 'Enter a password' : null;
-                      },
-                      onSaved: (value) => _password = value,
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        icon: Icon(Icons.vpn_key),
-                        labelText: 'Password',
-                        labelStyle: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 30, left: 60, right: 50),
-                    child: TextFormField(
-                      controller: _confirmpass,
-                      validator: (String value) {
-                        if (value.isEmpty) {
-                          return "Confirm your password";
-                        }
-                        if (value != _pass.text) {
-                          _confirmpass.clear();
-                          return "Passwords don't match";
-                        }
-                        return null;
-                      },
-                      onSaved: (value) => _confpassword = value,
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        labelText: 'Confirm Password',
-                        labelStyle: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 30, bottom: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(right: 10),
-                    child: FlatButton(
-                      splashColor: Color(0xff19547b),
-                      onPressed: () {
-                        setState(() {
-                          if (registerFormKey.currentState.validate()) {
-                            registerFormKey.currentState.reset();
-                            print('valid');
-                            //registerUser();
-                            _selectedIndex += 1;
-                          }
-                        });
-                      },
-                      child: Row(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Text(
-                              "NEXT",
-                              style: TextStyle(color: Colors.white, fontSize: 15),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          Icon(
-                            Icons.navigate_next,
-                            size: 25,
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.public),
+                          labelText: 'Country',
+                          labelStyle: TextStyle(
                             color: Colors.white,
                           ),
-                        ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                    Padding(
+                      padding: const EdgeInsets.only(top: 30, left: 20, right: 50),
+                      child: TextFormField(
+                        controller: _pass,
+                        validator: (String value) {
+                          return value.isEmpty ? 'Enter a password' : null;
+                        },
+                        onSaved: (value) => _password = value,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.vpn_key),
+                          labelText: 'Password',
+                          labelStyle: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 30, left: 60, right: 50),
+                      child: TextFormField(
+                        controller: _confirmpass,
+                        validator: (String value) {
+                          if (value.isEmpty) {
+                            return "Confirm your password";
+                          }
+                          if (value != _pass.text) {
+                            _confirmpass.clear();
+                            return "Passwords don't match";
+                          }
+                          return null;
+                        },
+                        onSaved: (value) => _confpassword = value,
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          labelText: 'Confirm Password',
+                          labelStyle: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            FadeTransition(
+              opacity: _animation4,
+              child: Padding(
+                padding: EdgeInsets.only(top: 30, bottom: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(right: 10),
+                      child: FlatButton(
+                        splashColor: Color(0xff19547b),
+                        onPressed: () {
+                          setState(() {
+                            if (registerFormKey.currentState.validate()) {
+                              registerFormKey.currentState.reset();
+                              print('valid');
+                              //registerUser();
+                              _selectedIndex += 1;
+                            }
+                          });
+                        },
+                        child: Row(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Text(
+                                "NEXT",
+                                style: TextStyle(color: Colors.white, fontSize: 15),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            Icon(
+                              Icons.navigate_next,
+                              size: 25,
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             )
           ],
@@ -532,6 +559,9 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                               _degreelevel = value;
                             });
                           },
+                          validator: (value) {
+                            return value == null ? 'Selection of degree level is required' : null;
+                          },
                         ),
                       ),
                     ),
@@ -540,7 +570,7 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                         padding: const EdgeInsets.only(top: 20, left: 50, right: 50),
                         child: TextFormField(
                           validator: (value) {
-                            return null;
+                            return value.isEmpty ? 'Enter name of last attended school' : null;
                           },
                           onSaved: (value) => _school = value,
                           style: TextStyle(
@@ -569,7 +599,7 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                             style: TextStyle(color: Colors.white),
                             hint: Text(
                               "Select Grade",
-                              style: TextStyle(fontSize: 16),
+                              style: TextStyle(fontSize: 16, color: Colors.white),
                             ),
                             itemHeight: kMinInteractiveDimension,
                             items: <String>['6', '7', '8', '9', '10', '11', '12', 'GY'].map((String value) {
@@ -593,6 +623,9 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                                 _grade = value;
                               });
                             },
+                            validator: (value) {
+                              return value == null ? 'Select a grade' : null;
+                            },
                           ),
                         ),
                       ),
@@ -602,14 +635,14 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                         padding: const EdgeInsets.only(top: 20, left: 50, right: 50),
                         child: TextFormField(
                           validator: (value) {
-                            return null;
+                            return value.isEmpty ? 'Enter name of last attended college' : null;
                           },
-                          onSaved: (value) => _university = value,
+                          onSaved: (value) => _college = value,
                           style: TextStyle(
                             color: Colors.white,
                           ),
                           decoration: InputDecoration(
-                            labelText: "University",
+                            labelText: "Last Attended College",
                             labelStyle: TextStyle(
                               color: Colors.white,
                             ),
@@ -639,15 +672,17 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                       padding: EdgeInsets.only(top: 30, left: 30, right: 30),
                       child: ListTile(
                         title: Text('What are your interests ?', style: TextStyle(color: Colors.white, fontSize: 20)),
-                        subtitle: Text('This will help our team recommend majors or get to know more about you if you have an intended major',
-                            style: TextStyle(color: Colors.white54)),
+                        subtitle: Text(
+                            'This will help our team recommend you majors or get to know more about you if you have an intended major'
+                            ' (Min 3)',
+                            style: TextStyle(color: Colors.white60)),
                       ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 0, left: 50, right: 50),
                       child: TextFormField(
                         validator: (value) {
-                          return null;
+                          return value.split('\n').length < 3 ? 'Add at least 3 interests' : null;
                         },
                         onSaved: (value) {
                           _interests = value.split("\n");
@@ -659,45 +694,107 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                         maxLines: null,
                         keyboardType: TextInputType.multiline,
                         decoration: InputDecoration(
-                          hintText: "Add interests in new lines",
+                          hintText: "Add interests in seperate lines",
                           hintStyle: TextStyle(
                             color: Colors.white70,
                           ),
                         ),
                       ),
                     ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 30, left: 30, right: 30),
+                      child: ListTile(
+                        title: Text('Are you interested in Research ?', style: TextStyle(color: Colors.white, fontSize: 20)),
+                        subtitle: Text('Let us know if you are interested in undertaking research during the course of your degree',
+                            style: TextStyle(color: Colors.white60)),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 20, right: 60),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              Radio(
+                                value: 1,
+                                groupValue: _radioValue,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _radioValue = value;
+                                    switch (_radioValue) {
+                                      case 0:
+                                        _research = false;
+                                        break;
+                                      case 1:
+                                        _research = true;
+                                        break;
+                                    }
+                                  });
+                                },
+                              ),
+                              Text('Yes      ', style: TextStyle(color: Colors.white, fontSize: 16)),
+                              Radio(
+                                value: 0,
+                                groupValue: _radioValue,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _radioValue = value;
+                                    switch (_radioValue) {
+                                      case 0:
+                                        _research = false;
+                                        break;
+                                      case 1:
+                                        _research = true;
+                                        break;
+                                    }
+                                  });
+                                },
+                              ),
+                              Text('No', style: TextStyle(color: Colors.white, fontSize: 16)),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
                   ],
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 50, bottom: 5),
+                padding: EdgeInsets.only(top: 30, bottom: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.only(right: 15),
-                      child: Row(
-                        children: <Widget>[
-                          Text(
-                            "NEXT",
-                            style: TextStyle(color: Colors.white70, fontSize: 13),
-                            textAlign: TextAlign.right,
-                          ),
-                          IconButton(
-                            icon: Icon(
-                              Icons.arrow_forward,
-                              size: 30,
+                      padding: EdgeInsets.only(right: 10),
+                      child: FlatButton(
+                        splashColor: Color(0xff19547b),
+                        onPressed: () {
+                          setState(() {
+                            if (signupformKey.currentState.validate()) {
+                              print('valid');
+                              //registerUser();
+                              _selectedIndex += 1;
+                            }
+                          });
+                        },
+                        child: Row(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Text(
+                                "NEXT",
+                                style: TextStyle(color: Colors.white, fontSize: 15),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            Icon(
+                              Icons.navigate_next,
+                              size: 25,
                               color: Colors.white,
                             ),
-                            onPressed: () {
-                              setState(() {
-                                if (signupformKey.currentState.validate()) {
-                                  _selectedIndex += 1;
-                                }
-                              });
-                            },
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -721,32 +818,45 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 320, bottom: 5),
+                padding: EdgeInsets.only(top: 30, bottom: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.only(right: 15),
-                      child: Row(
-                        children: <Widget>[
-                          Text(
-                            "FINISH",
-                            style: TextStyle(color: Colors.white70, fontSize: 13),
-                            textAlign: TextAlign.right,
-                          ),
-                          IconButton(
-                            icon: Icon(
-                              Icons.arrow_forward,
-                              size: 30,
+                      padding: EdgeInsets.only(right: 10),
+                      child: FlatButton(
+                        splashColor: Color(0xff19547b),
+                        onPressed: () {
+                          setState(() {
+                            if (signupformKey.currentState.validate()) {
+                              signupformKey.currentState.reset();
+                              print('valid');
+                              //updateUser();
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                PageTransition(type: PageTransitionType.fade, child: StudentHomeScreen()),
+                                (Route<dynamic> route) => false,
+                              );
+                            }
+                          });
+                        },
+                        child: Row(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Text(
+                                "NEXT",
+                                style: TextStyle(color: Colors.white, fontSize: 15),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            Icon(
+                              Icons.navigate_next,
+                              size: 25,
                               color: Colors.white,
                             ),
-                            onPressed: () {
-                              setState(() {
-                                _selectedIndex += 0;
-                              });
-                            },
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ],
