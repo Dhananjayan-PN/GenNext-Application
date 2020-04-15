@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:searchable_dropdown/searchable_dropdown.dart';
+import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:country_currency_pickers/currency_picker_dropdown.dart';
 import 'package:country_currency_pickers/country.dart';
 import 'package:country_currency_pickers/country_pickers.dart';
@@ -12,32 +13,6 @@ import 'dart:convert';
 //import 'package:back_button_interceptor/back_button_interceptor.dart'; //will be utilised in production
 //import 'package:page_transition/page_transition.dart';
 //import 'student/home.dart';
-
-Future<List<dynamic>> fetchCountries() async {
-  var result = await http.get('https://restcountries.eu/rest/v2/all?fields=name');
-
-  if (result.statusCode == 200) {
-    // If the server did return a 200 OK response,
-    // then parse the JSON.
-    return json.decode(result.body);
-  } else {
-    // If the server did not return a 200 OK response,
-    // then throw an exception.
-    throw Exception('Failed to load album');
-  }
-}
-
-Widget _buildCurrencyDropdownItem(Country country) => Container(
-      child: Row(
-        children: <Widget>[
-          CountryPickerUtils.getDefaultFlagImage(country),
-          SizedBox(
-            width: 8.0,
-          ),
-          Text("${country.currencyCode}"),
-        ],
-      ),
-    );
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -61,10 +36,12 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
   final registerFormKey = GlobalKey<FormState>();
   final signupformKey1 = GlobalKey<FormState>();
   final signupformKey2 = GlobalKey<FormState>();
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController _pass = TextEditingController();
   final TextEditingController _confirmpass = TextEditingController();
   ScrollController _scrollController;
   Future<List<dynamic>> _fetchCountries;
+  List<DropdownMenuItem<String>> countries;
   bool _isOnTop;
   int _selectedIndex = 0;
   int _radioValue = -1;
@@ -107,14 +84,14 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
     _fetchCountries = fetchCountries();
     _isOnTop = false;
     _scrollController = ScrollController();
-    _controller = AnimationController(vsync: this, duration: Duration(seconds: 7));
+    _controller = AnimationController(vsync: this, duration: Duration(seconds: 6));
     _animation1 = CurvedAnimation(
       parent: _controller,
       curve: Interval(0.0, 0.3, curve: Curves.fastOutSlowIn),
     );
     _animation2 = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.2, 0.4, curve: Curves.fastOutSlowIn),
+      curve: Interval(0.3, 0.4, curve: Curves.fastOutSlowIn),
     );
     _animation3 = CurvedAnimation(
       parent: _controller,
@@ -152,6 +129,44 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
     setState(() => _isOnTop = true);
   }
 
+  Future<List<dynamic>> fetchCountries() async {
+    var result = await http.get('https://restcountries.eu/rest/v2/all?fields=name');
+    if (result.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      List<String> countrylist = [];
+      for (var i = 0; i < json.decode(result.body).length; i++) {
+        countrylist.add(json.decode(result.body)[i]['name']);
+      }
+      countries = countrylist.map((String value) {
+        return new DropdownMenuItem<String>(
+          value: value,
+          child: Text(
+            value,
+            style: TextStyle(fontSize: 16),
+          ),
+        );
+      }).toList();
+      return json.decode(result.body);
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load countries');
+    }
+  }
+
+  Widget _buildCurrencyDropdownItem(Country country) => Container(
+        child: Row(
+          children: <Widget>[
+            CountryPickerUtils.getDefaultFlagImage(country),
+            SizedBox(
+              width: 8.0,
+            ),
+            Text("${country.currencyCode}"),
+          ],
+        ),
+      );
+
   Widget build(BuildContext context) {
     List<Widget> _pageOptions = <Widget>[
       Container(
@@ -164,7 +179,7 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
             FadeTransition(
               opacity: _animation1,
               child: Padding(
-                padding: EdgeInsets.only(top: 160),
+                padding: EdgeInsets.only(top: 120),
                 child: Text(
                   "Hi there !",
                   style: TextStyle(color: Colors.white, fontSize: 50, fontWeight: FontWeight.w500),
@@ -186,7 +201,7 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
             FadeTransition(
               opacity: _animation3,
               child: Padding(
-                padding: EdgeInsets.only(top: 40, left: 20, right: 20),
+                padding: EdgeInsets.only(top: 50, left: 20, right: 20),
                 child: Text(
                   "Our goal is to help students dash through the college admission process, with the help of our talented team and this feature-packed app",
                   style: TextStyle(color: Colors.white, fontSize: 18),
@@ -208,36 +223,49 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
             ),
             FadeTransition(
               opacity: _animation5,
-              child: Row(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(top: 30, left: 130),
-                    child: Text(
-                      "START",
-                      style: TextStyle(color: Colors.white, fontSize: 18),
-                      textAlign: TextAlign.center,
+              child: Padding(
+                padding: EdgeInsets.only(top: 50, left: 120, right: 120),
+                child: FlatButton(
+                  padding: const EdgeInsets.all(0.0),
+                  onPressed: () {
+                    setState(() {
+                      _controller.reset();
+                      _controller.duration = Duration(seconds: 6);
+                      _controller.forward();
+                      _selectedIndex += 1;
+                      _scrollToTop();
+                    });
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      gradient:
+                          LinearGradient(end: Alignment.bottomCenter, begin: Alignment.topCenter, colors: [Color(0xff36d1dc), Color(0xff19547b)]),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 15),
+                          child: Text(
+                            "START",
+                            style: TextStyle(color: Colors.white, fontSize: 20),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(0),
+                          child: Icon(
+                            Icons.navigate_next,
+                            size: 35,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 30, right: 15),
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.arrow_forward,
-                        size: 30,
-                        color: Colors.white,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _controller.reset();
-                          _controller.duration = Duration(seconds: 6);
-                          _controller.forward();
-                          _selectedIndex += 1;
-                          _scrollToTop();
-                        });
-                      },
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
           ],
@@ -433,7 +461,7 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.only(top: 30, left: 20, right: 10, bottom: 20),
+                          padding: const EdgeInsets.only(top: 30, left: 20, right: 10, bottom: 10),
                           child: Icon(Icons.public, color: Colors.black45),
                         ),
                         Flexible(
@@ -443,52 +471,32 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                               future: _fetchCountries,
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
-                                  List<String> countrylist = [];
-                                  List<DropdownMenuItem<String>> countries;
-                                  for (var i = 0; i < snapshot.data.length; i++) {
-                                    countrylist.add(snapshot.data[i]['name']);
-                                  }
-                                  countries = countrylist.map((String value) {
-                                    return new DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(
-                                        value,
-                                        style: TextStyle(fontSize: 16),
-                                      ),
-                                    );
-                                  }).toList();
                                   return SearchableDropdown.single(
-                                      //menuConstraints: BoxConstraints.tight(Size.fromHeight(350)),
-                                      dialogBox: true,
-                                      menuBackgroundColor: Colors.white,
-                                      icon: Icon(
-                                        Icons.arrow_drop_down,
-                                        size: 25,
-                                        color: Colors.white,
+                                    menuConstraints: BoxConstraints.tight(Size.fromHeight(350)),
+                                    dialogBox: false,
+                                    menuBackgroundColor: Colors.white,
+                                    icon: Icon(
+                                      Icons.arrow_drop_down,
+                                      size: 25,
+                                      color: Colors.white,
+                                    ),
+                                    items: countries,
+                                    style: TextStyle(color: Colors.white),
+                                    hint: Padding(
+                                      padding: const EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 15),
+                                      child: Text(
+                                        "Country",
+                                        style: TextStyle(color: Colors.white, fontSize: 16),
                                       ),
-                                      items: countries,
-                                      style: TextStyle(color: Colors.white),
-                                      hint: Padding(
-                                        padding: const EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 15),
-                                        child: Text(
-                                          "Country",
-                                          style: TextStyle(color: Colors.white, fontSize: 16),
-                                        ),
-                                      ),
-                                      value: _country,
-                                      searchHint: "Select a country",
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _country = value;
-                                        });
-                                      },
-                                      isExpanded: true,
-                                      validator: (value) {
-                                        if (value == null) {
-                                          return 'Select a country';
-                                        }
-                                        return null;
+                                    ),
+                                    value: _country,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _country = value;
                                       });
+                                    },
+                                    isExpanded: true,
+                                  );
                                 } else if (snapshot.hasError) {
                                   return Text("${snapshot.error}");
                                 }
@@ -565,13 +573,24 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                         onPressed: () {
                           setState(() {
                             if (registerFormKey.currentState.validate()) {
-                              print('valid');
-                              //registerUser();
-                              _controller.reset();
-                              _controller.duration = Duration(seconds: 8);
-                              _controller.forward();
-                              _selectedIndex += 1;
-                              _scrollToTop();
+                              if (_country != null) {
+                                print('valid');
+                                //registerUser();
+                                _controller.reset();
+                                _controller.duration = Duration(seconds: 8);
+                                _controller.forward();
+                                _selectedIndex += 1;
+                                _scrollToTop();
+                              } else {
+                                _scaffoldKey.currentState.showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Selection of a country is required to proceed',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                );
+                              }
                             }
                           });
                         },
@@ -828,50 +847,46 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            Row(
-                              children: <Widget>[
-                                Radio(
-                                  value: 1,
-                                  groupValue: _radioValue,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _radioValue = value;
-                                      switch (_radioValue) {
-                                        case 0:
-                                          _research = false;
-                                          break;
-                                        case 1:
-                                          _research = true;
-                                          break;
-                                        default:
-                                          _research = null;
-                                      }
-                                    });
-                                  },
-                                ),
-                                Text('Yes      ', style: TextStyle(color: Colors.white, fontSize: 16)),
-                                Radio(
-                                  value: 0,
-                                  groupValue: _radioValue,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _radioValue = value;
-                                      switch (value) {
-                                        case 0:
-                                          _research = false;
-                                          break;
-                                        case 1:
-                                          _research = true;
-                                          break;
-                                        default:
-                                          _research = null;
-                                      }
-                                    });
-                                  },
-                                ),
-                                Text('No', style: TextStyle(color: Colors.white, fontSize: 16)),
-                              ],
+                            Radio(
+                              value: 1,
+                              groupValue: _radioValue,
+                              onChanged: (value) {
+                                setState(() {
+                                  _radioValue = value;
+                                  switch (_radioValue) {
+                                    case 0:
+                                      _research = false;
+                                      break;
+                                    case 1:
+                                      _research = true;
+                                      break;
+                                    default:
+                                      _research = null;
+                                  }
+                                });
+                              },
                             ),
+                            Text('Yes      ', style: TextStyle(color: Colors.white, fontSize: 16)),
+                            Radio(
+                              value: 0,
+                              groupValue: _radioValue,
+                              onChanged: (value) {
+                                setState(() {
+                                  _radioValue = value;
+                                  switch (value) {
+                                    case 0:
+                                      _research = false;
+                                      break;
+                                    case 1:
+                                      _research = true;
+                                      break;
+                                    default:
+                                      _research = null;
+                                  }
+                                });
+                              },
+                            ),
+                            Text('No', style: TextStyle(color: Colors.white, fontSize: 16)),
                           ],
                         ),
                       )
@@ -1248,6 +1263,7 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
     ];
 
     return Scaffold(
+      key: _scaffoldKey,
       body: _pageOptions[_selectedIndex],
       bottomNavigationBar: Theme(
         data: Theme.of(context).copyWith(canvasColor: Color(0xff36d1dc)),
@@ -1278,3 +1294,13 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
     );
   }
 }
+/*
+
+setState(() {
+_controller.reset();
+_controller.duration = Duration(seconds: 6);
+_controller.forward();
+_selectedIndex += 1;
+_scrollToTop();
+});
+*/
