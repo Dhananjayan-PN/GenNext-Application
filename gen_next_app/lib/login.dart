@@ -143,6 +143,8 @@ class _LoginPageState extends State<LoginPage> {
                     height: 45,
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
+                      gradient:
+                          LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xff36d1dc), Color(0xff19547b)]),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.cyan[900],
@@ -164,6 +166,7 @@ class _LoginPageState extends State<LoginPage> {
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
+                          fontWeight: FontWeight.w600,
                         ),
                         textAlign: TextAlign.right,
                       ),
@@ -250,6 +253,7 @@ class _LoginPageState extends State<LoginPage> {
                   height: 47,
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
+                    gradient: LinearGradient(end: Alignment.bottomCenter, begin: Alignment.topCenter, colors: [Color(0xff36d1dc), Color(0xff19547b)]),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.cyan[900],
@@ -271,10 +275,11 @@ class _LoginPageState extends State<LoginPage> {
                       child: Text(
                         'Sign In',
                         style: TextStyle(
-                          color: Colors.lightBlueAccent,
-                          fontSize: 18,
+                          color: Colors.white,
+                          fontSize: 19,
                           fontWeight: FontWeight.w700,
                         ),
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   ),
