@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:searchable_dropdown/searchable_dropdown.dart';
-import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:country_currency_pickers/currency_picker_dropdown.dart';
 import 'package:country_currency_pickers/country.dart';
 import 'package:country_currency_pickers/country_pickers.dart';
@@ -71,7 +70,7 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
   List<int> _countryprefindexes = [];
   bool isChecked = false;
   String _budgetcurrency;
-  int _budgetamount = 40000;
+  int _budgetamount;
 
   //counsellor account information
 
