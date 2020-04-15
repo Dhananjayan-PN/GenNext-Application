@@ -247,10 +247,10 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 40, right: 50, left: 200),
+                padding: const EdgeInsets.only(top: 40, right: 55, left: 205),
                 child: Container(
                   alignment: Alignment.bottomRight,
-                  height: 47,
+                  height: 40,
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(end: Alignment.bottomCenter, begin: Alignment.topCenter, colors: [Color(0xff36d1dc), Color(0xff19547b)]),
@@ -272,14 +272,17 @@ class _LoginPageState extends State<LoginPage> {
                     splashColor: Colors.cyanAccent[400],
                     onPressed: validateAndSave,
                     child: Center(
-                      child: Text(
-                        'Sign In',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 19,
-                          fontWeight: FontWeight.w700,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 4),
+                        child: Text(
+                          'Sign In',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 19,
+                            fontWeight: FontWeight.w700,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                        textAlign: TextAlign.center,
                       ),
                     ),
                   ),
