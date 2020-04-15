@@ -1294,13 +1294,3 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
     );
   }
 }
-/*
-
-setState(() {
-_controller.reset();
-_controller.duration = Duration(seconds: 6);
-_controller.forward();
-_selectedIndex += 1;
-_scrollToTop();
-});
-*/
