@@ -10,7 +10,7 @@ import 'package:country_currency_pickers/country_pickers.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
-//import 'package:back_button_interceptor/back_button_interceptor.dart'; //will be utilised in prod
+//import 'package:back_button_interceptor/back_button_interceptor.dart'; //will be utilised in production
 import 'package:page_transition/page_transition.dart';
 import 'student/home.dart';
 
@@ -459,37 +459,32 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                                     );
                                   }).toList();
                                   return SearchableDropdown.single(
-                                      //menuConstraints: BoxConstraints.tight(Size.fromHeight(350)),
-                                      dialogBox: true,
-                                      menuBackgroundColor: Colors.white,
-                                      icon: Icon(
-                                        Icons.arrow_drop_down,
-                                        size: 25,
-                                        color: Colors.white,
+                                    //menuConstraints: BoxConstraints.tight(Size.fromHeight(350)),
+                                    dialogBox: true,
+                                    menuBackgroundColor: Colors.white,
+                                    icon: Icon(
+                                      Icons.arrow_drop_down,
+                                      size: 25,
+                                      color: Colors.white,
+                                    ),
+                                    items: countries,
+                                    style: TextStyle(color: Colors.white),
+                                    hint: Padding(
+                                      padding: const EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 15),
+                                      child: Text(
+                                        "Country",
+                                        style: TextStyle(color: Colors.white, fontSize: 16),
                                       ),
-                                      items: countries,
-                                      style: TextStyle(color: Colors.white),
-                                      hint: Padding(
-                                        padding: const EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 15),
-                                        child: Text(
-                                          "Country",
-                                          style: TextStyle(color: Colors.white, fontSize: 16),
-                                        ),
-                                      ),
-                                      value: _country,
-                                      searchHint: "Select a country",
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _country = value;
-                                        });
-                                      },
-                                      isExpanded: true,
-                                      validator: (value) {
-                                        if (value == null) {
-                                          return 'Select a country';
-                                        }
-                                        return null;
+                                    ),
+                                    value: _country,
+                                    searchHint: "Select a country",
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _country = value;
                                       });
+                                    },
+                                    isExpanded: true,
+                                  );
                                 } else if (snapshot.hasError) {
                                   return Text("${snapshot.error}");
                                 }
