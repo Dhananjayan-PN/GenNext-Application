@@ -1,4 +1,3 @@
-import 'package:country_currency_pickers/utils/typedefs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +10,8 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 //import 'package:back_button_interceptor/back_button_interceptor.dart'; //will be utilised in production
-import 'package:page_transition/page_transition.dart';
-import 'student/home.dart';
+//import 'package:page_transition/page_transition.dart';
+//import 'student/home.dart';
 
 Future<List<dynamic>> fetchCountries() async {
   var result = await http.get('https://restcountries.eu/rest/v2/all?fields=name');
