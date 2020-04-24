@@ -94,29 +94,42 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final formKey = GlobalKey<FormState>();
+  final _scafKey = GlobalKey<ScaffoldState>();
+  final TextEditingController username = TextEditingController();
+  final TextEditingController password = TextEditingController();
 
-  String _email;
+  String _username;
   String _password;
 
-  void validateAndSave() {
+  validateAndSave() {
     final form = formKey.currentState;
 
     if (form.validate()) {
       form.save();
-      if (_email == "jake.adams@gmail.com" && _password == 'gennext') {
+      if (_username == "jakeadams" && _password == 'gennext') {
         Navigator.pushAndRemoveUntil(
           context,
           PageTransition(type: PageTransitionType.downToUp, child: StudentHomeScreen()),
           (Route<dynamic> route) => false,
         );
       }
-      if (_email == "counsellor@gennext.edu" && _password == 'gennext') {
+      if (_username == "counsellor" && _password == 'gennext') {
         print('Hey Counsellor');
       }
-      if (_email == "university@gennext.edu" && _password == 'gennext') {
+      if (_username == "university" && _password == 'gennext') {
         print('Hey University');
       } else {
-        print("Invalid");
+        username.clear();
+        password.clear();
+        _scafKey.currentState.showSnackBar(
+          SnackBar(
+            content: Text(
+              'Invalid credentials. Try again',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+        print('Invalid credentials');
       }
     } else {
       print("Form Is Invalid");
@@ -128,6 +141,7 @@ class _LoginPageState extends State<LoginPage> {
     return WillPopScope(
       onWillPop: () async => Future.value(false),
       child: Scaffold(
+        key: _scafKey,
         body: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(begin: Alignment.bottomCenter, end: Alignment.topCenter, colors: [Color(0xff36d1dc), Color(0xff19547b)]),
@@ -161,14 +175,17 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     child: Align(
                       alignment: Alignment.center,
-                      child: Text(
-                        'Are you future-ready ?   ',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
+                      child: Padding(
+                        padding: EdgeInsets.only(bottom: 4),
+                        child: Text(
+                          'Are you future-ready ?   ',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          textAlign: TextAlign.right,
                         ),
-                        textAlign: TextAlign.right,
                       ),
                     ),
                   ),
@@ -205,12 +222,13 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   children: <Widget>[
                     Padding(
-                      padding: const EdgeInsets.only(top: 40, left: 30, right: 50),
+                      padding: const EdgeInsets.only(top: 35, left: 30, right: 50),
                       child: TextFormField(
+                        controller: username,
                         validator: (value) {
                           return value.isEmpty ? 'Enter valid username' : null;
                         },
-                        onSaved: (value) => _email = value,
+                        onSaved: (value) => _username = value,
                         style: TextStyle(
                           color: Colors.white,
                         ),
@@ -226,6 +244,7 @@ class _LoginPageState extends State<LoginPage> {
                     Padding(
                       padding: const EdgeInsets.only(top: 20, left: 30, right: 50),
                       child: TextFormField(
+                        controller: password,
                         validator: (String value) {
                           return value.isEmpty ? 'Enter a password' : null;
                         },
@@ -247,13 +266,13 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 40, right: 55, left: 205),
+                padding: const EdgeInsets.only(top: 45, right: 55, left: 205),
                 child: Container(
                   alignment: Alignment.bottomRight,
                   height: 40,
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(end: Alignment.bottomCenter, begin: Alignment.topCenter, colors: [Color(0xff36d1dc), Color(0xff19547b)]),
+                    //gradient: LinearGradient(end: Alignment.bottomCenter, begin: Alignment.topCenter, colors: [Color(0xff36d1dc), Color(0xff19547b)]),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.cyan[900],
@@ -266,18 +285,18 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ],
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(25),
+                    borderRadius: BorderRadius.circular(20),
                   ),
                   child: FlatButton(
                     splashColor: Colors.cyanAccent[400],
                     onPressed: validateAndSave,
                     child: Center(
                       child: Padding(
-                        padding: const EdgeInsets.only(bottom: 4),
+                        padding: const EdgeInsets.only(bottom: 2),
                         child: Text(
                           'Sign In',
                           style: TextStyle(
-                            color: Colors.white,
+                            color: Color(0xff36d1dc),
                             fontSize: 19,
                             fontWeight: FontWeight.w700,
                           ),
