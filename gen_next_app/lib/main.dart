@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-//Following class is a template for the custom dialog screen that can be used from anywhere
+//Following class is a template for the custom signout dialog screen that can be used from anywhere
 
 class SignOutDialog extends StatelessWidget {
   final String title, description, buttonText;

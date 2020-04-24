@@ -90,7 +90,7 @@ class NotificationScreen extends StatelessWidget {
         appBar: AppBar(
           leading: IconButton(
               icon: Icon(
-                Icons.keyboard_backspace,
+                Icons.arrow_back,
                 color: Colors.indigo[900],
               ),
               onPressed: () {
