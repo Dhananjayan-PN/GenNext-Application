@@ -57,7 +57,9 @@ class CustomDialog extends StatelessWidget {
               Align(
                 alignment: Alignment.bottomRight,
                 child: FlatButton(
-                  shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(9.0), side: BorderSide(color: Colors.cyan[600])),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(9.0),
+                      side: BorderSide(color: Colors.cyan[600])),
                   color: Colors.cyanAccent[400],
                   splashColor: Colors.blueAccent,
                   onPressed: () {
@@ -109,7 +111,8 @@ class _LoginPageState extends State<LoginPage> {
       if (_username == "jakeadams" && _password == 'gennext') {
         Navigator.pushAndRemoveUntil(
           context,
-          PageTransition(type: PageTransitionType.downToUp, child: StudentHomeScreen()),
+          PageTransition(
+              type: PageTransitionType.downToUp, child: StudentHomeScreen()),
           (Route<dynamic> route) => false,
         );
       }
@@ -144,12 +147,16 @@ class _LoginPageState extends State<LoginPage> {
         key: _scafKey,
         body: Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(begin: Alignment.bottomCenter, end: Alignment.topCenter, colors: [Color(0xff36d1dc), Color(0xff19547b)]),
+            gradient: LinearGradient(
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+                colors: [Color(0xff36d1dc), Color(0xff19547b)]),
           ),
           child: ListView(
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.only(top: 70, right: 90, left: 0, bottom: 0),
+                padding: const EdgeInsets.only(
+                    top: 70, right: 90, left: 0, bottom: 0),
                 child: Transform.scale(
                   scale: 1.2,
                   child: Container(
@@ -157,13 +164,17 @@ class _LoginPageState extends State<LoginPage> {
                     height: 45,
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
-                      gradient:
-                          LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xff36d1dc), Color(0xff19547b)]),
+                      gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [Color(0xff36d1dc), Color(0xff19547b)]),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.cyan[900],
-                          blurRadius: 8.0, // has the effect of softening the shadow
-                          spreadRadius: 0.1, // has the effect of extending the shadow
+                          blurRadius:
+                              8.0, // has the effect of softening the shadow
+                          spreadRadius:
+                              0.1, // has the effect of extending the shadow
                           offset: Offset(
                             5.0, // horizontal, move right 10
                             5.0, // vertical, move down 10
@@ -222,7 +233,8 @@ class _LoginPageState extends State<LoginPage> {
                 child: Column(
                   children: <Widget>[
                     Padding(
-                      padding: const EdgeInsets.only(top: 35, left: 30, right: 50),
+                      padding:
+                          const EdgeInsets.only(top: 35, left: 30, right: 50),
                       child: TextFormField(
                         controller: username,
                         validator: (value) {
@@ -242,7 +254,8 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 20, left: 30, right: 50),
+                      padding:
+                          const EdgeInsets.only(top: 20, left: 30, right: 50),
                       child: TextFormField(
                         controller: password,
                         validator: (String value) {
@@ -276,8 +289,10 @@ class _LoginPageState extends State<LoginPage> {
                     boxShadow: [
                       BoxShadow(
                         color: Colors.cyan[900],
-                        blurRadius: 10.0, // has the effect of softening the shadow
-                        spreadRadius: 1.0, // has the effect of extending the shadow
+                        blurRadius:
+                            10.0, // has the effect of softening the shadow
+                        spreadRadius:
+                            1.0, // has the effect of extending the shadow
                         offset: Offset(
                           5.0, // horizontal, move right 10
                           5.0, // vertical, move down 10
@@ -328,7 +343,11 @@ class _LoginPageState extends State<LoginPage> {
                           splashColor: Colors.cyan,
                           onTap: () {
                             formKey.currentState.reset();
-                            Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: SignUpPage()));
+                            Navigator.push(
+                                context,
+                                PageTransition(
+                                    type: PageTransitionType.rightToLeft,
+                                    child: SignUpPage()));
                           },
                           child: Text(
                             'Sign Up',
