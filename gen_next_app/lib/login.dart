@@ -1,8 +1,11 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
+import 'dart:convert';
+import 'main.dart';
 import 'package:page_transition/page_transition.dart';
 import 'student/home.dart';
-import 'package:http/http.dart' as http;
 import 'signup.dart';
 
 class CustomDialog extends StatelessWidget {
@@ -101,39 +104,65 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController username = TextEditingController();
   final TextEditingController password = TextEditingController();
 
+  String loginresult;
   String _username;
   String _password;
 
-  validateAndSave() {
-    final form = formKey.currentState;
-    if (form.validate()) {
-      form.save();
-      if (_username == "jakeadams" && _password == 'gennext') {
-        Navigator.pushAndRemoveUntil(
-          context,
-          PageTransition(
-              type: PageTransitionType.downToUp,
-              child: StudentHomeScreen(username: 'jakeadams')),
-          (Route<dynamic> route) => false,
-        );
-      }
-      if (_username == "counsellor" && _password == 'gennext') {
-        print('Hey Counsellor');
-      }
-      if (_username == "university" && _password == 'gennext') {
-        print('Hey University');
-      } else {
-        username.clear();
-        password.clear();
-        _scafKey.currentState.showSnackBar(
-          SnackBar(
-            content: Text(
-              'Invalid credentials. Try again',
-              textAlign: TextAlign.center,
-            ),
+  Future<void> _loginUser(String uname, String pass) async {
+    final http.Response result = await http.post(
+      'https://gennext.ml/authenticate/login/',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{'username': uname, 'password': pass}),
+    );
+    print(json.decode(result.body));
+    if (result.statusCode == 200) {
+      token = json.decode(result.body)['token'];
+      Navigator.pushAndRemoveUntil(
+        context,
+        PageTransition(
+            type: PageTransitionType.downToUp,
+            child: StudentHomeScreen(username: uname)),
+        (Route<dynamic> route) => false,
+      );
+    } else {
+      print('failed to login');
+      username.clear();
+      password.clear();
+      _scafKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(
+            'Invalid credentials. Try again',
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+  }
+
+  void validateAndSave() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: new Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              new CircularProgressIndicator(),
+              new Text("Loading"),
+            ],
           ),
         );
-      }
+      },
+    );
+    final form = formKey.currentState;
+    if (form.validate()) {
+      Future.delayed(new Duration(seconds: 3), () {
+        Navigator.pop(context); //pop dialog
+        _loginUser(username.text, password.text);
+      });
     } else {
       print("Form Is Invalid");
     }
@@ -313,7 +342,9 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     child: FlatButton(
                       splashColor: Colors.cyanAccent[400],
-                      onPressed: validateAndSave,
+                      onPressed: () {
+                        validateAndSave();
+                      },
                       child: Center(
                         child: Padding(
                           padding: const EdgeInsets.only(bottom: 2),

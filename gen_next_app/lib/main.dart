@@ -7,6 +7,8 @@ import 'login.dart';
 var name = 'Jake Adams';
 final emailid = 'jake.adams@gmail.com';
 
+String token;
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
