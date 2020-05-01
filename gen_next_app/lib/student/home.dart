@@ -204,36 +204,44 @@ class HomeAppBarState extends State<HomeAppBar> {
 }
 
 class StudentHomeScreen extends StatefulWidget {
+  final String username;
+  StudentHomeScreen({@required this.username});
   // This widget defines the homepage of the application
   @override
-  _StudentHomeScreenState createState() => _StudentHomeScreenState();
+  _StudentHomeScreenState createState() =>
+      _StudentHomeScreenState(username: username);
 }
 
 class _StudentHomeScreenState extends State<StudentHomeScreen> {
+  final String username;
+  _StudentHomeScreenState({@required this.username});
+
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      systemNavigationBarColor: Colors.grey[250],
-      statusBarColor: Color(0xff0072BC).withAlpha(150),
-    ));
-    return new Scaffold(
-      backgroundColor: Colors.grey[250],
-      drawer: NavDrawer(),
-      appBar: HomeAppBar(),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Image(
-              image: AssetImage('images/doggo.png'),
-            ),
-            Text(
-              'Our Application is under development\nCome back soon!',
-              style: TextStyle(color: Colors.black, fontSize: 20),
-              textAlign: TextAlign.center,
-            ),
-          ],
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        systemNavigationBarColor: Colors.white,
+        statusBarColor: Color(0xff0072BC).withAlpha(150),
+      ),
+      child: new Scaffold(
+        backgroundColor: Colors.grey[250],
+        drawer: NavDrawer(),
+        appBar: HomeAppBar(),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Image(
+                image: AssetImage('images/doggo.png'),
+              ),
+              Text(
+                'Our Application is under development\nCome back soon!',
+                style: TextStyle(color: Colors.black, fontSize: 20),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
       ),
     );

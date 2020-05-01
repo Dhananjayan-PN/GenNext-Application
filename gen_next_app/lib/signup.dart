@@ -172,10 +172,6 @@ class SignUpPageState extends State<SignUpPage>
       );
 
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      systemNavigationBarColor: Color(0xff00AEEF),
-      statusBarColor: Color(0xff0072BC).withAlpha(150),
-    ));
     List<Widget> _pageOptions = <Widget>[
       Container(
         decoration: BoxDecoration(
@@ -1373,34 +1369,40 @@ class SignUpPageState extends State<SignUpPage>
       if (_usertype == 'CollegeRep') ...[],
     ];
 
-    return Scaffold(
-      key: _scaffoldKey,
-      body: _pageOptions[_selectedIndex],
-      bottomNavigationBar: Theme(
-        data: Theme.of(context).copyWith(canvasColor: Color(0xff00AEEF)),
-        child: BottomNavigationBar(
-          elevation: 0,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.fiber_manual_record),
-              title: Text(''),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.fiber_manual_record),
-              title: Text(''),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.fiber_manual_record),
-              title: Text(''),
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.fiber_manual_record),
-              title: Text(''),
-            ),
-          ],
-          unselectedItemColor: Colors.blue[200],
-          currentIndex: _selectedIndex,
-          selectedItemColor: Colors.blue[900],
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        systemNavigationBarColor: Color(0xff00AEEF),
+        statusBarColor: Color(0xff0072BC).withAlpha(150),
+      ),
+      child: Scaffold(
+        key: _scaffoldKey,
+        body: _pageOptions[_selectedIndex],
+        bottomNavigationBar: Theme(
+          data: Theme.of(context).copyWith(canvasColor: Color(0xff00AEEF)),
+          child: BottomNavigationBar(
+            elevation: 0,
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(Icons.fiber_manual_record),
+                title: Text(''),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.fiber_manual_record),
+                title: Text(''),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.fiber_manual_record),
+                title: Text(''),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.fiber_manual_record),
+                title: Text(''),
+              ),
+            ],
+            unselectedItemColor: Colors.blue[200],
+            currentIndex: _selectedIndex,
+            selectedItemColor: Colors.blue[900],
+          ),
         ),
       ),
     );
