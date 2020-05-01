@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'student/home.dart';
+import 'package:http/http.dart' as http;
 import 'signup.dart';
 
 class CustomDialog extends StatelessWidget {
@@ -150,7 +151,7 @@ class _LoginPageState extends State<LoginPage> {
             gradient: LinearGradient(
                 begin: Alignment.bottomCenter,
                 end: Alignment.topCenter,
-                colors: [Color(0xff36d1dc), Color(0xff19547b)]),
+                colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
           ),
           child: ListView(
             children: <Widget>[
@@ -167,17 +168,15 @@ class _LoginPageState extends State<LoginPage> {
                       gradient: LinearGradient(
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
-                          colors: [Color(0xff36d1dc), Color(0xff19547b)]),
+                          colors: [Color(0xff2fbdf5), Color(0xff0062be)]),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.cyan[900],
-                          blurRadius:
-                              8.0, // has the effect of softening the shadow
-                          spreadRadius:
-                              0.1, // has the effect of extending the shadow
+                          blurRadius: 8.0,
+                          spreadRadius: 0.1,
                           offset: Offset(
-                            5.0, // horizontal, move right 10
-                            5.0, // vertical, move down 10
+                            5.0,
+                            5.0,
                           ),
                         ),
                       ],
@@ -202,31 +201,35 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-              Row(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(top: 30, left: 5),
-                    child: RotatedBox(
-                        quarterTurns: -1,
-                        child: Text(
-                          'Sign In',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 45,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        )),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 0, left: 0),
-                    child: Image.asset(
-                      'images/gennextlonglogo-3.png',
-                      height: 90,
-                      width: 245,
-                      fit: BoxFit.fill,
+              Padding(
+                padding: EdgeInsets.only(top: 28.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(top: 00, left: 5),
+                      child: RotatedBox(
+                          quarterTurns: -1,
+                          child: Text(
+                            'Sign In',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 45,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          )),
                     ),
-                  ),
-                ],
+                    Padding(
+                      padding: EdgeInsets.only(top: 0, left: 0),
+                      child: Image.asset(
+                        'images/gennextlonglogo-4.png',
+                        height: 110,
+                        width: 290,
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  ],
+                ),
               ),
               Form(
                 key: formKey,

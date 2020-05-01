@@ -16,6 +16,10 @@ class MyApp extends StatelessWidget {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      systemNavigationBarColor: Color(0xff00AEEF),
+      statusBarColor: Color(0xff0072BC).withAlpha(150),
+    ));
     return MaterialApp(
       home: new LoginPage(),
       debugShowCheckedModeBanner: false,
@@ -78,13 +82,17 @@ class SignOutDialog extends StatelessWidget {
               Align(
                 alignment: Alignment.bottomRight,
                 child: FlatButton(
-                  shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(9.0), side: BorderSide(color: Colors.cyan[600])),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(9.0),
+                      side: BorderSide(color: Colors.cyan[600])),
                   color: Colors.cyanAccent[400],
                   splashColor: Colors.blueAccent,
                   onPressed: () {
                     Navigator.pushAndRemoveUntil(
                       context,
-                      PageTransition(type: PageTransitionType.upToDown, child: LoginPage()),
+                      PageTransition(
+                          type: PageTransitionType.upToDown,
+                          child: LoginPage()),
                       (Route<dynamic> route) => false,
                     );
                   },

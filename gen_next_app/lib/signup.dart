@@ -18,7 +18,8 @@ class SignUpPage extends StatefulWidget {
   State<StatefulWidget> createState() => SignUpPageState();
 }
 
-class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMixin {
+class SignUpPageState extends State<SignUpPage>
+    with SingleTickerProviderStateMixin {
   /*
   bool myInterceptor(bool stopDefaultButtonEvent) {
     return true;
@@ -83,7 +84,8 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
     _fetchCountries = fetchCountries();
     _isOnTop = false;
     _scrollController = ScrollController();
-    _controller = AnimationController(vsync: this, duration: Duration(seconds: 6));
+    _controller =
+        AnimationController(vsync: this, duration: Duration(seconds: 6));
     _animation1 = CurvedAnimation(
       parent: _controller,
       curve: Interval(0.0, 0.3, curve: Curves.fastOutSlowIn),
@@ -124,12 +126,14 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
   }
 
   _scrollToTop() {
-    _scrollController.animateTo(_scrollController.position.minScrollExtent, duration: Duration(milliseconds: 1000), curve: Curves.easeIn);
+    _scrollController.animateTo(_scrollController.position.minScrollExtent,
+        duration: Duration(milliseconds: 1000), curve: Curves.easeIn);
     setState(() => _isOnTop = true);
   }
 
   Future<List<dynamic>> fetchCountries() async {
-    var result = await http.get('https://restcountries.eu/rest/v2/all?fields=name');
+    var result =
+        await http.get('https://restcountries.eu/rest/v2/all?fields=name');
     if (result.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
@@ -170,7 +174,10 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
     List<Widget> _pageOptions = <Widget>[
       Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(begin: Alignment.bottomCenter, end: Alignment.topCenter, colors: [Color(0xff36d1dc), Color(0xff19547b)]),
+          gradient: LinearGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
         ),
         child: ListView(
           controller: _scrollController,
@@ -181,7 +188,10 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                 padding: EdgeInsets.only(top: 120),
                 child: Text(
                   "Hi there !",
-                  style: TextStyle(color: Colors.white, fontSize: 50, fontWeight: FontWeight.w500),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 50,
+                      fontWeight: FontWeight.w500),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -238,8 +248,10 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
-                      gradient:
-                          LinearGradient(end: Alignment.bottomCenter, begin: Alignment.topCenter, colors: [Color(0xff36d1dc), Color(0xff19547b)]),
+                      gradient: LinearGradient(
+                          end: Alignment.bottomCenter,
+                          begin: Alignment.topCenter,
+                          colors: [Color(0xff36d1dc), Color(0xff19547b)]),
                     ),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -272,7 +284,10 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
       ),
       Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(begin: Alignment.bottomCenter, end: Alignment.topCenter, colors: [Color(0xff36d1dc), Color(0xff19547b)]),
+          gradient: LinearGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+              colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
         ),
         child: ListView(
           controller: _scrollController,
@@ -290,7 +305,10 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                 padding: const EdgeInsets.only(top: 5),
                 child: Text(
                   'Account Information',
-                  style: TextStyle(color: Colors.white, fontSize: 33, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 33,
+                      fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -345,7 +363,8 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                                 value: 'CollegeRep'),
                           ],
                           value: _usertype,
-                          validator: (value) => value == null ? 'This field is important' : null,
+                          validator: (value) =>
+                              value == null ? 'This field is important' : null,
                           isExpanded: true,
                           onChanged: (value) {
                             setState(() {
@@ -356,7 +375,8 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 30, left: 60, right: 50),
+                      padding:
+                          const EdgeInsets.only(top: 30, left: 60, right: 50),
                       child: TextFormField(
                         validator: (value) {
                           return value.isEmpty ? 'Enter your first name' : null;
@@ -374,7 +394,8 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 30, left: 60, right: 50),
+                      padding:
+                          const EdgeInsets.only(top: 30, left: 60, right: 50),
                       child: TextFormField(
                         validator: (value) {
                           return value.isEmpty ? 'Enter your last name' : null;
@@ -392,10 +413,13 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 30, left: 60, right: 50),
+                      padding:
+                          const EdgeInsets.only(top: 30, left: 60, right: 50),
                       child: TextFormField(
                         validator: (value) {
-                          return value.isEmpty ? 'Enter desired username' : null;
+                          return value.isEmpty
+                              ? 'Enter desired username'
+                              : null;
                         },
                         onSaved: (value) => _username = value,
                         style: TextStyle(
@@ -410,10 +434,13 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 30, left: 20, right: 50),
+                      padding:
+                          const EdgeInsets.only(top: 30, left: 20, right: 50),
                       child: TextFormField(
                         validator: (value) {
-                          return value.isEmpty ? 'Enter a valid Email ID' : null;
+                          return value.isEmpty
+                              ? 'Enter a valid Email ID'
+                              : null;
                         },
                         onSaved: (value) => _email = value,
                         style: TextStyle(
@@ -429,10 +456,13 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 30, left: 20, right: 50),
+                      padding:
+                          const EdgeInsets.only(top: 30, left: 20, right: 50),
                       child: DateTimeField(
                         validator: (value) {
-                          return value == null ? 'Enter your date of birth' : null;
+                          return value == null
+                              ? 'Enter your date of birth'
+                              : null;
                         },
                         style: TextStyle(color: Colors.white),
                         format: DateFormat("MM-dd-yyyy"),
@@ -460,18 +490,21 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.only(top: 30, left: 20, right: 10, bottom: 10),
+                          padding: const EdgeInsets.only(
+                              top: 30, left: 20, right: 10, bottom: 10),
                           child: Icon(Icons.public, color: Colors.black45),
                         ),
                         Flexible(
                           child: Padding(
-                            padding: const EdgeInsets.only(top: 30, left: 5, right: 50, bottom: 0),
+                            padding: const EdgeInsets.only(
+                                top: 30, left: 5, right: 50, bottom: 0),
                             child: FutureBuilder<List<dynamic>>(
                               future: _fetchCountries,
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
                                   return SearchableDropdown.single(
-                                    menuConstraints: BoxConstraints.tight(Size.fromHeight(350)),
+                                    menuConstraints: BoxConstraints.tight(
+                                        Size.fromHeight(350)),
                                     dialogBox: false,
                                     menuBackgroundColor: Colors.white,
                                     icon: Icon(
@@ -482,10 +515,15 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                                     items: countries,
                                     style: TextStyle(color: Colors.white),
                                     hint: Padding(
-                                      padding: const EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 15),
+                                      padding: const EdgeInsets.only(
+                                          left: 0,
+                                          right: 0,
+                                          top: 0,
+                                          bottom: 15),
                                       child: Text(
                                         "Country",
-                                        style: TextStyle(color: Colors.white, fontSize: 16),
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 16),
                                       ),
                                     ),
                                     value: _country,
@@ -507,7 +545,8 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                       ],
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 30, left: 20, right: 50),
+                      padding:
+                          const EdgeInsets.only(top: 30, left: 20, right: 50),
                       child: TextFormField(
                         controller: _pass,
                         validator: (String value) {
@@ -528,7 +567,8 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 30, left: 60, right: 50),
+                      padding:
+                          const EdgeInsets.only(top: 30, left: 60, right: 50),
                       child: TextFormField(
                         controller: _confirmpass,
                         validator: (String value) {
@@ -599,7 +639,8 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                               padding: const EdgeInsets.all(4.0),
                               child: Text(
                                 "NEXT",
-                                style: TextStyle(color: Colors.white, fontSize: 15),
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 15),
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -622,7 +663,10 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
       if (_usertype == 'Student') ...[
         Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(begin: Alignment.bottomCenter, end: Alignment.topCenter, colors: [Color(0xff36d1dc), Color(0xff19547b)]),
+            gradient: LinearGradient(
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+                colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
           ),
           child: ListView(
             controller: _scrollController,
@@ -631,7 +675,8 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                 opacity: _animation1,
                 child: Padding(
                   padding: EdgeInsets.only(top: 50),
-                  child: Icon(Icons.bubble_chart, size: 55, color: Colors.white),
+                  child:
+                      Icon(Icons.bubble_chart, size: 55, color: Colors.white),
                 ),
               ),
               FadeTransition(
@@ -640,7 +685,10 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                   padding: const EdgeInsets.only(top: 5),
                   child: Text(
                     'Tell us a little more about yourself',
-                    style: TextStyle(color: Colors.white, fontSize: 33, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 33,
+                        fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -667,7 +715,8 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                             style: TextStyle(color: Colors.white),
                             hint: Text(
                               "Select Intended Degree Level",
-                              style: TextStyle(color: Colors.white, fontSize: 16),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 16),
                             ),
                             itemHeight: kMinInteractiveDimension,
                             items: [
@@ -692,17 +741,22 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                               });
                             },
                             validator: (value) {
-                              return value == null ? 'Selection of degree level is required' : null;
+                              return value == null
+                                  ? 'Selection of degree level is required'
+                                  : null;
                             },
                           ),
                         ),
                       ),
                       if (_degreelevel == 'UG') ...[
                         Padding(
-                          padding: const EdgeInsets.only(top: 20, left: 50, right: 50),
+                          padding: const EdgeInsets.only(
+                              top: 20, left: 50, right: 50),
                           child: TextFormField(
                             validator: (value) {
-                              return value.isEmpty ? 'Enter name of last attended school' : null;
+                              return value.isEmpty
+                                  ? 'Enter name of last attended school'
+                                  : null;
                             },
                             onSaved: (value) => _school = value,
                             style: TextStyle(
@@ -717,7 +771,8 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(top: 20, left: 50, right: 50),
+                          padding:
+                              EdgeInsets.only(top: 20, left: 50, right: 50),
                           child: Theme(
                             data: Theme.of(context).copyWith(
                               canvasColor: Color(0xff19547b),
@@ -731,10 +786,20 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                               style: TextStyle(color: Colors.white),
                               hint: Text(
                                 "Select Grade",
-                                style: TextStyle(fontSize: 16, color: Colors.white),
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.white),
                               ),
                               itemHeight: kMinInteractiveDimension,
-                              items: <String>['6', '7', '8', '9', '10', '11', '12', 'GY'].map((String value) {
+                              items: <String>[
+                                '6',
+                                '7',
+                                '8',
+                                '9',
+                                '10',
+                                '11',
+                                '12',
+                                'GY'
+                              ].map((String value) {
                                 return new DropdownMenuItem<String>(
                                   value: value,
                                   child: value == 'GY'
@@ -764,10 +829,13 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                       ],
                       if (_degreelevel == 'G') ...[
                         Padding(
-                          padding: const EdgeInsets.only(top: 20, left: 50, right: 50),
+                          padding: const EdgeInsets.only(
+                              top: 20, left: 50, right: 50),
                           child: TextFormField(
                             validator: (value) {
-                              return value.isEmpty ? 'Enter name of last attended college' : null;
+                              return value.isEmpty
+                                  ? 'Enter name of last attended college'
+                                  : null;
                             },
                             onSaved: (value) => _college = value,
                             style: TextStyle(
@@ -803,7 +871,9 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                       Padding(
                         padding: EdgeInsets.only(top: 30, left: 30, right: 30),
                         child: ListTile(
-                          title: Text('What are your interests ?', style: TextStyle(color: Colors.white, fontSize: 20)),
+                          title: Text('What are your interests ?',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20)),
                           subtitle: Text(
                               'This will help our team recommend you majors or get to know more about you if you have an intended major'
                               ' (Min 3)',
@@ -814,7 +884,9 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                         padding: EdgeInsets.only(top: 0, left: 50, right: 50),
                         child: TextFormField(
                           validator: (value) {
-                            return value.split('\n').length < 3 ? 'Add at least 3 interests' : null;
+                            return value.split('\n').length < 3
+                                ? 'Add at least 3 interests'
+                                : null;
                           },
                           onSaved: (value) {
                             _interests = value.split("\n");
@@ -836,8 +908,11 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                       Padding(
                         padding: EdgeInsets.only(top: 30, left: 30, right: 30),
                         child: ListTile(
-                          title: Text('Are you interested in Research ?', style: TextStyle(color: Colors.white, fontSize: 20)),
-                          subtitle: Text('Let us know if you are interested in undertaking research during the course of your degree',
+                          title: Text('Are you interested in Research ?',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20)),
+                          subtitle: Text(
+                              'Let us know if you are interested in undertaking research during the course of your degree',
                               style: TextStyle(color: Colors.white60)),
                         ),
                       ),
@@ -865,7 +940,9 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                                 });
                               },
                             ),
-                            Text('Yes      ', style: TextStyle(color: Colors.white, fontSize: 16)),
+                            Text('Yes      ',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16)),
                             Radio(
                               value: 0,
                               groupValue: _radioValue,
@@ -885,7 +962,9 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                                 });
                               },
                             ),
-                            Text('No', style: TextStyle(color: Colors.white, fontSize: 16)),
+                            Text('No',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16)),
                           ],
                         ),
                       )
@@ -923,7 +1002,8 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                                 padding: const EdgeInsets.all(4.0),
                                 child: Text(
                                   "NEXT",
-                                  style: TextStyle(color: Colors.white, fontSize: 15),
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 15),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
@@ -945,7 +1025,10 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
         ),
         Container(
           decoration: BoxDecoration(
-            gradient: LinearGradient(begin: Alignment.bottomCenter, end: Alignment.topCenter, colors: [Color(0xff36d1dc), Color(0xff19547b)]),
+            gradient: LinearGradient(
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+                colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
           ),
           child: ListView(
             children: <Widget>[
@@ -953,7 +1036,8 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                 opacity: _animation1,
                 child: Padding(
                   padding: EdgeInsets.only(top: 50),
-                  child: Icon(Icons.account_balance, size: 55, color: Colors.white),
+                  child: Icon(Icons.account_balance,
+                      size: 55, color: Colors.white),
                 ),
               ),
               FadeTransition(
@@ -962,7 +1046,10 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                   padding: const EdgeInsets.only(top: 5),
                   child: Text(
                     "Let's talk about your\ncollege preferences",
-                    style: TextStyle(color: Colors.white, fontSize: 33, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 33,
+                        fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -978,8 +1065,11 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                       Padding(
                         padding: EdgeInsets.only(top: 30, left: 20, right: 20),
                         child: ListTile(
-                          title: Text('Have any colleges in mind ?', style: TextStyle(color: Colors.white, fontSize: 20)),
-                          subtitle: Text("Don't worry if you aren't sure yet, our team will help you find the best ones for you",
+                          title: Text('Have any colleges in mind ?',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20)),
+                          subtitle: Text(
+                              "Don't worry if you aren't sure yet, our team will help you find the best ones for you",
                               style: TextStyle(color: Colors.white60)),
                         ),
                       ),
@@ -1008,8 +1098,11 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                       Padding(
                         padding: EdgeInsets.only(top: 30, left: 20, right: 20),
                         child: ListTile(
-                          title: Text('Where would you like to study ?', style: TextStyle(color: Colors.white, fontSize: 20)),
-                          subtitle: Text("Don't worry if you aren't sure yet, we'll help you find the best countries for your interests",
+                          title: Text('Where would you like to study ?',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20)),
+                          subtitle: Text(
+                              "Don't worry if you aren't sure yet, we'll help you find the best countries for your interests",
                               style: TextStyle(color: Colors.white60)),
                         ),
                       ),
@@ -1047,7 +1140,8 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                                 style: TextStyle(color: Colors.white),
                                 hint: Text(
                                   "Select countries",
-                                  style: TextStyle(color: Colors.white, fontSize: 16),
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 16),
                                 ),
                                 searchHint: "Select countries",
                                 onChanged: (value) {
@@ -1061,7 +1155,9 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                                       : "Save without selection");
                                 },
                                 isExpanded: true,
-                                validator: (value) => value == null ? 'Select at least one' : null,
+                                validator: (value) => value == null
+                                    ? 'Select at least one'
+                                    : null,
                               );
                             } else if (snapshot.hasError) {
                               return Text("${snapshot.error}");
@@ -1073,8 +1169,11 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                       Padding(
                         padding: EdgeInsets.only(top: 20, left: 20, right: 20),
                         child: ListTile(
-                          title: Text('Any college locale preference ?', style: TextStyle(color: Colors.white, fontSize: 20)),
-                          subtitle: Text("What environment would you like to study in? Select 'Any' if you're okay with any type of college location",
+                          title: Text('Any college locale preference ?',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20)),
+                          subtitle: Text(
+                              "What environment would you like to study in? Select 'Any' if you're okay with any type of college location",
                               style: TextStyle(color: Colors.white60)),
                         ),
                       ),
@@ -1095,7 +1194,8 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                               padding: const EdgeInsets.all(3.0),
                               child: Text(
                                 "Select College Town Preference",
-                                style: TextStyle(color: Colors.white, fontSize: 16),
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16),
                               ),
                             ),
                             itemHeight: kMinInteractiveDimension,
@@ -1133,7 +1233,9 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                               });
                             },
                             validator: (value) {
-                              return value == null ? 'Choose at least one' : null;
+                              return value == null
+                                  ? 'Choose at least one'
+                                  : null;
                             },
                           ),
                         ),
@@ -1141,7 +1243,9 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                       Padding(
                         padding: EdgeInsets.only(top: 20, left: 20, right: 20),
                         child: ListTile(
-                          title: Text('Thought of a budget ?', style: TextStyle(color: Colors.white, fontSize: 20)),
+                          title: Text('Thought of a budget ?',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20)),
                           subtitle: Text(
                               "We will consider this budget when selecting colleges and countries for you."
                               "\nCheck 'Not Sure' if you don't know yet",
@@ -1198,7 +1302,9 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                                 });
                               },
                             ),
-                            Text('Not Sure', style: TextStyle(color: Colors.white, fontSize: 16)),
+                            Text('Not Sure',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16)),
                           ],
                         ),
                       ),
@@ -1236,7 +1342,8 @@ class SignUpPageState extends State<SignUpPage> with SingleTickerProviderStateMi
                                 padding: const EdgeInsets.all(4.0),
                                 child: Text(
                                   "FINISH",
-                                  style: TextStyle(color: Colors.white, fontSize: 15),
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 15),
                                   textAlign: TextAlign.center,
                                 ),
                               ),
