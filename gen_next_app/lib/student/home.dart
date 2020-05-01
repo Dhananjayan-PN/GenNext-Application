@@ -8,12 +8,17 @@ import 'youruniversities.dart';
 import 'completedapps.dart';
 import 'pendingapps.dart';
 import 'schedule.dart';
+import 'package:gradient_app_bar/gradient_app_bar.dart';
 
 final navlistelements = [
   ['Home', StudentHomeScreen(), Icons.home],
   ['Your Profile', ProfileScreen(), Icons.account_box],
   ['Your Universities', YourUniversitiesScreen(), Icons.account_balance],
-  ['Completed Applications', CompletedApplicationsScreen(), Icons.assignment_turned_in],
+  [
+    'Completed Applications',
+    CompletedApplicationsScreen(),
+    Icons.assignment_turned_in
+  ],
   ['Pending Applications', PendingApplicationsScreen(), Icons.assignment_late],
   ['Counselling Schedule', ScheduleScreen(), Icons.date_range]
 ];
@@ -54,8 +59,10 @@ class NavDrawer extends StatelessWidget {
         children: <Widget>[
           new UserAccountsDrawerHeader(
             decoration: BoxDecoration(color: Colors.cyanAccent[400]),
-            accountName: new Text(name, style: TextStyle(color: Colors.black, fontSize: 18)),
-            accountEmail: new Text(emailid, style: TextStyle(color: Colors.black, fontSize: 12)),
+            accountName: new Text(name,
+                style: TextStyle(color: Colors.black, fontSize: 18)),
+            accountEmail: new Text(emailid,
+                style: TextStyle(color: Colors.black, fontSize: 12)),
             currentAccountPicture: CircleAvatar(
               backgroundImage: AssetImage('images/profile.png'),
               backgroundColor: Colors.cyan[50],
@@ -65,15 +72,18 @@ class NavDrawer extends StatelessWidget {
               Navigator.pop(context);
               Navigator.pushAndRemoveUntil(
                 context,
-                PageTransition(type: PageTransitionType.fade, child: ProfileScreen()),
+                PageTransition(
+                    type: PageTransitionType.fade, child: ProfileScreen()),
                 (Route<dynamic> route) => false,
               );
             }, //Take to Profile Page...implement later
           ),
           new Column(children: navlist),
           new ListTile(
-            leading: Icon(Icons.power_settings_new, size: 26, color: Colors.red[600]),
-            title: Text('Sign Out', style: TextStyle(color: Colors.black, fontSize: 16.5)),
+            leading: Icon(Icons.power_settings_new,
+                size: 26, color: Colors.red[600]),
+            title: Text('Sign Out',
+                style: TextStyle(color: Colors.black, fontSize: 16.5)),
             onTap: () {
               showDialog(
                 context: context,
@@ -135,11 +145,14 @@ class HomeAppBarState extends State<HomeAppBar> {
   int counter = notifications.length;
   @override
   Widget build(BuildContext context) {
-    return AppBar(
+    return GradientAppBar(
+      gradient: LinearGradient(
+          begin: Alignment.bottomCenter,
+          end: Alignment.topCenter,
+          colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
       title: Image(
         image: AssetImage('images/gennextlonglogo.png'),
       ),
-      backgroundColor: Colors.cyanAccent[400],
       iconTheme: new IconThemeData(color: Colors.indigo[900]),
       actions: <Widget>[
         // Using Stack to show Notification Badge
@@ -150,7 +163,11 @@ class HomeAppBarState extends State<HomeAppBar> {
                 alignment: Alignment.bottomLeft,
                 onPressed: () {
                   setState(() {
-                    Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: NotificationScreen()));
+                    Navigator.push(
+                        context,
+                        PageTransition(
+                            type: PageTransitionType.rightToLeft,
+                            child: NotificationScreen()));
                   });
                 }),
             counter != 0
@@ -192,7 +209,7 @@ class StudentHomeScreen extends StatelessWidget {
     return new Scaffold(
       backgroundColor: Colors.grey[250],
       drawer: NavDrawer(),
-      appBar: HomeAppBar(),
+      appBar: GradientAppBar(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
