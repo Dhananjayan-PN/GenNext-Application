@@ -142,6 +142,10 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      systemNavigationBarColor: Color(0xff00AEEF),
+      statusBarColor: Color(0xff0072BC).withAlpha(150),
+    ));
     return WillPopScope(
       onWillPop: () async => Future.value(false),
       child: Scaffold(

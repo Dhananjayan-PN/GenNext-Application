@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:searchable_dropdown/searchable_dropdown.dart';
@@ -171,6 +172,10 @@ class SignUpPageState extends State<SignUpPage>
       );
 
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      systemNavigationBarColor: Color(0xff00AEEF),
+      statusBarColor: Color(0xff0072BC).withAlpha(150),
+    ));
     List<Widget> _pageOptions = <Widget>[
       Container(
         decoration: BoxDecoration(

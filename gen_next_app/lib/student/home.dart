@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
+import 'package:flutter/services.dart';
 import '../main.dart';
 import 'notifications.dart';
 import 'profile.dart';
@@ -146,14 +147,14 @@ class HomeAppBarState extends State<HomeAppBar> {
   @override
   Widget build(BuildContext context) {
     return GradientAppBar(
+      title: Image(
+        image: AssetImage('images/gennextlonglogo.png'),
+      ),
+      //iconTheme: new IconThemeData(color: Colors.indigo[900]),
       gradient: LinearGradient(
           begin: Alignment.bottomCenter,
           end: Alignment.topCenter,
           colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
-      title: Image(
-        image: AssetImage('images/gennextlonglogo.png'),
-      ),
-      iconTheme: new IconThemeData(color: Colors.indigo[900]),
       actions: <Widget>[
         // Using Stack to show Notification Badge
         new Stack(
@@ -202,14 +203,23 @@ class HomeAppBarState extends State<HomeAppBar> {
   }
 }
 
-class StudentHomeScreen extends StatelessWidget {
+class StudentHomeScreen extends StatefulWidget {
   // This widget defines the homepage of the application
   @override
+  _StudentHomeScreenState createState() => _StudentHomeScreenState();
+}
+
+class _StudentHomeScreenState extends State<StudentHomeScreen> {
+  @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      systemNavigationBarColor: Colors.grey[250],
+      statusBarColor: Color(0xff0072BC).withAlpha(150),
+    ));
     return new Scaffold(
       backgroundColor: Colors.grey[250],
       drawer: NavDrawer(),
-      appBar: GradientAppBar(),
+      appBar: HomeAppBar(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
