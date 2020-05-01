@@ -227,22 +227,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
         backgroundColor: Colors.grey[250],
         drawer: NavDrawer(),
         appBar: HomeAppBar(),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Image(
-                image: AssetImage('images/doggo.png'),
-              ),
-              Text(
-                'Our Application is under development\nCome back soon!',
-                style: TextStyle(color: Colors.black, fontSize: 20),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
+        body: Center(child: Text('Hey @' + username + '!')),
       ),
     );
   }
