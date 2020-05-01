@@ -57,7 +57,7 @@ class SignUpPageState extends State<SignUpPage>
   String _password;
   String _confpassword;
 
-  //student account information
+  //student account parameters
   String _degreelevel;
   String _grade;
   String _school;
@@ -73,9 +73,9 @@ class SignUpPageState extends State<SignUpPage>
   String _budgetcurrency;
   int _budgetamount;
 
-  //counsellor account information
+  //counsellor account parameters
 
-  //collegerep account information
+  //collegerep account parameters
 
   @override
   void initState() {
@@ -247,11 +247,11 @@ class SignUpPageState extends State<SignUpPage>
                   },
                   child: Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(25),
                       gradient: LinearGradient(
                           end: Alignment.bottomCenter,
                           begin: Alignment.topCenter,
-                          colors: [Color(0xff36d1dc), Color(0xff19547b)]),
+                          colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
                     ),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -1372,8 +1372,9 @@ class SignUpPageState extends State<SignUpPage>
       key: _scaffoldKey,
       body: _pageOptions[_selectedIndex],
       bottomNavigationBar: Theme(
-        data: Theme.of(context).copyWith(canvasColor: Color(0xff36d1dc)),
+        data: Theme.of(context).copyWith(canvasColor: Color(0xff00AEEF)),
         child: BottomNavigationBar(
+          elevation: 0,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
               icon: Icon(Icons.fiber_manual_record),
@@ -1392,9 +1393,9 @@ class SignUpPageState extends State<SignUpPage>
               title: Text(''),
             ),
           ],
-          unselectedItemColor: Colors.cyan[100],
+          unselectedItemColor: Colors.blue[200],
           currentIndex: _selectedIndex,
-          selectedItemColor: Colors.cyan[900],
+          selectedItemColor: Colors.blue[900],
         ),
       ),
     );
