@@ -27,7 +27,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         context,
         PageTransition(
             type: PageTransitionType.fade,
-            child: StudentHomeScreen(username: uname)));
+            child: CounselorHomeScreen(username: uname)));
     return true;
   }
 

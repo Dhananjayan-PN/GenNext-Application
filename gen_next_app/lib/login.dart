@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'main.dart';
 import 'package:page_transition/page_transition.dart';
 import 'student/home.dart';
+import 'counselor/home.dart';
 import 'signup.dart';
+import 'usermodel.dart';
 
 class CustomDialog extends StatelessWidget {
   final String title, description, buttonText;
@@ -106,6 +109,7 @@ class _LoginPageState extends State<LoginPage> {
 
   String _username;
   String _password;
+  User user;
 
   Future<void> _loginUser(String uname, String pass) async {
     final http.Response result = await http.post(
@@ -115,17 +119,70 @@ class _LoginPageState extends State<LoginPage> {
       },
       body: jsonEncode(<String, String>{'username': uname, 'password': pass}),
     );
-    print(json.decode(result.body));
     if (result.statusCode == 200) {
       token = json.decode(result.body)['token'];
-      Navigator.pop(context);
-      Navigator.pushAndRemoveUntil(
-        context,
-        PageTransition(
-            type: PageTransitionType.downToUp,
-            child: StudentHomeScreen(username: uname)),
-        (Route<dynamic> route) => false,
+      final response = await http.get(
+        'https://gennext.ml/authenticate/$uname',
+        headers: {HttpHeaders.authorizationHeader: "Token $token"},
       );
+      print(response.body);
+      if (response.statusCode == 200) {
+        user = User.fromJson(json.decode(response.body));
+        Navigator.pop(context);
+        switch (user.usertype) {
+          case 'S':
+            {
+              Navigator.pushAndRemoveUntil(
+                context,
+                PageTransition(
+                    type: PageTransitionType.downToUp,
+                    child: StudentHomeScreen(username: user.username)),
+                (Route<dynamic> route) => false,
+              );
+            }
+            break;
+
+          case 'C':
+            {
+              Navigator.pushAndRemoveUntil(
+                context,
+                PageTransition(
+                    type: PageTransitionType.downToUp,
+                    child: CounselorHomeScreen(username: user.username)),
+                (Route<dynamic> route) => false,
+              );
+            }
+            break;
+
+          case 'R':
+            {
+              //Take to rep page
+            }
+            break;
+
+          case 'A':
+            {
+              //Take to admin page
+            }
+            break;
+
+          default:
+            {
+              print('failed to login');
+              username.clear();
+              password.clear();
+              _scafKey.currentState.showSnackBar(
+                SnackBar(
+                  content: Text(
+                    'Failed to sign in. Try again',
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              );
+            }
+            break;
+        }
+      }
     } else {
       print('failed to login');
       username.clear();
@@ -163,6 +220,7 @@ class _LoginPageState extends State<LoginPage> {
                     colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
               ),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
@@ -174,9 +232,9 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 20.0),
+                    padding: const EdgeInsets.only(top: 23.0),
                     child: Text(
-                      "Hold on as we log you in...",
+                      "Signing you in...",
                       style: TextStyle(color: Colors.white, fontSize: 20),
                     ),
                   ),

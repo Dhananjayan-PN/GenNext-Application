@@ -5,21 +5,24 @@ import 'package:flutter/services.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import '../main.dart';
 import 'notifications.dart';
+import 'mystudents.dart';
+import 'counselormodel.dart';
+import 'essays.dart';
+import 'myuniversities.dart';
 import 'profile.dart';
 import 'schedule.dart';
+import 'connectwithunis.dart';
 
 String uname;
 
 final navlistelements = [
-  [
-    'Home',
-    StudentHomeScreen(
-      username: uname,
-    ),
-    Icons.home
-  ],
-  ['Your Profile', ProfileScreen(), Icons.account_box],
-  ['Counselor Schedule', ScheduleScreen(), Icons.date_range]
+  ['Home', CounselorHomeScreen(username: uname), Icons.home],
+  ['My Students', MyStudentsScreen(), Icons.group],
+  ['Essays', EssayScreen(), Icons.edit],
+  ['My Profile', ProfileScreen(), Icons.account_box],
+  ['Sessions Calendar', ScheduleScreen(), Icons.date_range],
+  ['My Universities', MyUniversitiesScreen(), Icons.account_balance],
+  ['Connect with Universities', ConnectUniversitiesScreen(), Icons.link]
 ];
 
 class NavDrawer extends StatelessWidget {
@@ -211,18 +214,18 @@ class HomeAppBarState extends State<HomeAppBar> {
   }
 }
 
-class StudentHomeScreen extends StatefulWidget {
+class CounselorHomeScreen extends StatefulWidget {
   final String username;
-  StudentHomeScreen({this.username});
+  CounselorHomeScreen({this.username});
   // This widget defines the homepage of the application
   @override
-  _StudentHomeScreenState createState() =>
-      _StudentHomeScreenState(username: username);
+  _CounselorHomeScreenState createState() =>
+      _CounselorHomeScreenState(username: username);
 }
 
-class _StudentHomeScreenState extends State<StudentHomeScreen> {
+class _CounselorHomeScreenState extends State<CounselorHomeScreen> {
   final String username;
-  _StudentHomeScreenState({this.username});
+  _CounselorHomeScreenState({this.username});
 
   @override
   Widget build(BuildContext context) {
