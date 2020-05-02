@@ -104,7 +104,6 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController username = TextEditingController();
   final TextEditingController password = TextEditingController();
 
-  String loginresult;
   String _username;
   String _password;
 
@@ -119,6 +118,7 @@ class _LoginPageState extends State<LoginPage> {
     print(json.decode(result.body));
     if (result.statusCode == 200) {
       token = json.decode(result.body)['token'];
+      Navigator.pop(context);
       Navigator.pushAndRemoveUntil(
         context,
         PageTransition(
@@ -130,6 +130,7 @@ class _LoginPageState extends State<LoginPage> {
       print('failed to login');
       username.clear();
       password.clear();
+      Navigator.pop(context);
       _scafKey.currentState.showSnackBar(
         SnackBar(
           content: Text(
@@ -173,10 +174,10 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 10.0),
+                    padding: const EdgeInsets.only(top: 20.0),
                     child: Text(
-                      "Loading",
-                      style: TextStyle(color: Colors.white, fontSize: 25),
+                      "Hold on as we log you in...",
+                      style: TextStyle(color: Colors.white, fontSize: 20),
                     ),
                   ),
                 ],
@@ -186,7 +187,6 @@ class _LoginPageState extends State<LoginPage> {
         },
       );
       Future.delayed(Duration(seconds: 3), () {
-        Navigator.pop(context); //pop dialog
         _loginUser(username.text, password.text);
       });
     } else {

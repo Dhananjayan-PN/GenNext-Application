@@ -42,7 +42,8 @@ class BodyBuilderState extends State<BodyBuilder> {
               itemBuilder: (context, index) {
                 return Dismissible(
                   key: Key('$index' + '$notifications[index]'),
-                  background: Container(child: Icon(Icons.delete), color: Colors.red[400]),
+                  background: Container(
+                      child: Icon(Icons.delete), color: Colors.red[400]),
                   child: Card(
                     elevation: 8,
                     child: InkWell(
@@ -95,7 +96,13 @@ class NotificationScreen extends StatelessWidget {
               ),
               onPressed: () {
                 Navigator.pop(context);
-                Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: StudentHomeScreen()));
+                Navigator.push(
+                    context,
+                    PageTransition(
+                        type: PageTransitionType.fade,
+                        child: StudentHomeScreen(
+                          username: uname,
+                        )));
               }),
           title: Text(
             'Notifications',

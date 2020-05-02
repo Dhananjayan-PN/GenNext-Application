@@ -8,7 +8,8 @@ class CompletedApplicationsScreen extends StatefulWidget {
   State<StatefulWidget> createState() => CompletedApplicationsScreenState();
 }
 
-class CompletedApplicationsScreenState extends State<CompletedApplicationsScreen> {
+class CompletedApplicationsScreenState
+    extends State<CompletedApplicationsScreen> {
   @override
   void initState() {
     super.initState();
@@ -23,7 +24,11 @@ class CompletedApplicationsScreenState extends State<CompletedApplicationsScreen
 
   bool myInterceptor(bool stopDefaultButtonEvent) {
     print("BACK BUTTON!");
-    Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: StudentHomeScreen()));
+    Navigator.push(
+        context,
+        PageTransition(
+            type: PageTransitionType.fade,
+            child: StudentHomeScreen(username: uname)));
     return true;
   }
 

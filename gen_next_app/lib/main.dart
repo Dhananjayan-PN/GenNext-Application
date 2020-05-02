@@ -4,9 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
 import 'login.dart';
 
-var name = 'Jake Adams';
-final emailid = 'jake.adams@gmail.com';
-
 String token;
 
 void main() => runApp(MyApp());

@@ -11,6 +11,8 @@ import 'pendingapps.dart';
 import 'schedule.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 
+String uname;
+
 final navlistelements = [
   ['Home', StudentHomeScreen(), Icons.home],
   ['Your Profile', ProfileScreen(), Icons.account_box],
@@ -25,6 +27,10 @@ final navlistelements = [
 ];
 
 class NavDrawer extends StatelessWidget {
+  final String uname;
+  final String email;
+  NavDrawer({this.uname, this.email});
+
   @override
   Widget build(BuildContext context) {
     List<Widget> navlist = [];
@@ -53,16 +59,15 @@ class NavDrawer extends StatelessWidget {
         Divider(),
       );
     }
-
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
           new UserAccountsDrawerHeader(
             decoration: BoxDecoration(color: Colors.cyanAccent[400]),
-            accountName: new Text(name,
+            accountName: new Text(uname,
                 style: TextStyle(color: Colors.black, fontSize: 18)),
-            accountEmail: new Text(emailid,
+            accountEmail: new Text('email',
                 style: TextStyle(color: Colors.black, fontSize: 12)),
             currentAccountPicture: CircleAvatar(
               backgroundImage: AssetImage('images/profile.png'),
@@ -205,7 +210,7 @@ class HomeAppBarState extends State<HomeAppBar> {
 
 class StudentHomeScreen extends StatefulWidget {
   final String username;
-  StudentHomeScreen({@required this.username});
+  StudentHomeScreen({this.username});
   // This widget defines the homepage of the application
   @override
   _StudentHomeScreenState createState() =>
@@ -214,18 +219,19 @@ class StudentHomeScreen extends StatefulWidget {
 
 class _StudentHomeScreenState extends State<StudentHomeScreen> {
   final String username;
-  _StudentHomeScreenState({@required this.username});
+  _StudentHomeScreenState({this.username});
 
   @override
   Widget build(BuildContext context) {
+    uname = username;
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         systemNavigationBarColor: Colors.white,
         statusBarColor: Color(0xff0072BC).withAlpha(150),
       ),
       child: new Scaffold(
-        backgroundColor: Colors.grey[250],
-        drawer: NavDrawer(),
+        backgroundColor: Colors.white,
+        drawer: NavDrawer(uname: username), //add email here too
         appBar: HomeAppBar(),
         body: Center(child: Text('Hey @' + username + '!')),
       ),
