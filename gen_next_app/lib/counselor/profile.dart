@@ -35,23 +35,8 @@ class ProfileScreenState extends State<ProfileScreen> {
     return new Scaffold(
       backgroundColor: Colors.white,
       drawer: NavDrawer(uname: uname),
-      appBar: CustomAppBar('Your Profile'),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Image(
-              image: AssetImage('images/doggo.png'),
-            ),
-            Text(
-              'Our Application is under development\nCome back soon!',
-              style: TextStyle(color: Colors.black, fontSize: 20),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
+      appBar: CustomAppBar('My Profile'),
+      body: Center(child: Text('Profile')),
     );
   }
 }

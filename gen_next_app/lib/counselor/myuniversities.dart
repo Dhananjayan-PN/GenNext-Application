@@ -38,23 +38,8 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
     return new Scaffold(
       backgroundColor: Colors.grey[250],
       drawer: NavDrawer(uname: uname),
-      appBar: CustomAppBar('Your Universities'),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Image(
-              image: AssetImage('images/doggo.png'),
-            ),
-            Text(
-              'Our Application is under development\nCome back soon!',
-              style: TextStyle(color: Colors.black, fontSize: 20),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
+      appBar: CustomAppBar('My Universities'),
+      body: Center(child: Text('Universities')),
     );
   }
 }

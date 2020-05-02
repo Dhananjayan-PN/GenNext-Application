@@ -37,22 +37,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
       backgroundColor: Colors.white,
       drawer: NavDrawer(uname: uname),
       appBar: CustomAppBar('Counselling Schedule'),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Image(
-              image: AssetImage('images/doggo.png'),
-            ),
-            Text(
-              'Our Application is under development\nCome back soon!',
-              style: TextStyle(color: Colors.black, fontSize: 20),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
+      body: Center(child: Text('Calendar')),
     );
   }
 }

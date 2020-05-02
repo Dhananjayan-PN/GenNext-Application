@@ -36,8 +36,8 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
     return new Scaffold(
       backgroundColor: Colors.white,
       drawer: NavDrawer(uname: uname),
-      appBar: CustomAppBar('Essays'),
-      body: Center(child: Text('Students')),
+      appBar: CustomAppBar('Connect'),
+      body: Center(child: Text('Connect')),
     );
   }
 }

@@ -36,7 +36,7 @@ class _EssayScreenState extends State<EssayScreen> {
       backgroundColor: Colors.white,
       drawer: NavDrawer(uname: uname),
       appBar: CustomAppBar('Essays'),
-      body: Center(child: Text('Students')),
+      body: Center(child: Text('Essays')),
     );
   }
 }
