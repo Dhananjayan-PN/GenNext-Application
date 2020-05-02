@@ -23,7 +23,13 @@ class YourUniversitiesScreenState extends State<YourUniversitiesScreen> {
 
   bool myInterceptor(bool stopDefaultButtonEvent) {
     print("BACK BUTTON!");
-    Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: StudentHomeScreen()));
+    Navigator.push(
+        context,
+        PageTransition(
+            type: PageTransitionType.fade,
+            child: StudentHomeScreen(
+              username: uname,
+            )));
     return true;
   }
 
@@ -31,7 +37,7 @@ class YourUniversitiesScreenState extends State<YourUniversitiesScreen> {
   Widget build(BuildContext context) {
     return new Scaffold(
       backgroundColor: Colors.grey[250],
-      drawer: NavDrawer(),
+      drawer: NavDrawer(uname: uname),
       appBar: CustomAppBar('Your Universities'),
       body: Center(
         child: Column(

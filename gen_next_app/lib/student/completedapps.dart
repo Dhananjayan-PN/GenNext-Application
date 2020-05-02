@@ -35,8 +35,8 @@ class CompletedApplicationsScreenState
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      backgroundColor: Colors.grey[250],
-      drawer: NavDrawer(),
+      backgroundColor: Colors.white,
+      drawer: NavDrawer(uname: uname),
       appBar: CustomAppBar('Completed Applications'),
       body: Center(
         child: Column(

@@ -23,15 +23,19 @@ class PendingApplicationsScreenState extends State<PendingApplicationsScreen> {
 
   bool myInterceptor(bool stopDefaultButtonEvent) {
     print("BACK BUTTON!");
-    Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: StudentHomeScreen()));
+    Navigator.push(
+        context,
+        PageTransition(
+            type: PageTransitionType.fade,
+            child: StudentHomeScreen(username: uname)));
     return true;
   }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      backgroundColor: Colors.grey[250],
-      drawer: NavDrawer(),
+      backgroundColor: Colors.white,
+      drawer: NavDrawer(uname: uname),
       appBar: CustomAppBar('Pending Application'),
       body: Center(
         child: Column(

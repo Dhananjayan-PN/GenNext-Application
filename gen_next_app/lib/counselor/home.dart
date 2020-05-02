@@ -2,14 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/services.dart';
+import 'package:gradient_app_bar/gradient_app_bar.dart';
 import '../main.dart';
 import 'notifications.dart';
 import 'profile.dart';
-import 'youruniversities.dart';
-import 'completedapps.dart';
-import 'pendingapps.dart';
 import 'schedule.dart';
-import 'package:gradient_app_bar/gradient_app_bar.dart';
 
 String uname;
 
@@ -22,14 +19,7 @@ final navlistelements = [
     Icons.home
   ],
   ['Your Profile', ProfileScreen(), Icons.account_box],
-  ['Your Universities', YourUniversitiesScreen(), Icons.account_balance],
-  [
-    'Completed Applications',
-    CompletedApplicationsScreen(),
-    Icons.assignment_turned_in
-  ],
-  ['Pending Applications', PendingApplicationsScreen(), Icons.assignment_late],
-  ['Counselling Schedule', ScheduleScreen(), Icons.date_range]
+  ['Counselor Schedule', ScheduleScreen(), Icons.date_range]
 ];
 
 class NavDrawer extends StatelessWidget {
