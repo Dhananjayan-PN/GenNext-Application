@@ -107,7 +107,7 @@ class NotificationScreen extends StatelessWidget {
               }),
           title: Text(
             'Notifications',
-            style: TextStyle(color: Colors.black, fontSize: 20),
+            style: TextStyle(color: Colors.white, fontSize: 20),
           ),
           gradient: LinearGradient(
               begin: Alignment.topCenter,

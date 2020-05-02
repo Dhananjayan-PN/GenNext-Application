@@ -40,7 +40,7 @@ class NavDrawer extends StatelessWidget {
         leading: Icon(
           element[2],
           size: 26,
-          color: Colors.indigo[900],
+          color: Colors.blue[800],
         ),
         title: Text(
           element[0],
@@ -64,14 +64,19 @@ class NavDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: <Widget>[
           new UserAccountsDrawerHeader(
-            decoration: BoxDecoration(color: Colors.cyanAccent[400]),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
+            ),
             accountName: new Text(uname,
                 style: TextStyle(color: Colors.black, fontSize: 18)),
             accountEmail: new Text('email',
                 style: TextStyle(color: Colors.black, fontSize: 12)),
             currentAccountPicture: CircleAvatar(
               backgroundImage: AssetImage('images/profile.png'),
-              backgroundColor: Colors.cyan[50],
+              backgroundColor: Colors.blue[200],
               radius: 30,
             ),
             onDetailsPressed: () {
@@ -114,12 +119,15 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
   Widget build(BuildContext context) {
-    return AppBar(
+    return GradientAppBar(
       title: Text(
         titletext,
         style: TextStyle(color: Colors.black, fontSize: 20),
       ),
-      backgroundColor: Colors.cyanAccent[400],
+      gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
       iconTheme: new IconThemeData(color: Colors.indigo[900]),
     );
   }
@@ -155,13 +163,11 @@ class HomeAppBarState extends State<HomeAppBar> {
       title: Image(
         image: AssetImage('images/gennextlonglogo.png'),
       ),
-      //iconTheme: new IconThemeData(color: Colors.indigo[900]),
       gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
       actions: <Widget>[
-        // Using Stack to show Notification Badge
         new Stack(
           children: <Widget>[
             new IconButton(
