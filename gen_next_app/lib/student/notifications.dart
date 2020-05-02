@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'home.dart';
 
 final notifications = ['Are you future ready?'];
@@ -88,7 +89,7 @@ class NotificationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return new Scaffold(
         backgroundColor: Colors.grey[250],
-        appBar: AppBar(
+        appBar: GradientAppBar(
           leading: IconButton(
               icon: Icon(
                 Icons.arrow_back,
@@ -108,7 +109,10 @@ class NotificationScreen extends StatelessWidget {
             'Notifications',
             style: TextStyle(color: Colors.black, fontSize: 20),
           ),
-          backgroundColor: Colors.cyanAccent[400],
+          gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
           iconTheme: new IconThemeData(color: Colors.indigo[900]),
         ),
         body: BodyBuilder());

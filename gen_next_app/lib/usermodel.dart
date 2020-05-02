@@ -1,7 +1,6 @@
 class User {
   String email;
   String username;
-  String password;
   String firstname;
   String lastname;
   String usertype;
@@ -11,7 +10,6 @@ class User {
   User({
     this.email,
     this.username,
-    this.password,
     this.firstname,
     this.lastname,
     this.usertype,

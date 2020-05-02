@@ -157,8 +157,8 @@ class HomeAppBarState extends State<HomeAppBar> {
       ),
       //iconTheme: new IconThemeData(color: Colors.indigo[900]),
       gradient: LinearGradient(
-          begin: Alignment.bottomCenter,
-          end: Alignment.topCenter,
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
           colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
       actions: <Widget>[
         // Using Stack to show Notification Badge
