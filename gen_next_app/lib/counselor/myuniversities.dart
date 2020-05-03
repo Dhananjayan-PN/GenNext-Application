@@ -68,6 +68,32 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                     itemCount: snapshot.data.length,
                     itemBuilder: (BuildContext context, int index) {
                       List unis = snapshot.data;
+                      List topmajors;
+                      List standoutfactors;
+                      for (var i = 0; i < unis[index]['top_majors']; i++) {
+                        topmajors.add(
+                          Chip(
+                            backgroundColor: Colors.blue,
+                            label: Text(
+                              unis[index]['top_majors'][i],
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        );
+                      }
+                      for (var i = 0;
+                          i < unis[index]['stand_out_factors'];
+                          i++) {
+                        standoutfactors.add(
+                          Chip(
+                            backgroundColor: Colors.blue,
+                            label: Text(
+                              unis[index]['stand_out_factors'][i],
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        );
+                      }
                       return Padding(
                         padding:
                             const EdgeInsets.only(top: 5, left: 10, right: 10),
@@ -107,6 +133,20 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                                     ),
                                     Text(
                                       unis[index]['usnews_ranking'].toString(),
+                                      style: TextStyle(color: Colors.black54),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 5, left: 20),
+                                child: Row(
+                                  children: <Widget>[
+                                    Text(
+                                      'Location: ',
+                                    ),
+                                    Text(
+                                      unis[index]['university_location'],
                                       style: TextStyle(color: Colors.black54),
                                     )
                                   ],
@@ -162,15 +202,53 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                               ),
                               Padding(
                                 padding: EdgeInsets.only(top: 5, left: 20),
+                                child: Column(
+                                  children: <Widget>[
+                                    Text(
+                                      'Top Majors: ',
+                                    ),
+                                    Wrap(
+                                      children: topmajors,
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 5, left: 20),
+                                child: Column(
+                                  children: <Widget>[
+                                    Text(
+                                      'Stand Out Factors: ',
+                                    ),
+                                    Wrap(
+                                      children: topmajors,
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 5, left: 20),
                                 child: Row(
                                   children: <Widget>[
                                     Text(
-                                      'International Cost: ',
+                                      'Research Institute?: ',
                                     ),
                                     Text(
-                                      r"$" +
-                                          unis[index]['international_cost']
-                                              .toString(),
+                                      r"$" + unis[index]['research_or_not'],
+                                      style: TextStyle(color: Colors.black54),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 5, left: 20),
+                                child: Row(
+                                  children: <Widget>[
+                                    Text(
+                                      'Both Grad and Undergrad?: ',
+                                    ),
+                                    Text(
+                                      r"$" + unis[index]['research_or_not'],
                                       style: TextStyle(color: Colors.black54),
                                     )
                                   ],
