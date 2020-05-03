@@ -427,17 +427,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: FlatButton(
                       splashColor: Colors.cyanAccent[400],
                       onPressed: () {
-                        if (username.text == 'd' && password.text == 'd') {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            PageTransition(
-                                type: PageTransitionType.downToUp,
-                                child: StudentHomeScreen(username: 'd')),
-                            (Route<dynamic> route) => false,
-                          );
-                        } else {
-                          validateAndSave();
-                        }
+                        validateAndSave();
                       },
                       child: Center(
                         child: Padding(
