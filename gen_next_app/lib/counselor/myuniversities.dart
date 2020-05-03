@@ -68,28 +68,34 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                     itemCount: snapshot.data.length,
                     itemBuilder: (BuildContext context, int index) {
                       List unis = snapshot.data;
-                      List topmajors;
-                      List standoutfactors;
-                      for (var i = 0; i < unis[index]['top_majors']; i++) {
+                      List<Widget> topmajors = [];
+                      List<Widget> standoutfactors = [];
+                      for (var i = 0;
+                          i < unis[index]['top_majors'].length;
+                          i++) {
                         topmajors.add(
                           Chip(
+                            elevation: 5,
                             backgroundColor: Colors.blue,
                             label: Text(
                               unis[index]['top_majors'][i],
-                              style: TextStyle(color: Colors.white),
+                              style:
+                                  TextStyle(fontSize: 10, color: Colors.white),
                             ),
                           ),
                         );
                       }
                       for (var i = 0;
-                          i < unis[index]['stand_out_factors'];
+                          i < unis[index]['stand_out_factors'].length;
                           i++) {
                         standoutfactors.add(
                           Chip(
+                            elevation: 5,
                             backgroundColor: Colors.blue,
                             label: Text(
                               unis[index]['stand_out_factors'][i],
-                              style: TextStyle(color: Colors.white),
+                              style:
+                                  TextStyle(fontSize: 10, color: Colors.white),
                             ),
                           ),
                         );
@@ -103,15 +109,14 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                                   BorderRadius.all(Radius.circular(15))),
                           elevation: 10,
                           child: ExpansionTile(
-                            title: Text(unis[index]['university']),
+                            title: Text(unis[index]['university_name']),
                             subtitle: Text(
                               unis[index]['university_location'],
                               style: TextStyle(color: Colors.black54),
                             ),
                             children: <Widget>[
                               Padding(
-                                padding: EdgeInsets.only(
-                                    top: 10, left: 20, bottom: 15),
+                                padding: EdgeInsets.only(top: 5, left: 20),
                                 child: Row(
                                   children: <Widget>[
                                     Text(
@@ -146,7 +151,8 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                                       'Location: ',
                                     ),
                                     Text(
-                                      unis[index]['university_location'],
+                                      unis[index]['university_location']
+                                          .toString(),
                                       style: TextStyle(color: Colors.black54),
                                     )
                                   ],
@@ -202,39 +208,13 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                               ),
                               Padding(
                                 padding: EdgeInsets.only(top: 5, left: 20),
-                                child: Column(
-                                  children: <Widget>[
-                                    Text(
-                                      'Top Majors: ',
-                                    ),
-                                    Wrap(
-                                      children: topmajors,
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 5, left: 20),
-                                child: Column(
-                                  children: <Widget>[
-                                    Text(
-                                      'Stand Out Factors: ',
-                                    ),
-                                    Wrap(
-                                      children: topmajors,
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 5, left: 20),
                                 child: Row(
                                   children: <Widget>[
                                     Text(
                                       'Research Institute?: ',
                                     ),
                                     Text(
-                                      r"$" + unis[index]['research_or_not'],
+                                      unis[index]['research_or_not'].toString(),
                                       style: TextStyle(color: Colors.black54),
                                     )
                                   ],
@@ -248,12 +228,46 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                                       'Both Grad and Undergrad?: ',
                                     ),
                                     Text(
-                                      r"$" + unis[index]['research_or_not'],
+                                      unis[index]['both_ug_and_g'].toString(),
                                       style: TextStyle(color: Colors.black54),
                                     )
                                   ],
                                 ),
                               ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 5, left: 20),
+                                child: Row(
+                                  children: <Widget>[
+                                    Text(
+                                      'Top Majors: ',
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 5),
+                                child: Wrap(
+                                  alignment: WrapAlignment.start,
+                                  children: topmajors,
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 5, left: 20),
+                                child: Row(
+                                  children: <Widget>[
+                                    Text(
+                                      'Stand Out Factors: ',
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 5, bottom: 15),
+                                child: Wrap(
+                                  alignment: WrapAlignment.start,
+                                  children: standoutfactors,
+                                ),
+                              )
                             ],
                           ),
                         ),
