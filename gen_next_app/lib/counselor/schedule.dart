@@ -38,7 +38,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
       drawer: NavDrawer(
           name: newUser.firstname + ' ' + newUser.lastname,
           email: newUser.email),
-      appBar: CustomAppBar('Counselling Schedule'),
+      appBar: CustomAppBar('Calendar'),
       body: Center(child: Text('Calendar')),
     );
   }

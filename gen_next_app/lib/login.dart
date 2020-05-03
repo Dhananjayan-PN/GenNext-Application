@@ -125,7 +125,6 @@ class _LoginPageState extends State<LoginPage> {
         'https://gennext.ml/authenticate/$uname',
         headers: {HttpHeaders.authorizationHeader: "Token $token"},
       );
-      print(response.body);
       if (response.statusCode == 200) {
         user = User.fromJson(json.decode(response.body));
         Navigator.pop(context);
