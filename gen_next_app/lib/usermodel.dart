@@ -25,7 +25,7 @@ class User {
       lastname: json['last_name'],
       usertype: json['user_type'],
       dob: json['dob'],
-      country: json['coutry'],
+      country: json['country'],
     );
   }
 }

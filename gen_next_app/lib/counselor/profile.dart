@@ -38,7 +38,102 @@ class ProfileScreenState extends State<ProfileScreen> {
           name: newUser.firstname + ' ' + newUser.lastname,
           email: newUser.email),
       appBar: CustomAppBar('My Profile'),
-      body: Center(child: Text('Profile')),
+      body: Padding(
+        padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
+        child: Card(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(15))),
+          elevation: 20,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                leading: CircleAvatar(
+                  backgroundImage: AssetImage('images/profile.png'),
+                  backgroundColor: Colors.blue[200],
+                  radius: 30,
+                ),
+                title: Text(
+                  newUser.firstname + ' ' + newUser.lastname,
+                  style: TextStyle(fontSize: 17),
+                ),
+                subtitle: Text('Counselor'),
+                trailing: Padding(
+                  padding: EdgeInsets.all(0),
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.edit,
+                      color: Colors.blue,
+                    ),
+                    onPressed: () {},
+                  ),
+                ),
+              ),
+              Divider(
+                thickness: 1,
+                indent: 20,
+                endIndent: 20,
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 5, left: 20),
+                child: Row(
+                  children: <Widget>[
+                    Text(
+                      'Username: ',
+                    ),
+                    Text(
+                      '@' + newUser.username,
+                      style: TextStyle(color: Colors.black54),
+                    )
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 15, left: 20),
+                child: Row(
+                  children: <Widget>[
+                    Text(
+                      'Email ID: ',
+                    ),
+                    Text(
+                      newUser.email,
+                      style: TextStyle(color: Colors.black54),
+                    )
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 15, left: 20),
+                child: Row(
+                  children: <Widget>[
+                    Text(
+                      'Date of Birth: ',
+                    ),
+                    Text(
+                      newUser.dob,
+                      style: TextStyle(color: Colors.black54),
+                    )
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 15, left: 20, bottom: 15),
+                child: Row(
+                  children: <Widget>[
+                    Text(
+                      'Country: ',
+                    ),
+                    Text(
+                      newUser.country,
+                      style: TextStyle(color: Colors.black54),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
