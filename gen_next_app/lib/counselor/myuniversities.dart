@@ -67,6 +67,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                 child: ListView.builder(
                     itemCount: snapshot.data.length,
                     itemBuilder: (BuildContext context, int index) {
+                      List unis = snapshot.data;
                       return Padding(
                         padding:
                             const EdgeInsets.only(top: 5, left: 10, right: 10),
@@ -76,27 +77,12 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                                   BorderRadius.all(Radius.circular(15))),
                           elevation: 10,
                           child: ExpansionTile(
-                            title: Text(snapshot.data[index]['university']),
+                            title: Text(unis[index]['university']),
                             subtitle: Text(
-                              'Ithaca, NY',
+                              unis[index]['university_location'],
                               style: TextStyle(color: Colors.black54),
                             ),
                             children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.only(top: 5, left: 20),
-                                child: Row(
-                                  children: <Widget>[
-                                    Text(
-                                      'ID: ',
-                                    ),
-                                    Text(
-                                      snapshot.data[index]['university_id']
-                                          .toString(),
-                                      style: TextStyle(color: Colors.black54),
-                                    )
-                                  ],
-                                ),
-                              ),
                               Padding(
                                 padding: EdgeInsets.only(
                                     top: 10, left: 20, bottom: 15),
@@ -106,9 +92,85 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                                       'University Rep: ',
                                     ),
                                     Text(
-                                      '@' +
-                                          snapshot.data[index]
-                                              ['university_rep'],
+                                      '@' + unis[index]['university_rep'],
+                                      style: TextStyle(color: Colors.black54),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 5, left: 20),
+                                child: Row(
+                                  children: <Widget>[
+                                    Text(
+                                      'US News Ranking: ',
+                                    ),
+                                    Text(
+                                      unis[index]['usnews_ranking'].toString(),
+                                      style: TextStyle(color: Colors.black54),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 5, left: 20),
+                                child: Row(
+                                  children: <Widget>[
+                                    Text(
+                                      'In-State Cost: ',
+                                    ),
+                                    Text(
+                                      r"$" +
+                                          unis[index]['in_state_cost']
+                                              .toString(),
+                                      style: TextStyle(color: Colors.black54),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 5, left: 20),
+                                child: Row(
+                                  children: <Widget>[
+                                    Text(
+                                      'Out-of-State Cost: ',
+                                    ),
+                                    Text(
+                                      r"$" +
+                                          unis[index]['out_of_state_cost']
+                                              .toString(),
+                                      style: TextStyle(color: Colors.black54),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 5, left: 20),
+                                child: Row(
+                                  children: <Widget>[
+                                    Text(
+                                      'International Cost: ',
+                                    ),
+                                    Text(
+                                      r"$" +
+                                          unis[index]['international_cost']
+                                              .toString(),
+                                      style: TextStyle(color: Colors.black54),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(top: 5, left: 20),
+                                child: Row(
+                                  children: <Widget>[
+                                    Text(
+                                      'International Cost: ',
+                                    ),
+                                    Text(
+                                      r"$" +
+                                          unis[index]['international_cost']
+                                              .toString(),
                                       style: TextStyle(color: Colors.black54),
                                     )
                                   ],
