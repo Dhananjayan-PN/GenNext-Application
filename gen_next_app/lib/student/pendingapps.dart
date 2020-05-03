@@ -27,7 +27,7 @@ class PendingApplicationsScreenState extends State<PendingApplicationsScreen> {
         context,
         PageTransition(
             type: PageTransitionType.fade,
-            child: StudentHomeScreen(username: uname)));
+            child: StudentHomeScreen(user: newUser)));
     return true;
   }
 
@@ -35,7 +35,9 @@ class PendingApplicationsScreenState extends State<PendingApplicationsScreen> {
   Widget build(BuildContext context) {
     return new Scaffold(
       backgroundColor: Colors.white,
-      drawer: NavDrawer(uname: uname),
+      drawer: NavDrawer(
+          name: newUser.firstname + ' ' + newUser.lastname,
+          email: newUser.email),
       appBar: CustomAppBar('Pending Application'),
       body: Center(
         child: Column(

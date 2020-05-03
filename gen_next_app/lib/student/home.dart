@@ -3,26 +3,27 @@ import 'package:page_transition/page_transition.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/services.dart';
 import '../main.dart';
+import '../usermodel.dart';
 import 'notifications.dart';
 import 'profile.dart';
-import 'youruniversities.dart';
+import 'myuniversities.dart';
 import 'completedapps.dart';
 import 'pendingapps.dart';
 import 'schedule.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 
-String uname;
+User newUser;
 
 final navlistelements = [
   [
     'Home',
     StudentHomeScreen(
-      username: uname,
+      user: newUser,
     ),
     Icons.home
   ],
-  ['Your Profile', ProfileScreen(), Icons.account_box],
-  ['Your Universities', YourUniversitiesScreen(), Icons.account_balance],
+  ['My Profile', ProfileScreen(), Icons.account_box],
+  ['My Universities', MyUniversitiesScreen(), Icons.account_balance],
   [
     'Completed Applications',
     CompletedApplicationsScreen(),
@@ -33,9 +34,9 @@ final navlistelements = [
 ];
 
 class NavDrawer extends StatelessWidget {
-  final String uname;
+  final String name;
   final String email;
-  NavDrawer({this.uname, this.email});
+  NavDrawer({this.name, this.email});
 
   @override
   Widget build(BuildContext context) {
@@ -77,9 +78,9 @@ class NavDrawer extends StatelessWidget {
                   end: Alignment.topCenter,
                   colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
             ),
-            accountName: new Text(uname,
+            accountName: new Text(name,
                 style: TextStyle(color: Colors.white, fontSize: 18)),
-            accountEmail: new Text('email',
+            accountEmail: new Text(email,
                 style: TextStyle(color: Colors.white, fontSize: 12)),
             currentAccountPicture: CircleAvatar(
               backgroundImage: AssetImage('images/profile.png'),
@@ -222,21 +223,19 @@ class HomeAppBarState extends State<HomeAppBar> {
 }
 
 class StudentHomeScreen extends StatefulWidget {
-  final String username;
-  StudentHomeScreen({this.username});
+  final User user;
+  StudentHomeScreen({this.user});
   // This widget defines the homepage of the application
   @override
-  _StudentHomeScreenState createState() =>
-      _StudentHomeScreenState(username: username);
+  _StudentHomeScreenState createState() => _StudentHomeScreenState(user: user);
 }
 
 class _StudentHomeScreenState extends State<StudentHomeScreen> {
-  final String username;
-  _StudentHomeScreenState({this.username});
+  final User user;
+  _StudentHomeScreenState({this.user});
 
   @override
   Widget build(BuildContext context) {
-    uname = username;
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         systemNavigationBarColor: Colors.white,
@@ -244,9 +243,12 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
       ),
       child: new Scaffold(
         backgroundColor: Colors.white,
-        drawer: NavDrawer(uname: username), //add email here too
+        drawer: NavDrawer(
+          name: user.firstname + ' ' + user.lastname,
+          email: user.email,
+        ), //add email here too
         appBar: HomeAppBar(),
-        body: Center(child: Text('Hey @' + username + '!')),
+        body: Center(child: Text('Hey @' + user.username + '!')),
       ),
     );
   }

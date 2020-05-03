@@ -102,7 +102,7 @@ class NotificationScreen extends StatelessWidget {
                     PageTransition(
                         type: PageTransitionType.fade,
                         child: StudentHomeScreen(
-                          username: uname,
+                          user: new,
                         )));
               }),
           title: Text(

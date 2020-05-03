@@ -27,7 +27,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         context,
         PageTransition(
             type: PageTransitionType.fade,
-            child: StudentHomeScreen(username: uname)));
+            child: StudentHomeScreen(user: newUser)));
     return true;
   }
 
@@ -35,7 +35,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   Widget build(BuildContext context) {
     return new Scaffold(
       backgroundColor: Colors.white,
-      drawer: NavDrawer(uname: uname),
+      drawer: NavDrawer(
+          name: newUser.firstname + ' ' + newUser.lastname,
+          email: newUser.email),
       appBar: CustomAppBar('Counselling Schedule'),
       body: Center(
         child: Column(

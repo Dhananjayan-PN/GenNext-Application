@@ -3,13 +3,12 @@ import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:page_transition/page_transition.dart';
 import 'home.dart';
 
-class CompletedApplicationsScreen extends StatefulWidget {
+class MyUniversitiesScreen extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => CompletedApplicationsScreenState();
+  State<StatefulWidget> createState() => MyUniversitiesScreenState();
 }
 
-class CompletedApplicationsScreenState
-    extends State<CompletedApplicationsScreen> {
+class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   @override
   void initState() {
     super.initState();
@@ -28,19 +27,21 @@ class CompletedApplicationsScreenState
         context,
         PageTransition(
             type: PageTransitionType.fade,
-            child: StudentHomeScreen(user: newUser)));
+            child: StudentHomeScreen(
+              user: newUser,
+            )));
     return true;
   }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[250],
       drawer: NavDrawer(
           name: newUser.firstname + ' ' + newUser.lastname,
           email: newUser.email),
-      appBar: CustomAppBar('Completed Applications'),
-      body: Center(child: Text('Completed')),
+      appBar: CustomAppBar('My Universities'),
+      body: Center(child: Text('Universities')),
     );
   }
 }

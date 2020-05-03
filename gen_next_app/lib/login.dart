@@ -136,7 +136,7 @@ class _LoginPageState extends State<LoginPage> {
                 context,
                 PageTransition(
                     type: PageTransitionType.downToUp,
-                    child: StudentHomeScreen(username: user.username)),
+                    child: StudentHomeScreen(user: user)),
                 (Route<dynamic> route) => false,
               );
             }
@@ -148,7 +148,7 @@ class _LoginPageState extends State<LoginPage> {
                 context,
                 PageTransition(
                     type: PageTransitionType.downToUp,
-                    child: CounselorHomeScreen(username: user.username)),
+                    child: CounselorHomeScreen(user: user)),
                 (Route<dynamic> route) => false,
               );
             }
