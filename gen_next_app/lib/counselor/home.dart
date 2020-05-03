@@ -4,19 +4,20 @@ import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/services.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import '../main.dart';
+import '../usermodel.dart';
 import 'notifications.dart';
 import 'mystudents.dart';
-import 'counselormodel.dart';
+//import 'counselormodel.dart';
 import 'essays.dart';
 import 'myuniversities.dart';
 import 'profile.dart';
 import 'schedule.dart';
 import 'connectwithunis.dart';
 
-String uname;
+User newUser;
 
 final navlistelements = [
-  ['Home', CounselorHomeScreen(username: uname), Icons.home],
+  ['Home', CounselorHomeScreen(user: newUser), Icons.home],
   ['My Students', MyStudentsScreen(), Icons.group],
   ['Essays', EssayScreen(), Icons.edit],
   ['My Profile', ProfileScreen(), Icons.account_box],
@@ -26,9 +27,9 @@ final navlistelements = [
 ];
 
 class NavDrawer extends StatelessWidget {
-  final String uname;
+  final String name;
   final String email;
-  NavDrawer({this.uname, this.email});
+  NavDrawer({this.name, this.email});
 
   @override
   Widget build(BuildContext context) {
@@ -70,9 +71,9 @@ class NavDrawer extends StatelessWidget {
                   end: Alignment.topCenter,
                   colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
             ),
-            accountName: new Text(uname,
+            accountName: new Text(name,
                 style: TextStyle(color: Colors.white, fontSize: 18)),
-            accountEmail: new Text('email',
+            accountEmail: new Text(email,
                 style: TextStyle(color: Colors.white, fontSize: 12)),
             currentAccountPicture: CircleAvatar(
               backgroundImage: AssetImage('images/profile.png'),
@@ -215,21 +216,21 @@ class HomeAppBarState extends State<HomeAppBar> {
 }
 
 class CounselorHomeScreen extends StatefulWidget {
-  final String username;
-  CounselorHomeScreen({this.username});
+  final User user;
+  CounselorHomeScreen({this.user});
   // This widget defines the homepage of the application
   @override
   _CounselorHomeScreenState createState() =>
-      _CounselorHomeScreenState(username: username);
+      _CounselorHomeScreenState(user: user);
 }
 
 class _CounselorHomeScreenState extends State<CounselorHomeScreen> {
-  final String username;
-  _CounselorHomeScreenState({this.username});
+  final User user;
+  _CounselorHomeScreenState({this.user});
 
   @override
   Widget build(BuildContext context) {
-    uname = username;
+    newUser = user;
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         systemNavigationBarColor: Colors.white,
@@ -237,9 +238,12 @@ class _CounselorHomeScreenState extends State<CounselorHomeScreen> {
       ),
       child: new Scaffold(
         backgroundColor: Colors.white,
-        drawer: NavDrawer(uname: username), //add email here too
+        drawer: NavDrawer(
+          name: '${user.firstname} ${user.lastname}',
+          email: user.email,
+        ),
         appBar: HomeAppBar(),
-        body: Center(child: Text('Hey @' + username + '!')),
+        body: Center(child: Text('Hey @' + user.username + '!')),
       ),
     );
   }

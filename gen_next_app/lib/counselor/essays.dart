@@ -27,14 +27,16 @@ class _EssayScreenState extends State<EssayScreen> {
         context,
         PageTransition(
             type: PageTransitionType.fade,
-            child: CounselorHomeScreen(username: uname)));
+            child: CounselorHomeScreen(user: newUser)));
     return true;
   }
 
   Widget build(BuildContext context) {
     return new Scaffold(
       backgroundColor: Colors.white,
-      drawer: NavDrawer(uname: uname),
+      drawer: NavDrawer(
+          name: newUser.firstname + ' ' + newUser.lastname,
+          email: newUser.email),
       appBar: CustomAppBar('Essays'),
       body: Center(child: Text('Essays')),
     );

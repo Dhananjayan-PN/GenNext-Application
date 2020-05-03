@@ -27,9 +27,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
         context,
         PageTransition(
             type: PageTransitionType.fade,
-            child: CounselorHomeScreen(
-              username: uname,
-            )));
+            child: CounselorHomeScreen(user: newUser)));
     return true;
   }
 
@@ -37,7 +35,9 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   Widget build(BuildContext context) {
     return new Scaffold(
       backgroundColor: Colors.grey[250],
-      drawer: NavDrawer(uname: uname),
+      drawer: NavDrawer(
+          name: newUser.firstname + ' ' + newUser.lastname,
+          email: newUser.email),
       appBar: CustomAppBar('My Universities'),
       body: Center(child: Text('Universities')),
     );
