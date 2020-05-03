@@ -15,7 +15,7 @@ import 'schedule.dart';
 import 'connectwithunis.dart';
 
 User newUser;
-
+String tok = token;
 final navlistelements = [
   ['Home', CounselorHomeScreen(user: newUser), Icons.home],
   ['My Students', MyStudentsScreen(), Icons.group],
