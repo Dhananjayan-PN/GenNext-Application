@@ -3,6 +3,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/services.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../main.dart';
 import '../usermodel.dart';
 import 'notifications.dart';
@@ -76,8 +77,9 @@ class NavDrawer extends StatelessWidget {
             accountEmail: new Text(email,
                 style: TextStyle(color: Colors.white, fontSize: 12)),
             currentAccountPicture: CircleAvatar(
-              backgroundImage: AssetImage('images/profile.png'),
-              backgroundColor: Colors.blue[200],
+              backgroundImage: CachedNetworkImageProvider(
+                  'https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png'),
+              backgroundColor: Colors.blue[400],
               radius: 30,
             ),
             onDetailsPressed: () {

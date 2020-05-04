@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:page_transition/page_transition.dart';
 import 'home.dart';
 
@@ -49,8 +50,9 @@ class ProfileScreenState extends State<ProfileScreen> {
             children: <Widget>[
               ListTile(
                 leading: CircleAvatar(
-                  backgroundImage: AssetImage('images/profile.png'),
-                  backgroundColor: Colors.blue[200],
+                  backgroundImage: CachedNetworkImageProvider(
+                      'https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png'),
+                  backgroundColor: Colors.blue[400],
                   radius: 30,
                 ),
                 title: Text(
