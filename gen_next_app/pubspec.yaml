@@ -19,6 +19,7 @@ dependencies:
   cached_network_image: ^2.2.0
   path_provider: ^1.6.7
   flutter_cache_manager: ^1.2.2
+  table_calendar: ^2.2.3
 
 
 dev_dependencies:
