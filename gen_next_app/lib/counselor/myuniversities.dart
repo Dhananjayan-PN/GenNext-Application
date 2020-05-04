@@ -109,6 +109,10 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                             style: TextStyle(color: Colors.black54),
                           ),
                           children: <Widget>[
+                            Divider(
+                              indent: 10,
+                              endIndent: 10,
+                            ),
                             Padding(
                               padding: EdgeInsets.only(top: 5, left: 20),
                               child: Row(
@@ -238,11 +242,13 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                               ),
                             ),
                             Padding(
-                              padding: EdgeInsets.only(top: 5),
-                              child: Wrap(
-                                spacing: 3,
-                                alignment: WrapAlignment.start,
-                                children: topmajors,
+                              padding: EdgeInsets.only(top: 5, left: 20),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Wrap(
+                                  spacing: 3,
+                                  children: topmajors,
+                                ),
                               ),
                             ),
                             Padding(
@@ -256,11 +262,14 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                               ),
                             ),
                             Padding(
-                              padding: EdgeInsets.only(top: 5, bottom: 10),
-                              child: Wrap(
-                                spacing: 3,
-                                alignment: WrapAlignment.start,
-                                children: standoutfactors,
+                              padding:
+                                  EdgeInsets.only(top: 5, left: 20, bottom: 10),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Wrap(
+                                  spacing: 3,
+                                  children: standoutfactors,
+                                ),
                               ),
                             )
                           ],

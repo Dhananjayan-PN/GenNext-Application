@@ -202,6 +202,10 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
                               style: TextStyle(color: Colors.black54),
                             ),
                             children: <Widget>[
+                              Divider(
+                                indent: 10,
+                                endIndent: 10,
+                              ),
                               Padding(
                                 padding: EdgeInsets.only(top: 5, left: 20),
                                 child: Row(
@@ -332,12 +336,13 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
                                 ),
                               ),
                               Padding(
-                                padding: EdgeInsets.only(top: 5),
-                                child: Wrap(
-                                  spacing: 3,
-                                  direction: Axis.horizontal,
-                                  alignment: WrapAlignment.start,
-                                  children: topmajors,
+                                padding: EdgeInsets.only(top: 5, left: 20),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Wrap(
+                                    spacing: 3,
+                                    children: topmajors,
+                                  ),
                                 ),
                               ),
                               Padding(
@@ -351,11 +356,15 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
                                 ),
                               ),
                               Padding(
-                                padding: EdgeInsets.only(top: 5, bottom: 10),
-                                child: Wrap(
-                                  spacing: 3,
-                                  direction: Axis.horizontal,
-                                  children: standoutfactors,
+                                padding: EdgeInsets.only(
+                                    top: 5, left: 20, bottom: 10),
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Wrap(
+                                    spacing: 3,
+                                    direction: Axis.horizontal,
+                                    children: standoutfactors,
+                                  ),
                                 ),
                               )
                             ],
