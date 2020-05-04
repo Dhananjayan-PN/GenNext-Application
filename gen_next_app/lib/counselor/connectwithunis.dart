@@ -17,6 +17,7 @@ class ConnectUniversitiesScreen extends StatefulWidget {
 
 class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
   GlobalKey<ScaffoldState> _scafKey = GlobalKey<ScaffoldState>();
+  var refreshKey = GlobalKey<RefreshIndicatorState>();
   List unis;
 
   @override
@@ -109,344 +110,397 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
           name: newUser.firstname + ' ' + newUser.lastname,
           email: newUser.email),
       appBar: CustomAppBar('Connect'),
-      body: FutureBuilder(
-          future: getAvailableUniversities(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return Padding(
-                padding: EdgeInsets.only(top: 10.0),
-                child: ListView.builder(
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      unis = snapshot.data;
-                      unis[index]['request_failed'] = false;
-                      unis[index]['requesting'] = false;
-                      List<Widget> topmajors = [];
-                      List<Widget> standoutfactors = [];
-                      for (var i = 0;
-                          i < unis[index]['top_majors'].length;
-                          i++) {
-                        topmajors.add(
-                          Chip(
-                            elevation: 5,
-                            backgroundColor: Colors.blue,
-                            label: Text(
-                              unis[index]['top_majors'][i],
-                              style:
-                                  TextStyle(fontSize: 10, color: Colors.white),
-                            ),
-                          ),
-                        );
-                      }
-                      for (var i = 0;
-                          i < unis[index]['stand_out_factors'].length;
-                          i++) {
-                        standoutfactors.add(
-                          Chip(
-                            elevation: 5,
-                            backgroundColor: Colors.blue,
-                            label: Text(
-                              unis[index]['stand_out_factors'][i],
-                              style:
-                                  TextStyle(fontSize: 10, color: Colors.white),
-                            ),
-                          ),
-                        );
-                      }
-                      return Padding(
-                        key: Key(unis[index]['university_id'].toString()),
-                        padding:
-                            const EdgeInsets.only(top: 5, left: 10, right: 10),
-                        child: Card(
-                          clipBehavior: Clip.antiAlias,
-                          shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15))),
-                          elevation: 10,
-                          child: CachedNetworkImage(
-                            imageUrl:
-                                "https://luskinconferencecenter.ucla.edu/wp-content/uploads/2018/03/Blog_Luskin.jpg",
-                            placeholder: (context, url) => Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Center(child: CircularProgressIndicator()),
-                            ),
-                            errorWidget: (context, url, error) {
-                              _scafKey.currentState.showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    'Failed to fetch data. Check your internet connection and try again',
-                                    textAlign: TextAlign.center,
+      body: RefreshIndicator(
+        key: refreshKey,
+        onRefresh: getAvailableUniversities,
+        child: FutureBuilder(
+            future: getAvailableUniversities(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return ListView(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(top: 10.0),
+                      child: ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: snapshot.data.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            unis = snapshot.data;
+                            unis[index]['request_failed'] = false;
+                            unis[index]['requesting'] = false;
+                            List<Widget> topmajors = [];
+                            List<Widget> standoutfactors = [];
+                            for (var i = 0;
+                                i < unis[index]['top_majors'].length;
+                                i++) {
+                              topmajors.add(
+                                Chip(
+                                  elevation: 5,
+                                  backgroundColor: Colors.blue,
+                                  label: Text(
+                                    unis[index]['top_majors'][i],
+                                    style: TextStyle(
+                                        fontSize: 10, color: Colors.white),
                                   ),
                                 ),
                               );
-                              return Icon(Icons.error);
-                            },
-                            imageBuilder: (context, imageProvider) => Container(
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  alignment: Alignment.center,
-                                  colorFilter: new ColorFilter.mode(
-                                      Colors.black.withAlpha(160),
-                                      BlendMode.darken),
-                                  image: imageProvider,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              child: custom.ExpansionTile(
-                                key: ValueKey(
-                                    unis[index]['university_id'].toString()),
-                                leading: Padding(
-                                  padding: EdgeInsets.only(left: 0.0),
-                                  child: InkWell(
-                                      child: unis[index]['request_sent']
-                                          ? Icon(
-                                              Icons.check,
-                                              color: Colors.green,
-                                              size: 40,
-                                            )
-                                          : unis[index]['request_failed']
-                                              ? Icon(
-                                                  Icons.priority_high,
-                                                  color: Colors.red,
-                                                  size: 40,
-                                                )
-                                              : unis[index]['requesting']
-                                                  ? CircularProgressIndicator()
-                                                  : Icon(
-                                                      Icons.add,
-                                                      color: Colors.blue,
-                                                      size: 40,
-                                                    ),
-                                      onTap: () {
-                                        if (unis[index]['request_sent']) {
-                                          _scafKey.currentState.showSnackBar(
-                                            SnackBar(
-                                              content: Text(
-                                                'Request already sent',
-                                                textAlign: TextAlign.center,
-                                              ),
-                                            ),
-                                          );
-                                        } else {
-                                          unis[index]['requesting'] = true;
-                                          requestSender(
-                                              unis[index]['university_id'],
-                                              index);
-                                        }
-                                      }),
-                                ),
-                                title: Text(
-                                  unis[index]['university_name'],
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                subtitle: Text(
-                                    unis[index]['university_location'],
+                            }
+                            for (var i = 0;
+                                i < unis[index]['stand_out_factors'].length;
+                                i++) {
+                              standoutfactors.add(
+                                Chip(
+                                  elevation: 5,
+                                  backgroundColor: Colors.blue,
+                                  label: Text(
+                                    unis[index]['stand_out_factors'][i],
                                     style: TextStyle(
-                                        color: Colors.white.withOpacity(0.8))),
-                                children: <Widget>[
-                                  Divider(
-                                    color: Colors.white70,
-                                    indent: 10,
-                                    endIndent: 10,
+                                        fontSize: 10, color: Colors.white),
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 5, left: 20),
-                                    child: Row(
-                                      children: <Widget>[
-                                        Text(
-                                          'University Rep: ',
-                                          style: TextStyle(color: Colors.white),
+                                ),
+                              );
+                            }
+                            return Padding(
+                              key: Key(unis[index]['university_id'].toString()),
+                              padding: const EdgeInsets.only(
+                                  top: 5, left: 10, right: 10),
+                              child: Card(
+                                clipBehavior: Clip.antiAlias,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(15))),
+                                elevation: 10,
+                                child: CachedNetworkImage(
+                                  imageUrl:
+                                      "https://luskinconferencecenter.ucla.edu/wp-content/uploads/2018/03/Blog_Luskin.jpg",
+                                  placeholder: (context, url) => Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Center(
+                                        child: CircularProgressIndicator()),
+                                  ),
+                                  errorWidget: (context, url, error) {
+                                    _scafKey.currentState.showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                          'Failed to fetch data. Check your internet connection and try again',
+                                          textAlign: TextAlign.center,
                                         ),
-                                        Text(
-                                          '@' + unis[index]['university_rep'],
-                                          style: TextStyle(color: Colors.blue),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 5, left: 20),
-                                    child: Row(
-                                      children: <Widget>[
-                                        Text(
-                                          'US News Ranking: ',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        Text(
-                                          unis[index]['usnews_ranking']
-                                              .toString(),
-                                          style: TextStyle(
-                                              color: Colors.white
-                                                  .withOpacity(0.8)),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 5, left: 20),
-                                    child: Row(
-                                      children: <Widget>[
-                                        Text(
-                                          'Location: ',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        Text(
-                                          unis[index]['university_location']
-                                              .toString(),
-                                          style: TextStyle(
-                                              color: Colors.white
-                                                  .withOpacity(0.8)),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 5, left: 20),
-                                    child: Row(
-                                      children: <Widget>[
-                                        Text(
-                                          'In-State Cost: ',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        Text(
-                                          r"$" +
-                                              unis[index]['in_state_cost']
-                                                  .toString(),
-                                          style: TextStyle(
-                                              color: Colors.white
-                                                  .withOpacity(0.8)),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 5, left: 20),
-                                    child: Row(
-                                      children: <Widget>[
-                                        Text(
-                                          'Out-of-State Cost: ',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        Text(
-                                          r"$" +
-                                              unis[index]['out_of_state_cost']
-                                                  .toString(),
-                                          style: TextStyle(
-                                              color: Colors.white
-                                                  .withOpacity(0.8)),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 5, left: 20),
-                                    child: Row(
-                                      children: <Widget>[
-                                        Text(
-                                          'International Cost: ',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        Text(
-                                          r"$" +
-                                              unis[index]['international_cost']
-                                                  .toString(),
-                                          style: TextStyle(
-                                              color: Colors.white
-                                                  .withOpacity(0.8)),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 5, left: 20),
-                                    child: Row(
-                                      children: <Widget>[
-                                        Text(
-                                          'Research Institute?: ',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        Text(
-                                          unis[index]['research_or_not']
-                                              .toString(),
-                                          style: TextStyle(
-                                              color: Colors.white
-                                                  .withOpacity(0.8)),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 5, left: 20),
-                                    child: Row(
-                                      children: <Widget>[
-                                        Text(
-                                          'Both Grad and Undergrad?: ',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                        Text(
-                                          unis[index]['both_ug_and_g']
-                                              .toString(),
-                                          style: TextStyle(
-                                              color: Colors.white
-                                                  .withOpacity(0.8)),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 5, left: 20),
-                                    child: Row(
-                                      children: <Widget>[
-                                        Text(
-                                          'Top Majors: ',
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 5, left: 20),
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Wrap(
-                                        spacing: 3,
-                                        children: topmajors,
+                                      ),
+                                    );
+                                    return Icon(Icons.error);
+                                  },
+                                  imageBuilder: (context, imageProvider) =>
+                                      Container(
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        alignment: Alignment.center,
+                                        colorFilter: new ColorFilter.mode(
+                                            Colors.black.withAlpha(160),
+                                            BlendMode.darken),
+                                        image: imageProvider,
+                                        fit: BoxFit.cover,
                                       ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.only(top: 5, left: 20),
-                                    child: Row(
+                                    child: custom.ExpansionTile(
+                                      key: ValueKey(unis[index]['university_id']
+                                          .toString()),
+                                      leading: Padding(
+                                        padding: EdgeInsets.only(left: 0.0),
+                                        child: InkWell(
+                                            child: unis[index]['request_sent']
+                                                ? Icon(
+                                                    Icons.check,
+                                                    color: Colors.green,
+                                                    size: 40,
+                                                  )
+                                                : unis[index]['request_failed']
+                                                    ? Icon(
+                                                        Icons.priority_high,
+                                                        color: Colors.red,
+                                                        size: 40,
+                                                      )
+                                                    : unis[index]['requesting']
+                                                        ? CircularProgressIndicator()
+                                                        : Icon(
+                                                            Icons.add,
+                                                            color: Colors.blue,
+                                                            size: 40,
+                                                          ),
+                                            onTap: () {
+                                              if (unis[index]['request_sent']) {
+                                                _scafKey.currentState
+                                                    .showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      'Request already sent',
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                    ),
+                                                  ),
+                                                );
+                                              } else {
+                                                unis[index]['requesting'] =
+                                                    true;
+                                                requestSender(
+                                                    unis[index]
+                                                        ['university_id'],
+                                                    index);
+                                              }
+                                            }),
+                                      ),
+                                      title: Text(
+                                        unis[index]['university_name'],
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      subtitle: Text(
+                                          unis[index]['university_location'],
+                                          style: TextStyle(
+                                              color: Colors.white
+                                                  .withOpacity(0.8))),
                                       children: <Widget>[
-                                        Text(
-                                          'Stand Out Factors: ',
-                                          style: TextStyle(color: Colors.white),
+                                        Divider(
+                                          color: Colors.white70,
+                                          indent: 10,
+                                          endIndent: 10,
                                         ),
+                                        Padding(
+                                          padding:
+                                              EdgeInsets.only(top: 5, left: 20),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Text(
+                                                'University Rep: ',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              Text(
+                                                '@' +
+                                                    unis[index]
+                                                        ['university_rep'],
+                                                style: TextStyle(
+                                                    color: Colors.blue),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              EdgeInsets.only(top: 5, left: 20),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Text(
+                                                'US News Ranking: ',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              Text(
+                                                unis[index]['usnews_ranking']
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    color: Colors.white
+                                                        .withOpacity(0.8)),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              EdgeInsets.only(top: 5, left: 20),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Text(
+                                                'Location: ',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              Text(
+                                                unis[index]
+                                                        ['university_location']
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    color: Colors.white
+                                                        .withOpacity(0.8)),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              EdgeInsets.only(top: 5, left: 20),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Text(
+                                                'In-State Cost: ',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              Text(
+                                                r"$" +
+                                                    unis[index]['in_state_cost']
+                                                        .toString(),
+                                                style: TextStyle(
+                                                    color: Colors.white
+                                                        .withOpacity(0.8)),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              EdgeInsets.only(top: 5, left: 20),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Text(
+                                                'Out-of-State Cost: ',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              Text(
+                                                r"$" +
+                                                    unis[index][
+                                                            'out_of_state_cost']
+                                                        .toString(),
+                                                style: TextStyle(
+                                                    color: Colors.white
+                                                        .withOpacity(0.8)),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              EdgeInsets.only(top: 5, left: 20),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Text(
+                                                'International Cost: ',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              Text(
+                                                r"$" +
+                                                    unis[index][
+                                                            'international_cost']
+                                                        .toString(),
+                                                style: TextStyle(
+                                                    color: Colors.white
+                                                        .withOpacity(0.8)),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              EdgeInsets.only(top: 5, left: 20),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Text(
+                                                'Research Institute?: ',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              Text(
+                                                unis[index]['research_or_not']
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    color: Colors.white
+                                                        .withOpacity(0.8)),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              EdgeInsets.only(top: 5, left: 20),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Text(
+                                                'Both Grad and Undergrad?: ',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              Text(
+                                                unis[index]['both_ug_and_g']
+                                                    .toString(),
+                                                style: TextStyle(
+                                                    color: Colors.white
+                                                        .withOpacity(0.8)),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              EdgeInsets.only(top: 5, left: 20),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Text(
+                                                'Top Majors: ',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              EdgeInsets.only(top: 5, left: 20),
+                                          child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Wrap(
+                                              spacing: 3,
+                                              children: topmajors,
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding:
+                                              EdgeInsets.only(top: 5, left: 20),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Text(
+                                                'Stand Out Factors: ',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              top: 5, left: 20, bottom: 10),
+                                          child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Wrap(
+                                              spacing: 3,
+                                              children: standoutfactors,
+                                            ),
+                                          ),
+                                        )
                                       ],
                                     ),
                                   ),
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                        top: 5, left: 20, bottom: 10),
-                                    child: Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Wrap(
-                                        spacing: 3,
-                                        children: standoutfactors,
-                                      ),
-                                    ),
-                                  )
-                                ],
+                                ),
                               ),
-                            ),
-                          ),
+                            );
+                          }),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 30.0),
+                      child: Center(
+                        child: Text(
+                          'Pull down to refresh',
+                          style: TextStyle(fontSize: 10, color: Colors.black54),
                         ),
-                      );
-                    }),
-              );
-            }
-            return Center(child: CircularProgressIndicator());
-          }),
+                      ),
+                    )
+                  ],
+                );
+              }
+              return Center(child: CircularProgressIndicator());
+            }),
+      ),
     );
   }
 }

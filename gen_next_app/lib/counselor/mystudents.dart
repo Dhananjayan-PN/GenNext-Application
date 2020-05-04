@@ -14,6 +14,8 @@ class MyStudentsScreen extends StatefulWidget {
 }
 
 class _MyStudentsScreenState extends State<MyStudentsScreen> {
+  var refreshKey = GlobalKey<RefreshIndicatorState>();
+
   @override
   void initState() {
     super.initState();
@@ -56,211 +58,249 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
           name: newUser.firstname + ' ' + newUser.lastname,
           email: newUser.email),
       appBar: CustomAppBar('My Students'),
-      body: FutureBuilder(
-        future: getMyStudents(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return Padding(
-              padding: EdgeInsets.only(top: 10.0),
-              child: ListView.builder(
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    List students = snapshot.data;
-                    List<Widget> collegelist = [];
-                    for (var i = 0;
-                        i < students[index]['college_list'].split(':').length;
-                        i++) {
-                      collegelist.add(
-                        Chip(
-                          elevation: 5,
-                          backgroundColor: Colors.blue,
-                          label: Text(
-                            students[index]['college_list'].split(':')[i],
-                            style: TextStyle(fontSize: 10, color: Colors.white),
-                          ),
-                        ),
-                      );
-                    }
-                    return Padding(
-                      padding:
-                          const EdgeInsets.only(top: 5, left: 10, right: 10),
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(15))),
-                        elevation: 10,
-                        child: ExpansionTile(
-                          leading: CircleAvatar(
-                            radius: 25,
-                            backgroundImage: CachedNetworkImageProvider(
-                                'https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png'),
-                            backgroundColor: Colors.blue[400],
-                          ),
-                          title: Text(students[index]['student_name']),
-                          subtitle: Text(
-                            '@' + students[index]['student_username'],
-                            style: TextStyle(color: Colors.black54),
-                          ),
-                          children: <Widget>[
-                            Divider(
-                              indent: 10,
-                              endIndent: 10,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 5, left: 20),
-                              child: Row(
-                                children: <Widget>[
-                                  Text(
-                                    'Date of Birth: ',
-                                  ),
-                                  Text(
-                                    students[index]['student_dob'],
-                                    style: TextStyle(color: Colors.black54),
-                                  )
-                                ],
+      body: RefreshIndicator(
+        key: refreshKey,
+        onRefresh: getMyStudents,
+        child: FutureBuilder(
+          future: getMyStudents(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return ListView(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          List students = snapshot.data;
+                          List<Widget> collegelist = [];
+                          for (var i = 0;
+                              i <
+                                  students[index]['college_list']
+                                      .split(':')
+                                      .length;
+                              i++) {
+                            collegelist.add(
+                              Chip(
+                                elevation: 5,
+                                backgroundColor: Colors.blue,
+                                label: Text(
+                                  students[index]['college_list'].split(':')[i],
+                                  style: TextStyle(
+                                      fontSize: 10, color: Colors.white),
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 5, left: 20),
-                              child: Row(
+                            );
+                          }
+                          return Padding(
+                            padding: const EdgeInsets.only(
+                                top: 5, left: 10, right: 10),
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(15))),
+                              elevation: 10,
+                              child: ExpansionTile(
+                                leading: CircleAvatar(
+                                  radius: 25,
+                                  backgroundImage: CachedNetworkImageProvider(
+                                      'https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png'),
+                                  backgroundColor: Colors.blue[400],
+                                ),
+                                title: Text(students[index]['student_name']),
+                                subtitle: Text(
+                                  '@' + students[index]['student_username'],
+                                  style: TextStyle(color: Colors.black54),
+                                ),
                                 children: <Widget>[
-                                  Text(
-                                    'Email ID: ',
+                                  Divider(
+                                    indent: 10,
+                                    endIndent: 10,
                                   ),
-                                  Text(
-                                    students[index]['student_email'].toString(),
-                                    style: TextStyle(color: Colors.black54),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 5, left: 20),
-                              child: Row(
-                                children: <Widget>[
-                                  Text(
-                                    'Degree Level: ',
-                                  ),
-                                  Text(
-                                    students[index]['student_degree_level']
-                                        .toString(),
-                                    style: TextStyle(color: Colors.black54),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 5, left: 20),
-                              child: Row(
-                                children: <Widget>[
-                                  Text(
-                                    'Major: ',
-                                  ),
-                                  Text(
-                                    students[index]['student_major'].toString(),
-                                    style: TextStyle(color: Colors.black54),
-                                  )
-                                ],
-                              ),
-                            ),
-                            if (students[index]['student_major'] ==
-                                'Undergraduate') ...[
-                              Padding(
-                                padding: EdgeInsets.only(top: 5, left: 20),
-                                child: Row(
-                                  children: <Widget>[
-                                    Text(
-                                      'School: ',
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 5, left: 20),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Text(
+                                          'Date of Birth: ',
+                                        ),
+                                        Text(
+                                          students[index]['student_dob'],
+                                          style:
+                                              TextStyle(color: Colors.black54),
+                                        )
+                                      ],
                                     ),
-                                    Text(
-                                      students[index]['student_school']
-                                          .toString(),
-                                      style: TextStyle(color: Colors.black54),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 5, left: 20),
-                                child: Row(
-                                  children: <Widget>[
-                                    Text(
-                                      'Grade: ',
-                                    ),
-                                    Text(
-                                      students[index]['student_grade']
-                                          .toString(),
-                                      style: TextStyle(color: Colors.black54),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ],
-                            if (students[index]['student_major'] ==
-                                'Graduate') ...[
-                              Padding(
-                                padding: EdgeInsets.only(top: 5, left: 20),
-                                child: Row(
-                                  children: <Widget>[
-                                    Text(
-                                      'University: ',
-                                    ),
-                                    Text(
-                                      students[index]['student_university']
-                                          .toString(),
-                                      style: TextStyle(color: Colors.black54),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ],
-                            Padding(
-                              padding: EdgeInsets.only(top: 5, left: 20),
-                              child: Row(
-                                children: <Widget>[
-                                  Text(
-                                    'Country: ',
                                   ),
-                                  Text(
-                                    students[index]['student_country']
-                                        .toString(),
-                                    style: TextStyle(color: Colors.black54),
-                                  )
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 5, left: 20),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Text(
+                                          'Email ID: ',
+                                        ),
+                                        Text(
+                                          students[index]['student_email']
+                                              .toString(),
+                                          style:
+                                              TextStyle(color: Colors.black54),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 5, left: 20),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Text(
+                                          'Degree Level: ',
+                                        ),
+                                        Text(
+                                          students[index]
+                                                  ['student_degree_level']
+                                              .toString(),
+                                          style:
+                                              TextStyle(color: Colors.black54),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 5, left: 20),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Text(
+                                          'Major: ',
+                                        ),
+                                        Text(
+                                          students[index]['student_major']
+                                              .toString(),
+                                          style:
+                                              TextStyle(color: Colors.black54),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  if (students[index]['student_major'] ==
+                                      'Undergraduate') ...[
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.only(top: 5, left: 20),
+                                      child: Row(
+                                        children: <Widget>[
+                                          Text(
+                                            'School: ',
+                                          ),
+                                          Text(
+                                            students[index]['student_school']
+                                                .toString(),
+                                            style: TextStyle(
+                                                color: Colors.black54),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.only(top: 5, left: 20),
+                                      child: Row(
+                                        children: <Widget>[
+                                          Text(
+                                            'Grade: ',
+                                          ),
+                                          Text(
+                                            students[index]['student_grade']
+                                                .toString(),
+                                            style: TextStyle(
+                                                color: Colors.black54),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                  if (students[index]['student_major'] ==
+                                      'Graduate') ...[
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.only(top: 5, left: 20),
+                                      child: Row(
+                                        children: <Widget>[
+                                          Text(
+                                            'University: ',
+                                          ),
+                                          Text(
+                                            students[index]
+                                                    ['student_university']
+                                                .toString(),
+                                            style: TextStyle(
+                                                color: Colors.black54),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 5, left: 20),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Text(
+                                          'Country: ',
+                                        ),
+                                        Text(
+                                          students[index]['student_country']
+                                              .toString(),
+                                          style:
+                                              TextStyle(color: Colors.black54),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 5, left: 20),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Text(
+                                          'College List: ',
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        top: 5, bottom: 10, left: 20),
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Wrap(
+                                        spacing: 3,
+                                        children: collegelist,
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 5, left: 20),
-                              child: Row(
-                                children: <Widget>[
-                                  Text(
-                                    'College List: ',
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  EdgeInsets.only(top: 5, bottom: 10, left: 20),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Wrap(
-                                  spacing: 3,
-                                  children: collegelist,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                          );
+                        }),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 30.0),
+                    child: Center(
+                      child: Text(
+                        'Pull down to refresh',
+                        style: TextStyle(fontSize: 10, color: Colors.black54),
                       ),
-                    );
-                  }),
+                    ),
+                  )
+                ],
+              );
+            }
+            return Center(
+              child: CircularProgressIndicator(),
             );
-          }
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        },
+          },
+        ),
       ),
     );
   }
