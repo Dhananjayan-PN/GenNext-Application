@@ -117,15 +117,25 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
             future: getAvailableUniversities(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return ListView(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(top: 10.0),
-                      child: ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: snapshot.data.length,
-                          itemBuilder: (BuildContext context, int index) {
+                return Padding(
+                  padding: EdgeInsets.only(top: 10.0),
+                  child: Scrollbar(
+                    child: ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        itemCount: snapshot.data.length + 1,
+                        itemBuilder: (BuildContext context, int index) {
+                          if (index == snapshot.data.length) {
+                            return Padding(
+                              padding: EdgeInsets.only(top: 30.0),
+                              child: Center(
+                                child: Text(
+                                  'Pull down from the top to refresh',
+                                  style: TextStyle(
+                                      fontSize: 10, color: Colors.black54),
+                                ),
+                              ),
+                            );
+                          } else {
                             unis = snapshot.data;
                             unis[index]['request_failed'] = false;
                             unis[index]['requesting'] = false;
@@ -135,13 +145,24 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
                                 i < unis[index]['top_majors'].length;
                                 i++) {
                               topmajors.add(
-                                Chip(
-                                  elevation: 5,
-                                  backgroundColor: Colors.blue,
-                                  label: Text(
-                                    unis[index]['top_majors'][i],
-                                    style: TextStyle(
-                                        fontSize: 10, color: Colors.white),
+                                Padding(
+                                  padding: EdgeInsets.only(right: 3),
+                                  child: Theme(
+                                    data: ThemeData(
+                                        canvasColor: Colors.transparent),
+                                    child: Chip(
+                                      labelPadding: EdgeInsets.only(
+                                          left: 3, right: 3, top: 1, bottom: 1),
+                                      elevation: 5,
+                                      backgroundColor: Colors.black26,
+                                      shape: StadiumBorder(
+                                          side: BorderSide(color: Colors.blue)),
+                                      label: Text(
+                                        unis[index]['top_majors'][i],
+                                        style: TextStyle(
+                                            fontSize: 13, color: Colors.white),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               );
@@ -150,13 +171,24 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
                                 i < unis[index]['stand_out_factors'].length;
                                 i++) {
                               standoutfactors.add(
-                                Chip(
-                                  elevation: 5,
-                                  backgroundColor: Colors.blue,
-                                  label: Text(
-                                    unis[index]['stand_out_factors'][i],
-                                    style: TextStyle(
-                                        fontSize: 10, color: Colors.white),
+                                Padding(
+                                  padding: EdgeInsets.only(right: 3),
+                                  child: Theme(
+                                    data: ThemeData(
+                                        canvasColor: Colors.transparent),
+                                    child: Chip(
+                                      labelPadding: EdgeInsets.only(
+                                          left: 3, right: 3, top: 1, bottom: 1),
+                                      elevation: 5,
+                                      backgroundColor: Colors.black26,
+                                      shape: StadiumBorder(
+                                          side: BorderSide(color: Colors.blue)),
+                                      label: Text(
+                                        unis[index]['stand_out_factors'][i],
+                                        style: TextStyle(
+                                            fontSize: 13, color: Colors.white),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               );
@@ -444,13 +476,21 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
                                           ),
                                         ),
                                         Padding(
-                                          padding:
-                                              EdgeInsets.only(top: 5, left: 20),
+                                          padding: EdgeInsets.only(
+                                              left: 20.0, right: 20, top: 5),
                                           child: Align(
                                             alignment: Alignment.centerLeft,
-                                            child: Wrap(
-                                              spacing: 3,
-                                              children: topmajors,
+                                            child: Container(
+                                              height: 50,
+                                              child: ListView(
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                children: <Widget>[
+                                                  Row(
+                                                    children: topmajors,
+                                                  )
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -469,33 +509,35 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
                                         ),
                                         Padding(
                                           padding: EdgeInsets.only(
-                                              top: 5, left: 20, bottom: 10),
+                                              left: 20.0,
+                                              right: 20,
+                                              top: 5,
+                                              bottom: 10),
                                           child: Align(
                                             alignment: Alignment.centerLeft,
-                                            child: Wrap(
-                                              spacing: 3,
-                                              children: standoutfactors,
+                                            child: Container(
+                                              height: 50,
+                                              child: ListView(
+                                                scrollDirection:
+                                                    Axis.horizontal,
+                                                children: <Widget>[
+                                                  Row(
+                                                    children: standoutfactors,
+                                                  )
+                                                ],
+                                              ),
                                             ),
                                           ),
-                                        )
+                                        ),
                                       ],
                                     ),
                                   ),
                                 ),
                               ),
                             );
-                          }),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 30.0),
-                      child: Center(
-                        child: Text(
-                          'Pull down to refresh',
-                          style: TextStyle(fontSize: 10, color: Colors.black54),
-                        ),
-                      ),
-                    )
-                  ],
+                          }
+                        }),
+                  ),
                 );
               }
               return Center(child: CircularProgressIndicator());

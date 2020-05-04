@@ -65,15 +65,24 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
           future: getMyStudents(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return ListView(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        shrinkWrap: true,
-                        itemCount: snapshot.data.length,
-                        itemBuilder: (BuildContext context, int index) {
+              return Padding(
+                padding: EdgeInsets.only(top: 10),
+                child: Scrollbar(
+                  child: ListView.builder(
+                      itemCount: snapshot.data.length + 1,
+                      itemBuilder: (BuildContext context, int index) {
+                        if (index == snapshot.data.length) {
+                          return Padding(
+                            padding: EdgeInsets.only(top: 30.0, bottom: 10),
+                            child: Center(
+                              child: Text(
+                                'Pull down from the top to refresh',
+                                style: TextStyle(
+                                    fontSize: 10, color: Colors.black54),
+                              ),
+                            ),
+                          );
+                        } else {
                           List students = snapshot.data;
                           List<Widget> collegelist = [];
                           for (var i = 0;
@@ -85,11 +94,13 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
                             collegelist.add(
                               Chip(
                                 elevation: 5,
-                                backgroundColor: Colors.blue,
+                                backgroundColor: Colors.transparent,
+                                shape: StadiumBorder(
+                                    side: BorderSide(color: Colors.blue)),
                                 label: Text(
                                   students[index]['college_list'].split(':')[i],
                                   style: TextStyle(
-                                      fontSize: 10, color: Colors.white),
+                                      fontSize: 13, color: Colors.black),
                                 ),
                               ),
                             );
@@ -282,18 +293,9 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
                               ),
                             ),
                           );
-                        }),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 30.0),
-                    child: Center(
-                      child: Text(
-                        'Pull down to refresh',
-                        style: TextStyle(fontSize: 10, color: Colors.black54),
-                      ),
-                    ),
-                  )
-                ],
+                        }
+                      }),
+                ),
               );
             }
             return Center(

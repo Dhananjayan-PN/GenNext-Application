@@ -354,22 +354,27 @@ class _LoginPageState extends State<LoginPage> {
                       Padding(
                         padding:
                             const EdgeInsets.only(top: 35, left: 30, right: 50),
-                        child: TextFormField(
-                          controller: username,
-                          validator: (value) {
-                            return value.isEmpty
-                                ? 'Enter valid username'
-                                : null;
-                          },
-                          onSaved: (value) => _username = value,
-                          style: TextStyle(
-                            color: Colors.white,
+                        child: Theme(
+                          data: Theme.of(context).copyWith(
+                            primaryColor: Colors.blue[900],
                           ),
-                          decoration: InputDecoration(
-                            icon: Icon(Icons.person),
-                            labelText: 'Username',
-                            labelStyle: TextStyle(
+                          child: TextFormField(
+                            controller: username,
+                            validator: (value) {
+                              return value.isEmpty
+                                  ? 'Enter valid username'
+                                  : null;
+                            },
+                            onSaved: (value) => _username = value,
+                            style: TextStyle(
                               color: Colors.white,
+                            ),
+                            decoration: InputDecoration(
+                              icon: Icon(Icons.person),
+                              labelText: 'Username',
+                              labelStyle: TextStyle(
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
@@ -377,21 +382,26 @@ class _LoginPageState extends State<LoginPage> {
                       Padding(
                         padding:
                             const EdgeInsets.only(top: 20, left: 30, right: 50),
-                        child: TextFormField(
-                          controller: password,
-                          validator: (String value) {
-                            return value.isEmpty ? 'Enter a password' : null;
-                          },
-                          onSaved: (value) => _password = value,
-                          style: TextStyle(
-                            color: Colors.white,
+                        child: Theme(
+                          data: Theme.of(context).copyWith(
+                            primaryColor: Colors.blue[900],
                           ),
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            icon: Icon(Icons.vpn_key),
-                            labelText: 'Password',
-                            labelStyle: TextStyle(
+                          child: TextFormField(
+                            controller: password,
+                            validator: (String value) {
+                              return value.isEmpty ? 'Enter a password' : null;
+                            },
+                            onSaved: (value) => _password = value,
+                            style: TextStyle(
                               color: Colors.white,
+                            ),
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              icon: Icon(Icons.vpn_key),
+                              labelText: 'Password',
+                              labelStyle: TextStyle(
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
@@ -400,45 +410,46 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 45, right: 55, left: 205),
-                  child: Container(
-                    alignment: Alignment.bottomRight,
-                    height: 40,
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      //gradient: LinearGradient(end: Alignment.bottomCenter, begin: Alignment.topCenter, colors: [Color(0xff36d1dc), Color(0xff19547b)]),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.cyan[900],
-                          blurRadius:
-                              10.0, // has the effect of softening the shadow
-                          spreadRadius:
-                              1.0, // has the effect of extending the shadow
-                          offset: Offset(
-                            5.0, // horizontal, move right 10
-                            5.0, // vertical, move down 10
-                          ),
-                        ),
-                      ],
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: FlatButton(
-                      splashColor: Colors.cyanAccent[400],
-                      onPressed: () {
-                        validateAndSave();
-                      },
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 2),
-                          child: Text(
-                            'Sign In',
-                            style: TextStyle(
-                              color: Color(0xff36d1dc),
-                              fontSize: 19,
-                              fontWeight: FontWeight.w700,
+                  padding: const EdgeInsets.only(top: 45, right: 50),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Container(
+                      height: 40,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.cyan[900],
+                            blurRadius:
+                                10.0, // has the effect of softening the shadow
+                            spreadRadius:
+                                1.0, // has the effect of extending the shadow
+                            offset: Offset(
+                              5.0, // horizontal, move right 10
+                              5.0, // vertical, move down 10
                             ),
-                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: FlatButton(
+                        splashColor: Colors.blue[900],
+                        onPressed: () {
+                          validateAndSave();
+                        },
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 2),
+                            child: Text(
+                              'Sign In',
+                              style: TextStyle(
+                                color: Color(0xff00AEEF),
+                                fontSize: 19,
+                                fontWeight: FontWeight.w700,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
                         ),
                       ),
@@ -473,7 +484,7 @@ class _LoginPageState extends State<LoginPage> {
                                       child: SignUpPage()));
                             },
                             child: Text(
-                              'Sign Up',
+                              'Register',
                               style: TextStyle(
                                 fontSize: 18,
                                 color: Colors.white,
