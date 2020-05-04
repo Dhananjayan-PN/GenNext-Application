@@ -16,6 +16,8 @@ class ConnectUniversitiesScreen extends StatefulWidget {
 
 class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
   GlobalKey<ScaffoldState> _scafKey = GlobalKey<ScaffoldState>();
+  List unis;
+
   @override
   void initState() {
     super.initState();
@@ -51,7 +53,7 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
     }
   }
 
-  Future sendRequest(int id) async {
+  Future sendRequest(int id, int index) async {
     final response = await http.put(
       'https://gennext.ml/api/counselor/connect-with-unis/$id',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
@@ -59,13 +61,7 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
     if (response.statusCode == 200) {
       if (json.decode(response.body)['Response'] ==
           'Request successfully sent!') {
-        setState(() {
-          addIcon = Icon(
-            Icons.check,
-            color: Colors.green,
-            size: 40,
-          );
-        });
+        unis[index]['request_sent'] = true;
         _scafKey.currentState.showSnackBar(
           SnackBar(
             content: Text(
@@ -75,13 +71,7 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
           ),
         );
       } else {
-        setState(() {
-          addIcon = Icon(
-            Icons.priority_high,
-            color: Colors.red,
-            size: 40,
-          );
-        });
+        unis[index]['request_failed'] = true;
         _scafKey.currentState.showSnackBar(
           SnackBar(
             content: Text(
@@ -92,13 +82,7 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
         );
       }
     } else {
-      setState(() {
-        addIcon = Icon(
-          Icons.error,
-          color: Colors.red,
-          size: 40,
-        );
-      });
+      unis[index]['request_failed'] = true;
       _scafKey.currentState.showSnackBar(
         SnackBar(
           content: Text(
@@ -110,22 +94,11 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
     }
   }
 
-  String res;
-
-  void requestSender(int id) async {
-    setState(() {
-      addIcon = CircularProgressIndicator();
-    });
-    Future.delayed(Duration(seconds: 2), () {
-      sendRequest(id);
+  void requestSender(int id, int index) async {
+    Future.delayed(Duration(milliseconds: 200), () {
+      sendRequest(id, index);
     });
   }
-
-  Widget addIcon = Icon(
-    Icons.add,
-    color: Colors.blue,
-    size: 40,
-  );
 
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -144,7 +117,9 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
                 child: ListView.builder(
                     itemCount: snapshot.data.length,
                     itemBuilder: (BuildContext context, int index) {
-                      List unis = snapshot.data;
+                      unis = snapshot.data;
+                      unis[index]['request_failed'] = false;
+                      unis[index]['requesting'] = false;
                       List<Widget> topmajors = [];
                       List<Widget> standoutfactors = [];
                       for (var i = 0;
@@ -192,10 +167,10 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
                               image: DecorationImage(
                                 alignment: Alignment.center,
                                 colorFilter: new ColorFilter.mode(
-                                    Colors.black.withAlpha(120),
+                                    Colors.black.withAlpha(140),
                                     BlendMode.darken),
                                 image: NetworkImage(
-                                    "https://www.wpr.org/sites/default/files/bascom_hall_summer.jpg"),
+                                    "https://luskinconferencecenter.ucla.edu/wp-content/uploads/2018/03/Blog_Luskin.jpg"),
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -205,10 +180,41 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
                               leading: Padding(
                                 padding: EdgeInsets.only(left: 0.0),
                                 child: InkWell(
-                                    child: addIcon,
+                                    child: unis[index]['request_sent']
+                                        ? Icon(
+                                            Icons.check,
+                                            color: Colors.green,
+                                            size: 40,
+                                          )
+                                        : unis[index]['request_failed']
+                                            ? Icon(
+                                                Icons.priority_high,
+                                                color: Colors.red,
+                                                size: 40,
+                                              )
+                                            : unis[index]['requesting']
+                                                ? CircularProgressIndicator()
+                                                : Icon(
+                                                    Icons.add,
+                                                    color: Colors.blue,
+                                                    size: 40,
+                                                  ),
                                     onTap: () {
-                                      requestSender(
-                                          unis[index]['university_id']);
+                                      if (unis[index]['request_sent']) {
+                                        _scafKey.currentState.showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              'Request already sent',
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                        );
+                                      } else {
+                                        unis[index]['requesting'] = true;
+                                        requestSender(
+                                            unis[index]['university_id'],
+                                            index);
+                                      }
                                     }),
                               ),
                               title: Text(
