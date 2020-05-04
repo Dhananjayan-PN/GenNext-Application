@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
@@ -91,7 +92,8 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
                         child: ExpansionTile(
                           leading: CircleAvatar(
                             radius: 25,
-                            backgroundImage: AssetImage('images/profile.png'),
+                            backgroundImage: CachedNetworkImageProvider(
+                                'https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png'),
                             backgroundColor: Colors.blue[400],
                           ),
                           title: Text(students[index]['student_name']),
