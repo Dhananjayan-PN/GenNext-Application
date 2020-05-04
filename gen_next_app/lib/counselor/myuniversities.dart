@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:page_transition/page_transition.dart';
+import '../custom_expansion_tile.dart' as custom;
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
@@ -105,25 +106,29 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                         elevation: 10,
                         child: Container(
                           decoration: BoxDecoration(
-                            //borderRadius: BorderRadius.all(Radius.circular(15)),
                             image: DecorationImage(
                               alignment: Alignment.center,
                               colorFilter: new ColorFilter.mode(
-                                  Colors.black.withAlpha(100),
+                                  Colors.black.withAlpha(140),
                                   BlendMode.darken),
                               image: NetworkImage(
                                   "https://www.wpr.org/sites/default/files/bascom_hall_summer.jpg"),
                               fit: BoxFit.cover,
                             ),
                           ),
-                          child: ExpansionTile(
-                            title: Text(unis[index]['university_name']),
+                          child: custom.ExpansionTile(
+                            key: Key(unis[index]['university_id'].toString()),
+                            title: Text(
+                              unis[index]['university_name'],
+                              style: TextStyle(color: Colors.white),
+                            ),
                             subtitle: Text(
                               unis[index]['university_location'],
-                              style: TextStyle(color: Colors.black54),
+                              style: TextStyle(color: Colors.white70),
                             ),
                             children: <Widget>[
                               Divider(
+                                color: Colors.white70,
                                 indent: 10,
                                 endIndent: 10,
                               ),
@@ -133,10 +138,11 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                                   children: <Widget>[
                                     Text(
                                       'University Rep: ',
+                                      style: TextStyle(color: Colors.white),
                                     ),
                                     Text(
                                       '@' + unis[index]['university_rep'],
-                                      style: TextStyle(color: Colors.black54),
+                                      style: TextStyle(color: Colors.white70),
                                     )
                                   ],
                                 ),
@@ -147,10 +153,11 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                                   children: <Widget>[
                                     Text(
                                       'US News Ranking: ',
+                                      style: TextStyle(color: Colors.white),
                                     ),
                                     Text(
                                       unis[index]['usnews_ranking'].toString(),
-                                      style: TextStyle(color: Colors.black54),
+                                      style: TextStyle(color: Colors.white70),
                                     )
                                   ],
                                 ),
@@ -161,11 +168,12 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                                   children: <Widget>[
                                     Text(
                                       'Location: ',
+                                      style: TextStyle(color: Colors.white),
                                     ),
                                     Text(
                                       unis[index]['university_location']
                                           .toString(),
-                                      style: TextStyle(color: Colors.black54),
+                                      style: TextStyle(color: Colors.white70),
                                     )
                                   ],
                                 ),
@@ -176,12 +184,13 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                                   children: <Widget>[
                                     Text(
                                       'In-State Cost: ',
+                                      style: TextStyle(color: Colors.white),
                                     ),
                                     Text(
                                       r"$" +
                                           unis[index]['in_state_cost']
                                               .toString(),
-                                      style: TextStyle(color: Colors.black54),
+                                      style: TextStyle(color: Colors.white70),
                                     )
                                   ],
                                 ),
@@ -192,12 +201,13 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                                   children: <Widget>[
                                     Text(
                                       'Out-of-State Cost: ',
+                                      style: TextStyle(color: Colors.white),
                                     ),
                                     Text(
                                       r"$" +
                                           unis[index]['out_of_state_cost']
                                               .toString(),
-                                      style: TextStyle(color: Colors.black54),
+                                      style: TextStyle(color: Colors.white70),
                                     )
                                   ],
                                 ),
@@ -208,12 +218,13 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                                   children: <Widget>[
                                     Text(
                                       'International Cost: ',
+                                      style: TextStyle(color: Colors.white),
                                     ),
                                     Text(
                                       r"$" +
                                           unis[index]['international_cost']
                                               .toString(),
-                                      style: TextStyle(color: Colors.black54),
+                                      style: TextStyle(color: Colors.white70),
                                     )
                                   ],
                                 ),
@@ -224,10 +235,11 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                                   children: <Widget>[
                                     Text(
                                       'Research Institute?: ',
+                                      style: TextStyle(color: Colors.white),
                                     ),
                                     Text(
                                       unis[index]['research_or_not'].toString(),
-                                      style: TextStyle(color: Colors.black54),
+                                      style: TextStyle(color: Colors.white70),
                                     )
                                   ],
                                 ),
@@ -238,10 +250,11 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                                   children: <Widget>[
                                     Text(
                                       'Both Grad and Undergrad?: ',
+                                      style: TextStyle(color: Colors.white),
                                     ),
                                     Text(
                                       unis[index]['both_ug_and_g'].toString(),
-                                      style: TextStyle(color: Colors.black54),
+                                      style: TextStyle(color: Colors.white70),
                                     )
                                   ],
                                 ),
@@ -252,6 +265,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                                   children: <Widget>[
                                     Text(
                                       'Top Majors: ',
+                                      style: TextStyle(color: Colors.white),
                                     ),
                                   ],
                                 ),
@@ -272,6 +286,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                                   children: <Widget>[
                                     Text(
                                       'Stand Out Factors: ',
+                                      style: TextStyle(color: Colors.white),
                                     ),
                                   ],
                                 ),

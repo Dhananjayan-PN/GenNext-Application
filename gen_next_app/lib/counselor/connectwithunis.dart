@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:http/http.dart' as http;
+import '../custom_expansion_tile.dart' as custom;
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -181,193 +182,224 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
                         padding:
                             const EdgeInsets.only(top: 5, left: 10, right: 10),
                         child: Card(
+                          clipBehavior: Clip.antiAlias,
                           shape: RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(15))),
                           elevation: 10,
-                          child: ExpansionTile(
-                            key: ValueKey(
-                                unis[index]['university_id'].toString()),
-                            leading: Padding(
-                              padding: EdgeInsets.only(left: 0.0),
-                              child: InkWell(
-                                  child: addIcon,
-                                  onTap: () {
-                                    requestSender(unis[index]['university_id']);
-                                  }),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                alignment: Alignment.center,
+                                colorFilter: new ColorFilter.mode(
+                                    Colors.black.withAlpha(120),
+                                    BlendMode.darken),
+                                image: NetworkImage(
+                                    "https://www.wpr.org/sites/default/files/bascom_hall_summer.jpg"),
+                                fit: BoxFit.cover,
+                              ),
                             ),
-                            title: Text(unis[index]['university_name']),
-                            subtitle: Text(
-                              unis[index]['university_location'],
-                              style: TextStyle(color: Colors.black54),
-                            ),
-                            children: <Widget>[
-                              Divider(
-                                indent: 10,
-                                endIndent: 10,
+                            child: custom.ExpansionTile(
+                              key: ValueKey(
+                                  unis[index]['university_id'].toString()),
+                              leading: Padding(
+                                padding: EdgeInsets.only(left: 0.0),
+                                child: InkWell(
+                                    child: addIcon,
+                                    onTap: () {
+                                      requestSender(
+                                          unis[index]['university_id']);
+                                    }),
                               ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 5, left: 20),
-                                child: Row(
-                                  children: <Widget>[
-                                    Text(
-                                      'University Rep: ',
-                                    ),
-                                    Text(
-                                      '@' + unis[index]['university_rep'],
-                                      style: TextStyle(color: Colors.black54),
-                                    )
-                                  ],
+                              title: Text(
+                                unis[index]['university_name'],
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              subtitle: Text(
+                                unis[index]['university_location'],
+                                style: TextStyle(
+                                    color: Colors.white.withOpacity(0.8)),
+                              ),
+                              children: <Widget>[
+                                Divider(
+                                  color: Colors.white70,
+                                  indent: 10,
+                                  endIndent: 10,
                                 ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 5, left: 20),
-                                child: Row(
-                                  children: <Widget>[
-                                    Text(
-                                      'US News Ranking: ',
-                                    ),
-                                    Text(
-                                      unis[index]['usnews_ranking'].toString(),
-                                      style: TextStyle(color: Colors.black54),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 5, left: 20),
-                                child: Row(
-                                  children: <Widget>[
-                                    Text(
-                                      'Location: ',
-                                    ),
-                                    Text(
-                                      unis[index]['university_location']
-                                          .toString(),
-                                      style: TextStyle(color: Colors.black54),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 5, left: 20),
-                                child: Row(
-                                  children: <Widget>[
-                                    Text(
-                                      'In-State Cost: ',
-                                    ),
-                                    Text(
-                                      r"$" +
-                                          unis[index]['in_state_cost']
-                                              .toString(),
-                                      style: TextStyle(color: Colors.black54),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 5, left: 20),
-                                child: Row(
-                                  children: <Widget>[
-                                    Text(
-                                      'Out-of-State Cost: ',
-                                    ),
-                                    Text(
-                                      r"$" +
-                                          unis[index]['out_of_state_cost']
-                                              .toString(),
-                                      style: TextStyle(color: Colors.black54),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 5, left: 20),
-                                child: Row(
-                                  children: <Widget>[
-                                    Text(
-                                      'International Cost: ',
-                                    ),
-                                    Text(
-                                      r"$" +
-                                          unis[index]['international_cost']
-                                              .toString(),
-                                      style: TextStyle(color: Colors.black54),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 5, left: 20),
-                                child: Row(
-                                  children: <Widget>[
-                                    Text(
-                                      'Research Institute?: ',
-                                    ),
-                                    Text(
-                                      unis[index]['research_or_not'].toString(),
-                                      style: TextStyle(color: Colors.black54),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 5, left: 20),
-                                child: Row(
-                                  children: <Widget>[
-                                    Text(
-                                      'Both Grad and Undergrad?: ',
-                                    ),
-                                    Text(
-                                      unis[index]['both_ug_and_g'].toString(),
-                                      style: TextStyle(color: Colors.black54),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 5, left: 20),
-                                child: Row(
-                                  children: <Widget>[
-                                    Text(
-                                      'Top Majors: ',
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 5, left: 20),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Wrap(
-                                    spacing: 3,
-                                    children: topmajors,
+                                Padding(
+                                  padding: EdgeInsets.only(top: 5, left: 20),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Text(
+                                        'University Rep: ',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      Text(
+                                        '@' + unis[index]['university_rep'],
+                                        style: TextStyle(color: Colors.white70),
+                                      )
+                                    ],
                                   ),
                                 ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(top: 5, left: 20),
-                                child: Row(
-                                  children: <Widget>[
-                                    Text(
-                                      'Stand Out Factors: ',
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    top: 5, left: 20, bottom: 10),
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Wrap(
-                                    spacing: 3,
-                                    direction: Axis.horizontal,
-                                    children: standoutfactors,
+                                Padding(
+                                  padding: EdgeInsets.only(top: 5, left: 20),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Text(
+                                        'US News Ranking: ',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      Text(
+                                        unis[index]['usnews_ranking']
+                                            .toString(),
+                                        style: TextStyle(color: Colors.white70),
+                                      )
+                                    ],
                                   ),
                                 ),
-                              )
-                            ],
+                                Padding(
+                                  padding: EdgeInsets.only(top: 5, left: 20),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Text(
+                                        'Location: ',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      Text(
+                                        unis[index]['university_location']
+                                            .toString(),
+                                        style: TextStyle(color: Colors.white70),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 5, left: 20),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Text(
+                                        'In-State Cost: ',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      Text(
+                                        r"$" +
+                                            unis[index]['in_state_cost']
+                                                .toString(),
+                                        style: TextStyle(color: Colors.white70),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 5, left: 20),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Text(
+                                        'Out-of-State Cost: ',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      Text(
+                                        r"$" +
+                                            unis[index]['out_of_state_cost']
+                                                .toString(),
+                                        style: TextStyle(color: Colors.white70),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 5, left: 20),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Text(
+                                        'International Cost: ',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      Text(
+                                        r"$" +
+                                            unis[index]['international_cost']
+                                                .toString(),
+                                        style: TextStyle(color: Colors.white70),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 5, left: 20),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Text(
+                                        'Research Institute?: ',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      Text(
+                                        unis[index]['research_or_not']
+                                            .toString(),
+                                        style: TextStyle(color: Colors.white70),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 5, left: 20),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Text(
+                                        'Both Grad and Undergrad?: ',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      Text(
+                                        unis[index]['both_ug_and_g'].toString(),
+                                        style: TextStyle(color: Colors.white70),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 5, left: 20),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Text(
+                                        'Top Majors: ',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 5, left: 20),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Wrap(
+                                      spacing: 3,
+                                      children: topmajors,
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 5, left: 20),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Text(
+                                        'Stand Out Factors: ',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 5, left: 20, bottom: 10),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Wrap(
+                                      spacing: 3,
+                                      children: standoutfactors,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       );
