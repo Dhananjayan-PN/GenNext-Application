@@ -92,15 +92,21 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
                                       .length;
                               i++) {
                             collegelist.add(
-                              Chip(
-                                elevation: 5,
-                                backgroundColor: Colors.transparent,
-                                shape: StadiumBorder(
-                                    side: BorderSide(color: Colors.blue)),
-                                label: Text(
-                                  students[index]['college_list'].split(':')[i],
-                                  style: TextStyle(
-                                      fontSize: 13, color: Colors.black),
+                              Padding(
+                                padding: EdgeInsets.only(right: 3),
+                                child: Chip(
+                                  labelPadding: EdgeInsets.only(
+                                      left: 3, right: 3, top: 1, bottom: 1),
+                                  elevation: 5,
+                                  backgroundColor: Colors.transparent,
+                                  shape: StadiumBorder(
+                                      side: BorderSide(color: Colors.blue)),
+                                  label: Text(
+                                    students[index]['college_list']
+                                        .split(':')[i],
+                                    style: TextStyle(
+                                        fontSize: 13, color: Colors.black),
+                                  ),
                                 ),
                               ),
                             );
@@ -280,12 +286,22 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
                                   ),
                                   Padding(
                                     padding: EdgeInsets.only(
-                                        top: 5, bottom: 10, left: 20),
+                                        left: 20.0,
+                                        right: 20,
+                                        top: 5,
+                                        bottom: 10),
                                     child: Align(
                                       alignment: Alignment.centerLeft,
-                                      child: Wrap(
-                                        spacing: 3,
-                                        children: collegelist,
+                                      child: Container(
+                                        height: 50,
+                                        child: ListView(
+                                          scrollDirection: Axis.horizontal,
+                                          children: <Widget>[
+                                            Row(
+                                              children: collegelist,
+                                            )
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),

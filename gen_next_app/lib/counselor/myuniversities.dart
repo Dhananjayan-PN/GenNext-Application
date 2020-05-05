@@ -46,8 +46,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
     );
     if (response.statusCode == 200) {
-      List myuniversities = json.decode(response.body)['my_connected_unis'];
-      return myuniversities;
+      return json.decode(response.body)['my_connected_unis'];
     } else {
       return 'failed';
     }
