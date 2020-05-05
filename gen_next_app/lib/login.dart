@@ -205,14 +205,17 @@ class _LoginPageState extends State<LoginPage> {
         context: context,
         barrierDismissible: true,
         builder: (BuildContext context) {
-          return Dialog(
+          return AlertDialog(
+            contentPadding: EdgeInsets.all(0),
             elevation: 20,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            child: Container(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20.0))),
+            content: Container(
               height: 150,
               width: 80,
               decoration: BoxDecoration(
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.all(Radius.circular(20.0)),
                 gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
@@ -253,39 +256,44 @@ class _LoginPageState extends State<LoginPage> {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
-          return Dialog(
+          return AlertDialog(
+            contentPadding: EdgeInsets.all(0),
             elevation: 20,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            child: Container(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20.0))),
+            content: Container(
               height: 150,
               width: 80,
               decoration: BoxDecoration(
+                shape: BoxShape.rectangle,
+                borderRadius: BorderRadius.all(Radius.circular(20.0)),
                 gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 50,
-                    width: 50,
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      strokeWidth: 3.0,
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      height: 50,
+                      width: 50,
+                      child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        strokeWidth: 3.0,
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 23.0),
-                    child: Text(
-                      "Signing you in...",
-                      style: TextStyle(color: Colors.white, fontSize: 15),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 23.0),
+                      child: Text(
+                        "Signing you in...",
+                        style: TextStyle(color: Colors.white, fontSize: 15),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );

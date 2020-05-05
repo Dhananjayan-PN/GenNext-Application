@@ -77,7 +77,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                       Icon(
                         Icons.error_outline,
                         size: 30,
-                        color: Colors.red.withOpacity(0.6),
+                        color: Colors.red.withOpacity(0.9),
                       ),
                       Text(
                         'Unable to establish a connection with our servers.\nCheck your connection and try again later.',
