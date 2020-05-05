@@ -98,7 +98,7 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
 
   void requestSender(int id, int index) async {
     Future.delayed(Duration(milliseconds: 200), () {
-      sendRequest(id, index);
+      sendRequest(id, index).timeout(Duration(seconds: 10));
     });
   }
 
@@ -114,8 +114,30 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
         key: refreshKey,
         onRefresh: getAvailableUniversities,
         child: FutureBuilder(
-            future: getAvailableUniversities(),
+            future: getAvailableUniversities().timeout(Duration(seconds: 10)),
             builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 40.0),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(
+                          Icons.error_outline,
+                          size: 30,
+                          color: Colors.red.withOpacity(0.6),
+                        ),
+                        Text(
+                          'Unable to establish a connection with our servers.\nCheck your connection and try again later.',
+                          style: TextStyle(color: Colors.black54),
+                          textAlign: TextAlign.center,
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              }
               if (snapshot.hasData) {
                 return Padding(
                   padding: EdgeInsets.only(top: 10.0),

@@ -112,88 +112,136 @@ class _LoginPageState extends State<LoginPage> {
   User user;
 
   Future<void> _loginUser(String uname, String pass) async {
-    final http.Response result = await http.post(
-      'https://gennext.ml/authenticate/login/',
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{'username': uname, 'password': pass}),
-    );
-    if (result.statusCode == 200) {
-      token = json.decode(result.body)['token'];
-      final response = await http.get(
-        'https://gennext.ml/authenticate/$uname',
-        headers: {HttpHeaders.authorizationHeader: "Token $token"},
+    try {
+      final http.Response result = await http.post(
+        'https://gennext.ml/authenticate/login/',
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, String>{'username': uname, 'password': pass}),
       );
-      if (response.statusCode == 200) {
-        user = User.fromJson(json.decode(response.body));
-        Navigator.pop(context);
-        switch (user.usertype) {
-          case 'S':
-            {
-              Navigator.pushAndRemoveUntil(
-                context,
-                PageTransition(
-                    type: PageTransitionType.downToUp,
-                    child: StudentHomeScreen(user: user)),
-                (Route<dynamic> route) => false,
-              );
-            }
-            break;
+      if (result.statusCode == 200) {
+        token = json.decode(result.body)['token'];
+        final response = await http.get(
+          'https://gennext.ml/authenticate/$uname',
+          headers: {HttpHeaders.authorizationHeader: "Token $token"},
+        );
+        if (response.statusCode == 200) {
+          user = User.fromJson(json.decode(response.body));
+          Navigator.pop(context);
+          switch (user.usertype) {
+            case 'S':
+              {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  PageTransition(
+                      type: PageTransitionType.downToUp,
+                      child: StudentHomeScreen(user: user)),
+                  (Route<dynamic> route) => false,
+                );
+              }
+              break;
 
-          case 'C':
-            {
-              Navigator.pushAndRemoveUntil(
-                context,
-                PageTransition(
-                    type: PageTransitionType.downToUp,
-                    child: CounselorHomeScreen(user: user)),
-                (Route<dynamic> route) => false,
-              );
-            }
-            break;
+            case 'C':
+              {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  PageTransition(
+                      type: PageTransitionType.downToUp,
+                      child: CounselorHomeScreen(user: user)),
+                  (Route<dynamic> route) => false,
+                );
+              }
+              break;
 
-          case 'R':
-            {
-              //Take to rep page
-            }
-            break;
+            case 'R':
+              {
+                //Take to rep page
+              }
+              break;
 
-          case 'A':
-            {
-              //Take to admin page
-            }
-            break;
+            case 'A':
+              {
+                //Take to admin page
+              }
+              break;
 
-          default:
-            {
-              print('failed to login');
-              username.clear();
-              password.clear();
-              _scafKey.currentState.showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'Failed to sign in. Try again',
-                    textAlign: TextAlign.center,
+            default:
+              {
+                print('failed to login');
+                username.clear();
+                password.clear();
+                _scafKey.currentState.showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'Failed to sign in. Try again',
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                ),
-              );
-            }
-            break;
+                );
+              }
+              break;
+          }
         }
+      } else {
+        print('failed to login');
+        username.clear();
+        password.clear();
+        Navigator.pop(context);
+        _scafKey.currentState.showSnackBar(
+          SnackBar(
+            content: Text(
+              'Invalid credentials. Try again',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
       }
-    } else {
-      print('failed to login');
+    } catch (e) {
       username.clear();
       password.clear();
       Navigator.pop(context);
-      _scafKey.currentState.showSnackBar(
-        SnackBar(
-          content: Text(
-            'Invalid credentials. Try again',
-            textAlign: TextAlign.center,
-          ),
-        ),
+      showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return Dialog(
+            elevation: 20,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            child: Container(
+              height: 150,
+              width: 80,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
+              ),
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      Icons.error_outline,
+                      size: 40,
+                      color: Colors.red.withOpacity(0.9),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 10),
+                      child: Text(
+                        'Unable to establish a connection with our servers.\nCheck your connection and try again later.',
+                        style: TextStyle(color: Colors.white, fontSize: 12),
+                        textAlign: TextAlign.center,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
       );
     }
   }
@@ -234,7 +282,7 @@ class _LoginPageState extends State<LoginPage> {
                     padding: const EdgeInsets.only(top: 23.0),
                     child: Text(
                       "Signing you in...",
-                      style: TextStyle(color: Colors.white, fontSize: 20),
+                      style: TextStyle(color: Colors.white, fontSize: 15),
                     ),
                   ),
                 ],
@@ -243,7 +291,7 @@ class _LoginPageState extends State<LoginPage> {
           );
         },
       );
-      Future.delayed(Duration(seconds: 3), () {
+      Future.delayed(Duration(milliseconds: 100), () {
         _loginUser(username.text, password.text);
       });
     } else {
@@ -420,13 +468,11 @@ class _LoginPageState extends State<LoginPage> {
                         boxShadow: [
                           BoxShadow(
                             color: Colors.cyan[900],
-                            blurRadius:
-                                10.0, // has the effect of softening the shadow
-                            spreadRadius:
-                                1.0, // has the effect of extending the shadow
+                            blurRadius: 10.0,
+                            spreadRadius: 1.0,
                             offset: Offset(
-                              5.0, // horizontal, move right 10
-                              5.0, // vertical, move down 10
+                              5.0,
+                              5.0,
                             ),
                           ),
                         ],
@@ -460,7 +506,6 @@ class _LoginPageState extends State<LoginPage> {
                   padding: const EdgeInsets.only(top: 30, left: 55, right: 55),
                   child: Container(
                     alignment: Alignment.topRight,
-                    //color: Colors.red,
                     height: 25,
                     child: Row(
                       children: <Widget>[

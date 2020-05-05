@@ -65,8 +65,30 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
         key: refreshKey,
         onRefresh: getUniversities,
         child: FutureBuilder(
-          future: getUniversities(),
+          future: getUniversities().timeout(Duration(seconds: 10)),
           builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 40.0),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Icon(
+                        Icons.error_outline,
+                        size: 30,
+                        color: Colors.red.withOpacity(0.6),
+                      ),
+                      Text(
+                        'Unable to establish a connection with our servers.\nCheck your connection and try again later.',
+                        style: TextStyle(color: Colors.black54),
+                        textAlign: TextAlign.center,
+                      )
+                    ],
+                  ),
+                ),
+              );
+            }
             if (snapshot.hasData) {
               return Padding(
                 padding: EdgeInsets.only(top: 10.0),

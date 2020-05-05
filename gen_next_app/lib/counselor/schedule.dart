@@ -66,8 +66,30 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           email: newUser.email),
       appBar: CustomAppBar('Calendar'),
       body: FutureBuilder(
-        future: getEvents(),
+        future: getEvents().timeout(Duration(seconds: 10)),
         builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 40.0),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      Icons.error_outline,
+                      size: 30,
+                      color: Colors.red.withOpacity(0.6),
+                    ),
+                    Text(
+                      'Unable to establish a connection with our servers.\nCheck your connection and try again later.',
+                      style: TextStyle(color: Colors.black54),
+                      textAlign: TextAlign.center,
+                    )
+                  ],
+                ),
+              ),
+            );
+          }
           if (snapshot.hasData) {
             _events = {};
             for (var i = 0; i < snapshot.data.length; i++) {
