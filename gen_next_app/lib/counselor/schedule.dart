@@ -121,7 +121,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                         padding: EdgeInsets.only(top: 10),
                         child: Text(
                           'Session successfully edited!\nRespective students will be notified',
-                          style: TextStyle(color: Colors.black, fontSize: 12),
+                          style: TextStyle(color: Colors.black, fontSize: 14),
                           textAlign: TextAlign.center,
                         ),
                       )
