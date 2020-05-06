@@ -5,6 +5,7 @@ dart:
 
 dart_task:
   - dartfmt
+  - dartanalyzer: true
 
 install:
   - git clone https://github.com/flutter/flutter.git -b stable
