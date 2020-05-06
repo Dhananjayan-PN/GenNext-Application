@@ -15,7 +15,7 @@ class MyStudentsScreen extends StatefulWidget {
 
 class _MyStudentsScreenState extends State<MyStudentsScreen> {
   var refreshKey = GlobalKey<RefreshIndicatorState>();
-  TextEditingController controller = new TextEditingController();
+  TextEditingController controller = TextEditingController();
   String filter;
 
   @override
@@ -59,7 +59,7 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
     }
   }
 
-  Widget buildCard(AsyncSnapshot snapshot, index) {
+  Widget buildCard(AsyncSnapshot snapshot, int index) {
     List students = snapshot.data;
     List<Widget> collegelist = [];
     for (var i = 0;
