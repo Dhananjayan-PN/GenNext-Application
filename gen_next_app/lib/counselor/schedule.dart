@@ -1,3 +1,4 @@
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:page_transition/page_transition.dart';
@@ -19,6 +20,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   TextEditingController _subject = TextEditingController();
   TextEditingController _duration = TextEditingController();
   TextEditingController _notes = TextEditingController();
+  TextEditingController _datetimecontroller = TextEditingController();
+
   CalendarController _calendarController;
   Map<DateTime, List<List<dynamic>>> _events;
   List _selectedEvents;
@@ -62,7 +65,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     }
   }
 
-  _editSession(String student, String time) {
+  _editSession(String student, DateTime time) {
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -72,7 +75,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           elevation: 20,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
-          title: Text('Edit Session Details'),
+          title: Text('Edit Session'),
           content: Container(
             decoration: BoxDecoration(
               shape: BoxShape.rectangle,
@@ -98,16 +101,39 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 25, right: 25),
-                    child: Row(
-                      children: <Widget>[
-                        Text('Time: '),
-                        Text(time, style: TextStyle(color: Colors.black54))
-                      ],
+                    padding: EdgeInsets.only(top: 10, left: 25, right: 25),
+                    child: DateTimeField(
+                      controller: _datetimecontroller,
+                      decoration: InputDecoration(
+                        border: UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.blue, width: 0.0),
+                        ),
+                        labelText: 'Date and Time',
+                        labelStyle: TextStyle(color: Colors.black54),
+                      ),
+                      format: DateFormat.yMd().add_jm(),
+                      onShowPicker: (context, currentValue) async {
+                        final _date = await showDatePicker(
+                            context: context,
+                            firstDate: DateTime(1900),
+                            initialDate: currentValue ?? time,
+                            lastDate: DateTime(2150));
+                        if (_date != null) {
+                          final _time = await showTimePicker(
+                            context: context,
+                            initialTime:
+                                TimeOfDay.fromDateTime(currentValue ?? time),
+                          );
+                          return DateTimeField.combine(_date, _time);
+                        } else {
+                          return currentValue;
+                        }
+                      },
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 25, right: 25),
+                    padding: EdgeInsets.only(top: 10, left: 25, right: 25),
                     child: TextFormField(
                       controller: _subject,
                       decoration: InputDecoration(
@@ -127,7 +153,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 25, right: 25),
+                    padding: EdgeInsets.only(top: 10, left: 25, right: 25),
                     child: TextFormField(
                       keyboardType: TextInputType.number,
                       controller: _duration,
@@ -148,7 +174,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 25, right: 25),
+                    padding: EdgeInsets.only(top: 10, left: 25, right: 25),
                     child: TextFormField(
                       keyboardType: TextInputType.multiline,
                       controller: _notes,
@@ -543,6 +569,10 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                           style: TextStyle(color: Colors.white),
                                         ),
                                         onPressed: () {
+                                          _datetimecontroller.text =
+                                              DateFormat.yMd()
+                                                  .add_jm()
+                                                  .format(timestamp.toLocal());
                                           _subject.text =
                                               _selectedEvents[index][4];
                                           _duration.text =
@@ -552,8 +582,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                               _selectedEvents[index][5];
                                           _editSession(
                                               _selectedEvents[index][2],
-                                              DateFormat.jm()
-                                                  .format(timestamp.toLocal()));
+                                              timestamp.toLocal());
                                         },
                                       ),
                                       Padding(
