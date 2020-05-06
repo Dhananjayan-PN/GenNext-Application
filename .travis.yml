@@ -1,0 +1,14 @@
+language: dart
+
+dart:
+  - stable
+
+dart_task:
+  - dartfmt
+
+install:
+  - git clone https://github.com/flutter/flutter.git -b stable
+
+script:
+  - ./flutter/bin/flutter doctor
+  - ./flutter/bin/flutter test
