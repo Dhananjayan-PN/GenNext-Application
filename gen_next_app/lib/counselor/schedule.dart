@@ -17,11 +17,12 @@ class ScheduleScreen extends StatefulWidget {
 
 class ScheduleScreenState extends State<ScheduleScreen> {
   final _formKey = GlobalKey<FormState>();
+  GlobalKey<ScaffoldState> _scafKey = GlobalKey<ScaffoldState>();
   TextEditingController _subject = TextEditingController();
   TextEditingController _duration = TextEditingController();
   TextEditingController _notes = TextEditingController();
   TextEditingController _datetimecontroller = TextEditingController();
-
+  DateTime _newDateTime;
   CalendarController _calendarController;
   Map<DateTime, List<List<dynamic>>> _events;
   List _selectedEvents;
@@ -57,7 +58,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   Future<void> getEvents() async {
     final response = await http.get(
         'https://gennext.ml/api/counselor/get-sessions-calendar',
-        headers: {HttpHeaders.authorizationHeader: 'Token $tok'});
+        headers: {
+          HttpHeaders.authorizationHeader: 'Token $tok',
+        });
     if (response.statusCode == 200) {
       return json.decode(response.body)['counselor_sessions'];
     } else {
@@ -65,7 +68,172 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     }
   }
 
-  _editSession(String student, DateTime time) {
+  Future<void> editSession(int id, String complete) async {
+    final response = await http.put(
+      'https://gennext.ml/api/counselor/edit-sessions-calendar',
+      headers: {
+        HttpHeaders.authorizationHeader: "Token $tok",
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{
+          "session_id": id,
+          "subject_of_session": _subject.text,
+          "time_of_session": _newDateTime.toUtc().toIso8601String(),
+          "session_notes": _notes.text,
+          "session_duration": _duration.text,
+          "session_complete": complete
+        },
+      ),
+    );
+    print(json.decode(response.body));
+    if (response.statusCode == 200) {
+      if (json.decode(response.body)['response'] ==
+          'Session Successfully edited!') {
+        Navigator.pop(context);
+        showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              contentPadding: EdgeInsets.all(0),
+              elevation: 20,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0))),
+              content: Container(
+                height: 150,
+                width: 80,
+                decoration: BoxDecoration(
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                ),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Icon(
+                        Icons.check_circle_outline,
+                        size: 40,
+                        color: Colors.green,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 10),
+                        child: Text(
+                          'Session successfully edited!\nRespective students will be notified',
+                          style: TextStyle(color: Colors.black, fontSize: 12),
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+        setState(() {});
+      } else {
+        Navigator.pop(context);
+        _error();
+      }
+    } else {
+      Navigator.pop(context);
+      _error();
+    }
+  }
+
+  _loading() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(0),
+          elevation: 20,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          content: Container(
+            height: 150,
+            width: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            ),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    height: 50,
+                    width: 50,
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                      strokeWidth: 3.0,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 23.0),
+                    child: Text(
+                      "Saving your changes",
+                      style: TextStyle(color: Colors.blue, fontSize: 15),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  _error() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(0),
+          elevation: 20,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          content: Container(
+            height: 150,
+            width: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            ),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(
+                    Icons.error_outline,
+                    size: 40,
+                    color: Colors.red.withOpacity(0.9),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Text(
+                      'Unable to establish a connection with our servers.\nCheck your connection and try again later.',
+                      style: TextStyle(color: Colors.black, fontSize: 12),
+                      textAlign: TextAlign.center,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  _editSession(String student, DateTime time, int id, String complete) {
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -113,6 +281,11 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                         labelStyle: TextStyle(color: Colors.black54),
                       ),
                       format: DateFormat.yMd().add_jm(),
+                      onChanged: (value) {
+                        setState(() {
+                          _newDateTime = value;
+                        });
+                      },
                       onShowPicker: (context, currentValue) async {
                         final _date = await showDatePicker(
                             context: context,
@@ -203,6 +376,52 @@ class ScheduleScreenState extends State<ScheduleScreen> {
               ),
               onPressed: () {
                 Navigator.pop(context);
+                showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      contentPadding: EdgeInsets.all(0),
+                      elevation: 20,
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(20.0))),
+                      content: Container(
+                        height: 150,
+                        width: 80,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                        ),
+                        child: Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              SizedBox(
+                                height: 50,
+                                width: 50,
+                                child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.blue),
+                                  strokeWidth: 3.0,
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 23.0),
+                                child: Text(
+                                  "Saving your changes",
+                                  style: TextStyle(
+                                      color: Colors.blue, fontSize: 15),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
               },
             ),
             FlatButton(
@@ -210,7 +429,11 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                 'Save',
                 style: TextStyle(color: Colors.blue),
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pop(context);
+                editSession(id, complete);
+                _loading();
+              },
             ),
           ],
         );
@@ -223,6 +446,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      key: _scafKey,
       resizeToAvoidBottomPadding: false,
       backgroundColor: Colors.white,
       drawer: NavDrawer(
@@ -582,7 +806,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                               _selectedEvents[index][5];
                                           _editSession(
                                               _selectedEvents[index][2],
-                                              timestamp.toLocal());
+                                              timestamp.toLocal(),
+                                              _selectedEvents[index][0],
+                                              completed[0]);
                                         },
                                       ),
                                       Padding(
