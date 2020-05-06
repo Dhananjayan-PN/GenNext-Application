@@ -15,9 +15,14 @@ class ScheduleScreen extends StatefulWidget {
 }
 
 class ScheduleScreenState extends State<ScheduleScreen> {
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController _subject = TextEditingController();
+  TextEditingController _duration = TextEditingController();
+  TextEditingController _notes = TextEditingController();
   CalendarController _calendarController;
   Map<DateTime, List<List<dynamic>>> _events;
   List _selectedEvents;
+  bool expanded;
 
   @override
   void initState() {
@@ -57,9 +62,118 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     }
   }
 
+  _editSession() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(0),
+          elevation: 20,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          title: Text('Edit Session'),
+          content: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            ),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(left: 25, right: 25),
+                    child: TextFormField(
+                      controller: _subject,
+                      decoration: InputDecoration(
+                        border: UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.blue, width: 0.0),
+                        ),
+                        labelText: 'Subject',
+                        labelStyle: TextStyle(color: Colors.black54),
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Session subject is required to save';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 25, right: 25),
+                    child: TextFormField(
+                      controller: _duration,
+                      decoration: InputDecoration(
+                        border: UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.blue, width: 0.0),
+                        ),
+                        labelText: 'Session Duration',
+                        labelStyle: TextStyle(color: Colors.black54),
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Session duration is required to save';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 25, right: 25),
+                    child: TextFormField(
+                      controller: _notes,
+                      decoration: InputDecoration(
+                        border: UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.blue, width: 0.0),
+                        ),
+                        labelText: 'Session Notes',
+                        labelStyle: TextStyle(color: Colors.black54),
+                      ),
+                      validator: (value) {
+                        return null;
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            FlatButton(
+              child: Text(
+                'Save',
+                style: TextStyle(color: Colors.blue),
+              ),
+              onPressed: () {},
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  _deleteSession() {}
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      resizeToAvoidBottomPadding: false,
       backgroundColor: Colors.white,
       drawer: NavDrawer(
           name: newUser.firstname + ' ' + newUser.lastname,
@@ -94,21 +208,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
             _events = {};
             for (var i = 0; i < snapshot.data.length; i++) {
               Map<String, dynamic> session = snapshot.data[i];
-              DateTime timestamp = DateTime.parse(session['session_timestamp']);
-              List event = [];
-              for (var j = 0; j < session.length; j++) {
-                event.add(session[session.keys.toList()[j]]);
-              }
-              _events[timestamp] == null
-                  ? _events[timestamp] = [
-                      event,
-                    ]
-                  : _events[timestamp].add(event);
-            }
-            _events = {};
-            for (var i = 0; i < snapshot.data.length; i++) {
-              Map<String, dynamic> session = snapshot.data[i];
-              DateTime timestamp = DateTime.parse(session['session_timestamp']);
+              DateTime timestamp =
+                  DateTime.parse(session['session_timestamp']).toLocal();
               List event = [];
               for (var j = 0; j < session.length; j++) {
                 event.add(session[session.keys.toList()[j]]);
@@ -151,12 +252,13 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                     weekendStyle: TextStyle(color: Colors.black),
                   ),
                   headerStyle: HeaderStyle(
-                    titleTextStyle: TextStyle(fontSize: 20),
+                    titleTextStyle: TextStyle(fontSize: 22),
                     centerHeaderTitle: true,
                   ),
                   headerVisible: true,
                   onDaySelected: (date, events) {
                     setState(() {
+                      expanded = false;
                       _selectedEvents = events;
                     });
                   },
@@ -227,23 +329,225 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                   ),
                 ),
                 Divider(
-                  thickness: 1,
+                  thickness: 0,
                 ),
                 Expanded(
                   child: ListView.builder(
                       scrollDirection: Axis.vertical,
                       itemCount: _selectedEvents.length,
                       itemBuilder: (context, index) {
+                        DateTime timestamp =
+                            DateTime.parse(_selectedEvents[index][7]);
+                        String completed = _selectedEvents[index][6];
                         return Padding(
                           padding: EdgeInsets.only(left: 10, right: 10),
                           child: Card(
+                            clipBehavior: Clip.antiAlias,
                             shape: RoundedRectangleBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(15))),
                             elevation: 5,
                             child: ExpansionTile(
-                              title: Text(_selectedEvents[index][2]),
-                              subtitle: Text(_selectedEvents[index][3]),
+                              initiallyExpanded: expanded ?? false,
+                              title: Padding(
+                                padding: EdgeInsets.only(top: 5.0),
+                                child: Text(_selectedEvents[index][2] +
+                                    ' - ' +
+                                    DateFormat.jm()
+                                        .format(timestamp.toLocal())),
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    '@' + _selectedEvents[index][3],
+                                    style: TextStyle(color: Colors.blue),
+                                  ),
+                                  if (completed == 'Yes') ...[
+                                    Transform.scale(
+                                      scale: 0.9,
+                                      child: Chip(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(30.0),
+                                        ),
+                                        padding: EdgeInsets.all(0),
+                                        labelPadding:
+                                            EdgeInsets.only(left: 3, right: 4),
+                                        elevation: 2,
+                                        backgroundColor: Colors.green,
+                                        label: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            Padding(
+                                              padding:
+                                                  EdgeInsets.only(right: 3),
+                                              child: Icon(
+                                                Icons.check,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            Text(
+                                              'Pending',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w700),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                  if (completed == 'No') ...[
+                                    Transform.scale(
+                                      scale: 0.9,
+                                      child: Chip(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(30.0),
+                                        ),
+                                        padding: EdgeInsets.all(0),
+                                        labelPadding:
+                                            EdgeInsets.only(left: 3, right: 4),
+                                        elevation: 2,
+                                        backgroundColor: Colors.yellow[600],
+                                        label: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: <Widget>[
+                                            Padding(
+                                              padding:
+                                                  EdgeInsets.only(right: 3),
+                                              child: Icon(
+                                                Icons.access_time,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            Text(
+                                              'Pending',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w700),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  ]
+                                ],
+                              ),
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.only(top: 5, left: 20),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Text(
+                                        'Session Subject: ',
+                                        style: TextStyle(fontSize: 15),
+                                      ),
+                                      Text(
+                                        _selectedEvents[index][4],
+                                        style: TextStyle(color: Colors.black54),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 5, left: 20),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Text(
+                                        'Session Duration: ',
+                                        style: TextStyle(fontSize: 15),
+                                      ),
+                                      Text(
+                                        _selectedEvents[index][8].toString() +
+                                            ' mins',
+                                        style: TextStyle(color: Colors.black54),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 5, left: 20),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Text(
+                                        'Session Notes: ',
+                                        style: TextStyle(fontSize: 15),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 5, left: 30, right: 20),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Wrap(
+                                      alignment: WrapAlignment.start,
+                                      children: <Widget>[
+                                        Text(
+                                          _selectedEvents[index][5],
+                                          style:
+                                              TextStyle(color: Colors.black54),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 5, right: 20, bottom: 10),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: <Widget>[
+                                      ActionChip(
+                                        pressElevation: 5,
+                                        labelPadding:
+                                            EdgeInsets.only(left: 5, right: 4),
+                                        avatar: Padding(
+                                          padding: EdgeInsets.only(left: 2),
+                                          child: Icon(Icons.edit,
+                                              color: Colors.white),
+                                        ),
+                                        elevation: 3,
+                                        backgroundColor: Colors.blue,
+                                        label: Text(
+                                          'Edit',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                        onPressed: () {
+                                          _editSession();
+                                        },
+                                      ),
+                                      Padding(
+                                          padding: EdgeInsets.only(left: 10),
+                                          child: ActionChip(
+                                            pressElevation: 5,
+                                            labelPadding: EdgeInsets.only(
+                                                left: 3, right: 4),
+                                            avatar: Padding(
+                                              padding: EdgeInsets.only(left: 2),
+                                              child: Icon(Icons.delete,
+                                                  color: Colors.white),
+                                            ),
+                                            elevation: 3,
+                                            backgroundColor: Colors.red,
+                                            label: Text(
+                                              'Delete',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                            onPressed: () {
+                                              _deleteSession();
+                                            },
+                                          ))
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         );

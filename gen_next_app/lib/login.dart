@@ -43,7 +43,7 @@ class CustomDialog extends StatelessWidget {
             ],
           ),
           child: Column(
-            mainAxisSize: MainAxisSize.min, // To make the card compact
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Text(
                 title,

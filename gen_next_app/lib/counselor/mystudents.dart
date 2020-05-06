@@ -137,6 +137,7 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
                             padding: const EdgeInsets.only(
                                 top: 5, left: 10, right: 10),
                             child: Card(
+                              clipBehavior: Clip.antiAlias,
                               shape: RoundedRectangleBorder(
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(15))),
@@ -151,7 +152,7 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
                                 title: Text(students[index]['student_name']),
                                 subtitle: Text(
                                   '@' + students[index]['student_username'],
-                                  style: TextStyle(color: Colors.black54),
+                                  style: TextStyle(color: Colors.blue),
                                 ),
                                 children: <Widget>[
                                   Divider(
