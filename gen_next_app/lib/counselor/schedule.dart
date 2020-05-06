@@ -86,7 +86,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         },
       ),
     );
-    print(json.decode(response.body));
     if (response.statusCode == 200) {
       if (json.decode(response.body)['response'] ==
           'Session Successfully edited!') {
@@ -121,6 +120,69 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                         padding: EdgeInsets.only(top: 10),
                         child: Text(
                           'Session successfully edited!\nRespective students will be notified',
+                          style: TextStyle(color: Colors.black, fontSize: 14),
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+        setState(() {});
+      } else {
+        Navigator.pop(context);
+        _error();
+      }
+    } else {
+      Navigator.pop(context);
+      _error();
+    }
+  }
+
+  Future<void> deleteSession(int id) async {
+    final response = await http.delete(
+      'https://gennext.ml/api/counselor/delete-counselor-session/$id',
+      headers: {
+        HttpHeaders.authorizationHeader: "Token $tok",
+      },
+    );
+    if (response.statusCode == 200) {
+      if (json.decode(response.body)['Response'] ==
+          'Session successfully deleted!') {
+        Navigator.pop(context);
+        showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              contentPadding: EdgeInsets.all(0),
+              elevation: 20,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0))),
+              content: Container(
+                height: 150,
+                width: 80,
+                decoration: BoxDecoration(
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                ),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Icon(
+                        Icons.check_circle_outline,
+                        size: 40,
+                        color: Colors.green,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 10),
+                        child: Text(
+                          'Session successfully deleted!\nRespective students will be notified',
                           style: TextStyle(color: Colors.black, fontSize: 14),
                           textAlign: TextAlign.center,
                         ),
@@ -394,7 +456,71 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     );
   }
 
-  _deleteSession() {}
+  _deleteSession(int id) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(0),
+          elevation: 20,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          content: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(top: 20),
+                  child: Icon(
+                    Icons.delete,
+                    size: 40,
+                    color: Colors.red.withOpacity(0.9),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 10),
+                  child: Text(
+                    'Are you sure you want to delete this session?',
+                    style: TextStyle(color: Colors.black, fontSize: 12),
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: Colors.blue),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            FlatButton(
+              child: Text(
+                'Delete',
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+                deleteSession(id);
+                _loading();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -783,7 +909,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                                   color: Colors.white),
                                             ),
                                             onPressed: () {
-                                              _deleteSession();
+                                              _deleteSession(
+                                                  _selectedEvents[index][0]);
                                             },
                                           ))
                                     ],
