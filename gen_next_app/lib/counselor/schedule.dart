@@ -62,7 +62,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     }
   }
 
-  _editSession() {
+  _editSession(String student, String time) {
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -72,7 +72,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           elevation: 20,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
-          title: Text('Edit Session'),
+          title: Text('Edit Session Details'),
           content: Container(
             decoration: BoxDecoration(
               shape: BoxShape.rectangle,
@@ -84,6 +84,28 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10, right: 10),
+                    child: Divider(thickness: 0),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 25, right: 25),
+                    child: Row(
+                      children: <Widget>[
+                        Text('Student: '),
+                        Text(student, style: TextStyle(color: Colors.black54))
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 25, right: 25),
+                    child: Row(
+                      children: <Widget>[
+                        Text('Time: '),
+                        Text(time, style: TextStyle(color: Colors.black54))
+                      ],
+                    ),
+                  ),
                   Padding(
                     padding: EdgeInsets.only(left: 25, right: 25),
                     child: TextFormField(
@@ -107,6 +129,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                   Padding(
                     padding: EdgeInsets.only(left: 25, right: 25),
                     child: TextFormField(
+                      keyboardType: TextInputType.number,
                       controller: _duration,
                       decoration: InputDecoration(
                         border: UnderlineInputBorder(
@@ -127,6 +150,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                   Padding(
                     padding: EdgeInsets.only(left: 25, right: 25),
                     child: TextFormField(
+                      keyboardType: TextInputType.multiline,
                       controller: _notes,
                       decoration: InputDecoration(
                         border: UnderlineInputBorder(
@@ -388,7 +412,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                               ),
                                             ),
                                             Text(
-                                              'Pending',
+                                              'Completed',
                                               style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 13,
@@ -519,7 +543,17 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                           style: TextStyle(color: Colors.white),
                                         ),
                                         onPressed: () {
-                                          _editSession();
+                                          _subject.text =
+                                              _selectedEvents[index][4];
+                                          _duration.text =
+                                              _selectedEvents[index][8]
+                                                  .toString();
+                                          _notes.text =
+                                              _selectedEvents[index][5];
+                                          _editSession(
+                                              _selectedEvents[index][2],
+                                              DateFormat.jm()
+                                                  .format(timestamp.toLocal()));
                                         },
                                       ),
                                       Padding(
