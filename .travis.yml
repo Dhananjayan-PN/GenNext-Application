@@ -1,15 +1,13 @@
 language: dart
-
-dart:
-  - stable
-
-dart_task:
-  - dartfmt
-  - dartanalyzer: true
-
+dist: xenial
 install:
   - git clone https://github.com/flutter/flutter.git -b stable
-
-script:
   - ./flutter/bin/flutter doctor
-  - ./flutter/bin/flutter test
+  - gem install coveralls-lcov
+script:
+  - ./flutter/bin/flutter test --coverage
+after_success:
+  - coveralls-lcov coverage/lcov.info
+cache:
+  directories:
+    - $HOME/.pub-cache
