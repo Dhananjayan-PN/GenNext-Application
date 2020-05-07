@@ -5,9 +5,7 @@ install:
   - ./flutter/bin/flutter doctor
   - gem install coveralls-lcov
 script:
- - pwd
- - cd Dhananjayan-PN
- - cd GenNext-Application
+ - cd gen_next_app
  - flutter test --coverage
 after_success:
   - coveralls-lcov coverage/lcov.info
