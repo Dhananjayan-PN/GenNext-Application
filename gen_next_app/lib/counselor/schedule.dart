@@ -306,7 +306,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           elevation: 20,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
-          title: Text('Edit Session'),
+          title: Center(child: Text('Edit Session')),
           content: Container(
             width:MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
