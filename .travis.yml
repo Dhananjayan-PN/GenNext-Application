@@ -2,7 +2,8 @@ language: dart
 dist: xenial
 install:
   - git clone https://github.com/flutter/flutter.git -b stable
-  - ./flutter/bin/flutter doctor
+  - export PATH="$PATH:`pwd`/flutter/bin"
+  - flutter doctor
   - gem install coveralls-lcov
 script:
  - echo "export PATH=/flutter/bin:$PATH" >> $HOME/.bash_profile
