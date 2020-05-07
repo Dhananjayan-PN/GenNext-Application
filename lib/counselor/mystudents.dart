@@ -17,6 +17,7 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
   var refreshKey = GlobalKey<RefreshIndicatorState>();
   TextEditingController controller = TextEditingController();
   String filter;
+  List students;
 
   @override
   void initState() {
@@ -60,7 +61,7 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
   }
 
   Widget buildCard(AsyncSnapshot snapshot, int index) {
-    List students = snapshot.data;
+    students = snapshot.data;
     List<Widget> collegelist = [];
     for (var i = 0;
         i < students[index]['college_list'].split(':').length;
@@ -291,51 +292,57 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
               );
             }
             if (snapshot.hasData) {
-              return Column(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(top: 5, left: 18, right: 30),
-                    child: Row(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5, right: 6),
-                          child: Icon(
-                            Icons.search,
-                            size: 30,
-                            color: Colors.black54,
+              if (snapshot.data.length == 0) {
+                return Center(
+                  child: Text('No Students'),
+                );
+              } else {
+                return Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(top: 5, left: 18, right: 30),
+                      child: Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5, right: 6),
+                            child: Icon(
+                              Icons.search,
+                              size: 30,
+                              color: Colors.black54,
+                            ),
                           ),
-                        ),
-                        Expanded(
-                          child: TextField(
-                            decoration: new InputDecoration(
-                                labelText: "Search",
-                                contentPadding: EdgeInsets.all(2)),
-                            controller: controller,
+                          Expanded(
+                            child: TextField(
+                              decoration: new InputDecoration(
+                                  labelText: "Search",
+                                  contentPadding: EdgeInsets.all(2)),
+                              controller: controller,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 20),
-                      child: Scrollbar(
-                        child: ListView.builder(
-                            itemCount: snapshot.data.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return filter == null || filter == ""
-                                  ? buildCard(snapshot, index)
-                                  : snapshot.data[index]['student_name']
-                                          .toLowerCase()
-                                          .contains(filter)
-                                      ? buildCard(snapshot, index)
-                                      : Container();
-                            }),
+                        ],
                       ),
                     ),
-                  ),
-                ],
-              );
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 20),
+                        child: Scrollbar(
+                          child: ListView.builder(
+                              itemCount: snapshot.data.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return filter == null || filter == ""
+                                    ? buildCard(snapshot, index)
+                                    : snapshot.data[index]['student_name']
+                                            .toLowerCase()
+                                            .contains(filter)
+                                        ? buildCard(snapshot, index)
+                                        : Container();
+                              }),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              }
             }
             return Center(
               child: CircularProgressIndicator(),
