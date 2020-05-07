@@ -12,6 +12,5 @@ jobs:
     - uses: subosito/flutter-action@v1
       with:
         flutter-version: '1.17.0'
-    - run: cd gen_next_app
     - run: flutter pub get
     - run: flutter test
