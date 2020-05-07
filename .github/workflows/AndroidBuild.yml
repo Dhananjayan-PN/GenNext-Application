@@ -22,6 +22,6 @@ jobs:
       with:
         prerelease: true
         allowUpdates: true
-        artifact: "build/app/outputs/bundle/release/app.aab"
+        artifacts: "build/app/outputs/bundle/release/app.aab"
         token: ${{ secrets.TOKEN }}
 
