@@ -6,7 +6,6 @@ install:
   - flutter doctor
   - gem install coveralls-lcov
 script:
- - echo "export PATH=/flutter/bin:$PATH" >> $HOME/.bash_profile
  - cd gen_next_app
  - flutter test --coverage
 after_success:
