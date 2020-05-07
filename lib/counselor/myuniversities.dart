@@ -19,6 +19,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   var refreshKey = GlobalKey<RefreshIndicatorState>();
   TextEditingController controller = new TextEditingController();
   String filter;
+  List unis;
 
   @override
   void initState() {
@@ -61,7 +62,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   }
 
   Widget buildCard(AsyncSnapshot snapshot, int index) {
-    List unis = snapshot.data;
+    unis = snapshot.data;
     List<Widget> topmajors = [];
     List<Widget> standoutfactors = [];
     for (var i = 0; i < unis[index]['top_majors'].length; i++) {
@@ -379,59 +380,61 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                 ),
               );
             }
-            if (snapshot.data.length == 0) {
-              return Center(
-                child: Text('No universities'),
-              );
-            }
+
             if (snapshot.hasData) {
-              return Column(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(top: 5, left: 18, right: 30),
-                    child: Row(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5, right: 6),
-                          child: Icon(
-                            Icons.search,
-                            size: 30,
-                            color: Colors.black54,
+              if (snapshot.data.length == 0) {
+                return Center(
+                  child: Text('No universities'),
+                );
+              } else {
+                return Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(top: 5, left: 18, right: 30),
+                      child: Row(
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5, right: 6),
+                            child: Icon(
+                              Icons.search,
+                              size: 30,
+                              color: Colors.black54,
+                            ),
                           ),
-                        ),
-                        Expanded(
-                          child: TextField(
-                            decoration: new InputDecoration(
-                                labelText: "Search",
-                                contentPadding: EdgeInsets.all(2)),
-                            controller: controller,
+                          Expanded(
+                            child: TextField(
+                              decoration: new InputDecoration(
+                                  labelText: "Search",
+                                  contentPadding: EdgeInsets.all(2)),
+                              controller: controller,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 20.0),
-                      child: Scrollbar(
-                        child: ListView.builder(
-                            primary: true,
-                            scrollDirection: Axis.vertical,
-                            itemCount: snapshot.data.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return filter == null || filter == ""
-                                  ? buildCard(snapshot, index)
-                                  : snapshot.data[index]['university_name']
-                                          .toLowerCase()
-                                          .contains(filter)
-                                      ? buildCard(snapshot, index)
-                                      : Container();
-                            }),
+                        ],
                       ),
                     ),
-                  ),
-                ],
-              );
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 20.0),
+                        child: Scrollbar(
+                          child: ListView.builder(
+                              primary: true,
+                              scrollDirection: Axis.vertical,
+                              itemCount: snapshot.data.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return filter == null || filter == ""
+                                    ? buildCard(snapshot, index)
+                                    : snapshot.data[index]['university_name']
+                                            .toLowerCase()
+                                            .contains(filter)
+                                        ? buildCard(snapshot, index)
+                                        : Container();
+                              }),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              }
             }
             return Center(
               child: CircularProgressIndicator(),
