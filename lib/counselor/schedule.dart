@@ -398,7 +398,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                           borderSide:
                               BorderSide(color: Colors.blue, width: 0.0),
                         ),
-                        labelText: 'Session Duration',
+                        labelText: 'Session Duration (mins)',
                         labelStyle: TextStyle(color: Colors.black54),
                       ),
                       validator: (value) {
