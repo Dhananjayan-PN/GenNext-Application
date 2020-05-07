@@ -22,5 +22,5 @@ jobs:
       with:
         prerelease: true
         allowUpdates: true
-        artifact: "ios\Runner.xcworkspace\contents.xcworkspacedata"
+        artifact: "ios/Runner.xcworkspace/contents.xcworkspacedata"
         token: ${{ secrets.TOKEN }}
