@@ -1,4 +1,7 @@
-on: push
+on: 
+  push:
+    tags:
+    - 'v1.0'
 name: Android Build & Release
 jobs:
   build:
@@ -17,6 +20,6 @@ jobs:
     - name: Create Android Release Bundle
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "build/app/outputs/bundle/release/app.aab"
-        token: ${{secrets.TOKEN }}
+        artifact: "build/app/outputs/bundle/release/app.aab"
+        token: ${{ secrets.TOKEN }}
 
