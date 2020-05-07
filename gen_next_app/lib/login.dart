@@ -468,7 +468,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 45, right: 50),
+                  padding: EdgeInsets.only(top: 45, right: 50),
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: Container(
@@ -490,7 +490,6 @@ class _LoginPageState extends State<LoginPage> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: FlatButton(
-                        key: Key("Sign In Button"),
                         splashColor: Colors.blue[900],
                         onPressed: () {
                           validateAndSave();
@@ -500,6 +499,7 @@ class _LoginPageState extends State<LoginPage> {
                             padding: const EdgeInsets.only(bottom: 2),
                             child: Text(
                               'Sign In',
+                              key: Key('button'),
                               style: TextStyle(
                                 color: Color(0xff00AEEF),
                                 fontSize: 19,
