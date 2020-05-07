@@ -57,7 +57,7 @@ class NavDrawer extends StatelessWidget {
         },
       ));
       navlist.add(
-        Divider(),
+        Divider(thickness: 0),
       );
     }
     return Drawer(
@@ -65,16 +65,16 @@ class NavDrawer extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          new UserAccountsDrawerHeader(
+          UserAccountsDrawerHeader(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
                   colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
             ),
-            accountName: new Text(name,
+            accountName: Text(name,
                 style: TextStyle(color: Colors.white, fontSize: 18)),
-            accountEmail: new Text(email,
+            accountEmail: Text(email,
                 style: TextStyle(color: Colors.white, fontSize: 12)),
             currentAccountPicture: CircleAvatar(
               backgroundImage: CachedNetworkImageProvider(
@@ -92,8 +92,10 @@ class NavDrawer extends StatelessWidget {
               );
             },
           ),
-          new Column(children: navlist),
-          new ListTile(
+         Column(
+           mainAxisSize: MainAxisSize.min,
+           children: navlist),
+         ListTile(
             leading: Icon(Icons.power_settings_new,
                 size: 26, color: Colors.red[600]),
             title: Text('Sign Out',
