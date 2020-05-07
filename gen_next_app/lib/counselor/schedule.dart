@@ -208,7 +208,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   _loading() {
     showDialog(
       context: context,
-      barrierDismissible: true,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           contentPadding: EdgeInsets.all(0),
@@ -300,6 +300,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
+        _newDateTime = time;
         return AlertDialog(
           contentPadding: EdgeInsets.all(0),
           elevation: 20,
@@ -307,6 +308,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
           title: Text('Edit Session'),
           content: Container(
+            width:MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.all(Radius.circular(20.0)),
