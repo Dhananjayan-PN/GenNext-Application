@@ -20,5 +20,5 @@ jobs:
     - name: Create Android Release Bundle
       uses: ncipollo/release-action@v1
       with:
-        artifact: "ios\Runner.xcworkspace\contents.xcworkspacedata"
+        artifact: "ios/Runner.xcworkspace/contents.xcworkspacedata"
         token: ${{ secrets.TOKEN }}
