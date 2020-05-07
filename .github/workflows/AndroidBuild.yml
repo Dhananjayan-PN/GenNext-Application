@@ -20,6 +20,8 @@ jobs:
     - name: Create Android Release Bundle
       uses: ncipollo/release-action@v1
       with:
+        prerelease: true
+        allowUpdates: true
         artifact: "build/app/outputs/bundle/release/app.aab"
         token: ${{ secrets.TOKEN }}
 
