@@ -72,8 +72,8 @@ class NavDrawer extends StatelessWidget {
                   end: Alignment.topCenter,
                   colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
             ),
-            accountName: Text(name,
-                style: TextStyle(color: Colors.white, fontSize: 18)),
+            accountName:
+                Text(name, style: TextStyle(color: Colors.white, fontSize: 18)),
             accountEmail: Text(email,
                 style: TextStyle(color: Colors.white, fontSize: 12)),
             currentAccountPicture: CircleAvatar(
@@ -92,10 +92,8 @@ class NavDrawer extends StatelessWidget {
               );
             },
           ),
-         Column(
-           mainAxisSize: MainAxisSize.min,
-           children: navlist),
-         ListTile(
+          Column(mainAxisSize: MainAxisSize.min, children: navlist),
+          ListTile(
             leading: Icon(Icons.power_settings_new,
                 size: 26, color: Colors.red[600]),
             title: Text('Sign Out',

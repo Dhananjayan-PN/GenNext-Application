@@ -415,6 +415,7 @@ class _LoginPageState extends State<LoginPage> {
                             primaryColor: Colors.blue[900],
                           ),
                           child: TextFormField(
+                            key: Key('Username'),
                             controller: username,
                             validator: (value) {
                               return value.isEmpty
@@ -443,6 +444,7 @@ class _LoginPageState extends State<LoginPage> {
                             primaryColor: Colors.blue[900],
                           ),
                           child: TextFormField(
+                            key: Key('Password'),
                             controller: password,
                             validator: (String value) {
                               return value.isEmpty ? 'Enter a password' : null;
@@ -488,6 +490,7 @@ class _LoginPageState extends State<LoginPage> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: FlatButton(
+                        key: Key("Sign In Button"),
                         splashColor: Colors.blue[900],
                         onPressed: () {
                           validateAndSave();
