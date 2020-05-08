@@ -415,7 +415,7 @@ class _LoginPageState extends State<LoginPage> {
                             primaryColor: Colors.blue[900],
                           ),
                           child: TextFormField(
-                            key: Key('Username'),
+                            key: ValueKey('Username'),
                             controller: username,
                             validator: (value) {
                               return value.isEmpty
@@ -444,7 +444,7 @@ class _LoginPageState extends State<LoginPage> {
                             primaryColor: Colors.blue[900],
                           ),
                           child: TextFormField(
-                            key: Key('Password'),
+                            key: ValueKey('Password'),
                             controller: password,
                             validator: (String value) {
                               return value.isEmpty ? 'Enter a password' : null;

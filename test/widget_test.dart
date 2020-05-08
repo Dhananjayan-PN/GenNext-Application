@@ -9,8 +9,8 @@ void main() {
     expect(find.text('Sign In'), findsOneWidget);
     expect(find.text('Sign Up'), findsNothing);
 
-    await tester.enterText(find.byKey(Key("Username")), 'username');
-    await tester.enterText(find.byKey(Key("Password")), 'password');
+    await tester.enterText(find.byKey(ValueKey("Username")), 'username');
+    await tester.enterText(find.byKey(ValueKey("Password")), 'password');
     await tester.pump(Duration(milliseconds: 300));
 
     expect(find.byKey(ValueKey('button'), skipOffstage: false), findsOneWidget);
