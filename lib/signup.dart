@@ -1119,7 +1119,7 @@ class SignUpPageState extends State<SignUpPage>
                                 countrylist.add(snapshot.data[i]['name']);
                               }
                               countries = countrylist.map((String value) {
-                                return new DropdownMenuItem<String>(
+                                return DropdownMenuItem<String>(
                                   value: value,
                                   child: Text(
                                     value,

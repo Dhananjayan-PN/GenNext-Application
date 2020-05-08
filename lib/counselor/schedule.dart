@@ -2,6 +2,7 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:searchable_dropdown/searchable_dropdown.dart';
 import 'package:http/http.dart' as http;
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
@@ -28,11 +29,14 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   CalendarController _calendarController;
   Map<DateTime, List<List<dynamic>>> _events;
   List _selectedEvents;
+  List<DropdownMenuItem<int>> studentlist = [];
+  int cid;
   bool expanded;
 
   @override
   void initState() {
     super.initState();
+    getMyStudents();
     _events = {};
     _calendarController = CalendarController();
     BackButtonInterceptor.add(myInterceptor);
@@ -57,6 +61,28 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     return true;
   }
 
+  Future<void> getMyStudents() async {
+    final response = await http.get(
+      'http://gennext.ml/api/counselor/counseled-students',
+      headers: {HttpHeaders.authorizationHeader: "Token $tok"},
+    );
+    if (response.statusCode == 200) {
+      List students = json.decode(response.body)['counseled_students'];
+      for (var i = 0; i < students.length; i++) {
+        studentlist.add(DropdownMenuItem<int>(
+          value: students[i]['student_id'],
+          child: Text(
+            students[i]['student_name'],
+            style: TextStyle(fontSize: 16),
+          ),
+        ));
+      }
+    } else {
+      Navigator.pop(context);
+      _error();
+    }
+  }
+
   Future<void> getEvents() async {
     final response = await http.get(
         'https://gennext.ml/api/counselor/get-sessions-calendar',
@@ -64,9 +90,85 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           HttpHeaders.authorizationHeader: 'Token $tok',
         });
     if (response.statusCode == 200) {
+      cid = json.decode(response.body)['counselor_id'];
       return json.decode(response.body)['counselor_sessions'];
     } else {
       return ('error');
+    }
+  }
+
+  Future<void> createSession(int id) async {
+    final response = await http.post(
+      'https://gennext.ml/api/counselor/counselor-sessions/create',
+      headers: {
+        HttpHeaders.authorizationHeader: "Token $tok",
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{
+          "student_id": id,
+          "counselor_id": cid,
+          "subject_of_session": _subject.text,
+          "time_of_session": _newDateTime.toUtc().toIso8601String(),
+          "session_notes": _notes.text,
+          "session_duration": _duration.text,
+        },
+      ),
+    );
+    print(json.decode(response.body));
+    if (response.statusCode == 200) {
+      if (json.decode(response.body)['Response'] ==
+          'Session successfully created.') {
+        Navigator.pop(context);
+        showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              contentPadding: EdgeInsets.all(0),
+              elevation: 20,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0))),
+              content: Container(
+                height: 150,
+                width: 80,
+                decoration: BoxDecoration(
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                ),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Icon(
+                        Icons.check_circle_outline,
+                        size: 40,
+                        color: Colors.green,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 10),
+                        child: Text(
+                          'Session successfully created!\nRespective students will be notified',
+                          style: TextStyle(color: Colors.black, fontSize: 14),
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+        setState(() {});
+      } else {
+        Navigator.pop(context);
+        _error();
+      }
+    } else {
+      Navigator.pop(context);
+      _error();
     }
   }
 
@@ -298,6 +400,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   }
 
   _createSession() {
+    int student;
     _student.clear();
     _subject.clear();
     _duration.clear();
@@ -332,23 +435,33 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                     child: Divider(thickness: 0),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 25, right: 25),
-                    child: TextFormField(
-                      controller: _student,
-                      decoration: InputDecoration(
-                        border: UnderlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.blue, width: 0.0),
-                        ),
-                        labelText: 'Student',
-                        labelStyle: TextStyle(color: Colors.black54),
+                    padding: EdgeInsets.only(top: 10, left: 25, right: 25),
+                    child: SearchableDropdown.single(
+                      //menuConstraints:BoxConstraints.tight(Size.fromHeight(180)),
+                      dialogBox: true,
+                      menuBackgroundColor: Colors.white,
+                      icon: Icon(
+                        Icons.arrow_drop_down,
+                        size: 25,
+                        color: Colors.black,
                       ),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Student subject is required to save';
-                        }
-                        return null;
+                      items: studentlist,
+                      value: student,
+                      style: TextStyle(color: Colors.black),
+                      hint: Padding(
+                        padding: EdgeInsets.only(bottom: 5.0),
+                        child: Text(
+                          "Student",
+                          style: TextStyle(color: Colors.black54, fontSize: 16),
+                        ),
+                      ),
+                      searchHint: "Student",
+                      onChanged: (value) {
+                        setState(() {
+                          student = value;
+                        });
                       },
+                      isExpanded: true,
                     ),
                   ),
                   Padding(
@@ -469,7 +582,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
               ),
               onPressed: () {
                 Navigator.pop(context);
-                //createSession();
+                createSession(student);
                 _loading();
               },
             ),
@@ -730,7 +843,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
             _createSession();
           }),
       key: _scafKey,
-      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       drawer: NavDrawer(
           name: newUser.firstname + ' ' + newUser.lastname,
@@ -749,7 +862,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                     Icon(
                       Icons.error_outline,
                       size: 30,
-                      color: Colors.red.withOpacity(0.6),
+                      color: Colors.red.withOpacity(0.9),
                     ),
                     Text(
                       'Unable to establish a connection with our servers.\nCheck your connection and try again later.',
