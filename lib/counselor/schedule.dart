@@ -814,10 +814,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                   ),
                   headerVisible: true,
                   onCalendarCreated: (first, last, format) {
-                    /*setState(() {
-                      expanded = false;
-                      _selectedEvents = _events[_selectedDay] ?? [];
-                    });*/
+                    _selectedEvents = _events[_selectedDay] ?? [];
                   },
                   onDaySelected: (date, events) {
                     setState(() {
