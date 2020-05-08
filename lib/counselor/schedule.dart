@@ -21,8 +21,10 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   TextEditingController _subject = TextEditingController();
   TextEditingController _duration = TextEditingController();
   TextEditingController _notes = TextEditingController();
+  TextEditingController _student = TextEditingController();
   TextEditingController _datetimecontroller = TextEditingController();
   DateTime _newDateTime;
+  DateTime _selectedDay;
   CalendarController _calendarController;
   Map<DateTime, List<List<dynamic>>> _events;
   List _selectedEvents;
@@ -34,7 +36,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     _events = {};
     _calendarController = CalendarController();
     BackButtonInterceptor.add(myInterceptor);
-    final _selectedDay = DateTime.now();
+    _selectedDay = DateTime.now();
     _selectedEvents = _events[_selectedDay] ?? [];
   }
 
@@ -295,20 +297,27 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     );
   }
 
-  _editSession(String student, DateTime time, int id, String complete) {
+  _createSession() {
+    _student.clear();
+    _subject.clear();
+    _duration.clear();
+    _notes.clear();
+    _datetimecontroller.clear();
     showDialog(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        _newDateTime = time;
         return AlertDialog(
+          titlePadding: EdgeInsets.only(top: 15),
           contentPadding: EdgeInsets.all(0),
           elevation: 20,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20.0))),
-          title: Center(child: Text('Edit Session')),
+          title: Center(
+              child: Text('Create Session',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))),
           content: Container(
-            width:MediaQuery.of(context).size.width,
+            width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.all(Radius.circular(20.0)),
@@ -319,11 +328,189 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                 shrinkWrap: true,
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.only(left: 10, right: 10),
+                    padding: EdgeInsets.only(top: 5, left: 20, right: 20),
                     child: Divider(thickness: 0),
                   ),
                   Padding(
                     padding: EdgeInsets.only(left: 25, right: 25),
+                    child: TextFormField(
+                      controller: _student,
+                      decoration: InputDecoration(
+                        border: UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.blue, width: 0.0),
+                        ),
+                        labelText: 'Student',
+                        labelStyle: TextStyle(color: Colors.black54),
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Student subject is required to save';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10, left: 25, right: 25),
+                    child: DateTimeField(
+                      controller: _datetimecontroller,
+                      decoration: InputDecoration(
+                        border: UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.blue, width: 0.0),
+                        ),
+                        labelText: 'Date and Time',
+                        labelStyle: TextStyle(color: Colors.black54),
+                      ),
+                      format: DateFormat.yMd().add_jm(),
+                      onChanged: (value) {
+                        setState(() {
+                          _newDateTime = value;
+                        });
+                      },
+                      onShowPicker: (context, currentValue) async {
+                        final _date = await showDatePicker(
+                            context: context,
+                            firstDate: DateTime(1900),
+                            initialDate: currentValue ?? _selectedDay,
+                            lastDate: DateTime(2150));
+                        if (_date != null) {
+                          final _time = await showTimePicker(
+                            context: context,
+                            initialTime: TimeOfDay.fromDateTime(
+                                currentValue ?? _selectedDay),
+                          );
+                          return DateTimeField.combine(_date, _time);
+                        } else {
+                          return currentValue;
+                        }
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10, left: 25, right: 25),
+                    child: TextFormField(
+                      controller: _subject,
+                      decoration: InputDecoration(
+                        border: UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.blue, width: 0.0),
+                        ),
+                        labelText: 'Subject',
+                        labelStyle: TextStyle(color: Colors.black54),
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Session subject is required to save';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10, left: 25, right: 25),
+                    child: TextFormField(
+                      keyboardType: TextInputType.number,
+                      controller: _duration,
+                      decoration: InputDecoration(
+                        border: UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.blue, width: 0.0),
+                        ),
+                        labelText: 'Session Duration (mins)',
+                        labelStyle: TextStyle(color: Colors.black54),
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Session duration is required to save';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 30, left: 25, right: 25),
+                    child: TextFormField(
+                      maxLines: null,
+                      keyboardType: TextInputType.multiline,
+                      controller: _notes,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.blue, width: 0.0),
+                        ),
+                        labelText: 'Session Notes',
+                        labelStyle: TextStyle(color: Colors.black54),
+                      ),
+                      validator: (value) {
+                        return null;
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            FlatButton(
+              child: Text(
+                'Create',
+                style: TextStyle(color: Colors.blue),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+                //createSession();
+                _loading();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  _editSession(String student, DateTime time, int id, String complete) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        _newDateTime = time;
+        return AlertDialog(
+          titlePadding: EdgeInsets.only(top: 15),
+          contentPadding: EdgeInsets.all(0),
+          elevation: 20,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          title: Center(
+              child: Text('Edit Session',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))),
+          content: Container(
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            ),
+            child: Form(
+              key: _formKey,
+              child: ListView(
+                shrinkWrap: true,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: 5, left: 20, right: 20),
+                    child: Divider(thickness: 0),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 15, left: 25, right: 25),
                     child: Row(
                       children: <Widget>[
                         Text('Student: '),
@@ -410,12 +597,13 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 10, left: 25, right: 25),
+                    padding: EdgeInsets.only(top: 30, left: 25, right: 25),
                     child: TextFormField(
+                      maxLines: null,
                       keyboardType: TextInputType.multiline,
                       controller: _notes,
                       decoration: InputDecoration(
-                        border: UnderlineInputBorder(
+                        border: OutlineInputBorder(
                           borderSide:
                               BorderSide(color: Colors.blue, width: 0.0),
                         ),
@@ -527,6 +715,20 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: FloatingActionButton(
+          tooltip: 'Create session',
+          elevation: 10,
+          backgroundColor: Colors.blue,
+          splashColor: Colors.blue[900],
+          child: Icon(
+            Icons.add,
+            size: 28,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            _createSession();
+          }),
       key: _scafKey,
       resizeToAvoidBottomPadding: false,
       backgroundColor: Colors.white,
@@ -611,8 +813,15 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                     centerHeaderTitle: true,
                   ),
                   headerVisible: true,
+                  onCalendarCreated: (first, last, format) {
+                    /*setState(() {
+                      expanded = false;
+                      _selectedEvents = _events[_selectedDay] ?? [];
+                    });*/
+                  },
                   onDaySelected: (date, events) {
                     setState(() {
+                      _selectedDay = date;
                       expanded = false;
                       _selectedEvents = events;
                     });
@@ -853,10 +1062,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(
-                                      top: 5, right: 20, bottom: 10),
+                                  padding: EdgeInsets.only(top: 5, bottom: 10),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       ActionChip(
                                         pressElevation: 5,
