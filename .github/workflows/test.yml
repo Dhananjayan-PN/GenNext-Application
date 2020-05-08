@@ -2,13 +2,18 @@ on: push
 name: Test
 jobs:
   build:
+    strategy:
+      matrix:
+        device:
+         - 36FF148A-F236-49D4-968E-9B8597C95B20
+         - 1F7867C0-A604-4FFA-B335-7A2141652DC5
     name: Test
     runs-on: macos-latest
     steps:
     - name: List all simulators
       run: xcrun instruments -s
     - name: "Start Simulator"
-      run: xcrun simctl boot 36FF148A-F236-49D4-968E-9B8597C95B20
+      run: xcrun simctl boot ${{matrix.device}}
     - uses: actions/checkout@v1
     - uses: actions/setup-java@v1
       with:
