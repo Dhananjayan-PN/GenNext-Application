@@ -499,7 +499,7 @@ class _LoginPageState extends State<LoginPage> {
                             padding: const EdgeInsets.only(bottom: 2),
                             child: Text(
                               'Sign In',
-                              key: Key('button'),
+                              key: ValueKey('button'),
                               style: TextStyle(
                                 color: Color(0xff00AEEF),
                                 fontSize: 19,

@@ -4,14 +4,18 @@ import 'package:gennextapp/main.dart';
 
 void main() {
   testWidgets('Signin Page Test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
     await tester.pumpWidget(MyApp());
 
     expect(find.text('Sign In'), findsOneWidget);
     expect(find.text('Sign Up'), findsNothing);
 
-    await tester.enterText(find.byKey(Key("Username")), 'chandra');
-    await tester.enterText(find.byKey(Key("Password")), 'gennext');
+    await tester.enterText(find.byKey(Key("Username")), 'username');
+    await tester.enterText(find.byKey(Key("Password")), 'password');
+    await tester.pump(Duration(milliseconds: 300));
+
+    expect(find.byKey(ValueKey('button'), skipOffstage: false), findsOneWidget);
+    await tester.tap(find.byKey(ValueKey('button'), skipOffstage: false));
+
     await tester.pump();
   });
 }
