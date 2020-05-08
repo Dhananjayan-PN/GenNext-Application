@@ -98,75 +98,79 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   }
 
   Future<void> createSession(int id) async {
-    final response = await http.post(
-      'https://gennext.ml/api/counselor/counselor-sessions/create',
-      headers: {
-        HttpHeaders.authorizationHeader: "Token $tok",
-        'Content-Type': 'application/json; charset=UTF-8'
-      },
-      body: jsonEncode(
-        <String, dynamic>{
-          "student_id": id,
-          "counselor_id": cid,
-          "subject_of_session": _subject.text,
-          "time_of_session": _newDateTime.toUtc().toIso8601String(),
-          "session_notes": _notes.text,
-          "session_duration": _duration.text,
+    try {
+      final response = await http.post(
+        'https://gennext.ml/api/counselor/counselor-sessions/create/',
+        headers: {
+          HttpHeaders.authorizationHeader: "Token $tok",
+          'Content-Type': 'application/json; charset=UTF-8'
         },
-      ),
-    );
-    print(json.decode(response.body));
-    if (response.statusCode == 200) {
-      if (json.decode(response.body)['Response'] ==
-          'Session successfully created.') {
-        Navigator.pop(context);
-        showDialog(
-          context: context,
-          barrierDismissible: true,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              contentPadding: EdgeInsets.all(0),
-              elevation: 20,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20.0))),
-              content: Container(
-                height: 150,
-                width: 80,
-                decoration: BoxDecoration(
-                  shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                ),
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Icon(
-                        Icons.check_circle_outline,
-                        size: 40,
-                        color: Colors.green,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 10),
-                        child: Text(
-                          'Session successfully created!\nRespective students will be notified',
-                          style: TextStyle(color: Colors.black, fontSize: 14),
-                          textAlign: TextAlign.center,
+        body: jsonEncode(
+          <String, dynamic>{
+            "student_id": id,
+            "counselor_id": cid,
+            "subject_of_session": _subject.text,
+            "time_of_session": _newDateTime.toUtc().toIso8601String(),
+            "session_notes": _notes.text,
+            "session_duration": _duration.text,
+          },
+        ),
+      );
+      if (response.statusCode == 200) {
+        if (json.decode(response.body)['Response'] ==
+            'Session successfully created.') {
+          Navigator.pop(context);
+          showDialog(
+            context: context,
+            barrierDismissible: true,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                contentPadding: EdgeInsets.all(0),
+                elevation: 20,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                content: Container(
+                  height: 150,
+                  width: 80,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  ),
+                  child: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(
+                          Icons.check_circle_outline,
+                          size: 40,
+                          color: Colors.green,
                         ),
-                      )
-                    ],
+                        Padding(
+                          padding: EdgeInsets.only(top: 10),
+                          child: Text(
+                            'Session successfully created!\nRespective students will be notified',
+                            style: TextStyle(color: Colors.black, fontSize: 14),
+                            textAlign: TextAlign.center,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
-        );
-        setState(() {});
+              );
+            },
+          );
+          setState(() {});
+        } else {
+          Navigator.pop(context);
+          _error();
+        }
       } else {
         Navigator.pop(context);
         _error();
       }
-    } else {
+    } catch (e) {
       Navigator.pop(context);
       _error();
     }
