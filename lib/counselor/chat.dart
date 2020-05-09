@@ -109,6 +109,7 @@ class _AllChatsState extends State<AllChats> {
             icon: Icon(Icons.more_vert),
             onPressed: () {},
           ),
+          onTap: () {},
         ),
       ),
     );
