@@ -113,7 +113,6 @@ class NotificationScreen extends StatelessWidget {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
-          iconTheme: new IconThemeData(color: Colors.indigo[900]),
         ),
         body: BodyBuilder());
   }

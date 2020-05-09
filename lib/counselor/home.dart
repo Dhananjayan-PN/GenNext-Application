@@ -8,7 +8,7 @@ import '../main.dart';
 import '../usermodel.dart';
 import 'notifications.dart';
 import 'mystudents.dart';
-//import 'counselormodel.dart';
+import 'chat.dart';
 import 'essays.dart';
 import 'myuniversities.dart';
 import 'profile.dart';
@@ -26,6 +26,7 @@ final navlistelements = [
   ['My Universities', MyUniversitiesScreen(), Icons.account_balance],
   ['Connect with Universities', ConnectUniversitiesScreen(), Icons.link]
 ];
+PageController _controller;
 
 class NavDrawer extends StatelessWidget {
   final String name;
@@ -37,7 +38,7 @@ class NavDrawer extends StatelessWidget {
     List<Widget> navlist = [];
     for (var i = 0; i < navlistelements.length; i++) {
       var element = navlistelements[i];
-      navlist.add(new ListTile(
+      navlist.add(ListTile(
         leading: Icon(
           element[2],
           size: 26,
@@ -172,9 +173,9 @@ class HomeAppBarState extends State<HomeAppBar> {
           end: Alignment.bottomCenter,
           colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
       actions: <Widget>[
-        new Stack(
+        Stack(
           children: <Widget>[
-            new IconButton(
+            IconButton(
                 icon: Icon(Icons.notifications, size: 28),
                 alignment: Alignment.bottomLeft,
                 onPressed: () {
@@ -187,12 +188,12 @@ class HomeAppBarState extends State<HomeAppBar> {
                   });
                 }),
             counter != 0
-                ? new Positioned(
+                ? Positioned(
                     right: 11,
                     top: 11,
-                    child: new Container(
+                    child: Container(
                       padding: EdgeInsets.all(2),
-                      decoration: new BoxDecoration(
+                      decoration: BoxDecoration(
                         color: Colors.red,
                         borderRadius: BorderRadius.circular(6),
                       ),
@@ -210,11 +211,37 @@ class HomeAppBarState extends State<HomeAppBar> {
                       ),
                     ),
                   )
-                : new Container()
+                : Container()
           ],
         ),
+        IconButton(
+          icon: Icon(Icons.chat, size: 28),
+          onPressed: () {
+            setState(() {
+              _controller.animateToPage(1,
+                  duration: Duration(milliseconds: 600), curve: Curves.ease);
+            });
+          },
+        )
       ],
     );
+  }
+}
+
+class DashBoard extends StatefulWidget {
+  final User user;
+  DashBoard({this.user});
+
+  @override
+  _DashBoardState createState() => _DashBoardState(user: user);
+}
+
+class _DashBoardState extends State<DashBoard> {
+  final User user;
+  _DashBoardState({this.user});
+
+  Widget build(BuildContext context) {
+    return Center(child: Text('Hey @' + user.username + '!'));
   }
 }
 
@@ -232,6 +259,20 @@ class _CounselorHomeScreenState extends State<CounselorHomeScreen> {
   _CounselorHomeScreenState({this.user});
 
   @override
+  void initState() {
+    super.initState();
+    _controller = PageController(
+      initialPage: 0,
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     newUser = user;
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -239,14 +280,47 @@ class _CounselorHomeScreenState extends State<CounselorHomeScreen> {
         systemNavigationBarColor: Colors.white,
         statusBarColor: Color(0xff0072BC).withAlpha(150),
       ),
-      child: new Scaffold(
-        backgroundColor: Colors.white,
-        drawer: NavDrawer(
-          name: '${user.firstname} ${user.lastname}',
-          email: user.email,
-        ),
-        appBar: HomeAppBar(),
-        body: Center(child: Text('Hey @' + user.username + '!')),
+      child: PageView(
+        controller: _controller,
+        children: [
+          Scaffold(
+              backgroundColor: Colors.white,
+              drawer: NavDrawer(
+                name: '${user.firstname} ${user.lastname}',
+                email: user.email,
+              ),
+              appBar: HomeAppBar(),
+              body: DashBoard(user: user)),
+          Scaffold(
+            backgroundColor: Colors.white,
+            appBar: GradientAppBar(
+              leading: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                        context,
+                        PageTransition(
+                            type: PageTransitionType.fade,
+                            child: CounselorHomeScreen(
+                              user: newUser,
+                            )));
+                  }),
+              title: Text(
+                'Chats',
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
+            ),
+            body: AllChats(),
+          ),
+        ],
       ),
     );
   }
