@@ -231,6 +231,22 @@ class _OpenChatState extends State<OpenChat> {
   final String otherUser;
   _OpenChatState({this.otherUser});
 
+  List messages = [
+    ['Hey!', 'me'],
+    ['Hello', 'user'],
+    ['How has your day been going?', 'me'],
+    ['Not too bad tbh', 'user'],
+    ['Wish I could go out tho', 'user'],
+    ['Yea same', 'me'],
+    ["It's painful sitting at home the entire day", 'me'],
+    ['Yea', 'user'],
+    ['Have you committed to any college yet?', 'me'],
+    ["Yes, I did. I'm going to Abilene Christian University", 'user'],
+    ["You have been blocked by the user", 'app'],
+  ];
+  final TextEditingController textEditingController = TextEditingController();
+  final FocusNode focusNode = new FocusNode();
+
   @override
   void initState() {
     super.initState();
@@ -289,7 +305,64 @@ class _OpenChatState extends State<OpenChat> {
             end: Alignment.bottomCenter,
             colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
       ),
-      body: Container(),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: ListView.builder(
+                itemCount: messages.length,
+                itemBuilder: (context, index) {
+                  return Container();
+                  //return buildMessage(messages[index][0], messages[index][1]);
+                }),
+          ),
+          Container(
+            color: Colors.grey[200],
+            width: double.infinity,
+            child: Row(
+              children: <Widget>[
+                Material(
+                  color: Colors.grey[200],
+                  child: IconButton(
+                    icon: new Icon(Icons.sentiment_satisfied),
+                    onPressed: () {},
+                    color: Colors.black,
+                  ),
+                ),
+                Flexible(
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 5, bottom: 5),
+                    child: TextField(
+                      maxLines: null,
+                      keyboardType: TextInputType.multiline,
+                      style: TextStyle(color: Colors.black, fontSize: 16.0),
+                      controller: textEditingController,
+                      decoration: InputDecoration(
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black87),
+                            borderRadius: BorderRadius.circular(8)),
+                        contentPadding: EdgeInsets.all(5),
+                        border: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.black54),
+                            borderRadius: BorderRadius.circular(8)),
+                        hintText: 'Type your message...',
+                        hintStyle: TextStyle(color: Colors.black54),
+                      ),
+                    ),
+                  ),
+                ),
+                Material(
+                  color: Colors.grey[200],
+                  child: IconButton(
+                    icon: new Icon(Icons.send),
+                    onPressed: () {},
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }
