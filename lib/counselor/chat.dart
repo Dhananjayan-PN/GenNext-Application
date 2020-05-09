@@ -232,16 +232,16 @@ class _OpenChatState extends State<OpenChat> {
   _OpenChatState({this.otherUser});
 
   List messages = [
-    ['Hey!', 'me'],
-    ['Hello', 'user'],
-    ['How has your day been going?', 'me'],
-    ['Not too bad tbh', 'user'],
-    ['Wish I could go out tho', 'user'],
-    ['Yea same', 'me'],
-    ["It's painful sitting at home the entire day", 'me'],
-    ['Yea', 'user'],
-    ['Have you committed to any college yet?', 'me'],
-    ["Yes, I did. I'm going to Abilene Christian University", 'user'],
+    ['Hey!', 'user'],
+    ['Hello', 'me'],
+    ['How has your day been going?', 'user'],
+    ['Not too bad tbh', 'me'],
+    ['Wish I could go out tho', 'me'],
+    ['Yea same', 'user'],
+    ["It's painful sitting at home the entire day", 'user'],
+    ['Yea', 'me'],
+    ['Have you committed to any college yet?', 'user'],
+    ["Yes, I did. I'm going to Abilene Christian University", 'me'],
     ["You have been blocked by the user", 'app'],
   ];
   final TextEditingController textEditingController = TextEditingController();
@@ -263,6 +263,132 @@ class _OpenChatState extends State<OpenChat> {
     print("BACK BUTTON!");
     Navigator.pop(context);
     return true;
+  }
+
+  Widget buildMessage(index) {
+    if (messages[index][1] == 'me') {
+      return Column(
+        children: <Widget>[
+          Container(
+            constraints: BoxConstraints(maxWidth: 200),
+            child: Text(
+              messages[index][0],
+              style: TextStyle(color: Colors.white),
+              textAlign: TextAlign.end,
+            ),
+            padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+            decoration: BoxDecoration(
+                color: Colors.blue, borderRadius: BorderRadius.circular(8.0)),
+            margin: EdgeInsets.only(bottom: 5.0, right: 10.0),
+          ),
+          if (index != (messages.length - 1) &&
+              messages[index + 1][1] != messages[index][1]) ...[
+            Container(
+              child: Text(
+                DateFormat('dd MMM kk:mm').format(DateTime.now()),
+                style: TextStyle(
+                  color: Colors.black54,
+                  fontSize: 12.0,
+                ),
+              ),
+              margin: EdgeInsets.only(right: 15, top: 5, bottom: 5),
+            ),
+          ],
+          if (index == (messages.length - 1) &&
+              messages[index - 1][1] == messages[index][1]) ...[
+            Container(
+              child: Text(
+                DateFormat('dd MMM kk:mm').format(DateTime.now()),
+                style: TextStyle(
+                  color: Colors.black54,
+                  fontSize: 12.0,
+                ),
+              ),
+            ),
+          ]
+        ],
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.end,
+      );
+    }
+    if (messages[index][1] == 'app') {
+      return Center(
+        child: Padding(
+          padding: EdgeInsets.only(top: 10, bottom: 10),
+          child: Container(
+            padding: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.grey[200],
+            ),
+            child: Text(
+              messages[index][0],
+              style: TextStyle(color: Colors.black54),
+            ),
+          ),
+        ),
+      );
+    } else {
+      return Container(
+        child: Column(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(left: 8),
+                  child: Material(
+                    child: CachedNetworkImage(
+                      placeholder: (context, url) => Container(
+                        child: CircularProgressIndicator(),
+                        width: 35.0,
+                        height: 35.0,
+                        padding: EdgeInsets.all(10.0),
+                      ),
+                      imageUrl:
+                          'https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png',
+                      width: 30.0,
+                      height: 30.0,
+                      fit: BoxFit.cover,
+                    ),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(18.0),
+                    ),
+                    clipBehavior: Clip.hardEdge,
+                  ),
+                ),
+                Container(
+                  constraints: BoxConstraints(maxWidth: 200),
+                  child: Text(
+                    messages[index][0],
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+                  decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(8.0)),
+                  margin: EdgeInsets.only(bottom: 5, left: 10.0),
+                )
+              ],
+            ),
+            if (index != (messages.length - 1) &&
+                messages[index + 1][1] != messages[index][1]) ...[
+              Container(
+                child: Text(
+                  DateFormat('dd MMM kk:mm').format(DateTime.now()),
+                  style: TextStyle(
+                    color: Colors.black54,
+                    fontSize: 12.0,
+                  ),
+                ),
+                margin: EdgeInsets.only(left: 50.0, top: 5.0, bottom: 5.0),
+              )
+            ]
+          ],
+          crossAxisAlignment: CrossAxisAlignment.start,
+        ),
+        margin: EdgeInsets.only(bottom: 5.0),
+      );
+    }
   }
 
   Widget build(BuildContext context) {
@@ -308,22 +434,24 @@ class _OpenChatState extends State<OpenChat> {
       body: Column(
         children: <Widget>[
           Expanded(
-            child: ListView.builder(
-                itemCount: messages.length,
-                itemBuilder: (context, index) {
-                  return Container();
-                  //return buildMessage(messages[index][0], messages[index][1]);
-                }),
+            child: Padding(
+              padding: EdgeInsets.only(top: 20, bottom: 10),
+              child: ListView.builder(
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) {
+                    return buildMessage(index);
+                  }),
+            ),
           ),
           Container(
-            color: Colors.grey[200],
+            color: Colors.grey[100],
             width: double.infinity,
             child: Row(
               children: <Widget>[
                 Material(
-                  color: Colors.grey[200],
+                  color: Colors.grey[100],
                   child: IconButton(
-                    icon: new Icon(Icons.sentiment_satisfied),
+                    icon: new Icon(Icons.insert_photo),
                     onPressed: () {},
                     color: Colors.black,
                   ),
@@ -351,7 +479,7 @@ class _OpenChatState extends State<OpenChat> {
                   ),
                 ),
                 Material(
-                  color: Colors.grey[200],
+                  color: Colors.grey[100],
                   child: IconButton(
                     icon: new Icon(Icons.send),
                     onPressed: () {},
