@@ -183,6 +183,8 @@ class HomeAppBarState extends State<HomeAppBar> {
                     Navigator.push(
                         context,
                         PageTransition(
+                            curve: Curves.ease,
+                            duration: Duration(milliseconds: 500),
                             type: PageTransitionType.rightToLeft,
                             child: NotificationScreen()));
                   });
@@ -291,35 +293,7 @@ class _CounselorHomeScreenState extends State<CounselorHomeScreen> {
               ),
               appBar: HomeAppBar(),
               body: DashBoard(user: user)),
-          Scaffold(
-            backgroundColor: Colors.white,
-            appBar: GradientAppBar(
-              leading: IconButton(
-                  icon: Icon(
-                    Icons.arrow_back,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context);
-                    Navigator.push(
-                        context,
-                        PageTransition(
-                            type: PageTransitionType.fade,
-                            child: CounselorHomeScreen(
-                              user: newUser,
-                            )));
-                  }),
-              title: Text(
-                'Chats',
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              ),
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
-            ),
-            body: AllChats(),
-          ),
+          AllChats()
         ],
       ),
     );

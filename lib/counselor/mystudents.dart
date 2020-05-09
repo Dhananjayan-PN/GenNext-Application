@@ -257,7 +257,7 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
   }
 
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       backgroundColor: Colors.white,
       drawer: NavDrawer(
           name: newUser.firstname + ' ' + newUser.lastname,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
+import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'home.dart';
 
 final notifications = ['Are you future ready?'];
@@ -84,7 +85,37 @@ class BodyBuilderState extends State<BodyBuilder> {
   }
 }
 
-class NotificationScreen extends StatelessWidget {
+class NotificationScreen extends StatefulWidget {
+  @override
+  _NotificationScreenState createState() => _NotificationScreenState();
+}
+
+class _NotificationScreenState extends State<NotificationScreen> {
+  @override
+  void initState() {
+    super.initState();
+    BackButtonInterceptor.add(myInterceptor);
+  }
+
+  @override
+  void dispose() {
+    BackButtonInterceptor.remove(myInterceptor);
+    super.dispose();
+  }
+
+  bool myInterceptor(bool stopDefaultButtonEvent) {
+    print("BACK BUTTON!");
+    Navigator.push(
+        context,
+        PageTransition(
+            duration: Duration(milliseconds: 500),
+            type: PageTransitionType.leftToRight,
+            child: CounselorHomeScreen(
+              user: newUser,
+            )));
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -100,7 +131,8 @@ class NotificationScreen extends StatelessWidget {
                 Navigator.push(
                     context,
                     PageTransition(
-                        type: PageTransitionType.fade,
+                        duration: Duration(milliseconds: 500),
+                        type: PageTransitionType.leftToRightWithFade,
                         child: CounselorHomeScreen(
                           user: newUser,
                         )));
