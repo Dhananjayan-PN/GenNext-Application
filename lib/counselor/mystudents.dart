@@ -293,8 +293,42 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
             }
             if (snapshot.hasData) {
               if (snapshot.data.length == 0) {
-                return Center(
-                  child: Text('No Students'),
+                return Padding(
+                  padding: EdgeInsets.only(bottom: 70),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Opacity(
+                          opacity: 0.9,
+                          child: Image.asset(
+                            "images/snap.gif",
+                            height: 100.0,
+                            width: 100.0,
+                          ),
+                        ),
+                        Text(
+                          'Oh Snap!',
+                          style: TextStyle(fontSize: 18, color: Colors.black54),
+                        ),
+                        Padding(
+                            padding:
+                                EdgeInsets.only(top: 5, left: 30, right: 30),
+                            child: Text(
+                              "Looks like you don't have counsel\nany students at the moment :(",
+                              style: TextStyle(color: Colors.black54),
+                              textAlign: TextAlign.center,
+                            )),
+                        Padding(
+                          padding: EdgeInsets.only(top: 3),
+                          child: Text(
+                              "Request your admin to assign or accept a request to get started!",
+                              style: TextStyle(color: Colors.black54),
+                              textAlign: TextAlign.center),
+                        )
+                      ],
+                    ),
+                  ),
                 );
               } else {
                 return Column(
