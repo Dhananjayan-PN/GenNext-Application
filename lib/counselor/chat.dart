@@ -65,12 +65,6 @@ class _AllChatsState extends State<AllChats> {
 
   bool myInterceptor(bool stopDefaultButtonEvent) {
     print("BACK BUTTON!");
-    Navigator.push(
-        context,
-        PageTransition(
-            duration: Duration(milliseconds: 600),
-            type: PageTransitionType.leftToRight,
-            child: CounselorHomeScreen(user: newUser)));
     return true;
   }
 
@@ -109,7 +103,19 @@ class _AllChatsState extends State<AllChats> {
             icon: Icon(Icons.more_vert),
             onPressed: () {},
           ),
-          onTap: () {},
+          onTap: () {
+            Navigator.push(
+              context,
+              PageTransition(
+                curve: Curves.ease,
+                duration: Duration(milliseconds: 500),
+                type: PageTransitionType.rightToLeft,
+                child: OpenChat(
+                  otherUser: chats[index],
+                ),
+              ),
+            );
+          },
         ),
       ),
     );
@@ -149,6 +155,13 @@ class _AllChatsState extends State<AllChats> {
                           user: newUser,
                         )));
               }),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.more_vert),
+              onPressed: () {},
+            )
+          ],
+          centerTitle: true,
           title: Text(
             'Chats',
             style: TextStyle(color: Colors.white, fontSize: 20),
@@ -202,5 +215,80 @@ class _AllChatsState extends State<AllChats> {
             ),
           ],
         ));
+  }
+}
+
+class OpenChat extends StatefulWidget {
+  final String otherUser;
+  OpenChat({this.otherUser});
+
+  @override
+  _OpenChatState createState() => _OpenChatState(otherUser: otherUser);
+}
+
+class _OpenChatState extends State<OpenChat> {
+  final String otherUser;
+  _OpenChatState({this.otherUser});
+
+  @override
+  void initState() {
+    super.initState();
+    BackButtonInterceptor.add(myInterceptor);
+  }
+
+  @override
+  void dispose() {
+    BackButtonInterceptor.remove(myInterceptor);
+    super.dispose();
+  }
+
+  bool myInterceptor(bool stopDefaultButtonEvent) {
+    print("BACK BUTTON!");
+    Navigator.pop(context);
+    return true;
+  }
+
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: GradientAppBar(
+        leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            }),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.more_vert),
+            onPressed: () {},
+          )
+        ],
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            CircleAvatar(
+              radius: 20,
+              backgroundImage: CachedNetworkImageProvider(
+                  'https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png'),
+              backgroundColor: Colors.blue[400],
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 15),
+              child: Text(
+                otherUser,
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ),
+            ),
+          ],
+        ),
+        gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
+      ),
+      body: Container(),
+    );
   }
 }
