@@ -13,8 +13,8 @@ import 'dart:io';
 import 'dart:convert';
 
 List chats = [
-  'Chad Sprice'
-      'Racheal Oster',
+  'Chad Sprice',
+  'Racheal Oster',
   'Modesta Feenstra',
   'Mireille Nitti',
   'Clarice Mccracken',
