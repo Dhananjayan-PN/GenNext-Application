@@ -28,8 +28,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   DateTime _selectedDay;
   CalendarController _calendarController;
   Map<DateTime, List<List<dynamic>>> _events;
+  Map<String, int> studentids = {};
   List _selectedEvents;
-  List<DropdownMenuItem<int>> studentlist = [];
+  List<DropdownMenuItem<String>> studentlist = [];
   int cid;
   bool expanded;
 
@@ -69,8 +70,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     if (response.statusCode == 200) {
       List students = json.decode(response.body)['counseled_students'];
       for (var i = 0; i < students.length; i++) {
-        studentlist.add(DropdownMenuItem<int>(
-          value: students[i]['student_id'],
+        studentids[students[i]['student_name']] = students[i]['student_id'];
+        studentlist.add(DropdownMenuItem<String>(
+          value: students[i]['student_name'],
           child: Text(
             students[i]['student_name'],
             style: TextStyle(fontSize: 16),
@@ -404,7 +406,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   }
 
   _createSession() {
-    int student;
+    String student;
     _student.clear();
     _subject.clear();
     _duration.clear();
@@ -441,7 +443,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                   Padding(
                     padding: EdgeInsets.only(top: 10, left: 25, right: 25),
                     child: SearchableDropdown.single(
-                      //menuConstraints:BoxConstraints.tight(Size.fromHeight(180)),
+                      isCaseSensitiveSearch: false,
                       dialogBox: true,
                       menuBackgroundColor: Colors.white,
                       icon: Icon(
@@ -586,7 +588,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
               ),
               onPressed: () {
                 Navigator.pop(context);
-                createSession(student);
+                createSession(studentids[student]);
                 _loading();
               },
             ),

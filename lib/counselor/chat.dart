@@ -246,6 +246,7 @@ class _OpenChatState extends State<OpenChat> {
   ];
   final TextEditingController textEditingController = TextEditingController();
   final FocusNode focusNode = new FocusNode();
+  ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -255,6 +256,7 @@ class _OpenChatState extends State<OpenChat> {
 
   @override
   void dispose() {
+    _scrollController.dispose();
     BackButtonInterceptor.remove(myInterceptor);
     super.dispose();
   }
@@ -266,6 +268,10 @@ class _OpenChatState extends State<OpenChat> {
   }
 
   Widget buildMessage(index) {
+    Timer(
+        Duration(milliseconds: 100),
+        () => _scrollController
+            .jumpTo(_scrollController.position.maxScrollExtent));
     if (messages[index][1] == 'me') {
       return Column(
         children: <Widget>[
@@ -435,13 +441,14 @@ class _OpenChatState extends State<OpenChat> {
         children: <Widget>[
           Expanded(
             child: Padding(
-              padding: EdgeInsets.only(top: 20, bottom: 10),
-              child: ListView.builder(
+                padding: EdgeInsets.only(top: 20, bottom: 10),
+                child: ListView.builder(
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
                     return buildMessage(index);
-                  }),
-            ),
+                  },
+                  controller: _scrollController,
+                )),
           ),
           Container(
             color: Colors.grey[100],
