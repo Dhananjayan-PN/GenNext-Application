@@ -64,7 +64,43 @@ class _DashBoardState extends State<DashBoard> {
   }
 
   requestBuilder(Map<String, dynamic> request) {
-    return Text(request['student_name']);
+    return Padding(
+      padding: EdgeInsets.only(left: 20, right: 15, bottom: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(request['student_name'], style: TextStyle(fontSize: 18)),
+              Text('@' + request['assigner_admin'],
+                  style: TextStyle(color: Colors.blue))
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              IconButton(
+                icon: Icon(
+                  Icons.check_circle,
+                  size: 30,
+                  color: Colors.green,
+                ),
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.cancel,
+                  size: 30,
+                  color: Colors.red,
+                ),
+                onPressed: () {},
+              )
+            ],
+          )
+        ],
+      ),
+    );
   }
 
   Widget build(BuildContext context) {

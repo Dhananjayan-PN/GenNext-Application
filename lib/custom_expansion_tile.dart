@@ -200,7 +200,7 @@ class _ExpansionTileState extends State<ExpansionTile>
     final ThemeData theme = Theme.of(context);
     _borderColorTween.end = theme.dividerColor;
     _headerColorTween
-      ..begin = theme.textTheme.subtitle.color
+      ..begin = theme.textTheme.subtitle2.color
       ..end = theme.accentColor;
     _iconColorTween
       ..begin = theme.unselectedWidgetColor
