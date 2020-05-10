@@ -171,14 +171,8 @@ class _LoginPageState extends State<LoginPage> {
                 print('failed to login');
                 username.clear();
                 password.clear();
-                _scafKey.currentState.showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'Failed to sign in. Try again',
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                );
+                Navigator.pop(context);
+                _error();
               }
               break;
           }
@@ -188,64 +182,13 @@ class _LoginPageState extends State<LoginPage> {
         username.clear();
         password.clear();
         Navigator.pop(context);
-        _scafKey.currentState.showSnackBar(
-          SnackBar(
-            content: Text(
-              'Invalid credentials. Try again',
-              textAlign: TextAlign.center,
-            ),
-          ),
-        );
+        _wrongCreds();
       }
     } catch (e) {
       username.clear();
       password.clear();
       Navigator.pop(context);
-      showDialog(
-        context: context,
-        barrierDismissible: true,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            contentPadding: EdgeInsets.all(0),
-            elevation: 20,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(20.0))),
-            content: Container(
-              height: 150,
-              width: 80,
-              decoration: BoxDecoration(
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
-              ),
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(
-                      Icons.error_outline,
-                      size: 40,
-                      color: Colors.red.withOpacity(0.9),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 10),
-                      child: Text(
-                        'Unable to establish a connection with our servers.\nCheck your connection and try again later.',
-                        style: TextStyle(color: Colors.white, fontSize: 12),
-                        textAlign: TextAlign.center,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-          );
-        },
-      );
+      _error();
     }
   }
 
@@ -300,11 +243,113 @@ class _LoginPageState extends State<LoginPage> {
         },
       );
       Future.delayed(Duration(milliseconds: 100), () {
-        _loginUser(username.text, password.text);
+        _loginUser(username.text, password.text).timeout(Duration(seconds: 8),
+            onTimeout: () {
+          username.clear();
+          password.clear();
+          Navigator.pop(context);
+          _error();
+        });
       });
     } else {
       print("Form Is Invalid");
     }
+  }
+
+  _error() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(0),
+          elevation: 20,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          content: Container(
+            height: 150,
+            width: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
+            ),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(
+                    Icons.error_outline,
+                    size: 40,
+                    color: Colors.red.withOpacity(0.9),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Text(
+                      'Unable to establish a connection with our servers.\nCheck your connection and try again later.',
+                      style: TextStyle(color: Colors.white, fontSize: 12),
+                      textAlign: TextAlign.center,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  _wrongCreds() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(0),
+          elevation: 20,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          content: Container(
+            height: 150,
+            width: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
+            ),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(
+                    Icons.sentiment_dissatisfied,
+                    size: 40,
+                    color: Colors.red.withOpacity(0.9),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Text(
+                      'Invalid login credentials!\nCheck your credentials and try again',
+                      style: TextStyle(color: Colors.white, fontSize: 14),
+                      textAlign: TextAlign.center,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
