@@ -754,9 +754,11 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                 style: TextStyle(color: Colors.blue),
               ),
               onPressed: () {
-                Navigator.pop(context);
-                editSession(id, complete);
-                _loading();
+                if (_formKey.currentState.validate()) {
+                  Navigator.pop(context);
+                  editSession(id, complete);
+                  _loading();
+                }
               },
             ),
           ],

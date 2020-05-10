@@ -23,6 +23,8 @@ class _DashBoardState extends State<DashBoard> {
   final User user;
   _DashBoardState({this.user});
 
+  TextEditingController _reason = TextEditingController();
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   int index = 0;
 
   Future<void> getUpcomingSession() async {
@@ -51,21 +53,311 @@ class _DashBoardState extends State<DashBoard> {
         });
     if (response.statusCode == 200) {
       List requests = json.decode(response.body)['incoming_reqs'];
-      List<Widget> requestList = [
-        Divider(indent: 25, endIndent: 25, thickness: 0)
-      ];
-      for (var i = 0; i < requests.length; i++) {
-        requestList.add(requestBuilder(requests[i]));
+      if (requests.length == 0) {
+        return <Widget>[];
+      } else {
+        List<Widget> requestList = [
+          Divider(indent: 25, endIndent: 25, thickness: 0)
+        ];
+        for (var i = 0; i < requests.length; i++) {
+          requestList.add(requestBuilder(requests[i]));
+        }
+        return requestList;
       }
-      return requestList;
     } else {
       throw ('error');
     }
   }
 
+  Future<void> accept(int id) async {
+    final response = await http.put(
+      'https://gennext.ml/api/counselor/accept-or-deny-reqs',
+      headers: {
+        HttpHeaders.authorizationHeader: "Token $tok",
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{
+          "student_id": id,
+          "decision": 'A',
+          "reason_for_decision": ''
+        },
+      ),
+    );
+    if (response.statusCode == 200) {
+      if (json.decode(response.body)['response'] == 'Decision Registered.') {
+        Navigator.pop(context);
+        _success();
+        setState(() {});
+      } else {
+        Navigator.pop(context);
+        _error();
+      }
+    } else {
+      Navigator.pop(context);
+      _error();
+    }
+  }
+
+  Future<void> deny(int id) async {
+    final response = await http.put(
+      'https://gennext.ml/api/counselor/accept-or-deny-reqs',
+      headers: {
+        HttpHeaders.authorizationHeader: "Token $tok",
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{
+          "student_id": id,
+          "decision": 'R',
+          "reason_for_decision": _reason.text
+        },
+      ),
+    );
+    if (response.statusCode == 200) {
+      if (json.decode(response.body)['response'] == 'Decision Registered.') {
+        Navigator.pop(context);
+        _success();
+        setState(() {});
+      } else {
+        Navigator.pop(context);
+        _error();
+      }
+    } else {
+      Navigator.pop(context);
+      _error();
+    }
+  }
+
+  _success() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(0),
+          elevation: 20,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          content: Container(
+            height: 150,
+            width: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            ),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(
+                    Icons.check_circle_outline,
+                    size: 40,
+                    color: Colors.green,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Text(
+                      'Message successfully delivered!\nRespective individuals will be notified',
+                      style: TextStyle(color: Colors.black, fontSize: 14),
+                      textAlign: TextAlign.center,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  _loading() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(0),
+          elevation: 20,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          content: Container(
+            height: 150,
+            width: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            ),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    height: 50,
+                    width: 50,
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                      strokeWidth: 3.0,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 23.0),
+                    child: Text(
+                      "Saving your changes",
+                      style: TextStyle(color: Colors.blue, fontSize: 15),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  _error() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(0),
+          elevation: 20,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          content: Container(
+            height: 150,
+            width: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            ),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(
+                    Icons.error_outline,
+                    size: 40,
+                    color: Colors.red.withOpacity(0.9),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Text(
+                      'Unable to establish a connection with our servers.\nCheck your connection and try again later.',
+                      style: TextStyle(color: Colors.black, fontSize: 12),
+                      textAlign: TextAlign.center,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  _deny(String decision, int id) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          titlePadding: EdgeInsets.only(top: 15),
+          contentPadding: EdgeInsets.all(0),
+          elevation: 20,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          title: Center(
+              child: Text('Reject',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))),
+          content: Container(
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            ),
+            child: Form(
+              key: _formKey,
+              child: ListView(
+                shrinkWrap: true,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: 5, left: 20, right: 20),
+                    child: Divider(thickness: 0),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Text(
+                      'Provide a reason for your rejection',
+                      style: TextStyle(fontSize: 12, color: Colors.black54),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 25, right: 25),
+                    child: TextFormField(
+                      controller: _reason,
+                      decoration: InputDecoration(
+                        border: UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.blue, width: 0.0),
+                        ),
+                        labelText: 'Reason',
+                        labelStyle: TextStyle(color: Colors.black54),
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'A reason is required to reject';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () {
+                _reason.clear();
+                Navigator.pop(context);
+              },
+            ),
+            FlatButton(
+              child: Text(
+                'Send',
+                style: TextStyle(color: Colors.blue),
+              ),
+              onPressed: () {
+                if (_formKey.currentState.validate()) {
+                  _reason.clear();
+                  Navigator.pop(context);
+                  _loading();
+                  deny(id);
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   requestBuilder(Map<String, dynamic> request) {
     return Padding(
-      padding: EdgeInsets.only(left: 20, right: 15, bottom: 20),
+      padding: EdgeInsets.only(left: 20, right: 15, bottom: 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         mainAxisSize: MainAxisSize.max,
@@ -74,8 +366,13 @@ class _DashBoardState extends State<DashBoard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(request['student_name'], style: TextStyle(fontSize: 18)),
-              Text('@' + request['assigner_admin'],
-                  style: TextStyle(color: Colors.blue))
+              Row(
+                children: <Widget>[
+                  Text('Sent by: '),
+                  Text('@' + request['assigner_admin'],
+                      style: TextStyle(color: Colors.blue)),
+                ],
+              )
             ],
           ),
           Row(
@@ -86,7 +383,10 @@ class _DashBoardState extends State<DashBoard> {
                   size: 30,
                   color: Colors.green,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  _loading();
+                  accept(request['student_id']);
+                },
               ),
               IconButton(
                 icon: Icon(
@@ -94,7 +394,9 @@ class _DashBoardState extends State<DashBoard> {
                   size: 30,
                   color: Colors.red,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  _deny('R', request['student_id']);
+                },
               )
             ],
           )
@@ -325,7 +627,18 @@ class _DashBoardState extends State<DashBoard> {
                           ],
                         ),
                       ),
-                      children: snapshot.data,
+                      children: snapshot.data.length == 0
+                          ? [
+                              Padding(
+                                padding: EdgeInsets.only(bottom: 15),
+                                child: Text(
+                                  'You have no requests at the moment',
+                                  style: TextStyle(color: Colors.black54),
+                                  textAlign: TextAlign.center,
+                                ),
+                              )
+                            ]
+                          : snapshot.data,
                     ),
                   );
                 }
