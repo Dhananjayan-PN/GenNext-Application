@@ -6,6 +6,7 @@ import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../main.dart';
 import '../usermodel.dart';
+import 'dashboard.dart';
 import 'notifications.dart';
 import 'mystudents.dart';
 import 'chat.dart';
@@ -230,23 +231,6 @@ class HomeAppBarState extends State<HomeAppBar> {
   }
 }
 
-class DashBoard extends StatefulWidget {
-  final User user;
-  DashBoard({this.user});
-
-  @override
-  _DashBoardState createState() => _DashBoardState(user: user);
-}
-
-class _DashBoardState extends State<DashBoard> {
-  final User user;
-  _DashBoardState({this.user});
-
-  Widget build(BuildContext context) {
-    return Center(child: Text('Hey @' + user.username + '!'));
-  }
-}
-
 class CounselorHomeScreen extends StatefulWidget {
   final User user;
   CounselorHomeScreen({this.user});
@@ -270,8 +254,8 @@ class _CounselorHomeScreenState extends State<CounselorHomeScreen> {
 
   @override
   void dispose() {
-    _controller.dispose();
     super.dispose();
+    _controller.dispose();
   }
 
   @override

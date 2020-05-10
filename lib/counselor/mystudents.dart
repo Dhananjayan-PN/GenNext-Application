@@ -56,7 +56,7 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
       List mystudents = json.decode(response.body)['counseled_students'];
       return mystudents;
     } else {
-      return 'failed';
+      throw 'failed';
     }
   }
 
@@ -83,7 +83,7 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
       );
     }
     return Padding(
-      padding: const EdgeInsets.only(top: 5, left: 10, right: 10),
+      padding: EdgeInsets.only(top: 5, left: 10, right: 10),
       child: Card(
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(

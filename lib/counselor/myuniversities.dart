@@ -57,7 +57,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
     if (response.statusCode == 200) {
       return json.decode(response.body)['my_connected_unis'];
     } else {
-      return 'failed';
+      throw 'failed';
     }
   }
 
@@ -405,7 +405,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                             padding:
                                 EdgeInsets.only(top: 5, left: 30, right: 30),
                             child: Text(
-                              "Looks like you haven't connected\nto any universites yet :(",
+                              "Looks like you haven't connected\nwith any universites yet :(",
                               style: TextStyle(color: Colors.black54),
                               textAlign: TextAlign.center,
                             )),

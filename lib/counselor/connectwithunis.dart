@@ -59,7 +59,7 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
       List availableuniversities = json.decode(response.body)['available_unis'];
       return availableuniversities;
     } else {
-      return 'failed';
+      throw 'failed';
     }
   }
 

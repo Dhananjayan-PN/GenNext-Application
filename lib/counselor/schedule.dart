@@ -95,7 +95,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
       cid = json.decode(response.body)['counselor_id'];
       return json.decode(response.body)['counselor_sessions'];
     } else {
-      return ('error');
+      throw ('error');
     }
   }
 
