@@ -22,10 +22,10 @@ void main() {
       await driver.tap(usernameFinder);
       await driver.enterText('chandra');
       await driver.tap(passwordFinder);
-      await driver.enterText('gennext');
+      await driver.enterText('gennext123');
       await driver.tap(buttonFinder);
 
-      await driver.waitFor(find.text('Hey @chandra!'));
+      await driver.waitFor(find.text('Upcoming Sessions'));
     });
   });
 }
