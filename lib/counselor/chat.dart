@@ -235,13 +235,7 @@ class _OpenChatState extends State<OpenChat> {
     ['Hello', 'me'],
     ['How has your day been going?', 'user'],
     ['Not too bad tbh', 'me'],
-    ['Wish I could go out tho', 'me'],
-    ['Yea same', 'user'],
-    ["It's painful sitting at home the entire day", 'user'],
-    ['Yea', 'me'],
     ['Have you committed to any college yet?', 'user'],
-    ["Yes, I did. I'm going to Abilene Christian University", 'me'],
-    ["You have been blocked by the user", 'app'],
   ];
   final TextEditingController textEditingController = TextEditingController();
   final FocusNode focusNode = new FocusNode();
