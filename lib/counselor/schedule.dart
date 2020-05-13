@@ -67,7 +67,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
 
   Future<void> getMyStudents() async {
     final response = await http.get(
-      'http://gennext.ml/api/counselor/counseled-students',
+      'https://gennext.ml/api/counselor/counseled-students',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
     );
     if (response.statusCode == 200) {
