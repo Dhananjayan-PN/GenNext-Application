@@ -122,21 +122,24 @@ class _NotificationScreenState extends State<NotificationScreen> {
         backgroundColor: Colors.white,
         appBar: GradientAppBar(
           leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.push(
-                    context,
-                    PageTransition(
-                        duration: Duration(milliseconds: 500),
-                        type: PageTransitionType.leftToRightWithFade,
-                        child: CounselorHomeScreen(
-                          user: newUser,
-                        )));
-              }),
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                PageTransition(
+                  duration: Duration(milliseconds: 500),
+                  type: PageTransitionType.leftToRightWithFade,
+                  child: CounselorHomeScreen(
+                    user: newUser,
+                  ),
+                ),
+              );
+            },
+          ),
           title: Text(
             'Notifications',
             style: TextStyle(color: Colors.white, fontSize: 20),

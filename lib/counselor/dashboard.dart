@@ -27,7 +27,7 @@ class _DashBoardState extends State<DashBoard> {
   TextEditingController counselornotes = TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   int index = 0;
-  int user_id;
+  int userId;
   bool saved = false;
   bool saving = true;
   bool savingfailed = false;
@@ -157,7 +157,7 @@ class _DashBoardState extends State<DashBoard> {
         saving = false;
         saved = true;
       });
-      user_id = json.decode(response.body)['counselor_id'];
+      userId = json.decode(response.body)['counselor_id'];
       String notes = json.decode(response.body)['counselor_notes'];
       return notes;
     } else {
@@ -177,7 +177,7 @@ class _DashBoardState extends State<DashBoard> {
         'Content-Type': 'application/json; charset=UTF-8'
       },
       body: jsonEncode(
-        <String, dynamic>{"user_id": user_id, "notes": counselornotes.text},
+        <String, dynamic>{"user_id": userId, "notes": counselornotes.text},
       ),
     );
     if (response.statusCode == 200) {

@@ -706,9 +706,11 @@ packages:
   zefyr:
     dependency: "direct main"
     description:
-      name: zefyr
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "packages/zefyr/"
+      ref: HEAD
+      resolved-ref: "9b032d8b868cf51b5eee18c74c056bfd943b8464"
+      url: "git://github.com/winwisely99/zefyr.git"
+    source: git
     version: "0.10.0"
 sdks:
   dart: ">=2.7.0 <3.0.0"

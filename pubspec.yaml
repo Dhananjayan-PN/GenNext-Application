@@ -21,7 +21,11 @@ dependencies:
   flutter_cache_manager: ^1.2.2
   table_calendar: ^2.2.3
   flutter_swiper: ^1.1.6
-  zefyr: ^0.10.0
+  zefyr:
+    git:
+      url: git://github.com/winwisely99/zefyr.git
+      path: packages/zefyr/
+      commit: 9b032d8
 
 
 dev_dependencies:
