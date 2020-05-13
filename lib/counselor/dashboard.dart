@@ -550,24 +550,35 @@ class _DashBoardState extends State<DashBoard> {
             }
             if (snapshot.hasData) {
               if (snapshot.data.length == 0) {
-                return Container(
-                  height: 250,
+                return Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
                   child: Card(
                     margin: EdgeInsets.only(top: 20, bottom: 30),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(15))),
                     elevation: 10,
-                    child: Column(
-                      children: <Widget>[
-                        Icon(
-                          Icons.sentiment_dissatisfied,
-                          size: 40,
-                        ),
-                        Text(
-                          "Looks like you haven't scheduled\nany session yet :(",
-                          style: TextStyle(color: Colors.black54),
-                        ),
-                      ],
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 10, bottom: 10),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(
+                            Icons.sentiment_dissatisfied,
+                            size: 40,
+                          ),
+                          Text(
+                            "Looks like you haven't scheduled\nany session yet",
+                            style: TextStyle(color: Colors.black54),
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            "Head over to the Schedule section to\nget started!",
+                            style: TextStyle(color: Colors.black54),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );
@@ -665,7 +676,7 @@ class _DashBoardState extends State<DashBoard> {
           },
         ),
         Padding(
-          padding: EdgeInsets.only(top: 30, left: 10, right: 10),
+          padding: EdgeInsets.only(top: 20, left: 10, right: 10),
           child: FutureBuilder(
               future: assignmentrequests,
               builder: (context, snapshot) {
@@ -741,7 +752,7 @@ class _DashBoardState extends State<DashBoard> {
               }),
         ),
         Padding(
-          padding: EdgeInsets.only(bottom: 20, top: 20, left: 10, right: 10),
+          padding: EdgeInsets.only(bottom: 20, top: 30, left: 10, right: 10),
           child: Card(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(15))),

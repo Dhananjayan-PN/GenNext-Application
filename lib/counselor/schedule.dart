@@ -167,7 +167,10 @@ class ScheduleScreenState extends State<ScheduleScreen> {
             },
           );
           refresh();
-          setState(() {});
+          setState(() {
+            _selectedDay = _newDateTime;
+            _selectedEvents = _events[_selectedDay] ?? [];
+          });
         } else {
           Navigator.pop(context);
           _error();
@@ -252,7 +255,10 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           },
         );
         refresh();
-        setState(() {});
+        setState(() {
+          _selectedDay = _newDateTime;
+          _selectedEvents = _events[_selectedDay] ?? [];
+        });
       } else {
         Navigator.pop(context);
         _error();
@@ -320,7 +326,10 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           },
         );
         refresh();
-        setState(() {});
+        setState(() {
+          _selectedDay = DateTime.now();
+          _selectedEvents = _events[_selectedDay] ?? [];
+        });
       } else {
         Navigator.pop(context);
         _error();
