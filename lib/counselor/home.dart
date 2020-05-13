@@ -4,6 +4,7 @@ import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/services.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../login.dart';
 import '../main.dart';
 import '../usermodel.dart';
 import 'dashboard.dart';
@@ -156,6 +157,13 @@ class NavDrawer extends StatelessWidget {
                             ),
                             onPressed: () {
                               Navigator.pop(context);
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                PageTransition(
+                                    type: PageTransitionType.upToDown,
+                                    child: LoginPage()),
+                                (Route<dynamic> route) => false,
+                              );
                             },
                           ),
                         ],
