@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/services.dart';
-import '../main.dart';
+import '../login.dart';
 import '../usermodel.dart';
 import 'notifications.dart';
 import 'profile.dart';
@@ -106,10 +106,67 @@ class NavDrawer extends StatelessWidget {
             onTap: () {
               showDialog(
                 context: context,
-                builder: (BuildContext context) => SignOutDialog(
-                  title: "Sign Out ?",
-                  description: "Are you sure you want to sign out?",
-                  buttonText: "Sign Out",
+                builder: (BuildContext context) => AlertDialog(
+                  contentPadding: EdgeInsets.all(0),
+                  elevation: 20,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                  content: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(top: 20),
+                          child: Icon(
+                            Icons.power_settings_new,
+                            size: 40,
+                            color: Colors.red.withOpacity(0.9),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 10),
+                          child: Text(
+                            'Are you sure you want to sign out?',
+                            style: TextStyle(color: Colors.black),
+                            textAlign: TextAlign.center,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    FlatButton(
+                      child: Text(
+                        'Sign out',
+                        style: TextStyle(color: Colors.red),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          PageTransition(
+                              type: PageTransitionType.upToDown,
+                              child: LoginPage()),
+                          (Route<dynamic> route) => false,
+                        );
+                      },
+                    ),
+                  ],
                 ),
               );
             },
