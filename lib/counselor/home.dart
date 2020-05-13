@@ -21,7 +21,7 @@ String tok = token;
 final navlistelements = [
   ['Home', CounselorHomeScreen(user: newUser), Icons.home],
   ['My Students', MyStudentsScreen(), Icons.group],
-  ['Essays', EssayScreen(), Icons.edit],
+  ['Essays', EssaysScreen(), Icons.edit],
   ['My Profile', ProfileScreen(), Icons.account_box],
   ['Sessions Calendar', ScheduleScreen(), Icons.date_range],
   ['My Universities', MyUniversitiesScreen(), Icons.account_balance],

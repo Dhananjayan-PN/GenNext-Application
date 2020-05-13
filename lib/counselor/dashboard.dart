@@ -180,7 +180,6 @@ class _DashBoardState extends State<DashBoard> {
         <String, dynamic>{"user_id": user_id, "notes": counselornotes.text},
       ),
     );
-    print(json.decode(response.body));
     if (response.statusCode == 200) {
       if (json.decode(response.body)['response'] ==
           'Notes Successfuly Updated.') {
@@ -774,7 +773,7 @@ class _DashBoardState extends State<DashBoard> {
                             )
                           : saving
                               ? Padding(
-                                  padding: EdgeInsets.only(right: 10),
+                                  padding: EdgeInsets.only(right: 14),
                                   child: SizedBox(
                                     height: 20,
                                     width: 20,
