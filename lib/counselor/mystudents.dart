@@ -19,6 +19,8 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
   String filter;
   List students;
 
+  Future mystudents;
+
   @override
   void initState() {
     super.initState();
@@ -28,6 +30,7 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
         filter = controller.text;
       });
     });
+    mystudents = getMyStudents();
   }
 
   @override
@@ -58,6 +61,12 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
     } else {
       throw 'failed';
     }
+  }
+
+  void refresh() {
+    setState(() {
+      mystudents = getMyStudents();
+    });
   }
 
   Widget buildCard(AsyncSnapshot snapshot, int index) {
@@ -265,9 +274,12 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
       appBar: CustomAppBar('My Students'),
       body: RefreshIndicator(
         key: refreshKey,
-        onRefresh: getMyStudents,
+        onRefresh: () {
+          refresh();
+          return mystudents;
+        },
         child: FutureBuilder(
-          future: getMyStudents().timeout(Duration(seconds: 10)),
+          future: mystudents.timeout(Duration(seconds: 10)),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Padding(

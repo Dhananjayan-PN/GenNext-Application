@@ -34,10 +34,13 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   int cid;
   bool expanded;
 
+  Future sessions;
+
   @override
   void initState() {
     super.initState();
     getMyStudents();
+    sessions = getEvents();
     _events = {};
     _calendarController = CalendarController();
     BackButtonInterceptor.add(myInterceptor);
@@ -163,18 +166,21 @@ class ScheduleScreenState extends State<ScheduleScreen> {
               );
             },
           );
-          setState(() {});
+          refresh();
         } else {
           Navigator.pop(context);
           _error();
+          refresh();
         }
       } else {
         Navigator.pop(context);
         _error();
+        refresh();
       }
     } catch (e) {
       Navigator.pop(context);
       _error();
+      refresh();
     }
   }
 
@@ -241,14 +247,16 @@ class ScheduleScreenState extends State<ScheduleScreen> {
             );
           },
         );
-        setState(() {});
+        refresh();
       } else {
         Navigator.pop(context);
         _error();
+        refresh();
       }
     } else {
       Navigator.pop(context);
       _error();
+      refresh();
     }
   }
 
@@ -304,15 +312,23 @@ class ScheduleScreenState extends State<ScheduleScreen> {
             );
           },
         );
-        setState(() {});
+        refresh();
       } else {
         Navigator.pop(context);
         _error();
+        refresh();
       }
     } else {
       Navigator.pop(context);
       _error();
+      refresh();
     }
+  }
+
+  refresh() {
+    setState(() {
+      sessions = getEvents();
+    });
   }
 
   _loading() {
@@ -858,7 +874,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           email: newUser.email),
       appBar: CustomAppBar('Calendar'),
       body: FutureBuilder(
-        future: getEvents().timeout(Duration(seconds: 10)),
+        future: sessions.timeout(Duration(seconds: 10)),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Padding(
