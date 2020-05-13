@@ -167,20 +167,24 @@ class ScheduleScreenState extends State<ScheduleScreen> {
             },
           );
           refresh();
+          setState(() {});
         } else {
           Navigator.pop(context);
           _error();
           refresh();
+          setState(() {});
         }
       } else {
         Navigator.pop(context);
         _error();
         refresh();
+        setState(() {});
       }
     } catch (e) {
       Navigator.pop(context);
       _error();
       refresh();
+      setState(() {});
     }
   }
 
@@ -248,15 +252,18 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           },
         );
         refresh();
+        setState(() {});
       } else {
         Navigator.pop(context);
         _error();
         refresh();
+        setState(() {});
       }
     } else {
       Navigator.pop(context);
       _error();
       refresh();
+      setState(() {});
     }
   }
 
@@ -313,15 +320,18 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           },
         );
         refresh();
+        setState(() {});
       } else {
         Navigator.pop(context);
         _error();
         refresh();
+        setState(() {});
       }
     } else {
       Navigator.pop(context);
       _error();
       refresh();
+      setState(() {});
     }
   }
 
