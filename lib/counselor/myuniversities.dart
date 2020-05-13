@@ -53,7 +53,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
 
   Future<void> getUniversities() async {
     final response = await http.get(
-      'http://gennext.ml/api/counselor/get-connected-unis',
+      'https://gennext.ml/api/counselor/get-connected-unis',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
     );
     if (response.statusCode == 200) {
