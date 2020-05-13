@@ -834,7 +834,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                   padding: EdgeInsets.only(top: 10),
                   child: Text(
                     'Are you sure you want to delete this session?',
-                    style: TextStyle(color: Colors.black, fontSize: 12),
+                    style: TextStyle(
+                      color: Colors.black,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 )
