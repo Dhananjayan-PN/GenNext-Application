@@ -24,8 +24,25 @@ class _DashBoardState extends State<DashBoard> {
   _DashBoardState({this.user});
 
   TextEditingController _reason = TextEditingController();
+  TextEditingController counselornotes = TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   int index = 0;
+  int user_id;
+  bool saved = false;
+  bool saving = true;
+  bool savingfailed = false;
+
+  Future upcomingsession;
+  Future assignmentrequests;
+  Future counselorNotes;
+
+  @override
+  void initState() {
+    upcomingsession = getUpcomingSession();
+    assignmentrequests = getAssignmentRequests();
+    counselorNotes = getCounselorNotes();
+    super.initState();
+  }
 
   Future<void> getUpcomingSession() async {
     final response = await http.get(
@@ -127,6 +144,72 @@ class _DashBoardState extends State<DashBoard> {
       Navigator.pop(context);
       _error();
     }
+  }
+
+  Future<void> getCounselorNotes() async {
+    saving = true;
+    final response = await http
+        .get('https://gennext.ml/api/counselor/get-counselor-notes', headers: {
+      HttpHeaders.authorizationHeader: 'Token $tok',
+    });
+    if (response.statusCode == 200) {
+      setState(() {
+        saving = false;
+        saved = true;
+      });
+      user_id = json.decode(response.body)['counselor_id'];
+      String notes = json.decode(response.body)['counselor_notes'];
+      return notes;
+    } else {
+      setState(() {
+        saving = false;
+        savingfailed = true;
+      });
+      throw ('error');
+    }
+  }
+
+  Future<void> editCounselorNotes() async {
+    final response = await http.put(
+      'https://gennext.ml/api/counselor/edit-counselor-notes',
+      headers: {
+        HttpHeaders.authorizationHeader: "Token $tok",
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{"user_id": user_id, "notes": counselornotes.text},
+      ),
+    );
+    print(json.decode(response.body));
+    if (response.statusCode == 200) {
+      if (json.decode(response.body)['response'] ==
+          'Notes Successfuly Updated.') {
+        setState(() {
+          saving = false;
+          saved = true;
+        });
+      } else {
+        setState(() {
+          saving = false;
+          savingfailed = true;
+        });
+        _error();
+      }
+    } else {
+      setState(() {
+        saving = false;
+        savingfailed = true;
+      });
+      _error();
+    }
+  }
+
+  _editCounselorNotes() {
+    setState(() {
+      saved = false;
+      saving = true;
+    });
+    editCounselorNotes();
   }
 
   _success() {
@@ -432,7 +515,7 @@ class _DashBoardState extends State<DashBoard> {
           ),
         ),
         FutureBuilder(
-          future: getUpcomingSession(),
+          future: upcomingsession,
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Center(
@@ -572,7 +655,7 @@ class _DashBoardState extends State<DashBoard> {
         Padding(
           padding: EdgeInsets.only(top: 30, left: 10, right: 10),
           child: FutureBuilder(
-              future: getAssignmentRequests(),
+              future: assignmentrequests,
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   return Container(
@@ -654,52 +737,117 @@ class _DashBoardState extends State<DashBoard> {
             child: Column(
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(top: 10, bottom: 10, right: 30),
+                  padding: EdgeInsets.only(top: 10, bottom: 10),
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(right: 5),
-                        child: Icon(
-                          Icons.edit,
-                          color: Colors.black.withOpacity(0.8),
-                        ),
+                      Spacer(),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(right: 5),
+                            child: Icon(
+                              Icons.edit,
+                              color: Colors.black.withOpacity(0.8),
+                            ),
+                          ),
+                          Text(
+                            'Notepad',
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w800,
+                                color: Colors.black.withOpacity(0.8)),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
                       ),
-                      Text(
-                        'Notepad',
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w800,
-                            color: Colors.black.withOpacity(0.8)),
-                        textAlign: TextAlign.center,
-                      ),
+                      Spacer(),
+                      saved
+                          ? Padding(
+                              padding: EdgeInsets.only(right: 10),
+                              child: Icon(
+                                Icons.check,
+                                color: Colors.green,
+                              ),
+                            )
+                          : saving
+                              ? Padding(
+                                  padding: EdgeInsets.only(right: 10),
+                                  child: SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 3,
+                                    ),
+                                  ),
+                                )
+                              : savingfailed
+                                  ? Padding(
+                                      padding: EdgeInsets.only(right: 10),
+                                      child: Icon(
+                                        Icons.priority_high,
+                                        color: Colors.red,
+                                      ),
+                                    )
+                                  : Container(),
                     ],
                   ),
                 ),
                 Text(
-                  "Your changes will be synced with your web dashboard",
+                  "Changes will be synced across devices",
                   style: TextStyle(color: Colors.black54, fontSize: 10),
                   textAlign: TextAlign.center,
                 ),
                 Divider(thickness: 0, indent: 25, endIndent: 25),
-                Padding(
-                  padding:
-                      EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 10),
-                  child: TextField(
-                    autocorrect: true,
-                    maxLines: null,
-                    decoration: InputDecoration(
-                      focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black87),
-                          borderRadius: BorderRadius.circular(10)),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      hintText: 'Scratch down your ideas, thoughts, tasks...',
-                      hintStyle: TextStyle(color: Colors.black54),
-                    ),
-                  ),
-                )
+                FutureBuilder(
+                    future: counselorNotes,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        saving = false;
+                        savingfailed = true;
+                        return Padding(
+                          padding: EdgeInsets.only(
+                              top: 00, left: 20, right: 20, bottom: 15),
+                          child: Text(
+                            'Unable to load your notes. Try again later',
+                            style: TextStyle(fontSize: 12, color: Colors.red),
+                            textAlign: TextAlign.center,
+                          ),
+                        );
+                      }
+                      if (snapshot.hasData) {
+                        saving = false;
+                        saved = true;
+                        return Padding(
+                          padding: EdgeInsets.only(
+                              top: 10, left: 20, right: 20, bottom: 10),
+                          child: TextField(
+                            controller: counselornotes,
+                            autocorrect: true,
+                            maxLines: null,
+                            decoration: InputDecoration(
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black87),
+                                  borderRadius: BorderRadius.circular(10)),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              hintText:
+                                  'Take note of your tasks, plans, thoughts...',
+                              hintStyle: TextStyle(
+                                  color: Colors.black54, fontSize: 14),
+                            ),
+                            onChanged: (value) => _editCounselorNotes(),
+                          ),
+                        );
+                      }
+                      return Padding(
+                        padding: EdgeInsets.only(
+                            top: 10, left: 20, right: 20, bottom: 10),
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    })
               ],
             ),
           ),
