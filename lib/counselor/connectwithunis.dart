@@ -21,6 +21,7 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
   TextEditingController controller = TextEditingController();
   String filter;
   List unis;
+  Future getavailableuniversities;
 
   @override
   void initState() {
@@ -31,6 +32,7 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
         filter = controller.text;
       });
     });
+    getavailableuniversities = getAvailableUniversities();
   }
 
   @override
@@ -107,6 +109,12 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
   void requestSender(int id, int index) async {
     Future.delayed(Duration(milliseconds: 200), () {
       sendRequest(id, index).timeout(Duration(seconds: 10));
+    });
+  }
+
+  void refresh() {
+    setState(() {
+      getavailableuniversities = getAvailableUniversities();
     });
   }
 
@@ -441,9 +449,12 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
       appBar: CustomAppBar('Connect'),
       body: RefreshIndicator(
         key: refreshKey,
-        onRefresh: getAvailableUniversities,
+        onRefresh: () {
+          refresh();
+          return getavailableuniversities;
+        },
         child: FutureBuilder(
-            future: getAvailableUniversities().timeout(Duration(seconds: 10)),
+            future: getavailableuniversities.timeout(Duration(seconds: 10)),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 return Padding(

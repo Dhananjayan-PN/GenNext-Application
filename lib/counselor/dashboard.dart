@@ -105,14 +105,16 @@ class _DashBoardState extends State<DashBoard> {
       if (json.decode(response.body)['response'] == 'Decision Registered.') {
         Navigator.pop(context);
         _success();
-        setState(() {});
+        refresh();
       } else {
         Navigator.pop(context);
         _error();
+        refresh();
       }
     } else {
       Navigator.pop(context);
       _error();
+      refresh();
     }
   }
 
@@ -135,14 +137,16 @@ class _DashBoardState extends State<DashBoard> {
       if (json.decode(response.body)['response'] == 'Decision Registered.') {
         Navigator.pop(context);
         _success();
-        setState(() {});
+        refresh();
       } else {
         Navigator.pop(context);
         _error();
+        refresh();
       }
     } else {
       Navigator.pop(context);
       _error();
+      refresh();
     }
   }
 
@@ -212,6 +216,7 @@ class _DashBoardState extends State<DashBoard> {
   }
 
   _success() {
+    refresh();
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -485,6 +490,14 @@ class _DashBoardState extends State<DashBoard> {
         ],
       ),
     );
+  }
+
+  refresh() {
+    setState(() {
+      upcomingsession = getUpcomingSession();
+      assignmentrequests = getAssignmentRequests();
+      counselorNotes = getCounselorNotes();
+    });
   }
 
   Widget build(BuildContext context) {
