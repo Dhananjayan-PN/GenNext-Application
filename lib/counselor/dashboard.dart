@@ -604,7 +604,7 @@ class _DashBoardState extends State<DashBoard> {
                     child: ExpansionTile(
                       initiallyExpanded: true,
                       title: Padding(
-                        padding: EdgeInsets.only(left: 10),
+                        padding: EdgeInsets.only(left: 20),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -644,6 +644,65 @@ class _DashBoardState extends State<DashBoard> {
                 }
                 return Center(child: CircularProgressIndicator());
               }),
+        ),
+        Padding(
+          padding: EdgeInsets.only(bottom: 20, top: 20, left: 10, right: 10),
+          child: Card(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15))),
+            elevation: 10,
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(top: 10, bottom: 10, right: 30),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(right: 5),
+                        child: Icon(
+                          Icons.edit,
+                          color: Colors.black.withOpacity(0.8),
+                        ),
+                      ),
+                      Text(
+                        'Notepad',
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.black.withOpacity(0.8)),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+                Text(
+                  "Your changes will be synced with your web dashboard",
+                  style: TextStyle(color: Colors.black54, fontSize: 10),
+                  textAlign: TextAlign.center,
+                ),
+                Divider(thickness: 0, indent: 25, endIndent: 25),
+                Padding(
+                  padding:
+                      EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 10),
+                  child: TextField(
+                    autocorrect: true,
+                    maxLines: null,
+                    decoration: InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black87),
+                          borderRadius: BorderRadius.circular(10)),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      hintText: 'Scratch down your ideas, thoughts, tasks...',
+                      hintStyle: TextStyle(color: Colors.black54),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
         )
       ],
     );
