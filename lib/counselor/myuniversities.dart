@@ -20,6 +20,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   TextEditingController controller = new TextEditingController();
   String filter;
   List unis;
+  Future myuniversities;
 
   @override
   void initState() {
@@ -30,6 +31,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
         filter = controller.text;
       });
     });
+    myuniversities = getUniversities();
   }
 
   @override
@@ -59,6 +61,12 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
     } else {
       throw 'failed';
     }
+  }
+
+  void refresh() {
+    setState(() {
+      myuniversities = getUniversities();
+    });
   }
 
   Widget buildCard(AsyncSnapshot snapshot, int index) {
@@ -354,9 +362,12 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
       appBar: CustomAppBar('My Universities'),
       body: RefreshIndicator(
         key: refreshKey,
-        onRefresh: getUniversities,
+        onRefresh: () {
+          refresh();
+          return myuniversities;
+        },
         child: FutureBuilder(
-          future: getUniversities().timeout(Duration(seconds: 10)),
+          future: myuniversities.timeout(Duration(seconds: 10)),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Padding(
