@@ -82,6 +82,7 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
             ),
           ),
         );
+        refresh();
       } else {
         unis[index]['request_failed'] = true;
         _scafKey.currentState.showSnackBar(
@@ -92,6 +93,7 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
             ),
           ),
         );
+        refresh();
       }
     } else {
       unis[index]['request_failed'] = true;
@@ -103,6 +105,7 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
           ),
         ),
       );
+      refresh();
     }
   }
 
