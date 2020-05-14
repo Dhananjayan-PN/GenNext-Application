@@ -10,6 +10,7 @@ import '../usermodel.dart';
 import 'chat.dart';
 import 'dashboard.dart';
 import 'notifications.dart';
+import 'essays.dart';
 import 'profile.dart';
 import 'myuniversities.dart';
 import 'completedapps.dart';
@@ -27,6 +28,7 @@ final navlistelements = [
     CompletedApplicationsScreen(),
     Icons.assignment_turned_in
   ],
+  ['My Essays', EssaysScreen(), Icons.edit],
   ['Pending Applications', PendingApplicationsScreen(), Icons.assignment_late],
   ['Counselling Schedule', ScheduleScreen(), Icons.date_range]
 ];
