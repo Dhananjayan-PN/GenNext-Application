@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
+import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'home.dart';
 
 final notifications = ['Are you future ready?'];
@@ -84,27 +85,59 @@ class BodyBuilderState extends State<BodyBuilder> {
   }
 }
 
-class NotificationScreen extends StatelessWidget {
+class NotificationScreen extends StatefulWidget {
+  @override
+  _NotificationScreenState createState() => _NotificationScreenState();
+}
+
+class _NotificationScreenState extends State<NotificationScreen> {
+  @override
+  void initState() {
+    super.initState();
+    BackButtonInterceptor.add(myInterceptor);
+  }
+
+  @override
+  void dispose() {
+    BackButtonInterceptor.remove(myInterceptor);
+    super.dispose();
+  }
+
+  bool myInterceptor(bool stopDefaultButtonEvent) {
+    print("BACK BUTTON!");
+    Navigator.push(
+        context,
+        PageTransition(
+            duration: Duration(milliseconds: 500),
+            type: PageTransitionType.leftToRight,
+            child: StudentHomeScreen(
+              user: newUser,
+            )));
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
         backgroundColor: Colors.white,
         appBar: GradientAppBar(
           leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.push(
-                    context,
-                    PageTransition(
-                        type: PageTransitionType.fade,
-                        child: StudentHomeScreen(
-                          user: newUser,
-                        )));
-              }),
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                PageTransition(
+                  duration: Duration(milliseconds: 500),
+                  type: PageTransitionType.leftToRightWithFade,
+                  child: StudentHomeScreen(user: newUser),
+                ),
+              );
+            },
+          ),
           title: Text(
             'Notifications',
             style: TextStyle(color: Colors.white, fontSize: 20),
@@ -113,7 +146,6 @@ class NotificationScreen extends StatelessWidget {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
-          iconTheme: new IconThemeData(color: Colors.indigo[900]),
         ),
         body: BodyBuilder());
   }

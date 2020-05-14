@@ -118,7 +118,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
         backgroundColor: Colors.white,
         appBar: GradientAppBar(
           leading: IconButton(
@@ -133,9 +133,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 PageTransition(
                   duration: Duration(milliseconds: 500),
                   type: PageTransitionType.leftToRightWithFade,
-                  child: CounselorHomeScreen(
-                    user: newUser,
-                  ),
+                  child: CounselorHomeScreen(user: newUser),
                 ),
               );
             },
