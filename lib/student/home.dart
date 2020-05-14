@@ -23,12 +23,12 @@ final navlistelements = [
   ['Home', StudentHomeScreen(user: newUser), Icons.home],
   ['My Profile', ProfileScreen(), Icons.account_box],
   ['My Universities', MyUniversitiesScreen(), Icons.account_balance],
+  ['My Essays', EssaysScreen(), Icons.edit],
   [
     'Completed Applications',
     CompletedApplicationsScreen(),
     Icons.assignment_turned_in
   ],
-  ['My Essays', EssaysScreen(), Icons.edit],
   ['Pending Applications', PendingApplicationsScreen(), Icons.assignment_late],
   ['Counselling Schedule', ScheduleScreen(), Icons.date_range]
 ];
