@@ -2,26 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/services.dart';
+import 'package:gradient_app_bar/gradient_app_bar.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../login.dart';
+import '../main.dart';
 import '../usermodel.dart';
+import 'chat.dart';
+import 'dashboard.dart';
 import 'notifications.dart';
 import 'profile.dart';
 import 'myuniversities.dart';
 import 'completedapps.dart';
 import 'pendingapps.dart';
 import 'schedule.dart';
-import 'package:gradient_app_bar/gradient_app_bar.dart';
 
 User newUser;
-
+String tok = token;
 final navlistelements = [
-  [
-    'Home',
-    StudentHomeScreen(
-      user: newUser,
-    ),
-    Icons.home
-  ],
+  ['Home', StudentHomeScreen(user: newUser), Icons.home],
   ['My Profile', ProfileScreen(), Icons.account_box],
   ['My Universities', MyUniversitiesScreen(), Icons.account_balance],
   [
@@ -32,6 +30,7 @@ final navlistelements = [
   ['Pending Applications', PendingApplicationsScreen(), Icons.assignment_late],
   ['Counselling Schedule', ScheduleScreen(), Icons.date_range]
 ];
+PageController _controller;
 
 class NavDrawer extends StatelessWidget {
   final String name;
@@ -71,20 +70,21 @@ class NavDrawer extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          new UserAccountsDrawerHeader(
+          UserAccountsDrawerHeader(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
                   colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
             ),
-            accountName: new Text(name,
-                style: TextStyle(color: Colors.white, fontSize: 18)),
-            accountEmail: new Text(email,
+            accountName:
+                Text(name, style: TextStyle(color: Colors.white, fontSize: 18)),
+            accountEmail: Text(email,
                 style: TextStyle(color: Colors.white, fontSize: 12)),
             currentAccountPicture: CircleAvatar(
-              backgroundImage: AssetImage('images/profile.png'),
-              backgroundColor: Colors.blue[200],
+              backgroundImage: CachedNetworkImageProvider(
+                  'https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png'),
+              backgroundColor: Colors.blue[400],
               radius: 30,
             ),
             onDetailsPressed: () {
@@ -97,8 +97,8 @@ class NavDrawer extends StatelessWidget {
               );
             },
           ),
-          new Column(children: navlist),
-          new ListTile(
+          Column(mainAxisSize: MainAxisSize.min, children: navlist),
+          ListTile(
             leading: Icon(Icons.power_settings_new,
                 size: 26, color: Colors.red[600]),
             title: Text('Sign Out',
@@ -185,6 +185,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
   Widget build(BuildContext context) {
     return GradientAppBar(
+      elevation: 20,
       title: Text(
         titletext,
         style: TextStyle(color: Colors.white, fontSize: 20),
@@ -233,9 +234,9 @@ class HomeAppBarState extends State<HomeAppBar> {
           end: Alignment.bottomCenter,
           colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
       actions: <Widget>[
-        new Stack(
+        Stack(
           children: <Widget>[
-            new IconButton(
+            IconButton(
                 icon: Icon(Icons.notifications, size: 28),
                 alignment: Alignment.bottomLeft,
                 onPressed: () {
@@ -243,17 +244,19 @@ class HomeAppBarState extends State<HomeAppBar> {
                     Navigator.push(
                         context,
                         PageTransition(
+                            curve: Curves.ease,
+                            duration: Duration(milliseconds: 500),
                             type: PageTransitionType.rightToLeft,
                             child: NotificationScreen()));
                   });
                 }),
             counter != 0
-                ? new Positioned(
+                ? Positioned(
                     right: 11,
                     top: 11,
-                    child: new Container(
+                    child: Container(
                       padding: EdgeInsets.all(2),
-                      decoration: new BoxDecoration(
+                      decoration: BoxDecoration(
                         color: Colors.red,
                         borderRadius: BorderRadius.circular(6),
                       ),
@@ -271,9 +274,20 @@ class HomeAppBarState extends State<HomeAppBar> {
                       ),
                     ),
                   )
-                : new Container()
+                : Container()
           ],
         ),
+        IconButton(
+          icon: Icon(Icons.chat, size: 28),
+          onPressed: () {
+            setState(
+              () {
+                _controller.animateToPage(1,
+                    duration: Duration(milliseconds: 600), curve: Curves.ease);
+              },
+            );
+          },
+        )
       ],
     );
   }
@@ -292,20 +306,40 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
   _StudentHomeScreenState({this.user});
 
   @override
+  void initState() {
+    super.initState();
+    _controller = PageController(
+      initialPage: 0,
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    newUser = user;
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         systemNavigationBarColor: Colors.white,
         statusBarColor: Color(0xff0072BC).withAlpha(150),
       ),
-      child: new Scaffold(
-        backgroundColor: Colors.white,
-        drawer: NavDrawer(
-          name: user.firstname + ' ' + user.lastname,
-          email: user.email,
-        ), //add email here too
-        appBar: HomeAppBar(),
-        body: Center(child: Text('Hey @' + user.username + '!')),
+      child: PageView(
+        controller: _controller,
+        children: [
+          Scaffold(
+              backgroundColor: Colors.white,
+              drawer: NavDrawer(
+                name: '${user.firstname} ${user.lastname}',
+                email: user.email,
+              ),
+              appBar: HomeAppBar(),
+              body: DashBoard(user: user)),
+          AllChats()
+        ],
       ),
     );
   }
