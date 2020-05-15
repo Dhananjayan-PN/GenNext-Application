@@ -72,9 +72,7 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
   Widget buildCard(AsyncSnapshot snapshot, int index) {
     students = snapshot.data;
     List<Widget> collegelist = [];
-    for (var i = 0;
-        i < students[index]['college_list'].split(':').length;
-        i++) {
+    for (var i = 0; i < students[index]['college_list'].length; i++) {
       collegelist.add(
         Padding(
           padding: EdgeInsets.only(right: 3),
@@ -84,7 +82,7 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
             backgroundColor: Colors.transparent,
             shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
             label: Text(
-              students[index]['college_list'].split(':')[i],
+              students[index]['college_list'][i],
               style: TextStyle(fontSize: 13, color: Colors.black),
             ),
           ),
