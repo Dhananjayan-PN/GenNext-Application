@@ -73,6 +73,8 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
     unis = snapshot.data;
     List<Widget> topmajors = [];
     List<Widget> standoutfactors = [];
+    List<Widget> degreelevels = [];
+    List<Widget> testing = [];
     for (var i = 0; i < unis[index]['top_majors'].length; i++) {
       topmajors.add(
         Padding(
@@ -108,6 +110,48 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
               shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
               label: Text(
                 unis[index]['stand_out_factors'][i],
+                style: TextStyle(fontSize: 13, color: Colors.white),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+    for (var i = 0; i < unis[index]['degree_levels'].length; i++) {
+      degreelevels.add(
+        Padding(
+          padding: EdgeInsets.only(right: 3),
+          child: Theme(
+            data: ThemeData(canvasColor: Colors.transparent),
+            child: Chip(
+              labelPadding:
+                  EdgeInsets.only(left: 3, right: 3, top: 1, bottom: 1),
+              elevation: 5,
+              backgroundColor: Colors.black26,
+              shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
+              label: Text(
+                unis[index]['degree_levels'][i],
+                style: TextStyle(fontSize: 13, color: Colors.white),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+    for (var i = 0; i < unis[index]['testing_requirements'].length; i++) {
+      testing.add(
+        Padding(
+          padding: EdgeInsets.only(right: 3),
+          child: Theme(
+            data: ThemeData(canvasColor: Colors.transparent),
+            child: Chip(
+              labelPadding:
+                  EdgeInsets.only(left: 3, right: 3, top: 1, bottom: 1),
+              elevation: 5,
+              backgroundColor: Colors.black26,
+              shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
+              label: Text(
+                unis[index]['testing_requirements'][i],
                 style: TextStyle(fontSize: 13, color: Colors.white),
               ),
             ),
@@ -276,21 +320,6 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                   child: Row(
                     children: <Widget>[
                       Text(
-                        'Both Grad and Undergrad?: ',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      Text(
-                        unis[index]['both_ug_and_g'].toString(),
-                        style: TextStyle(color: Colors.white.withOpacity(0.8)),
-                      )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 5, left: 20),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
                         'Top Majors: ',
                         style: TextStyle(color: Colors.white),
                       ),
@@ -326,6 +355,58 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                   ),
                 ),
                 Padding(
+                  padding: EdgeInsets.only(left: 20.0, right: 20, top: 5),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      height: 50,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: <Widget>[
+                          Row(
+                            children: standoutfactors,
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 5, left: 20),
+                  child: Row(
+                    children: <Widget>[
+                      Text(
+                        'Degree Levels: ',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 20.0, right: 20, top: 5),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      height: 50,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: <Widget>[Row(children: degreelevels)],
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 5, left: 20),
+                  child: Row(
+                    children: <Widget>[
+                      Text(
+                        'Testing Requirements: ',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
                   padding: EdgeInsets.only(
                       left: 20.0, right: 20, top: 5, bottom: 10),
                   child: Align(
@@ -336,7 +417,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                         scrollDirection: Axis.horizontal,
                         children: <Widget>[
                           Row(
-                            children: standoutfactors,
+                            children: testing,
                           )
                         ],
                       ),
