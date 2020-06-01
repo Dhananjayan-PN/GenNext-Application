@@ -54,7 +54,7 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
 
   Future getAvailableUniversities() async {
     final response = await http.get(
-      'https://gennext.ml/api/counselor/connect-with-unis',
+      dom + 'api/counselor/connect-with-unis',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
     );
     if (response.statusCode == 200) {
@@ -67,7 +67,7 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
 
   Future sendRequest(int id, int index) async {
     final response = await http.put(
-      'https://gennext.ml/api/counselor/connect-with-unis/$id',
+      dom + 'api/counselor/connect-with-unis/$id',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
     );
     if (response.statusCode == 200) {

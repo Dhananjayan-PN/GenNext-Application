@@ -5,6 +5,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'login.dart';
 
 String token;
+String domain = "https://gennext.tk/";
 
 void main() {
   initializeDateFormatting().then((_) => runApp(MyApp()));

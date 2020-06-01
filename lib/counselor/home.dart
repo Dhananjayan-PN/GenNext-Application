@@ -19,6 +19,7 @@ import 'connectwithunis.dart';
 
 User newUser;
 String tok = token;
+String dom = domain;
 final navlistelements = [
   ['Home', CounselorHomeScreen(user: newUser), Icons.home],
   ['My Students', MyStudentsScreen(), Icons.group],

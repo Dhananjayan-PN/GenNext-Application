@@ -45,11 +45,10 @@ class _DashBoardState extends State<DashBoard> {
   }
 
   Future<void> getUpcomingSession() async {
-    final response = await http.get(
-        'https://gennext.ml/api/counselor/get-sessions-calendar',
-        headers: {
-          HttpHeaders.authorizationHeader: 'Token $tok',
-        });
+    final response =
+        await http.get(dom + 'api/counselor/get-sessions-calendar', headers: {
+      HttpHeaders.authorizationHeader: 'Token $tok',
+    });
     if (response.statusCode == 200) {
       List sessions = json.decode(response.body)['counselor_sessions'];
       List upcoming = [];
@@ -63,11 +62,10 @@ class _DashBoardState extends State<DashBoard> {
   }
 
   Future<void> getAssignmentRequests() async {
-    final response = await http.get(
-        'https://gennext.ml/api/counselor/get-assignment-requests',
-        headers: {
-          HttpHeaders.authorizationHeader: 'Token $tok',
-        });
+    final response =
+        await http.get(dom + 'api/counselor/get-assignment-requests', headers: {
+      HttpHeaders.authorizationHeader: 'Token $tok',
+    });
     if (response.statusCode == 200) {
       List requests = json.decode(response.body)['incoming_reqs'];
       if (requests.length == 0) {
@@ -88,7 +86,7 @@ class _DashBoardState extends State<DashBoard> {
 
   Future<void> accept(int id) async {
     final response = await http.put(
-      'https://gennext.ml/api/counselor/accept-or-deny-reqs',
+      dom + 'api/counselor/accept-or-deny-reqs',
       headers: {
         HttpHeaders.authorizationHeader: "Token $tok",
         'Content-Type': 'application/json; charset=UTF-8'
@@ -120,7 +118,7 @@ class _DashBoardState extends State<DashBoard> {
 
   Future<void> deny(int id) async {
     final response = await http.put(
-      'https://gennext.ml/api/counselor/accept-or-deny-reqs',
+      dom + 'api/counselor/accept-or-deny-reqs',
       headers: {
         HttpHeaders.authorizationHeader: "Token $tok",
         'Content-Type': 'application/json; charset=UTF-8'
@@ -152,8 +150,8 @@ class _DashBoardState extends State<DashBoard> {
 
   Future<void> getCounselorNotes() async {
     saving = true;
-    final response = await http
-        .get('https://gennext.ml/api/counselor/get-counselor-notes', headers: {
+    final response =
+        await http.get(dom + 'api/counselor/get-counselor-notes', headers: {
       HttpHeaders.authorizationHeader: 'Token $tok',
     });
     if (response.statusCode == 200) {
@@ -175,7 +173,7 @@ class _DashBoardState extends State<DashBoard> {
 
   Future<void> editCounselorNotes() async {
     final response = await http.put(
-      'https://gennext.ml/api/counselor/edit-counselor-notes',
+      dom + 'api/counselor/edit-counselor-notes',
       headers: {
         HttpHeaders.authorizationHeader: "Token $tok",
         'Content-Type': 'application/json; charset=UTF-8'

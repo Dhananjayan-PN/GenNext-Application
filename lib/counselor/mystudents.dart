@@ -52,7 +52,7 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
 
   Future<void> getMyStudents() async {
     final response = await http.get(
-      'https://gennext.ml/api/counselor/counseled-students',
+      dom + 'api/counselor/counseled-students',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
     );
     if (response.statusCode == 200) {

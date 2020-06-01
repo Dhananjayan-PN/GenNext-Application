@@ -114,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _loginUser(String uname, String pass) async {
     try {
       final http.Response result = await http.post(
-        'https://gennext.ml/authenticate/login/',
+        domain + 'authenticate/login/',
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
@@ -123,7 +123,7 @@ class _LoginPageState extends State<LoginPage> {
       if (result.statusCode == 200) {
         token = json.decode(result.body)['token'];
         final response = await http.get(
-          'https://gennext.ml/authenticate/$uname',
+          domain + 'authenticate/$uname',
           headers: {HttpHeaders.authorizationHeader: "Token $token"},
         );
         if (response.statusCode == 200) {

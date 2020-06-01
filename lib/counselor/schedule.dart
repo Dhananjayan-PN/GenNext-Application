@@ -67,7 +67,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
 
   Future<void> getMyStudents() async {
     final response = await http.get(
-      'https://gennext.ml/api/counselor/counseled-students',
+      dom + 'api/counselor/counseled-students',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
     );
     if (response.statusCode == 200) {
@@ -89,11 +89,10 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   }
 
   Future<void> getEvents() async {
-    final response = await http.get(
-        'https://gennext.ml/api/counselor/get-sessions-calendar',
-        headers: {
-          HttpHeaders.authorizationHeader: 'Token $tok',
-        });
+    final response =
+        await http.get(dom + 'api/counselor/get-sessions-calendar', headers: {
+      HttpHeaders.authorizationHeader: 'Token $tok',
+    });
     if (response.statusCode == 200) {
       cid = json.decode(response.body)['counselor_id'];
       return json.decode(response.body)['counselor_sessions'];
@@ -105,7 +104,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   Future<void> createSession(int id) async {
     try {
       final response = await http.post(
-        'https://gennext.ml/api/counselor/counselor-sessions/create/',
+        dom + 'api/counselor/counselor-sessions/create/',
         headers: {
           HttpHeaders.authorizationHeader: "Token $tok",
           'Content-Type': 'application/json; charset=UTF-8'
@@ -193,7 +192,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
 
   Future<void> editSession(int id, String complete) async {
     final response = await http.put(
-      'https://gennext.ml/api/counselor/edit-sessions-calendar',
+      dom + 'api/counselor/edit-sessions-calendar',
       headers: {
         HttpHeaders.authorizationHeader: "Token $tok",
         'Content-Type': 'application/json; charset=UTF-8'
@@ -275,7 +274,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
 
   Future<void> deleteSession(int id) async {
     final response = await http.delete(
-      'https://gennext.ml/api/counselor/delete-counselor-session/$id',
+      dom + 'api/counselor/delete-counselor-session/$id',
       headers: {
         HttpHeaders.authorizationHeader: "Token $tok",
       },
