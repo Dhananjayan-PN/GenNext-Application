@@ -72,6 +72,43 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
     });
   }
 
+  showTopMajors(List topmajors) {
+    List<Widget> topMajorsChips = [];
+    for (var i = 0; i < topmajors.length; i++) {
+      topMajorsChips.add(
+        Padding(
+          padding: EdgeInsets.only(right: 3),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Chip(
+              labelPadding:
+                  EdgeInsets.only(left: 3, right: 3, top: 1, bottom: 1),
+              elevation: 5,
+              shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
+              label: Text(
+                topmajors[i],
+                style: TextStyle(fontSize: 13, color: Colors.black),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+    showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return AlertDialog(
+              elevation: 20,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0))),
+              title: Center(child: Text('Top Majors')),
+              content: ListView(
+                children: topMajorsChips,
+              ));
+        });
+  }
+
   Widget buildCard(AsyncSnapshot snapshot, int index) {
     unis = snapshot.data;
     List<Widget> topmajors = [];
@@ -219,7 +256,10 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                     children: <Widget>[
                       Text(
                         'University Rep: ',
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w900),
                       ),
                       Text(
                         '@' + unis[index]['university_rep'],
@@ -234,7 +274,10 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                     children: <Widget>[
                       Text(
                         'US News Ranking: ',
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w900),
                       ),
                       Text(
                         unis[index]['usnews_ranking'].toString(),
@@ -249,7 +292,10 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                     children: <Widget>[
                       Text(
                         'Location: ',
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w900),
                       ),
                       Text(
                         unis[index]['university_location'].toString(),
@@ -264,7 +310,10 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                     children: <Widget>[
                       Text(
                         'In-State Cost: ',
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w900),
                       ),
                       Text(
                         r"$" + unis[index]['in_state_cost'].toString(),
@@ -279,7 +328,10 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                     children: <Widget>[
                       Text(
                         'Out-of-State Cost: ',
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w900),
                       ),
                       Text(
                         r"$" + unis[index]['out_of_state_cost'].toString(),
@@ -294,7 +346,10 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                     children: <Widget>[
                       Text(
                         'International Cost: ',
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w900),
                       ),
                       Text(
                         r"$" + unis[index]['international_cost'].toString(),
@@ -308,11 +363,14 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                   child: Row(
                     children: <Widget>[
                       Text(
-                        'Research Institute?: ',
-                        style: TextStyle(color: Colors.white),
+                        'Research Institute: ',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w900),
                       ),
                       Text(
-                        unis[index]['research_or_not'].toString(),
+                        unis[index]['research_or_not'] ? 'Yes' : 'No',
                         style: TextStyle(color: Colors.white.withOpacity(0.8)),
                       )
                     ],
@@ -324,7 +382,10 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                     children: <Widget>[
                       Text(
                         'Top Majors: ',
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w900),
                       ),
                     ],
                   ),
@@ -333,15 +394,26 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                   padding: EdgeInsets.only(left: 20.0, right: 20, top: 5),
                   child: Align(
                     alignment: Alignment.centerLeft,
-                    child: Container(
-                      height: 50,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: <Widget>[
-                          Row(
-                            children: topmajors,
-                          )
-                        ],
+                    child: Wrap(
+                      runAlignment: WrapAlignment.start,
+                      children: topmajors.sublist(0, 2),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 5, bottom: 5, left: 25),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        splashColor: Colors.blue[900],
+                        child: Text('View more',
+                            style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.blue,
+                                fontWeight: FontWeight.w900)),
+                        onTap: () {},
                       ),
                     ),
                   ),
@@ -352,7 +424,10 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                     children: <Widget>[
                       Text(
                         'Stand Out Factors: ',
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w900),
                       ),
                     ],
                   ),
@@ -380,7 +455,10 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                     children: <Widget>[
                       Text(
                         'Degree Levels: ',
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w900),
                       ),
                     ],
                   ),
@@ -404,14 +482,16 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                     children: <Widget>[
                       Text(
                         'Testing Requirements: ',
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w900),
                       ),
                     ],
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(
-                      left: 20.0, right: 20, top: 5, bottom: 10),
+                  padding: EdgeInsets.only(left: 20.0, right: 20, top: 5),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Container(
@@ -423,6 +503,24 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                             children: testing,
                           )
                         ],
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 5, bottom: 20),
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        splashColor: Colors.blue[900],
+                        child: Text('View profile',
+                            style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.blue,
+                                fontWeight: FontWeight.w900)),
+                        onTap: () {},
                       ),
                     ),
                   ),
