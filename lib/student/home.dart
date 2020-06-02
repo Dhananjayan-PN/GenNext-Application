@@ -13,6 +13,7 @@ import 'notifications.dart';
 import 'essays.dart';
 import 'profile.dart';
 import 'myuniversities.dart';
+import 'allunis.dart';
 import 'completedapps.dart';
 import 'pendingapps.dart';
 import 'schedule.dart';
@@ -25,6 +26,7 @@ final navlistelements = [
   ['My Profile', ProfileScreen(), Icons.account_box],
   ['My Universities', MyUniversitiesScreen(), Icons.account_balance],
   ['My Essays', EssaysScreen(), Icons.edit],
+  ['All Universities', AllUniversitiesScreen(), Icons.account_balance],
   [
     'Completed Applications',
     CompletedApplicationsScreen(),
