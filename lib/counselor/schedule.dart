@@ -119,6 +119,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         },
       ),
     );
+    print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 200) {
       if (json.decode(response.body)['Response'] ==
           'Session successfully created.') {
