@@ -25,8 +25,8 @@ final navlistelements = [
   ['Home', StudentHomeScreen(user: newUser), Icons.home],
   ['My Profile', ProfileScreen(), Icons.account_box],
   ['My Universities', MyUniversitiesScreen(), Icons.account_balance],
+  ['Explore Universities', AllUniversitiesScreen(), Icons.explore],
   ['My Essays', EssaysScreen(), Icons.edit],
-  ['All Universities', AllUniversitiesScreen(), Icons.account_balance],
   [
     'Completed Applications',
     CompletedApplicationsScreen(),
