@@ -508,7 +508,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 5, bottom: 20),
+                  padding: EdgeInsets.only(top: 10, bottom: 20),
                   child: Align(
                     alignment: Alignment.bottomCenter,
                     child: Material(
@@ -517,7 +517,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                         splashColor: Colors.blue[900],
                         child: Text('View profile',
                             style: TextStyle(
-                                fontSize: 20,
+                                fontSize: 18,
                                 color: Colors.blue,
                                 fontWeight: FontWeight.w900)),
                         onTap: () {},
