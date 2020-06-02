@@ -556,17 +556,17 @@ class _DashBoardState extends State<DashBoard> {
                         borderRadius: BorderRadius.all(Radius.circular(15))),
                     elevation: 10,
                     child: Padding(
-                      padding: EdgeInsets.only(top: 10, bottom: 10),
+                      padding: EdgeInsets.only(top: 20, bottom: 30),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Icon(
-                            Icons.sentiment_dissatisfied,
+                            Icons.sentiment_neutral,
                             size: 40,
                           ),
                           Text(
-                            "Looks like you haven't scheduled\nany session yet",
+                            "Looks like you haven't scheduled\nany sessions yet",
                             style: TextStyle(color: Colors.black54),
                             textAlign: TextAlign.center,
                           ),
@@ -736,7 +736,7 @@ class _DashBoardState extends State<DashBoard> {
                               Padding(
                                 padding: EdgeInsets.only(bottom: 15),
                                 child: Text(
-                                  'You have no requests at the moment',
+                                  'All requests have been taken care of!',
                                   style: TextStyle(color: Colors.black54),
                                   textAlign: TextAlign.center,
                                 ),

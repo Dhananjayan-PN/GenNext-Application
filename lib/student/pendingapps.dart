@@ -38,23 +38,8 @@ class PendingApplicationsScreenState extends State<PendingApplicationsScreen> {
       drawer: NavDrawer(
           name: newUser.firstname + ' ' + newUser.lastname,
           email: newUser.email),
-      appBar: CustomAppBar('Pending Application'),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Image(
-              image: AssetImage('images/doggo.png'),
-            ),
-            Text(
-              'Our Application is under development\nCome back soon!',
-              style: TextStyle(color: Colors.black, fontSize: 20),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
+      appBar: CustomAppBar('Pending Applications'),
+      body: Center(child: Text('Pending')),
     );
   }
 }
