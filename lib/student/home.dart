@@ -19,6 +19,7 @@ import 'schedule.dart';
 
 User newUser;
 String tok = token;
+String dom = domain;
 final navlistelements = [
   ['Home', StudentHomeScreen(user: newUser), Icons.home],
   ['My Profile', ProfileScreen(), Icons.account_box],
