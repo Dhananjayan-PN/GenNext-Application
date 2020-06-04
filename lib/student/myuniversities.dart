@@ -61,7 +61,6 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
       dom + 'api/student/get-college-list',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
     );
-    print(response.body);
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       return [
