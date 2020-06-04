@@ -5,8 +5,8 @@ jobs:
     strategy:
       matrix:
         device:
-         - 61BB25F8-AFA7-460B-8E2F-6EB5BD7C1E24
-         - BBAA1D88-F2BA-4BB1-AFC9-F4DDF29003C0
+         - 88BC2FB9-BD96-4019-9DFB-4A2740910BF3
+         - 8DCCE253-5ABB-468D-B66F-CF83F489B649
     name: Test
     runs-on: macos-latest
     steps:
