@@ -3,7 +3,6 @@ import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../custom_expansion_tile.dart' as custom;
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
@@ -17,11 +16,13 @@ class MyUniversitiesScreen extends StatefulWidget {
 
 class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   GlobalKey<ScaffoldState> _scafKey = GlobalKey<ScaffoldState>();
-  var refreshKey = GlobalKey<RefreshIndicatorState>();
+  var refreshKey1 = GlobalKey<RefreshIndicatorState>();
+  var refreshKey2 = GlobalKey<RefreshIndicatorState>();
   TextEditingController controller = new TextEditingController();
   String filter;
   List unis;
   Future collegeList;
+  Future favoritedList;
 
   @override
   void initState() {
@@ -32,7 +33,8 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
         filter = controller.text;
       });
     });
-    collegeList = getUniversities();
+    collegeList = getCollegeList();
+    favoritedList = getFavorited();
   }
 
   @override
@@ -54,13 +56,31 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
     return true;
   }
 
-  Future<void> getUniversities() async {
+  Future<void> getCollegeList() async {
     final response = await http.get(
       dom + 'api/student/get-college-list',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
     );
+    print(response.body);
     if (response.statusCode == 200) {
-      return json.decode(response.body)['college_list_data'];
+      final data = json.decode(response.body);
+      return [
+        data['safety_college_list_data'],
+        data['match_college_list_data'],
+        data['reach_college_list_data']
+      ];
+    } else {
+      throw 'failed';
+    }
+  }
+
+  Future<void> getFavorited() async {
+    final response = await http.get(
+      dom + 'api/student/get-favorited-universities',
+      headers: {HttpHeaders.authorizationHeader: "Token $tok"},
+    );
+    if (response.statusCode == 200) {
+      return json.decode(response.body)['favorited_university_data'];
     } else {
       throw 'failed';
     }
@@ -68,7 +88,8 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
 
   void refresh() {
     setState(() {
-      collegeList = getUniversities();
+      favoritedList = getFavorited();
+      collegeList = getCollegeList();
     });
   }
 
@@ -109,8 +130,8 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
         });
   }
 
-  Widget buildCard(AsyncSnapshot snapshot, int index) {
-    unis = snapshot.data;
+  Widget buildCard(snapshot, int index) {
+    unis = snapshot;
     List<Widget> topmajors = [];
     List<Widget> standoutfactors = [];
     List<Widget> degreelevels = [];
@@ -234,7 +255,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                 fit: BoxFit.cover,
               ),
             ),
-            child: custom.ExpansionTile(
+            child: ListTile(
               key: Key(unis[index]['university_id'].toString()),
               title: Text(
                 unis[index]['university_name'],
@@ -244,288 +265,6 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                 unis[index]['university_location'],
                 style: TextStyle(color: Colors.white.withOpacity(0.8)),
               ),
-              children: <Widget>[
-                Divider(
-                  color: Colors.white70,
-                  indent: 10,
-                  endIndent: 10,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 5, left: 20),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        'University Rep: ',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w900),
-                      ),
-                      Text(
-                        '@' + unis[index]['university_rep'],
-                        style: TextStyle(color: Colors.blue),
-                      )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 5, left: 20),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        'US News Ranking: ',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w900),
-                      ),
-                      Text(
-                        unis[index]['usnews_ranking'].toString(),
-                        style: TextStyle(color: Colors.white.withOpacity(0.8)),
-                      )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 5, left: 20),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        'Location: ',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w900),
-                      ),
-                      Text(
-                        unis[index]['university_location'].toString(),
-                        style: TextStyle(color: Colors.white.withOpacity(0.8)),
-                      )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 5, left: 20),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        'In-State Cost: ',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w900),
-                      ),
-                      Text(
-                        r"$" + unis[index]['in_state_cost'].toString(),
-                        style: TextStyle(color: Colors.white.withOpacity(0.8)),
-                      )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 5, left: 20),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        'Out-of-State Cost: ',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w900),
-                      ),
-                      Text(
-                        r"$" + unis[index]['out_of_state_cost'].toString(),
-                        style: TextStyle(color: Colors.white.withOpacity(0.8)),
-                      )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 5, left: 20),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        'International Cost: ',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w900),
-                      ),
-                      Text(
-                        r"$" + unis[index]['international_cost'].toString(),
-                        style: TextStyle(color: Colors.white.withOpacity(0.8)),
-                      )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 5, left: 20),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        'Research Institute: ',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w900),
-                      ),
-                      Text(
-                        unis[index]['research_or_not'] ? 'Yes' : 'No',
-                        style: TextStyle(color: Colors.white.withOpacity(0.8)),
-                      )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 5, left: 20),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        'Top Majors: ',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w900),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20.0, right: 20, top: 5),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Wrap(
-                      runAlignment: WrapAlignment.start,
-                      children: topmajors.sublist(0, 2),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 5, bottom: 5, left: 25),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        splashColor: Colors.blue[900],
-                        child: Text('View more',
-                            style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.blue,
-                                fontWeight: FontWeight.w900)),
-                        onTap: () {},
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 5, left: 20),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        'Stand Out Factors: ',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w900),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20.0, right: 20, top: 5),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      height: 50,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: <Widget>[
-                          Row(
-                            children: standoutfactors,
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 5, left: 20),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        'Degree Levels: ',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w900),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20.0, right: 20, top: 5),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      height: 50,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: <Widget>[Row(children: degreelevels)],
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 5, left: 20),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        'Testing Requirements: ',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w900),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20.0, right: 20, top: 5),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      height: 50,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: <Widget>[
-                          Row(
-                            children: testing,
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10, bottom: 20),
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        splashColor: Colors.blue[900],
-                        child: Text('View profile',
-                            style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.blue,
-                                fontWeight: FontWeight.w900)),
-                        onTap: () {},
-                      ),
-                    ),
-                  ),
-                ),
-              ],
             ),
           ),
         ),
@@ -581,7 +320,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
         body: TabBarView(
           children: <Widget>[
             RefreshIndicator(
-              key: refreshKey,
+              key: refreshKey1,
               onRefresh: () {
                 refresh();
                 return collegeList;
@@ -680,6 +419,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                               ],
                             ),
                           ),
+                          Text('Safety'),
                           Expanded(
                             child: Padding(
                               padding: EdgeInsets.only(top: 20.0),
@@ -687,16 +427,77 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                                 child: ListView.builder(
                                     primary: true,
                                     scrollDirection: Axis.vertical,
-                                    itemCount: snapshot.data.length,
+                                    itemCount:
+                                        snapshot.data.elementAt(0).length,
                                     itemBuilder:
                                         (BuildContext context, int index) {
                                       return filter == null || filter == ""
-                                          ? buildCard(snapshot, index)
-                                          : snapshot.data[index]
+                                          ? buildCard(
+                                              snapshot.data.elementAt(0), index)
+                                          : snapshot.data
+                                                  .elementAt(0)[index]
                                                       ['university_name']
                                                   .toLowerCase()
                                                   .contains(filter)
-                                              ? buildCard(snapshot, index)
+                                              ? buildCard(
+                                                  snapshot.data.elementAt(0),
+                                                  index)
+                                              : Container();
+                                    }),
+                              ),
+                            ),
+                          ),
+                          Text('Match'),
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 20.0),
+                              child: Scrollbar(
+                                child: ListView.builder(
+                                    primary: true,
+                                    scrollDirection: Axis.vertical,
+                                    itemCount:
+                                        snapshot.data.elementAt(1).length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return filter == null || filter == ""
+                                          ? buildCard(
+                                              snapshot.data.elementAt(1), index)
+                                          : snapshot.data
+                                                  .elementAt(1)[index]
+                                                      ['university_name']
+                                                  .toLowerCase()
+                                                  .contains(filter)
+                                              ? buildCard(
+                                                  snapshot.data.elementAt(1),
+                                                  index)
+                                              : Container();
+                                    }),
+                              ),
+                            ),
+                          ),
+                          Text('Reach'),
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 20.0),
+                              child: Scrollbar(
+                                child: ListView.builder(
+                                    primary: true,
+                                    scrollDirection: Axis.vertical,
+                                    itemCount:
+                                        snapshot.data.elementAt(2).length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return filter == null || filter == ""
+                                          ? buildCard(
+                                              snapshot.data.elementAt(2), index)
+                                          : snapshot.data
+                                                  .elementAt(2)[index]
+                                                      ['university_name']
+                                                  .toLowerCase()
+                                                  .contains(filter)
+                                              ? buildCard(
+                                                  snapshot.data.elementAt(2),
+                                                  index)
                                               : Container();
                                     }),
                               ),
@@ -712,7 +513,138 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                 },
               ),
             ),
-            Icon(Icons.star)
+            RefreshIndicator(
+              key: refreshKey2,
+              onRefresh: () {
+                refresh();
+                return collegeList;
+              },
+              child: FutureBuilder(
+                future: favoritedList.timeout(Duration(seconds: 10)),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 40.0),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(
+                              Icons.error_outline,
+                              size: 30,
+                              color: Colors.red.withOpacity(0.9),
+                            ),
+                            Text(
+                              'Unable to establish a connection with our servers.\nCheck your connection and try again later.',
+                              style: TextStyle(color: Colors.black54),
+                              textAlign: TextAlign.center,
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+
+                  if (snapshot.hasData) {
+                    if (snapshot.data.length == 0) {
+                      return Padding(
+                        padding: EdgeInsets.only(bottom: 70),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Opacity(
+                                opacity: 0.9,
+                                child: Image.asset(
+                                  "images/snap.gif",
+                                  height: 100.0,
+                                  width: 100.0,
+                                ),
+                              ),
+                              Text(
+                                'Oh Snap!',
+                                style: TextStyle(
+                                    fontSize: 18, color: Colors.black54),
+                              ),
+                              Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 5, left: 30, right: 30),
+                                  child: Text(
+                                    "Looks like you haven't added\nany universites yet :(",
+                                    style: TextStyle(color: Colors.black54),
+                                    textAlign: TextAlign.center,
+                                  )),
+                              Padding(
+                                padding: EdgeInsets.only(top: 3),
+                                child: Text(
+                                    "Head over to the 'Explore Universities' section to get started!",
+                                    style: TextStyle(color: Colors.black54),
+                                    textAlign: TextAlign.center),
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    } else {
+                      return Column(
+                        children: <Widget>[
+                          Padding(
+                            padding:
+                                EdgeInsets.only(top: 5, left: 18, right: 30),
+                            child: Row(
+                              children: <Widget>[
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(top: 5, right: 6),
+                                  child: Icon(
+                                    Icons.search,
+                                    size: 30,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: TextField(
+                                    decoration: new InputDecoration(
+                                        labelText: "Search",
+                                        contentPadding: EdgeInsets.all(2)),
+                                    controller: controller,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 20.0),
+                              child: Scrollbar(
+                                child: ListView.builder(
+                                    primary: true,
+                                    scrollDirection: Axis.vertical,
+                                    itemCount: snapshot.data.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return filter == null || filter == ""
+                                          ? buildCard(snapshot.data, index)
+                                          : snapshot.data[index]
+                                                      ['university_name']
+                                                  .toLowerCase()
+                                                  .contains(filter)
+                                              ? buildCard(snapshot.data, index)
+                                              : Container();
+                                    }),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                  }
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+              ),
+            )
           ],
         ),
       ),
