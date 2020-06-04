@@ -87,8 +87,7 @@ class NavDrawer extends StatelessWidget {
             accountEmail: Text(email,
                 style: TextStyle(color: Colors.white, fontSize: 12)),
             currentAccountPicture: CircleAvatar(
-              backgroundImage: CachedNetworkImageProvider(
-                  'https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png'),
+              backgroundImage: CachedNetworkImageProvider(newUser.dp),
               backgroundColor: Colors.blue[400],
               radius: 30,
             ),

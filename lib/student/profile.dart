@@ -33,6 +33,7 @@ class ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget build(BuildContext context) {
+    print(newUser.dp);
     return new Scaffold(
       backgroundColor: Colors.white,
       drawer: NavDrawer(
@@ -50,8 +51,7 @@ class ProfileScreenState extends State<ProfileScreen> {
             children: <Widget>[
               ListTile(
                 leading: CircleAvatar(
-                  backgroundImage: CachedNetworkImageProvider(
-                      'https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png'),
+                  backgroundImage: CachedNetworkImageProvider(newUser.dp),
                   backgroundColor: Colors.blue[400],
                   radius: 30,
                 ),

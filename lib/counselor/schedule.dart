@@ -116,7 +116,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           "time_of_session": _newDateTime.toUtc().toIso8601String(),
           "session_notes": _notes.text,
           "session_duration": _duration.text,
-          "student_request": false
+          "student_request": null
         },
       ),
     );
