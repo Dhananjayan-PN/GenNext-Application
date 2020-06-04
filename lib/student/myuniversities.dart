@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
+import 'package:grouped_list/grouped_list.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
@@ -63,11 +64,11 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
     );
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      return [
-        data['safety_college_list_data'],
-        data['match_college_list_data'],
-        data['reach_college_list_data']
-      ];
+      final List list = [];
+      list.addAll(data['safety_college_list_data']);
+      list.addAll(data['match_college_list_data']);
+      list.addAll(data['reach_college_list_data']);
+      return list;
     } else {
       throw 'failed';
     }
@@ -130,6 +131,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   }
 
   Widget buildCard(snapshot, int index) {
+    var _isStarred = true;
     unis = snapshot;
     List<Widget> topmajors = [];
     List<Widget> standoutfactors = [];
@@ -224,7 +226,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
       child: Card(
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(15))),
+            borderRadius: BorderRadius.all(Radius.circular(10))),
         elevation: 10,
         child: CachedNetworkImage(
           imageUrl:
@@ -254,15 +256,207 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                 fit: BoxFit.cover,
               ),
             ),
-            child: ListTile(
-              key: Key(unis[index]['university_id'].toString()),
-              title: Text(
-                unis[index]['university_name'],
-                style: TextStyle(color: Colors.white),
+            child: Material(
+              color: Colors.transparent,
+              child: ListTile(
+                key: Key(unis[index]['university_id'].toString()),
+                title: Text(
+                  unis[index]['university_name'],
+                  style: TextStyle(color: Colors.white),
+                ),
+                subtitle: Text(
+                  unis[index]['university_location'],
+                  style: TextStyle(color: Colors.white.withOpacity(0.8)),
+                ),
+                trailing: Wrap(
+                  children: <Widget>[
+                    IconButton(
+                      padding: EdgeInsets.all(0),
+                      icon: _isStarred
+                          ? Icon(Icons.star)
+                          : Icon(Icons.star_border),
+                      color: Colors.white,
+                      onPressed: () {
+                        setState(() {
+                          _isStarred = !_isStarred;
+                        });
+                      },
+                    ),
+                    IconButton(
+                      padding: EdgeInsets.all(0),
+                      icon: Icon(Icons.more_vert),
+                      color: Colors.white,
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
               ),
-              subtitle: Text(
-                unis[index]['university_location'],
-                style: TextStyle(color: Colors.white.withOpacity(0.8)),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildCollegeListCard(uni) {
+    var isStarred = false;
+    List<Widget> topmajors = [];
+    List<Widget> standoutfactors = [];
+    List<Widget> degreelevels = [];
+    List<Widget> testing = [];
+    for (var i = 0; i < uni['top_majors'].length; i++) {
+      topmajors.add(
+        Padding(
+          padding: EdgeInsets.only(right: 3),
+          child: Theme(
+            data: ThemeData(canvasColor: Colors.transparent),
+            child: Chip(
+              labelPadding:
+                  EdgeInsets.only(left: 3, right: 3, top: 1, bottom: 1),
+              elevation: 5,
+              backgroundColor: Colors.black26,
+              shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
+              label: Text(
+                uni['top_majors'][i],
+                style: TextStyle(fontSize: 13, color: Colors.white),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+    for (var i = 0; i < uni['stand_out_factors'].length; i++) {
+      standoutfactors.add(
+        Padding(
+          padding: EdgeInsets.only(right: 3),
+          child: Theme(
+            data: ThemeData(canvasColor: Colors.transparent),
+            child: Chip(
+              labelPadding:
+                  EdgeInsets.only(left: 3, right: 3, top: 1, bottom: 1),
+              elevation: 5,
+              backgroundColor: Colors.black26,
+              shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
+              label: Text(
+                uni['stand_out_factors'][i],
+                style: TextStyle(fontSize: 13, color: Colors.white),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+    for (var i = 0; i < uni['degree_levels'].length; i++) {
+      degreelevels.add(
+        Padding(
+          padding: EdgeInsets.only(right: 3),
+          child: Theme(
+            data: ThemeData(canvasColor: Colors.transparent),
+            child: Chip(
+              labelPadding:
+                  EdgeInsets.only(left: 3, right: 3, top: 1, bottom: 1),
+              elevation: 5,
+              backgroundColor: Colors.black26,
+              shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
+              label: Text(
+                uni['degree_levels'][i],
+                style: TextStyle(fontSize: 13, color: Colors.white),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+    for (var i = 0; i < uni['testing_requirements'].length; i++) {
+      testing.add(
+        Padding(
+          padding: EdgeInsets.only(right: 3),
+          child: Theme(
+            data: ThemeData(canvasColor: Colors.transparent),
+            child: Chip(
+              labelPadding:
+                  EdgeInsets.only(left: 3, right: 3, top: 1, bottom: 1),
+              elevation: 5,
+              backgroundColor: Colors.black26,
+              shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
+              label: Text(
+                uni['testing_requirements'][i],
+                style: TextStyle(fontSize: 13, color: Colors.white),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+    return Padding(
+      padding: const EdgeInsets.only(top: 5, left: 10, right: 10),
+      child: Card(
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        elevation: 10,
+        child: CachedNetworkImage(
+          imageUrl:
+              "https://www.wpr.org/sites/default/files/bascom_hall_summer.jpg",
+          placeholder: (context, url) => Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(child: CircularProgressIndicator()),
+          ),
+          errorWidget: (context, url, error) {
+            _scafKey.currentState.showSnackBar(
+              SnackBar(
+                content: Text(
+                  'Failed to fetch data. Check your internet connection and try again',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            );
+            return Icon(Icons.error);
+          },
+          imageBuilder: (context, imageProvider) => Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                alignment: Alignment.center,
+                colorFilter: new ColorFilter.mode(
+                    Colors.black.withAlpha(160), BlendMode.darken),
+                image: imageProvider,
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: ListTile(
+                key: Key(uni['university_id'].toString()),
+                title: Text(
+                  uni['university_name'],
+                  style: TextStyle(color: Colors.white),
+                ),
+                subtitle: Text(
+                  uni['university_location'],
+                  style: TextStyle(color: Colors.white.withOpacity(0.8)),
+                ),
+                trailing: Wrap(
+                  children: <Widget>[
+                    IconButton(
+                      padding: EdgeInsets.all(0),
+                      icon: isStarred
+                          ? Icon(Icons.star)
+                          : Icon(Icons.star_border),
+                      color: Colors.white,
+                      onPressed: () {
+                        setState(() {
+                          isStarred = !isStarred;
+                        });
+                      },
+                    ),
+                    IconButton(
+                      padding: EdgeInsets.all(0),
+                      icon: Icon(Icons.more_vert),
+                      color: Colors.white,
+                      onPressed: () {},
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -418,32 +612,62 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                               ],
                             ),
                           ),
-                          Text('Safety'),
+                          Expanded(
+                            child: GroupedListView(
+                              elements: snapshot.data,
+                              groupBy: (element) => element['category'],
+                              groupSeparatorBuilder: (value) {
+                                return Padding(
+                                  padding: EdgeInsets.only(top: 20, bottom: 10),
+                                  child: Padding(
+                                    padding: EdgeInsets.only(left: 30),
+                                    child: Text(
+                                      '${value[0].toUpperCase()}${value.substring(1)}',
+                                      style: TextStyle(
+                                          color: Colors.black87,
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                  ),
+                                );
+                              },
+                              itemBuilder: (context, element) {
+                                return filter == null || filter == ""
+                                    ? buildCollegeListCard(element)
+                                    : element['university_name']
+                                            .toLowerCase()
+                                            .contains(filter)
+                                        ? buildCollegeListCard(element)
+                                        : Container();
+                              },
+                              order: GroupedListOrder.ASC,
+                            ),
+                          ),
+
+                          /*Text('Safety'),
                           Expanded(
                             child: Padding(
                               padding: EdgeInsets.only(top: 20.0),
-                              child: Scrollbar(
-                                child: ListView.builder(
-                                    primary: true,
-                                    scrollDirection: Axis.vertical,
-                                    itemCount:
-                                        snapshot.data.elementAt(0).length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return filter == null || filter == ""
-                                          ? buildCard(
-                                              snapshot.data.elementAt(0), index)
-                                          : snapshot.data
-                                                  .elementAt(0)[index]
-                                                      ['university_name']
-                                                  .toLowerCase()
-                                                  .contains(filter)
-                                              ? buildCard(
-                                                  snapshot.data.elementAt(0),
-                                                  index)
-                                              : Container();
-                                    }),
-                              ),
+                              child: ListView.builder(
+                                  primary: true,
+                                  scrollDirection: Axis.vertical,
+                                  itemCount:
+                                      snapshot.data.elementAt(0).length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return filter == null || filter == ""
+                                        ? buildCard(
+                                            snapshot.data.elementAt(0), index)
+                                        : snapshot.data
+                                                .elementAt(0)[index]
+                                                    ['university_name']
+                                                .toLowerCase()
+                                                .contains(filter)
+                                            ? buildCard(
+                                                snapshot.data.elementAt(0),
+                                                index)
+                                            : Container();
+                                  }),
                             ),
                           ),
                           Text('Match'),
@@ -501,7 +725,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                                     }),
                               ),
                             ),
-                          ),
+                          ),*/
                         ],
                       );
                     }
