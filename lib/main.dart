@@ -5,7 +5,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'login.dart';
 
 String token;
-String domain = "https://gennext.tk/";
+String domain = "https://gennext.ml/";
 
 void main() {
   initializeDateFormatting().then((_) => runApp(MyApp()));
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitUp,
     ]);
     return MaterialApp(
-      home: new LoginPage(),
+      home: LoginPage(),
       debugShowCheckedModeBanner: false,
     );
   }
