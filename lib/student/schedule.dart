@@ -2,6 +2,7 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:flutter/rendering.dart';
 import 'package:searchable_dropdown/searchable_dropdown.dart';
 import 'package:http/http.dart' as http;
 import 'package:table_calendar/table_calendar.dart';
@@ -32,6 +33,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   List _selectedEvents;
   int cid;
   bool expanded;
+  bool fabVisible = true;
   Future sessions;
 
   @override
@@ -68,9 +70,15 @@ class ScheduleScreenState extends State<ScheduleScreen> {
       HttpHeaders.authorizationHeader: 'Token $tok',
     });
     if (response.statusCode == 200) {
-      // cid = json.decode(response.body)['counselor_id'];
-      return json.decode(response.body)['session_data'];
+      final data = json.decode(response.body);
+      if (data['Response'] == 'Student yet to be connected with a counselor.') {
+        fabVisible = false;
+        return 'No counselor';
+      } else {
+        return json.decode(response.body)['session_data'];
+      }
     } else {
+      fabVisible = false;
       throw ('error');
     }
   }
@@ -840,19 +848,22 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   Widget build(BuildContext context) {
     return new Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FloatingActionButton(
-          tooltip: 'Create session',
-          elevation: 10,
-          backgroundColor: Colors.blue,
-          splashColor: Colors.blue[900],
-          child: Icon(
-            Icons.add,
-            size: 28,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            _requestSession();
-          }),
+      floatingActionButton: Visibility(
+        visible: fabVisible,
+        child: FloatingActionButton(
+            tooltip: 'Create session',
+            elevation: 10,
+            backgroundColor: Colors.blue,
+            splashColor: Colors.blue[900],
+            child: Icon(
+              Icons.add,
+              size: 28,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              _requestSession();
+            }),
+      ),
       key: _scafKey,
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
@@ -917,6 +928,44 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                         padding: EdgeInsets.only(top: 3),
                         child: Text(
                             "Click the '+' icon to scedule your first session!",
+                            style: TextStyle(color: Colors.black54),
+                            textAlign: TextAlign.center),
+                      )
+                    ],
+                  ),
+                ),
+              );
+            } else if (snapshot.data == 'No counselor') {
+              return Padding(
+                padding: EdgeInsets.only(bottom: 70),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Opacity(
+                        opacity: 0.9,
+                        child: Image.asset(
+                          "images/snap.gif",
+                          height: 100.0,
+                          width: 100.0,
+                        ),
+                      ),
+                      Text(
+                        'Oh Snap!',
+                        style: TextStyle(fontSize: 18, color: Colors.black54),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 5, left: 30, right: 30),
+                        child: Text(
+                          "Looks like you haven't requested\nfor counselling",
+                          style: TextStyle(color: Colors.black54),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 3),
+                        child: Text(
+                            "Head over to the 'Counselor' section to\nrequest for counselling!",
                             style: TextStyle(color: Colors.black54),
                             textAlign: TextAlign.center),
                       )
