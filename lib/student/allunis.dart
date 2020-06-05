@@ -3,7 +3,6 @@ import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../custom_expansion_tile.dart' as custom;
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
@@ -19,7 +18,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
   GlobalKey<ScaffoldState> _scafKey = GlobalKey<ScaffoldState>();
   var refreshKey1 = GlobalKey<RefreshIndicatorState>();
   var refreshKey2 = GlobalKey<RefreshIndicatorState>();
-  TextEditingController controller = new TextEditingController();
+  TextEditingController controller = TextEditingController();
   String filter;
   List unis;
   Future allUniList;

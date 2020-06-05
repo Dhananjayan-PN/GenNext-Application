@@ -14,7 +14,7 @@ import 'essays.dart';
 import 'profile.dart';
 import 'myuniversities.dart';
 import 'allunis.dart';
-import 'completedapps.dart';
+import 'applications.dart';
 import 'pendingapps.dart';
 import 'schedule.dart';
 
@@ -27,12 +27,7 @@ final navlistelements = [
   ['My Universities', MyUniversitiesScreen(), Icons.account_balance],
   ['Explore Universities', AllUniversitiesScreen(), Icons.explore],
   ['My Essays', EssaysScreen(), Icons.edit],
-  [
-    'Completed Applications',
-    CompletedApplicationsScreen(),
-    Icons.assignment_turned_in
-  ],
-  ['Pending Applications', PendingApplicationsScreen(), Icons.assignment_late],
+  ['My Applications', ApplicationsScreen(), Icons.assignment],
   ['Counselling Schedule', ScheduleScreen(), Icons.date_range]
 ];
 PageController _controller;
