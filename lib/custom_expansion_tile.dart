@@ -29,7 +29,7 @@ class ExpansionTile extends StatefulWidget {
     this.subtitle,
     this.backgroundColor,
     this.onExpansionChanged,
-    this.children = <Widget>[],
+    this.children = const <Widget>[],
     this.trailing,
     this.initiallyExpanded = false,
     this.tilePadding,
