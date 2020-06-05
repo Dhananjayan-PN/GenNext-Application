@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 
-const Duration _kExpand = Duration(milliseconds: 200);
+Duration _kExpand = Duration(milliseconds: 200);
 
 /// A single-line [ListTile] with a trailing button that expands or collapses
 /// the tile to reveal or hide the [children].
@@ -22,14 +22,14 @@ class ExpansionTile extends StatefulWidget {
   /// Creates a single-line [ListTile] with a trailing button that expands or collapses
   /// the tile to reveal or hide the [children]. The [initiallyExpanded] property must
   /// be non-null.
-  const ExpansionTile({
+  ExpansionTile({
     Key key,
     this.leading,
     @required this.title,
     this.subtitle,
     this.backgroundColor,
     this.onExpansionChanged,
-    this.children = const <Widget>[],
+    this.children = <Widget>[],
     this.trailing,
     this.initiallyExpanded = false,
     this.tilePadding,
@@ -177,7 +177,7 @@ class _ExpansionTileState extends State<ExpansionTile>
               trailing: widget.trailing ??
                   RotationTransition(
                     turns: _iconTurns,
-                    child: const Icon(
+                    child: Icon(
                       Icons.expand_more,
                       color: Colors.white,
                     ),

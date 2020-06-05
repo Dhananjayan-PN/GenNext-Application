@@ -40,7 +40,7 @@ class ProfileScreenState extends State<ProfileScreen> {
           email: newUser.email),
       appBar: CustomAppBar('My Profile'),
       body: Padding(
-        padding: const EdgeInsets.only(top: 15, left: 10, right: 10),
+        padding: EdgeInsets.only(top: 15, left: 10, right: 10),
         child: Card(
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(15))),

@@ -178,7 +178,7 @@ class _AllChatsState extends State<AllChats> {
               child: Row(
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.only(top: 5, right: 6),
+                    padding: EdgeInsets.only(top: 5, right: 6),
                     child: Icon(
                       Icons.search,
                       size: 30,

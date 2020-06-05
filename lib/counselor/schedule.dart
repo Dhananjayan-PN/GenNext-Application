@@ -374,7 +374,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 23.0),
+                    padding: EdgeInsets.only(top: 23.0),
                     child: Text(
                       "Saving your changes",
                       style: TextStyle(color: Colors.blue, fontSize: 15),
@@ -892,7 +892,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Padding(
-              padding: const EdgeInsets.only(bottom: 40.0),
+              padding: EdgeInsets.only(bottom: 40.0),
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -1017,7 +1017,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       markersBuilder: (context, date, events, holidays) {
                         return [
                           Container(
-                            margin: const EdgeInsets.all(2.0),
+                            margin: EdgeInsets.all(2.0),
                             decoration: BoxDecoration(
                               border: Border.all(color: Colors.red),
                               shape: BoxShape.circle,
@@ -1029,7 +1029,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       },
                       todayDayBuilder: (context, date, _) {
                         return Container(
-                          margin: const EdgeInsets.all(6.0),
+                          margin: EdgeInsets.all(6.0),
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.blue),
                             shape: BoxShape.circle,
@@ -1063,7 +1063,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                             color: Colors.blue,
                             shape: BoxShape.circle,
                           ),
-                          margin: const EdgeInsets.all(2.0),
+                          margin: EdgeInsets.all(2.0),
                           width: 100,
                           height: 100,
                           child: Center(

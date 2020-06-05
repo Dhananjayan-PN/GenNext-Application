@@ -236,7 +236,7 @@ class SignUpPageState extends State<SignUpPage>
               child: Padding(
                 padding: EdgeInsets.only(top: 50, left: 120, right: 120),
                 child: FlatButton(
-                  padding: const EdgeInsets.all(0.0),
+                  padding: EdgeInsets.all(0.0),
                   onPressed: () {
                     setState(() {
                       _controller.reset();
@@ -259,7 +259,7 @@ class SignUpPageState extends State<SignUpPage>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.only(left: 15),
+                          padding: EdgeInsets.only(left: 15),
                           child: Text(
                             "START",
                             style: TextStyle(color: Colors.white, fontSize: 20),
@@ -267,7 +267,7 @@ class SignUpPageState extends State<SignUpPage>
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(0),
+                          padding: EdgeInsets.all(0),
                           child: Icon(
                             Icons.navigate_next,
                             size: 35,
@@ -303,7 +303,7 @@ class SignUpPageState extends State<SignUpPage>
             FadeTransition(
               opacity: _animation2,
               child: Padding(
-                padding: const EdgeInsets.only(top: 5),
+                padding: EdgeInsets.only(top: 5),
                 child: Text(
                   'Account Information',
                   style: TextStyle(
@@ -376,8 +376,7 @@ class SignUpPageState extends State<SignUpPage>
                       ),
                     ),
                     Padding(
-                      padding:
-                          const EdgeInsets.only(top: 30, left: 60, right: 50),
+                      padding: EdgeInsets.only(top: 30, left: 60, right: 50),
                       child: TextFormField(
                         validator: (value) {
                           return value.isEmpty ? 'Enter your first name' : null;
@@ -395,8 +394,7 @@ class SignUpPageState extends State<SignUpPage>
                       ),
                     ),
                     Padding(
-                      padding:
-                          const EdgeInsets.only(top: 30, left: 60, right: 50),
+                      padding: EdgeInsets.only(top: 30, left: 60, right: 50),
                       child: TextFormField(
                         validator: (value) {
                           return value.isEmpty ? 'Enter your last name' : null;
@@ -414,8 +412,7 @@ class SignUpPageState extends State<SignUpPage>
                       ),
                     ),
                     Padding(
-                      padding:
-                          const EdgeInsets.only(top: 30, left: 60, right: 50),
+                      padding: EdgeInsets.only(top: 30, left: 60, right: 50),
                       child: TextFormField(
                         validator: (value) {
                           return value.isEmpty
@@ -435,8 +432,7 @@ class SignUpPageState extends State<SignUpPage>
                       ),
                     ),
                     Padding(
-                      padding:
-                          const EdgeInsets.only(top: 30, left: 20, right: 50),
+                      padding: EdgeInsets.only(top: 30, left: 20, right: 50),
                       child: TextFormField(
                         validator: (value) {
                           return value.isEmpty
@@ -457,8 +453,7 @@ class SignUpPageState extends State<SignUpPage>
                       ),
                     ),
                     Padding(
-                      padding:
-                          const EdgeInsets.only(top: 30, left: 20, right: 50),
+                      padding: EdgeInsets.only(top: 30, left: 20, right: 50),
                       child: DateTimeField(
                         validator: (value) {
                           return value == null
@@ -491,13 +486,13 @@ class SignUpPageState extends State<SignUpPage>
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.only(
+                          padding: EdgeInsets.only(
                               top: 30, left: 20, right: 10, bottom: 10),
                           child: Icon(Icons.public, color: Colors.black45),
                         ),
                         Flexible(
                           child: Padding(
-                            padding: const EdgeInsets.only(
+                            padding: EdgeInsets.only(
                                 top: 30, left: 5, right: 50, bottom: 0),
                             child: FutureBuilder<List<dynamic>>(
                               future: _fetchCountries,
@@ -516,7 +511,7 @@ class SignUpPageState extends State<SignUpPage>
                                     items: countries,
                                     style: TextStyle(color: Colors.white),
                                     hint: Padding(
-                                      padding: const EdgeInsets.only(
+                                      padding: EdgeInsets.only(
                                           left: 0,
                                           right: 0,
                                           top: 0,
@@ -546,8 +541,7 @@ class SignUpPageState extends State<SignUpPage>
                       ],
                     ),
                     Padding(
-                      padding:
-                          const EdgeInsets.only(top: 30, left: 20, right: 50),
+                      padding: EdgeInsets.only(top: 30, left: 20, right: 50),
                       child: TextFormField(
                         controller: _pass,
                         validator: (String value) {
@@ -568,8 +562,7 @@ class SignUpPageState extends State<SignUpPage>
                       ),
                     ),
                     Padding(
-                      padding:
-                          const EdgeInsets.only(top: 30, left: 60, right: 50),
+                      padding: EdgeInsets.only(top: 30, left: 60, right: 50),
                       child: TextFormField(
                         controller: _confirmpass,
                         validator: (String value) {
@@ -637,7 +630,7 @@ class SignUpPageState extends State<SignUpPage>
                         child: Row(
                           children: <Widget>[
                             Padding(
-                              padding: const EdgeInsets.all(4.0),
+                              padding: EdgeInsets.all(4.0),
                               child: Text(
                                 "NEXT",
                                 style: TextStyle(
@@ -683,7 +676,7 @@ class SignUpPageState extends State<SignUpPage>
               FadeTransition(
                 opacity: _animation2,
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 5),
+                  padding: EdgeInsets.only(top: 5),
                   child: Text(
                     'Tell us a little more about yourself',
                     style: TextStyle(
@@ -751,8 +744,8 @@ class SignUpPageState extends State<SignUpPage>
                       ),
                       if (_degreelevel == 'UG') ...[
                         Padding(
-                          padding: const EdgeInsets.only(
-                              top: 20, left: 50, right: 50),
+                          padding:
+                              EdgeInsets.only(top: 20, left: 50, right: 50),
                           child: TextFormField(
                             validator: (value) {
                               return value.isEmpty
@@ -830,8 +823,8 @@ class SignUpPageState extends State<SignUpPage>
                       ],
                       if (_degreelevel == 'G') ...[
                         Padding(
-                          padding: const EdgeInsets.only(
-                              top: 20, left: 50, right: 50),
+                          padding:
+                              EdgeInsets.only(top: 20, left: 50, right: 50),
                           child: TextFormField(
                             validator: (value) {
                               return value.isEmpty
@@ -1000,7 +993,7 @@ class SignUpPageState extends State<SignUpPage>
                           child: Row(
                             children: <Widget>[
                               Padding(
-                                padding: const EdgeInsets.all(4.0),
+                                padding: EdgeInsets.all(4.0),
                                 child: Text(
                                   "NEXT",
                                   style: TextStyle(
@@ -1044,7 +1037,7 @@ class SignUpPageState extends State<SignUpPage>
               FadeTransition(
                 opacity: _animation2,
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 5),
+                  padding: EdgeInsets.only(top: 5),
                   child: Text(
                     "Let's talk about your\ncollege preferences",
                     style: TextStyle(
@@ -1192,7 +1185,7 @@ class SignUpPageState extends State<SignUpPage>
                             ),
                             style: TextStyle(color: Colors.white),
                             hint: Padding(
-                              padding: const EdgeInsets.all(3.0),
+                              padding: EdgeInsets.all(3.0),
                               child: Text(
                                 "Select College Town Preference",
                                 style: TextStyle(
@@ -1255,7 +1248,7 @@ class SignUpPageState extends State<SignUpPage>
                       ),
                       if (isChecked == false)
                         Padding(
-                          padding: const EdgeInsets.only(right: 50, left: 50),
+                          padding: EdgeInsets.only(right: 50, left: 50),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
@@ -1340,7 +1333,7 @@ class SignUpPageState extends State<SignUpPage>
                           child: Row(
                             children: <Widget>[
                               Padding(
-                                padding: const EdgeInsets.all(4.0),
+                                padding: EdgeInsets.all(4.0),
                                 child: Text(
                                   "FINISH",
                                   style: TextStyle(
@@ -1381,7 +1374,7 @@ class SignUpPageState extends State<SignUpPage>
           data: Theme.of(context).copyWith(canvasColor: Color(0xff00AEEF)),
           child: BottomNavigationBar(
             elevation: 0,
-            items: const <BottomNavigationBarItem>[
+            items: <BottomNavigationBarItem>[
               BottomNavigationBarItem(
                 icon: Icon(Icons.fiber_manual_record),
                 title: Text(''),

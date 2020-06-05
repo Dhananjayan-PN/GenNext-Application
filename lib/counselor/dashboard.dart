@@ -289,7 +289,7 @@ class _DashBoardState extends State<DashBoard> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 23.0),
+                    padding: EdgeInsets.only(top: 23.0),
                     child: Text(
                       "Saving your changes",
                       style: TextStyle(color: Colors.blue, fontSize: 15),
@@ -549,7 +549,7 @@ class _DashBoardState extends State<DashBoard> {
             if (snapshot.hasData) {
               if (snapshot.data.length == 0) {
                 return Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  padding: EdgeInsets.only(left: 20, right: 20),
                   child: Card(
                     margin: EdgeInsets.only(top: 20, bottom: 30),
                     shape: RoundedRectangleBorder(

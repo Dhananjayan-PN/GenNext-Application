@@ -85,7 +85,7 @@ class _CounsellingScreenState extends State<CounsellingScreen> {
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Padding(
-                padding: const EdgeInsets.only(bottom: 40.0),
+                padding: EdgeInsets.only(bottom: 40.0),
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,

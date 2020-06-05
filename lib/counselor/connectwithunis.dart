@@ -215,7 +215,7 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
     }
     return Padding(
       key: Key(unis[index]['university_id'].toString()),
-      padding: const EdgeInsets.only(top: 5, left: 10, right: 10),
+      padding: EdgeInsets.only(top: 5, left: 10, right: 10),
       child: Card(
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
@@ -225,7 +225,7 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
           imageUrl:
               "https://luskinconferencecenter.ucla.edu/wp-content/uploads/2018/03/Blog_Luskin.jpg",
           placeholder: (context, url) => Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(8.0),
             child: Center(child: CircularProgressIndicator()),
           ),
           errorWidget: (context, url, error) {
@@ -603,7 +603,7 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 return Padding(
-                  padding: const EdgeInsets.only(bottom: 40.0),
+                  padding: EdgeInsets.only(bottom: 40.0),
                   child: Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -671,7 +671,7 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
                         child: Row(
                           children: <Widget>[
                             Padding(
-                              padding: const EdgeInsets.only(top: 5, right: 6),
+                              padding: EdgeInsets.only(top: 5, right: 6),
                               child: Icon(
                                 Icons.search,
                                 size: 30,

@@ -38,7 +38,7 @@ class CustomDialog extends StatelessWidget {
               BoxShadow(
                 color: Colors.black26,
                 blurRadius: 10.0,
-                offset: const Offset(0.0, 10.0),
+                offset: Offset(0.0, 10.0),
               ),
             ],
           ),
@@ -229,7 +229,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 23.0),
+                      padding: EdgeInsets.only(top: 23.0),
                       child: Text(
                         "Signing you in...",
                         style: TextStyle(color: Colors.white, fontSize: 15),
@@ -373,8 +373,8 @@ class _LoginPageState extends State<LoginPage> {
             child: ListView(
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(
-                      top: 70, right: 90, left: 0, bottom: 0),
+                  padding:
+                      EdgeInsets.only(top: 70, right: 90, left: 0, bottom: 0),
                   child: Transform.scale(
                     scale: 1.2,
                     child: Container(
@@ -424,7 +424,7 @@ class _LoginPageState extends State<LoginPage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Padding(
-                        padding: const EdgeInsets.only(top: 00, left: 5),
+                        padding: EdgeInsets.only(top: 00, left: 5),
                         child: RotatedBox(
                             quarterTurns: -1,
                             child: Text(
@@ -453,8 +453,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Column(
                     children: <Widget>[
                       Padding(
-                        padding:
-                            const EdgeInsets.only(top: 35, left: 30, right: 50),
+                        padding: EdgeInsets.only(top: 35, left: 30, right: 50),
                         child: Theme(
                           data: Theme.of(context).copyWith(
                             primaryColor: Colors.blue[900],
@@ -482,8 +481,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       Padding(
-                        padding:
-                            const EdgeInsets.only(top: 20, left: 30, right: 50),
+                        padding: EdgeInsets.only(top: 20, left: 30, right: 50),
                         child: Theme(
                           data: Theme.of(context).copyWith(
                             primaryColor: Colors.blue[900],
@@ -541,7 +539,7 @@ class _LoginPageState extends State<LoginPage> {
                         },
                         child: Center(
                           child: Padding(
-                            padding: const EdgeInsets.only(bottom: 2),
+                            padding: EdgeInsets.only(bottom: 2),
                             child: Text(
                               'Sign In',
                               key: ValueKey('button'),
@@ -559,7 +557,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 30, left: 55, right: 55),
+                  padding: EdgeInsets.only(top: 30, left: 55, right: 55),
                   child: Container(
                     alignment: Alignment.topRight,
                     height: 25,

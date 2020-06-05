@@ -179,7 +179,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
       );
     }
     return Padding(
-      padding: const EdgeInsets.only(top: 5, left: 10, right: 10),
+      padding: EdgeInsets.only(top: 5, left: 10, right: 10),
       child: Card(
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
@@ -189,7 +189,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
           imageUrl:
               "https://www.wpr.org/sites/default/files/bascom_hall_summer.jpg",
           placeholder: (context, url) => Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(8.0),
             child: Center(child: CircularProgressIndicator()),
           ),
           errorWidget: (context, url, error) {
@@ -315,7 +315,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     return Padding(
-                      padding: const EdgeInsets.only(bottom: 40.0),
+                      padding: EdgeInsets.only(bottom: 40.0),
                       child: Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -373,8 +373,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
                             child: Row(
                               children: <Widget>[
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 5, right: 6),
+                                  padding: EdgeInsets.only(top: 5, right: 6),
                                   child: Icon(
                                     Icons.search,
                                     size: 30,
@@ -435,7 +434,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     return Padding(
-                      padding: const EdgeInsets.only(bottom: 40.0),
+                      padding: EdgeInsets.only(bottom: 40.0),
                       child: Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -505,8 +504,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
                             child: Row(
                               children: <Widget>[
                                 Padding(
-                                  padding:
-                                      const EdgeInsets.only(top: 5, right: 6),
+                                  padding: EdgeInsets.only(top: 5, right: 6),
                                   child: Icon(
                                     Icons.search,
                                     size: 30,

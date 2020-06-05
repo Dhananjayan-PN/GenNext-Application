@@ -281,7 +281,7 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Padding(
-                padding: const EdgeInsets.only(bottom: 40.0),
+                padding: EdgeInsets.only(bottom: 40.0),
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -348,7 +348,7 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
                       child: Row(
                         children: <Widget>[
                           Padding(
-                            padding: const EdgeInsets.only(top: 5, right: 6),
+                            padding: EdgeInsets.only(top: 5, right: 6),
                             child: Icon(
                               Icons.search,
                               size: 30,
