@@ -9,16 +9,21 @@ import 'dart:convert';
 import 'dart:io';
 import 'home.dart';
 
-class CounselorScreen extends StatefulWidget {
+class CounsellingScreen extends StatefulWidget {
   @override
-  _CounselorScreenState createState() => _CounselorScreenState();
+  _CounsellingScreenState createState() => _CounsellingScreenState();
 }
 
-class _CounselorScreenState extends State<CounselorScreen> {
+class _CounsellingScreenState extends State<CounsellingScreen> {
+  GlobalKey<ScaffoldState> _scafKey = GlobalKey<ScaffoldState>();
+  var refreshKey = GlobalKey<RefreshIndicatorState>();
+  Future counselorInfo;
+
   @override
   void initState() {
     super.initState();
     BackButtonInterceptor.add(myInterceptor);
+    counselorInfo = getCounselorInfo();
   }
 
   @override
@@ -37,8 +42,110 @@ class _CounselorScreenState extends State<CounselorScreen> {
     return true;
   }
 
+  Future<void> getCounselorInfo() async {
+    final response = await http.get(
+      dom + 'api/student/get-counselor-information',
+      headers: {HttpHeaders.authorizationHeader: "Token $tok"},
+    );
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      if (data['Response'] == 'Student yet to be connected with a counselor.') {
+        return 'No counselor';
+      } else {
+        return data['counselor_data'];
+      }
+    } else {
+      throw 'failed';
+    }
+  }
+
+  refresh() {
+    setState(() {
+      //add future call here
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      key: _scafKey,
+      backgroundColor: Colors.white,
+      drawer: NavDrawer(
+          name: newUser.firstname + ' ' + newUser.lastname,
+          email: newUser.email),
+      appBar: CustomAppBar('Counselling'),
+      body: RefreshIndicator(
+        key: refreshKey,
+        onRefresh: () {
+          refresh();
+          return counselorInfo;
+        },
+        child: FutureBuilder(
+          future: counselorInfo.timeout(Duration(seconds: 10)),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 40.0),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Icon(
+                        Icons.error_outline,
+                        size: 30,
+                        color: Colors.red.withOpacity(0.9),
+                      ),
+                      Text(
+                        'Unable to establish a connection with our servers.\nCheck your connection and try again later.',
+                        style: TextStyle(color: Colors.black54),
+                        textAlign: TextAlign.center,
+                      )
+                    ],
+                  ),
+                ),
+              );
+            }
+            if (snapshot.hasData) {
+              if (snapshot.data == 'No counselor') {
+                return Padding(
+                  padding: EdgeInsets.only(bottom: 70),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(Icons.sentiment_satisfied),
+                        Padding(
+                            padding:
+                                EdgeInsets.only(top: 5, left: 30, right: 30),
+                            child: Text(
+                              "You haven't requested for counselling yet.",
+                              style: TextStyle(color: Colors.black54),
+                              textAlign: TextAlign.center,
+                            )),
+                        Padding(
+                          padding: EdgeInsets.only(top: 3),
+                          child: Text("Click the button to get started!",
+                              style: TextStyle(color: Colors.black54),
+                              textAlign: TextAlign.center),
+                        ),
+                        RaisedButton(
+                          child: Text('Request Counselling'),
+                          onPressed: () {},
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              } else {
+                return Container();
+              }
+            }
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          },
+        ),
+      ),
+    );
   }
 }

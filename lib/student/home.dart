@@ -15,7 +15,7 @@ import 'profile.dart';
 import 'myuniversities.dart';
 import 'allunis.dart';
 import 'applications.dart';
-import 'pendingapps.dart';
+import 'counselor.dart';
 import 'schedule.dart';
 
 User newUser;
@@ -24,11 +24,12 @@ String dom = domain;
 final navlistelements = [
   ['Home', StudentHomeScreen(user: newUser), Icons.home],
   ['My Profile', ProfileScreen(), Icons.account_box],
+  ['Counselling', CounsellingScreen(), Icons.person],
+  ['Schedule', ScheduleScreen(), Icons.date_range],
   ['My Universities', MyUniversitiesScreen(), Icons.account_balance],
   ['Explore Universities', AllUniversitiesScreen(), Icons.explore],
-  ['My Essays', EssaysScreen(), Icons.edit],
   ['My Applications', ApplicationsScreen(), Icons.assignment],
-  ['Counselling Schedule', ScheduleScreen(), Icons.date_range]
+  ['My Essays', EssaysScreen(), Icons.edit]
 ];
 PageController _controller;
 
