@@ -72,13 +72,17 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       if (data['Response'] == 'Student yet to be connected with a counselor.') {
-        fabVisible = false;
+        setState(() {
+          fabVisible = false;
+        });
         return 'No counselor';
       } else {
         return json.decode(response.body)['session_data'];
       }
     } else {
-      fabVisible = false;
+      setState(() {
+        fabVisible = false;
+      });
       throw ('error');
     }
   }
