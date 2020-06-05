@@ -957,7 +957,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       Padding(
                         padding: EdgeInsets.only(top: 5, left: 30, right: 30),
                         child: Text(
-                          "Looks like you haven't requested\nfor counselling",
+                          "You haven't requested for counselling yet.",
                           style: TextStyle(color: Colors.black54),
                           textAlign: TextAlign.center,
                         ),
