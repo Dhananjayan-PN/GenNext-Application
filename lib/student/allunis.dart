@@ -23,6 +23,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
   String filter;
   List unis;
   Future allUniList;
+  Future recoUniList;
 
   @override
   void initState() {
@@ -34,6 +35,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
       });
     });
     allUniList = getAllUniversities();
+    recoUniList = getRecommended();
   }
 
   @override
@@ -67,9 +69,22 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
     }
   }
 
+  Future<void> getRecommended() async {
+    final response = await http.get(
+      dom + 'api/student/recommend-universities',
+      headers: {HttpHeaders.authorizationHeader: "Token $tok"},
+    );
+    if (response.statusCode == 200) {
+      return json.decode(response.body)['recommended_universities'];
+    } else {
+      throw 'failed';
+    }
+  }
+
   void refresh() {
     setState(() {
       allUniList = getAllUniversities();
+      recoUniList = getRecommended();
     });
   }
 
@@ -290,7 +305,126 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
         ),
         body: TabBarView(
           children: <Widget>[
-            Icon(Icons.assessment),
+            RefreshIndicator(
+              key: refreshKey1,
+              onRefresh: () {
+                refresh();
+                return recoUniList;
+              },
+              child: FutureBuilder(
+                future: recoUniList.timeout(Duration(seconds: 10)),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 40.0),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(
+                              Icons.error_outline,
+                              size: 30,
+                              color: Colors.red.withOpacity(0.9),
+                            ),
+                            Text(
+                              'Unable to establish a connection with our servers.\nCheck your connection and try again later.',
+                              style: TextStyle(color: Colors.black54),
+                              textAlign: TextAlign.center,
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+
+                  if (snapshot.hasData) {
+                    if (snapshot.data.length == 0) {
+                      return Padding(
+                        padding: EdgeInsets.only(bottom: 70),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Icon(Icons.sentiment_satisfied),
+                              Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 5, left: 30, right: 30),
+                                  child: Text(
+                                    "There aren't any recommendations\nat the moment",
+                                    style: TextStyle(color: Colors.black54),
+                                    textAlign: TextAlign.center,
+                                  )),
+                              Padding(
+                                padding: EdgeInsets.only(top: 3),
+                                child: Text(
+                                    "Come back later to explore your recommendations!",
+                                    style: TextStyle(color: Colors.black54),
+                                    textAlign: TextAlign.center),
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    } else {
+                      return Column(
+                        children: <Widget>[
+                          Padding(
+                            padding:
+                                EdgeInsets.only(top: 5, left: 18, right: 30),
+                            child: Row(
+                              children: <Widget>[
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.only(top: 5, right: 6),
+                                  child: Icon(
+                                    Icons.search,
+                                    size: 30,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: TextField(
+                                    decoration: new InputDecoration(
+                                        labelText: "Search",
+                                        contentPadding: EdgeInsets.all(2)),
+                                    controller: controller,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 20.0),
+                              child: Scrollbar(
+                                child: ListView.builder(
+                                    primary: true,
+                                    scrollDirection: Axis.vertical,
+                                    itemCount: snapshot.data.length,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return filter == null || filter == ""
+                                          ? buildCard(snapshot.data, index)
+                                          : snapshot.data[index]
+                                                      ['university_name']
+                                                  .toLowerCase()
+                                                  .contains(filter)
+                                              ? buildCard(snapshot.data, index)
+                                              : Container();
+                                    }),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                  }
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+              ),
+            ),
             RefreshIndicator(
               key: refreshKey2,
               onRefresh: () {
