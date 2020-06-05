@@ -33,7 +33,6 @@ class ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget build(BuildContext context) {
-    print(newUser.dp);
     return new Scaffold(
       backgroundColor: Colors.white,
       drawer: NavDrawer(

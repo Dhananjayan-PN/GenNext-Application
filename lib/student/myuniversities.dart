@@ -270,23 +270,25 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                 ),
                 trailing: Wrap(
                   children: <Widget>[
-                    IconButton(
-                      padding: EdgeInsets.all(0),
-                      icon: _isStarred
-                          ? Icon(Icons.star)
-                          : Icon(Icons.star_border),
-                      color: Colors.white,
-                      onPressed: () {
+                    InkWell(
+                      child: _isStarred
+                          ? Icon(Icons.star, color: Colors.white)
+                          : Icon(Icons.star_border, color: Colors.white),
+                      onTap: () {
                         setState(() {
                           _isStarred = !_isStarred;
                         });
                       },
                     ),
-                    IconButton(
-                      padding: EdgeInsets.all(0),
-                      icon: Icon(Icons.more_vert),
-                      color: Colors.white,
-                      onPressed: () {},
+                    Padding(
+                      padding: EdgeInsets.only(left: 8.0),
+                      child: InkWell(
+                        child: Icon(
+                          Icons.more_vert,
+                          color: Colors.white,
+                        ),
+                        onTap: () {},
+                      ),
                     ),
                   ],
                 ),
@@ -299,7 +301,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   }
 
   Widget buildCollegeListCard(uni) {
-    var isStarred = false;
+    var _isStarred = false;
     List<Widget> topmajors = [];
     List<Widget> standoutfactors = [];
     List<Widget> degreelevels = [];
@@ -437,23 +439,25 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                 ),
                 trailing: Wrap(
                   children: <Widget>[
-                    IconButton(
-                      padding: EdgeInsets.all(0),
-                      icon: isStarred
-                          ? Icon(Icons.star)
-                          : Icon(Icons.star_border),
-                      color: Colors.white,
-                      onPressed: () {
+                    InkWell(
+                      child: _isStarred
+                          ? Icon(Icons.star, color: Colors.white)
+                          : Icon(Icons.star_border, color: Colors.white),
+                      onTap: () {
                         setState(() {
-                          isStarred = !isStarred;
+                          _isStarred = !_isStarred;
                         });
                       },
                     ),
-                    IconButton(
-                      padding: EdgeInsets.all(0),
-                      icon: Icon(Icons.more_vert),
-                      color: Colors.white,
-                      onPressed: () {},
+                    Padding(
+                      padding: EdgeInsets.only(left: 8.0),
+                      child: InkWell(
+                        child: Icon(
+                          Icons.more_vert,
+                          color: Colors.white,
+                        ),
+                        onTap: () {},
+                      ),
                     ),
                   ],
                 ),
