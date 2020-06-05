@@ -37,7 +37,7 @@ class _EssaysScreenState extends State<EssaysScreen> {
   }
 
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       backgroundColor: Colors.white,
       drawer: NavDrawer(
           name: newUser.firstname + ' ' + newUser.lastname,
@@ -98,7 +98,7 @@ class _EssayEditorState extends State<EssayEditor> {
   }
 
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       backgroundColor: Colors.white,
       drawer: NavDrawer(
           name: newUser.firstname + ' ' + newUser.lastname,

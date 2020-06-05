@@ -143,7 +143,7 @@ class SignUpPageState extends State<SignUpPage>
         countrylist.add(json.decode(result.body)[i]['name']);
       }
       countries = countrylist.map((String value) {
-        return new DropdownMenuItem<String>(
+        return DropdownMenuItem<String>(
           value: value,
           child: Text(
             value,
@@ -801,7 +801,7 @@ class SignUpPageState extends State<SignUpPage>
                                 '12',
                                 'GY'
                               ].map((String value) {
-                                return new DropdownMenuItem<String>(
+                                return DropdownMenuItem<String>(
                                   value: value,
                                   child: value == 'GY'
                                       ? Text(

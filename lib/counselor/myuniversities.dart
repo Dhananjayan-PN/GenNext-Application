@@ -17,7 +17,7 @@ class MyUniversitiesScreen extends StatefulWidget {
 class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   GlobalKey<ScaffoldState> _scafKey = GlobalKey<ScaffoldState>();
   var refreshKey = GlobalKey<RefreshIndicatorState>();
-  TextEditingController controller = new TextEditingController();
+  TextEditingController controller = TextEditingController();
   String filter;
   List unis;
   Future myuniversities;
@@ -188,7 +188,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
             decoration: BoxDecoration(
               image: DecorationImage(
                 alignment: Alignment.center,
-                colorFilter: new ColorFilter.mode(
+                colorFilter: ColorFilter.mode(
                     Colors.black.withAlpha(160), BlendMode.darken),
                 image: imageProvider,
                 fit: BoxFit.cover,
@@ -495,7 +495,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       key: _scafKey,
       backgroundColor: Colors.white,
       drawer: NavDrawer(
@@ -590,7 +590,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                           ),
                           Expanded(
                             child: TextField(
-                              decoration: new InputDecoration(
+                              decoration: InputDecoration(
                                   labelText: "Search",
                                   contentPadding: EdgeInsets.all(2)),
                               controller: controller,

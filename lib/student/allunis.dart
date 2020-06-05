@@ -207,7 +207,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
             decoration: BoxDecoration(
               image: DecorationImage(
                 alignment: Alignment.center,
-                colorFilter: new ColorFilter.mode(
+                colorFilter: ColorFilter.mode(
                     Colors.black.withAlpha(160), BlendMode.darken),
                 image: imageProvider,
                 fit: BoxFit.cover,
@@ -383,7 +383,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
                                 ),
                                 Expanded(
                                   child: TextField(
-                                    decoration: new InputDecoration(
+                                    decoration: InputDecoration(
                                         labelText: "Search",
                                         contentPadding: EdgeInsets.all(2)),
                                     controller: controller,
@@ -515,7 +515,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
                                 ),
                                 Expanded(
                                   child: TextField(
-                                    decoration: new InputDecoration(
+                                    decoration: InputDecoration(
                                         labelText: "Search",
                                         contentPadding: EdgeInsets.all(2)),
                                     controller: controller,

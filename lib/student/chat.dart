@@ -187,7 +187,7 @@ class _AllChatsState extends State<AllChats> {
                   ),
                   Expanded(
                     child: TextField(
-                      decoration: new InputDecoration(
+                      decoration: InputDecoration(
                           labelText: "Search",
                           contentPadding: EdgeInsets.all(2)),
                       controller: controller,
@@ -238,7 +238,7 @@ class _OpenChatState extends State<OpenChat> {
     ['Have you committed to any college yet?', 'user'],
   ];
   final TextEditingController textEditingController = TextEditingController();
-  final FocusNode focusNode = new FocusNode();
+  final FocusNode focusNode = FocusNode();
   ScrollController _scrollController = ScrollController();
 
   @override
@@ -453,7 +453,7 @@ class _OpenChatState extends State<OpenChat> {
                 Material(
                   color: Colors.grey[100],
                   child: IconButton(
-                    icon: new Icon(Icons.insert_photo),
+                    icon: Icon(Icons.insert_photo),
                     onPressed: () {},
                     color: Colors.black,
                   ),
@@ -483,7 +483,7 @@ class _OpenChatState extends State<OpenChat> {
                 Material(
                   color: Colors.grey[100],
                   child: IconButton(
-                    icon: new Icon(Icons.send),
+                    icon: Icon(Icons.send),
                     onPressed: () {},
                     color: Colors.black,
                   ),

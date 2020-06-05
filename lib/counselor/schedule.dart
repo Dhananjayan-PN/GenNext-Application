@@ -865,7 +865,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
           tooltip: 'Create session',
@@ -1018,7 +1018,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                         return [
                           Container(
                             margin: const EdgeInsets.all(2.0),
-                            decoration: new BoxDecoration(
+                            decoration: BoxDecoration(
                               border: Border.all(color: Colors.red),
                               shape: BoxShape.circle,
                             ),
@@ -1030,7 +1030,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       todayDayBuilder: (context, date, _) {
                         return Container(
                           margin: const EdgeInsets.all(6.0),
-                          decoration: new BoxDecoration(
+                          decoration: BoxDecoration(
                             border: Border.all(color: Colors.blue),
                             shape: BoxShape.circle,
                           ),
@@ -1049,7 +1049,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       },
                       selectedDayBuilder: (context, date, _) {
                         return Container(
-                          decoration: new BoxDecoration(
+                          decoration: BoxDecoration(
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.black45,

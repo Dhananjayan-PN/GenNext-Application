@@ -30,7 +30,7 @@ class CustomDialog extends StatelessWidget {
             left: 16,
             right: 16,
           ),
-          decoration: new BoxDecoration(
+          decoration: BoxDecoration(
             color: Colors.white,
             shape: BoxShape.rectangle,
             borderRadius: BorderRadius.circular(16),
@@ -65,7 +65,7 @@ class CustomDialog extends StatelessWidget {
                 alignment: Alignment.bottomRight,
                 child: FlatButton(
                   shape: RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(9.0),
+                      borderRadius: BorderRadius.circular(9.0),
                       side: BorderSide(color: Colors.cyan[600])),
                   color: Colors.cyanAccent[400],
                   splashColor: Colors.blueAccent,
@@ -98,7 +98,7 @@ class CustomDialog extends StatelessWidget {
 
 class LoginPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => new _LoginPageState();
+  State<StatefulWidget> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {

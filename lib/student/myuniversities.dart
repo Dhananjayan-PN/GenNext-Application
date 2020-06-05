@@ -19,7 +19,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   GlobalKey<ScaffoldState> _scafKey = GlobalKey<ScaffoldState>();
   var refreshKey1 = GlobalKey<RefreshIndicatorState>();
   var refreshKey2 = GlobalKey<RefreshIndicatorState>();
-  TextEditingController controller = new TextEditingController();
+  TextEditingController controller = TextEditingController();
   String filter;
   List unis;
   Future collegeList;
@@ -250,7 +250,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
             decoration: BoxDecoration(
               image: DecorationImage(
                 alignment: Alignment.center,
-                colorFilter: new ColorFilter.mode(
+                colorFilter: ColorFilter.mode(
                     Colors.black.withAlpha(160), BlendMode.darken),
                 image: imageProvider,
                 fit: BoxFit.cover,
@@ -419,7 +419,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
             decoration: BoxDecoration(
               image: DecorationImage(
                 alignment: Alignment.center,
-                colorFilter: new ColorFilter.mode(
+                colorFilter: ColorFilter.mode(
                     Colors.black.withAlpha(160), BlendMode.darken),
                 image: imageProvider,
                 fit: BoxFit.cover,
@@ -607,7 +607,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                                 ),
                                 Expanded(
                                   child: TextField(
-                                    decoration: new InputDecoration(
+                                    decoration: InputDecoration(
                                         labelText: "Search",
                                         contentPadding: EdgeInsets.all(2)),
                                     controller: controller,
@@ -831,7 +831,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                                 ),
                                 Expanded(
                                   child: TextField(
-                                    decoration: new InputDecoration(
+                                    decoration: InputDecoration(
                                         labelText: "Search",
                                         contentPadding: EdgeInsets.all(2)),
                                     controller: controller,

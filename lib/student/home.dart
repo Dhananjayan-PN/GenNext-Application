@@ -43,7 +43,7 @@ class NavDrawer extends StatelessWidget {
     List<Widget> navlist = [];
     for (var i = 0; i < navlistelements.length; i++) {
       var element = navlistelements[i];
-      navlist.add(new ListTile(
+      navlist.add(ListTile(
         leading: Icon(
           element[2],
           size: 26,

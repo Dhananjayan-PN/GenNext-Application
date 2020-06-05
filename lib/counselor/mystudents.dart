@@ -357,7 +357,7 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
                           ),
                           Expanded(
                             child: TextField(
-                              decoration: new InputDecoration(
+                              decoration: InputDecoration(
                                   labelText: "Search",
                                   contentPadding: EdgeInsets.all(2)),
                               controller: controller,
