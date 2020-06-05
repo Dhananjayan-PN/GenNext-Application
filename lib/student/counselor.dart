@@ -124,7 +124,7 @@ class _CounsellingScreenState extends State<CounsellingScreen> {
                         ),
                         Padding(
                           padding:
-                              EdgeInsets.only(left: 20, right: 20, bottom: 30),
+                              EdgeInsets.only(left: 20, right: 20, bottom: 50),
                           child: Text(
                             'Whether you know exactly what and where you want to study or are completely confused about where to start, we’re here for you.' +
                                 '\nFrom program and university selection, to completing applications, to meeting deadlines, to preparing for the visa interview,' +
@@ -139,14 +139,18 @@ class _CounsellingScreenState extends State<CounsellingScreen> {
                             child: Text(
                               "You haven't requested for counselling yet.",
                               style: TextStyle(
-                                  color: Colors.black87, fontSize: 20),
+                                  color: Colors.black87,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w900),
                               textAlign: TextAlign.center,
                             )),
                         Padding(
-                          padding: EdgeInsets.only(top: 5, bottom: 20),
+                          padding: EdgeInsets.only(top: 5, bottom: 15),
                           child: Text("Click the button to get started!",
                               style: TextStyle(
-                                  color: Colors.black87, fontSize: 20),
+                                  color: Colors.black87,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w900),
                               textAlign: TextAlign.center),
                         ),
                         RaisedButton(
