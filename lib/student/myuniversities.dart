@@ -302,164 +302,82 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
 
   Widget buildCollegeListCard(uni) {
     var _isStarred = false;
-    List<Widget> topmajors = [];
-    List<Widget> standoutfactors = [];
-    List<Widget> degreelevels = [];
-    List<Widget> testing = [];
-    for (var i = 0; i < uni['top_majors'].length; i++) {
-      topmajors.add(
-        Padding(
-          padding: EdgeInsets.only(right: 3),
-          child: Theme(
-            data: ThemeData(canvasColor: Colors.transparent),
-            child: Chip(
-              labelPadding:
-                  EdgeInsets.only(left: 3, right: 3, top: 1, bottom: 1),
-              elevation: 5,
-              backgroundColor: Colors.black26,
-              shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
-              label: Text(
-                uni['top_majors'][i],
-                style: TextStyle(fontSize: 13, color: Colors.white),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-    for (var i = 0; i < uni['stand_out_factors'].length; i++) {
-      standoutfactors.add(
-        Padding(
-          padding: EdgeInsets.only(right: 3),
-          child: Theme(
-            data: ThemeData(canvasColor: Colors.transparent),
-            child: Chip(
-              labelPadding:
-                  EdgeInsets.only(left: 3, right: 3, top: 1, bottom: 1),
-              elevation: 5,
-              backgroundColor: Colors.black26,
-              shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
-              label: Text(
-                uni['stand_out_factors'][i],
-                style: TextStyle(fontSize: 13, color: Colors.white),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-    for (var i = 0; i < uni['degree_levels'].length; i++) {
-      degreelevels.add(
-        Padding(
-          padding: EdgeInsets.only(right: 3),
-          child: Theme(
-            data: ThemeData(canvasColor: Colors.transparent),
-            child: Chip(
-              labelPadding:
-                  EdgeInsets.only(left: 3, right: 3, top: 1, bottom: 1),
-              elevation: 5,
-              backgroundColor: Colors.black26,
-              shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
-              label: Text(
-                uni['degree_levels'][i],
-                style: TextStyle(fontSize: 13, color: Colors.white),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-    for (var i = 0; i < uni['testing_requirements'].length; i++) {
-      testing.add(
-        Padding(
-          padding: EdgeInsets.only(right: 3),
-          child: Theme(
-            data: ThemeData(canvasColor: Colors.transparent),
-            child: Chip(
-              labelPadding:
-                  EdgeInsets.only(left: 3, right: 3, top: 1, bottom: 1),
-              elevation: 5,
-              backgroundColor: Colors.black26,
-              shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
-              label: Text(
-                uni['testing_requirements'][i],
-                style: TextStyle(fontSize: 13, color: Colors.white),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
     return Padding(
       padding: EdgeInsets.only(top: 5, left: 10, right: 10),
-      child: Card(
-        clipBehavior: Clip.antiAlias,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10))),
-        elevation: 10,
-        child: CachedNetworkImage(
-          imageUrl:
-              "https://www.wpr.org/sites/default/files/bascom_hall_summer.jpg",
-          placeholder: (context, url) => Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Center(child: CircularProgressIndicator()),
-          ),
-          errorWidget: (context, url, error) {
-            _scafKey.currentState.showSnackBar(
-              SnackBar(
-                content: Text(
-                  'Failed to fetch data. Check your internet connection and try again',
-                  textAlign: TextAlign.center,
-                ),
+      child: Material(
+        color: Colors.transparent,
+        child: Card(
+          clipBehavior: Clip.antiAlias,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10))),
+          elevation: 10,
+          child: Material(
+            color: Colors.transparent,
+            child: CachedNetworkImage(
+              imageUrl:
+                  "https://www.wpr.org/sites/default/files/bascom_hall_summer.jpg",
+              placeholder: (context, url) => Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Center(child: CircularProgressIndicator()),
               ),
-            );
-            return Icon(Icons.error);
-          },
-          imageBuilder: (context, imageProvider) => Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                alignment: Alignment.center,
-                colorFilter: ColorFilter.mode(
-                    Colors.black.withAlpha(160), BlendMode.darken),
-                image: imageProvider,
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: Material(
-              color: Colors.transparent,
-              child: ListTile(
-                key: Key(uni['university_id'].toString()),
-                title: Text(
-                  uni['university_name'],
-                  style: TextStyle(color: Colors.white),
-                ),
-                subtitle: Text(
-                  uni['university_location'],
-                  style: TextStyle(color: Colors.white.withOpacity(0.8)),
-                ),
-                trailing: Wrap(
-                  children: <Widget>[
-                    InkWell(
-                      child: _isStarred
-                          ? Icon(Icons.star, color: Colors.white)
-                          : Icon(Icons.star_border, color: Colors.white),
-                      onTap: () {
-                        setState(() {
-                          _isStarred = !_isStarred;
-                        });
-                      },
+              errorWidget: (context, url, error) {
+                _scafKey.currentState.showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'Failed to fetch data. Check your internet connection and try again',
+                      textAlign: TextAlign.center,
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 8.0),
-                      child: InkWell(
-                        child: Icon(
-                          Icons.more_vert,
-                          color: Colors.white,
+                  ),
+                );
+                return Icon(Icons.error);
+              },
+              imageBuilder: (context, imageProvider) => Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    alignment: Alignment.center,
+                    colorFilter: ColorFilter.mode(
+                        Colors.black.withAlpha(160), BlendMode.darken),
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: Material(
+                  color: Colors.transparent,
+                  child: ListTile(
+                    key: Key(uni['university_id'].toString()),
+                    title: Text(
+                      uni['university_name'],
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    subtitle: Text(
+                      uni['university_location'],
+                      style: TextStyle(color: Colors.white.withOpacity(0.8)),
+                    ),
+                    trailing: Wrap(
+                      children: <Widget>[
+                        InkWell(
+                          child: _isStarred
+                              ? Icon(Icons.star, color: Colors.white)
+                              : Icon(Icons.star_border, color: Colors.white),
+                          onTap: () {
+                            setState(() {
+                              _isStarred = !_isStarred;
+                            });
+                          },
                         ),
-                        onTap: () {},
-                      ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 8.0),
+                          child: InkWell(
+                            child: Icon(
+                              Icons.more_vert,
+                              color: Colors.white,
+                            ),
+                            onTap: () {},
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -617,6 +535,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                           ),
                           Expanded(
                             child: GroupedListView(
+                              order: null,
                               elements: snapshot.data,
                               groupBy: (element) => element['category'],
                               groupSeparatorBuilder: (value) {
@@ -643,7 +562,6 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                                         ? buildCollegeListCard(element)
                                         : Container();
                               },
-                              order: GroupedListOrder.ASC,
                             ),
                           ),
 
