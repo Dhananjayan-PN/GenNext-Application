@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
+import 'package:http/http.dart' as http;
 import 'package:quill_delta/quill_delta.dart';
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:zefyr/zefyr.dart';
@@ -71,6 +73,7 @@ class _EssayEditorState extends State<EssayEditor> {
   ZefyrController _controller;
   FocusNode _focusNode;
   Future<NotusDocument> loadDocument;
+  Future essayList;
 
   @override
   void initState() {
@@ -78,6 +81,7 @@ class _EssayEditorState extends State<EssayEditor> {
     _focusNode = FocusNode();
     loadDocument = _loadDocument();
     BackButtonInterceptor.add(myInterceptor);
+    essayList = getEssays();
   }
 
   @override
@@ -95,6 +99,18 @@ class _EssayEditorState extends State<EssayEditor> {
   Future<NotusDocument> _loadDocument() async {
     final Delta delta = Delta()..insert("Essay editor\n");
     return NotusDocument.fromDelta(delta);
+  }
+
+  Future<void> getEssays() async {
+    final response = await http.get(
+      dom + 'api/student/get-my-essays',
+      headers: {HttpHeaders.authorizationHeader: "Token $tok"},
+    );
+    if (response.statusCode == 200) {
+      return json.decode(response.body)['essay_data'];
+    } else {
+      throw 'failed';
+    }
   }
 
   Widget build(BuildContext context) {

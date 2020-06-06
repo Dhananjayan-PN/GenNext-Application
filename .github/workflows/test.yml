@@ -5,24 +5,23 @@ jobs:
     strategy:
       matrix:
         device:
-         - 88BC2FB9-BD96-4019-9DFB-4A2740910BF3
-         - 8DCCE253-5ABB-468D-B66F-CF83F489B649
+          - 88BC2FB9-BD96-4019-9DFB-4A2740910BF3
     name: Test
     runs-on: macos-latest
     steps:
-    - name: List all simulators
-      run: xcrun instruments -s
-    - name: "Start Simulator"
-      run: xcrun simctl boot ${{matrix.device}}
-    - uses: actions/checkout@v1
-    - uses: actions/setup-java@v1
-      with:
-        java-version: '12.x'
-    - uses: subosito/flutter-action@v1
-      with:
-        flutter-version: '1.17.0'
-    - run: flutter pub get
-    - name: Run Flutter Widget Tests
-      run: flutter test
-    - name: Run Flutter Integration Tests
-      run: flutter drive --target=test_driver/app.dart
+      - name: List all simulators
+        run: xcrun instruments -s
+      - name: "Start Simulator"
+        run: xcrun simctl boot ${{matrix.device}}
+      - uses: actions/checkout@v1
+      - uses: actions/setup-java@v1
+        with:
+          java-version: "12.x"
+      - uses: subosito/flutter-action@v1
+        with:
+          flutter-version: "1.17.0"
+      - run: flutter pub get
+      - name: Run Flutter Widget Tests
+        run: flutter test
+      - name: Run Flutter Integration Tests
+        run: flutter drive --target=test_driver/app.dart
