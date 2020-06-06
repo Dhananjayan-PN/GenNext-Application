@@ -252,7 +252,7 @@ class _CounsellingScreenState extends State<CounsellingScreen> {
                   ),
                 );
               } else {
-                return Container();
+                return Container(); // Update with counselor info and actions on counselor
               }
             }
             return Center(
