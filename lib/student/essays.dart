@@ -76,12 +76,20 @@ class _EssaysScreenState extends State<EssaysScreen> {
           child: ListTile(
             key: Key(essay['essay_id'].toString()),
             title: Text(
-              essay['essay_prompt'],
+              essay['essay_title'],
               style: TextStyle(color: Colors.black),
             ),
             subtitle: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Padding(
+                  padding: EdgeInsets.only(top: 5),
+                  child: Text(
+                    essay['university'].toString(),
+                    style: TextStyle(color: Colors.black54),
+                  ),
+                ),
+                /*Padding(
                   padding: EdgeInsets.only(top: 5),
                   child: Row(
                     children: <Widget>[
@@ -94,7 +102,7 @@ class _EssaysScreenState extends State<EssaysScreen> {
                       )
                     ],
                   ),
-                ),
+                ),*/
               ],
             ),
             trailing: Wrap(
