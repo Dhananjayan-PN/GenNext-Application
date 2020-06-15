@@ -19,8 +19,10 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   GlobalKey<ScaffoldState> _scafKey = GlobalKey<ScaffoldState>();
   var refreshKey1 = GlobalKey<RefreshIndicatorState>();
   var refreshKey2 = GlobalKey<RefreshIndicatorState>();
-  TextEditingController controller = TextEditingController();
-  String filter;
+  TextEditingController controller1 = TextEditingController();
+  TextEditingController controller2 = TextEditingController();
+  String filter1;
+  String filter2;
   List unis;
   Future collegeList;
   Future favoritedList;
@@ -29,9 +31,14 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   void initState() {
     super.initState();
     BackButtonInterceptor.add(myInterceptor);
-    controller.addListener(() {
+    controller1.addListener(() {
       setState(() {
-        filter = controller.text;
+        filter1 = controller1.text.toLowerCase();
+      });
+    });
+    controller2.addListener(() {
+      setState(() {
+        filter2 = controller2.text.toLowerCase();
       });
     });
     collegeList = getCollegeList();
@@ -40,7 +47,8 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
 
   @override
   void dispose() {
-    controller.dispose();
+    controller1.dispose();
+    controller2.dispose();
     BackButtonInterceptor.remove(myInterceptor);
     super.dispose();
   }
@@ -527,7 +535,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                                     decoration: InputDecoration(
                                         labelText: "Search",
                                         contentPadding: EdgeInsets.all(2)),
-                                    controller: controller,
+                                    controller: controller1,
                                   ),
                                 ),
                               ],
@@ -554,11 +562,11 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                                 );
                               },
                               itemBuilder: (context, element) {
-                                return filter == null || filter == ""
+                                return filter1 == null || filter1 == ""
                                     ? buildCollegeListCard(element)
                                     : element['university_name']
                                             .toLowerCase()
-                                            .contains(filter)
+                                            .contains(filter1)
                                         ? buildCollegeListCard(element)
                                         : Container();
                               },
@@ -750,7 +758,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                                     decoration: InputDecoration(
                                         labelText: "Search",
                                         contentPadding: EdgeInsets.all(2)),
-                                    controller: controller,
+                                    controller: controller2,
                                   ),
                                 ),
                               ],
@@ -766,12 +774,12 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                                     itemCount: snapshot.data.length,
                                     itemBuilder:
                                         (BuildContext context, int index) {
-                                      return filter == null || filter == ""
+                                      return filter2 == null || filter2 == ""
                                           ? buildCard(snapshot.data, index)
                                           : snapshot.data[index]
                                                       ['university_name']
                                                   .toLowerCase()
-                                                  .contains(filter)
+                                                  .contains(filter2)
                                               ? buildCard(snapshot.data, index)
                                               : Container();
                                     }),

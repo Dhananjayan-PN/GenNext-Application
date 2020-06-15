@@ -4,6 +4,7 @@ import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:http/http.dart' as http;
 import 'package:quill_delta/quill_delta.dart';
+import 'package:quill_zefyr_bijection/quill_zefyr_bijection.dart';
 import 'dart:math';
 import 'dart:async';
 import 'dart:convert';
@@ -26,6 +27,11 @@ class _EssaysScreenState extends State<EssaysScreen> {
   void initState() {
     super.initState();
     BackButtonInterceptor.add(myInterceptor);
+    controller.addListener(() {
+      setState(() {
+        filter = controller.text.toLowerCase();
+      });
+    });
     essayList = getEssays();
   }
 
@@ -80,6 +86,7 @@ class _EssaysScreenState extends State<EssaysScreen> {
               style: TextStyle(color: Colors.black),
             ),
             subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Padding(
@@ -89,20 +96,6 @@ class _EssaysScreenState extends State<EssaysScreen> {
                     style: TextStyle(color: Colors.black54),
                   ),
                 ),
-                /*Padding(
-                  padding: EdgeInsets.only(top: 5),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        'University: ',
-                      ),
-                      Text(
-                        essay['university'].toString(),
-                        style: TextStyle(color: Colors.black54),
-                      )
-                    ],
-                  ),
-                ),*/
               ],
             ),
             trailing: Wrap(
@@ -110,7 +103,19 @@ class _EssaysScreenState extends State<EssaysScreen> {
                 InkWell(
                   child: Transform.rotate(
                       angle: 3.14159, child: Icon(Icons.keyboard_backspace)),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.leftToRight,
+                          child: EssayEditor(
+                              studentEdit:
+                                  QuillZefyrBijection.convertJSONToZefyrDelta(
+                                      essay['student_essay_content']
+                                          .toString()),
+                              counselorEdit: essay['counselor_essay_content'])),
+                    );
+                  },
                 )
               ],
             ),
@@ -230,7 +235,7 @@ class _EssaysScreenState extends State<EssaysScreen> {
                         itemBuilder: (context, index) {
                           return filter == null || filter == ""
                               ? buildEssayCard(snapshot.data[index])
-                              : snapshot.data[index]['essay_prompt']
+                              : snapshot.data[index]['essay_title']
                                       .toLowerCase()
                                       .contains(filter)
                                   ? buildEssayCard(snapshot.data[index])
@@ -257,14 +262,23 @@ class _EssaysScreenState extends State<EssaysScreen> {
 }
 
 class EssayEditor extends StatefulWidget {
+  final Delta studentEdit;
+  final Delta counselorEdit;
+  EssayEditor({this.studentEdit, this.counselorEdit});
+
   @override
-  _EssayEditorState createState() => _EssayEditorState();
+  _EssayEditorState createState() =>
+      _EssayEditorState(studentEdit: studentEdit, counselorEdit: counselorEdit);
 }
 
 class _EssayEditorState extends State<EssayEditor> {
+  final Delta studentEdit;
+  final Delta counselorEdit;
   ZefyrController _controller;
   FocusNode _focusNode;
   Future<NotusDocument> loadDocument;
+
+  _EssayEditorState({this.studentEdit, this.counselorEdit});
 
   @override
   void initState() {
@@ -288,15 +302,12 @@ class _EssayEditorState extends State<EssayEditor> {
 
   Future<NotusDocument> _loadDocument() async {
     final Delta delta = Delta()..insert("Essay editor\n");
-    return NotusDocument.fromDelta(delta);
+    return NotusDocument.fromDelta(studentEdit);
   }
 
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      drawer: NavDrawer(
-          name: newUser.firstname + ' ' + newUser.lastname,
-          email: newUser.email),
       appBar: GradientAppBar(
         leading: IconButton(
           icon: Icon(
