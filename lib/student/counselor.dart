@@ -55,7 +55,7 @@ class _CounsellingScreenState extends State<CounsellingScreen> {
           "Student yet to be connected with a counselor.") {
         return 'Request sent';
       } else {
-        return data['counselor_data'];
+        return data;
       }
     } else {
       throw 'failed';
@@ -252,7 +252,119 @@ class _CounsellingScreenState extends State<CounsellingScreen> {
                   ),
                 );
               } else {
-                return Container(); // Update with counselor info and actions on counselor
+                return Column(
+                  children: <Widget>[
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 25, left: 25),
+                        child: Text(
+                          'My Counselor',
+                          style: TextStyle(fontSize: 21),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 12, left: 10, right: 10),
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15))),
+                        elevation: 10,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            ListTile(
+                              leading: CircleAvatar(
+                                backgroundImage: CachedNetworkImageProvider(
+                                    snapshot.data['counselor_profile_pic']),
+                                backgroundColor: Colors.blue[400],
+                                radius: 30,
+                              ),
+                              title: Text(
+                                snapshot.data['counselor_name'],
+                                style: TextStyle(fontSize: 17),
+                              ),
+                              subtitle: Text('Counselor'),
+                            ),
+                            Divider(
+                              thickness: 1,
+                              indent: 20,
+                              endIndent: 20,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 5, left: 20),
+                              child: Row(
+                                children: <Widget>[
+                                  Text(
+                                    'Username: ',
+                                  ),
+                                  Text(
+                                    '@' + snapshot.data['counselor_username'],
+                                    style: TextStyle(color: Colors.black54),
+                                  )
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(top: 15, left: 20),
+                              child: Row(
+                                children: <Widget>[
+                                  Text(
+                                    'Email ID: ',
+                                  ),
+                                  Text(
+                                    snapshot.data['counselor_email'],
+                                    style: TextStyle(color: Colors.black54),
+                                  )
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  top: 15, left: 20, bottom: 15),
+                              child: Row(
+                                children: <Widget>[
+                                  Text(
+                                    'Country: ',
+                                  ),
+                                  Text(
+                                    snapshot.data['counselor_country'],
+                                    style: TextStyle(color: Colors.black54),
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 25),
+                      child: Text(
+                        'Not satisfied with your counselor?',
+                        style: TextStyle(
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        splashColor: Colors.cyan,
+                        onTap: () {},
+                        child: Text(
+                          'Request for another',
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.blue,
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
+                      ),
+                    ),
+                  ],
+                );
               }
             }
             return Center(
