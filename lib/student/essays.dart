@@ -364,12 +364,12 @@ class _EssayEditorState extends State<EssayEditor> {
                 Tab(
                     child: Padding(
                   padding: EdgeInsets.only(left: 3.0),
-                  child: Text('My Edit'),
+                  child: Text('My Version'),
                 )),
                 Tab(
                     child: Padding(
                   padding: EdgeInsets.only(left: 3.0),
-                  child: Text('Counselor Edit'),
+                  child: Text('Counselor Version'),
                 )),
               ],
             ),
