@@ -98,26 +98,31 @@ class _EssaysScreenState extends State<EssaysScreen> {
                 ),
               ],
             ),
-            trailing: Wrap(
-              children: <Widget>[
-                InkWell(
-                  child: Transform.rotate(
-                      angle: 3.14159, child: Icon(Icons.keyboard_backspace)),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      PageTransition(
-                          type: PageTransitionType.leftToRight,
-                          child: EssayEditor(
-                              studentEdit:
-                                  QuillZefyrBijection.convertJSONToZefyrDelta(
-                                      essay['student_essay_content']
-                                          .toString()),
-                              counselorEdit: essay['counselor_essay_content'])),
-                    );
-                  },
-                )
-              ],
+            trailing: IconButton(
+              icon: Transform.rotate(
+                  angle: 3.14159, child: Icon(Icons.keyboard_backspace)),
+              onPressed: () {
+                String studentString = essay['student_essay_content'] == ''
+                    ? '[{\"attributes\":{\"align\":\"justify\"},\"insert\":\"\\n\"},{\"insert\":\"\\n\"}]'
+                    : essay['student_essay_content'];
+                String counselorString = essay['counselor_essay_content'] == ''
+                    ? '[{\"attributes\":{\"align\":\"justify\"},\"insert\":\"\\n\"},{\"insert\":\"\\n\"}]'
+                    : essay['counselor_essay_content'];
+                Navigator.push(
+                  context,
+                  PageTransition(
+                    type: PageTransitionType.rightToLeft,
+                    child: EssayEditor(
+                      essayTitle: essay['essay_title'],
+                      studentEdit: QuillZefyrBijection.convertJSONToZefyrDelta(
+                          '{\"ops\":' + studentString + '}'),
+                      counselorEdit:
+                          QuillZefyrBijection.convertJSONToZefyrDelta(
+                              '{\"ops\":' + counselorString + '}'),
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         ),
@@ -264,27 +269,38 @@ class _EssaysScreenState extends State<EssaysScreen> {
 class EssayEditor extends StatefulWidget {
   final Delta studentEdit;
   final Delta counselorEdit;
-  EssayEditor({this.studentEdit, this.counselorEdit});
+  final String essayTitle;
+  EssayEditor({this.essayTitle, this.studentEdit, this.counselorEdit});
 
   @override
-  _EssayEditorState createState() =>
-      _EssayEditorState(studentEdit: studentEdit, counselorEdit: counselorEdit);
+  _EssayEditorState createState() => _EssayEditorState(
+      essayTitle: essayTitle,
+      studentEdit: studentEdit,
+      counselorEdit: counselorEdit);
 }
 
 class _EssayEditorState extends State<EssayEditor> {
   final Delta studentEdit;
   final Delta counselorEdit;
-  ZefyrController _controller;
-  FocusNode _focusNode;
-  Future<NotusDocument> loadDocument;
+  final String essayTitle;
+  ZefyrController _controller1;
+  ZefyrController _controller2;
+  FocusNode _focusNode1;
+  FocusNode _focusNode2;
+  NotusDocument studentDocument;
+  NotusDocument counselorDocument;
 
-  _EssayEditorState({this.studentEdit, this.counselorEdit});
+  _EssayEditorState({this.essayTitle, this.studentEdit, this.counselorEdit});
 
   @override
   void initState() {
     super.initState();
-    _focusNode = FocusNode();
-    loadDocument = _loadDocument();
+    _focusNode1 = FocusNode();
+    studentDocument = _loadSDocument();
+    _controller1 = ZefyrController(studentDocument);
+    _focusNode2 = FocusNode();
+    counselorDocument = _loadCDocument();
+    _controller2 = ZefyrController(counselorDocument);
     BackButtonInterceptor.add(myInterceptor);
   }
 
@@ -300,49 +316,84 @@ class _EssayEditorState extends State<EssayEditor> {
     return true;
   }
 
-  Future<NotusDocument> _loadDocument() async {
-    final Delta delta = Delta()..insert("Essay editor\n");
+  NotusDocument _loadSDocument() {
     return NotusDocument.fromDelta(studentEdit);
   }
 
+  NotusDocument _loadCDocument() {
+    return NotusDocument.fromDelta(counselorEdit);
+  }
+
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: GradientAppBar(
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        title: Text(
-          'Essay Editor',
-          style: TextStyle(color: Colors.white, fontSize: 20),
-        ),
-        gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
-      ),
-      body: FutureBuilder(
-        future: loadDocument,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            _controller = ZefyrController(snapshot.data);
-            return ZefyrScaffold(
-              child: ZefyrEditor(
-                padding: EdgeInsets.all(16),
-                controller: _controller,
-                focusNode: _focusNode,
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+          backgroundColor: Colors.white,
+          appBar: GradientAppBar(
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back,
+                color: Colors.white,
               ),
-            );
-          }
-          return CircularProgressIndicator();
-        },
-      ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  'SAVE',
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.w500),
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            ],
+            title: Text(
+              essayTitle,
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
+            bottom: TabBar(
+              tabs: [
+                Tab(
+                    child: Padding(
+                  padding: EdgeInsets.only(left: 3.0),
+                  child: Text('My Edit'),
+                )),
+                Tab(
+                    child: Padding(
+                  padding: EdgeInsets.only(left: 3.0),
+                  child: Text('Counselor Edit'),
+                )),
+              ],
+            ),
+          ),
+          body: TabBarView(
+            children: <Widget>[
+              ZefyrScaffold(
+                child: ZefyrEditor(
+                  padding: EdgeInsets.all(16),
+                  controller: _controller1,
+                  focusNode: _focusNode1,
+                ),
+              ),
+              ZefyrScaffold(
+                child: ZefyrEditor(
+                  mode: ZefyrMode(
+                      canEdit: false, canFormat: false, canSelect: true),
+                  padding: EdgeInsets.all(16),
+                  controller: _controller2,
+                  focusNode: _focusNode2,
+                ),
+              ),
+            ],
+          )),
     );
   }
 }
