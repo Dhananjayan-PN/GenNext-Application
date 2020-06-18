@@ -5,7 +5,6 @@ import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:http/http.dart' as http;
 import 'package:quill_delta/quill_delta.dart';
 import 'package:quill_zefyr_bijection/quill_zefyr_bijection.dart';
-import 'dart:math';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
