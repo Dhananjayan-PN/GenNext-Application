@@ -364,7 +364,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                     trailing: Wrap(
                       children: <Widget>[
                         InkWell(
-                          child: _isStarred
+                          child: uni['favorited_status']
                               ? Icon(Icons.star, color: Colors.white)
                               : Icon(Icons.star_border, color: Colors.white),
                           onTap: () {
@@ -434,7 +434,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                     Icon(Icons.star),
                     Padding(
                       padding: EdgeInsets.only(left: 3.0),
-                      child: Text('Starred'),
+                      child: Text('Favorited'),
                     )
                   ])),
             ],
@@ -696,7 +696,6 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                       ),
                     );
                   }
-
                   if (snapshot.hasData) {
                     if (snapshot.data.length == 0) {
                       return Padding(

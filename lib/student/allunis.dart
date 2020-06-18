@@ -228,7 +228,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
                 trailing: Wrap(
                   children: <Widget>[
                     InkWell(
-                      child: _isStarred
+                      child: unis[index]['favorited_status']
                           ? Icon(Icons.star, color: Colors.white)
                           : Icon(Icons.star_border, color: Colors.white),
                       onTap: () {
@@ -335,7 +335,6 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
                       ),
                     );
                   }
-
                   if (snapshot.hasData) {
                     if (snapshot.data.length == 0) {
                       return Padding(
@@ -454,7 +453,6 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
                       ),
                     );
                   }
-
                   if (snapshot.hasData) {
                     if (snapshot.data.length == 0) {
                       return Padding(
