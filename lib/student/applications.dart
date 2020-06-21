@@ -124,6 +124,10 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
         data: ThemeData(canvasColor: Colors.black.withOpacity(0.3)),
         child: ActionChip(
           key: Key(curTranscript["transcript_id"].toString()),
+          avatar: curTranscript["in_progress"]
+              ? Icon(Icons.check, color: Colors.green)
+              : Icon(Icons.priority_high, color: Colors.red),
+          labelPadding: EdgeInsets.only(left: 3, right: 5),
           backgroundColor: Colors.black.withOpacity(0.2),
           shape: RoundedRectangleBorder(
               side: BorderSide(color: Colors.white30, width: 0.5),
@@ -151,6 +155,10 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
         data: ThemeData(canvasColor: Colors.black.withOpacity(0.3)),
         child: ActionChip(
           key: Key(curDoc["misc_doc_id"].toString()),
+          avatar: curDoc["in_progress"]
+              ? Icon(Icons.check, color: Colors.green)
+              : Icon(Icons.priority_high, color: Colors.red),
+          labelPadding: EdgeInsets.only(left: 3, right: 5),
           backgroundColor: Colors.black.withOpacity(0.2),
           shape: RoundedRectangleBorder(
               side: BorderSide(color: Colors.white30, width: 0.5),
