@@ -189,9 +189,9 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
         child: CachedNetworkImage(
           imageUrl:
               "https://www.wpr.org/sites/default/files/bascom_hall_summer.jpg",
-          placeholder: (context, url) => Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Center(child: CircularProgressIndicator()),
+          placeholder: (context, url) => CardSkeleton(
+            padding: 0,
+            isBottomLinesActive: false,
           ),
           errorWidget: (context, url, error) {
             _scafKey.currentState.showSnackBar(
