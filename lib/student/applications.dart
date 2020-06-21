@@ -127,7 +127,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
           avatar: curTranscript["in_progress"]
               ? Icon(Icons.check, color: Colors.green)
               : Icon(Icons.priority_high, color: Colors.red),
-          labelPadding: EdgeInsets.only(left: 3, right: 5),
+          labelPadding: EdgeInsets.only(left: 2, right: 5),
           backgroundColor: Colors.black.withOpacity(0.2),
           shape: RoundedRectangleBorder(
               side: BorderSide(color: Colors.white30, width: 0.5),
@@ -158,7 +158,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
           avatar: curDoc["in_progress"]
               ? Icon(Icons.check, color: Colors.green)
               : Icon(Icons.priority_high, color: Colors.red),
-          labelPadding: EdgeInsets.only(left: 3, right: 5),
+          labelPadding: EdgeInsets.only(left: 2, right: 5),
           backgroundColor: Colors.black.withOpacity(0.2),
           shape: RoundedRectangleBorder(
               side: BorderSide(color: Colors.white30, width: 0.5),
@@ -227,15 +227,42 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
             ),
             child: custom.ExpansionTile(
               key: Key(uni['application_id'].toString()),
-              title: Text(
-                uni['university'],
-                style: TextStyle(color: Colors.white),
+              title: Padding(
+                padding: EdgeInsets.only(top: 8),
+                child: Text(
+                  uni['university'],
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
-              subtitle: Text(
-                'Deadline: ' +
-                    DateFormat.yMMMMd('en_US').format(deadline.toLocal()) +
-                    ' ($timeleft)',
-                style: TextStyle(fontSize: 14, color: timecolor),
+              subtitle: Padding(
+                padding: EdgeInsets.only(bottom: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      'Due: ' +
+                          DateFormat.yMMMMd('en_US')
+                              .format(deadline.toLocal()) +
+                          ' ($timeleft)',
+                      style: TextStyle(fontSize: 14, color: timecolor),
+                    ),
+                    uni["completion_status"]
+                        ? Text('Completed',
+                            style: TextStyle(
+                              color: Colors.green,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                            ))
+                        : Text(
+                            'Pending',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                            ),
+                          )
+                  ],
+                ),
               ),
               children: <Widget>[
                 Divider(
@@ -245,35 +272,6 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 5, left: 20),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        'Status: ',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700),
-                      ),
-                      uni["completion_status"]
-                          ? Text('Completed',
-                              style: TextStyle(
-                                color: Colors.green,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16,
-                              ))
-                          : Text(
-                              'Pending',
-                              style: TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16,
-                              ),
-                            )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10, left: 20),
                   child: Row(
                     children: <Widget>[
                       Text(
