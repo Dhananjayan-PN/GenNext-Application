@@ -28,6 +28,7 @@ dependencies:
       commit: 9b032d8
   quill_zefyr_bijection: ^0.3.0
   grouped_list: ^3.1.0
+  url_launcher: ^5.4.11
 
 dev_dependencies:
   flutter_driver:

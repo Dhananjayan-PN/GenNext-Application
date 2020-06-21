@@ -1,7 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../custom_expansion_tile.dart' as custom;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
@@ -83,6 +85,93 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
   }
 
   Widget buildCard(uni) {
+    List<Widget> essays = [];
+    List<Widget> transcripts = [];
+    List<Widget> misc = [];
+    for (var i = 0; i < uni["essay_data"].length; i++) {
+      final curEssay = uni["essay_data"][i];
+      essays.add(Card(
+        shape: RoundedRectangleBorder(
+            side: BorderSide(color: Colors.white30, width: 1),
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        color: Colors.black.withOpacity(0.2),
+        child: ListTile(
+          dense: true,
+          title: Text(
+            curEssay["essay_title"],
+            style: TextStyle(color: Colors.white),
+          ),
+          subtitle: curEssay["in_progress"] &&
+                  curEssay["essay_approval_status"] == "Y"
+              ? Text('Completed', style: TextStyle(color: Colors.green))
+              : curEssay["in_progress"] &&
+                      curEssay["essay_approval_status"] == "N"
+                  ? Text('In Progress', style: TextStyle(color: Colors.yellow))
+                  : Text('Not Started', style: TextStyle(color: Colors.red)),
+          trailing: IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Icons.arrow_forward,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ));
+    }
+    for (var i = 0; i < uni["transcript_data"].length; i++) {
+      final curTranscript = uni["transcript_data"][i];
+      transcripts.add(Theme(
+        data: ThemeData(canvasColor: Colors.black.withOpacity(0.3)),
+        child: ActionChip(
+          key: Key(curTranscript["transcript_id"].toString()),
+          backgroundColor: Colors.black.withOpacity(0.2),
+          shape: RoundedRectangleBorder(
+              side: BorderSide(color: Colors.white30, width: 0.5),
+              borderRadius: BorderRadius.all(Radius.circular(10))),
+          label: Text(curTranscript["title"],
+              style: TextStyle(color: Colors.white)),
+          onPressed: () {
+            curTranscript["in_progress"]
+                ? launch(curTranscript["transcript_file_path"])
+                : _scafKey.currentState.showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'No Document Uploaded',
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  );
+          },
+        ),
+      ));
+    }
+    for (var i = 0; i < uni["misc_doc_data"].length; i++) {
+      final curDoc = uni["misc_doc_data"][i];
+      misc.add(Theme(
+        data: ThemeData(canvasColor: Colors.black.withOpacity(0.3)),
+        child: ActionChip(
+          key: Key(curDoc["misc_doc_id"].toString()),
+          backgroundColor: Colors.black.withOpacity(0.2),
+          shape: RoundedRectangleBorder(
+              side: BorderSide(color: Colors.white30, width: 0.5),
+              borderRadius: BorderRadius.all(Radius.circular(10))),
+          label: Text(curDoc["title"], style: TextStyle(color: Colors.white)),
+          onPressed: () {
+            curDoc["in_progress"]
+                ? launch(curDoc["misc_doc_path"] ??
+                    'https://user-images.githubusercontent.com/1825286/26859182-9d8c266c-4afb-11e7-8913-93d29b3f47e5.png')
+                : _scafKey.currentState.showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'No Document Uploaded',
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  );
+          },
+        ),
+      ));
+    }
     DateTime deadline = DateTime.parse(uni["application_deadline"]).toLocal();
     var timeleft = DateTime.now().isBefore(deadline)
         ? deadline.difference(DateTime.now()).inDays
@@ -154,75 +243,97 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                         'Status: ',
                         style: TextStyle(
                             color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w900),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700),
                       ),
                       uni["completion_status"]
                           ? Text('Completed',
-                              style: TextStyle(color: Colors.green))
+                              style: TextStyle(
+                                color: Colors.green,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                              ))
                           : Text(
                               'Pending',
                               style: TextStyle(
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.w600),
+                                color: Colors.red,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                              ),
                             )
                     ],
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 5, left: 20),
+                  padding: EdgeInsets.only(top: 10, left: 20),
                   child: Row(
                     children: <Widget>[
                       Text(
-                        'Essays: ',
+                        'Essays',
                         style: TextStyle(
                             color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w900),
-                      ),
-                      Text(
-                        '', //unis[index]['usnews_ranking'].toString(),
-                        style: TextStyle(color: Colors.white.withOpacity(0.8)),
-                      )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 5, left: 20),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        'Transcripts: ',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w900),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700),
                       ),
                     ],
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: 20.0, right: 20, top: 5),
+                  padding: EdgeInsets.only(left: 25, right: 30, top: 5),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Wrap(
-                        runAlignment: WrapAlignment.start,
-                        children: [] //topmajors.sublist(0, 2),
-                        ),
+                      runAlignment: WrapAlignment.start,
+                      children: essays,
+                    ),
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 5, left: 20),
+                  padding: EdgeInsets.only(top: 10, left: 20),
                   child: Row(
                     children: <Widget>[
                       Text(
-                        'Misc Documents: ',
+                        'Transcripts',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 30, right: 30),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Wrap(
+                      runAlignment: WrapAlignment.start,
+                      children: transcripts,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 10, left: 20),
+                  child: Row(
+                    children: <Widget>[
+                      Text(
+                        'Misc Documents',
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 15,
                             fontWeight: FontWeight.w900),
                       ),
                     ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 30, right: 30),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Wrap(
+                      runAlignment: WrapAlignment.start,
+                      children: misc,
+                    ),
                   ),
                 ),
                 Padding(
@@ -233,7 +344,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                       color: Colors.transparent,
                       child: InkWell(
                         splashColor: Colors.blue[900],
-                        child: Text('View profile',
+                        child: Text('View University',
                             style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.blue,
