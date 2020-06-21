@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
+import '../shimmer_skeleton.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -136,7 +137,11 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
               style: TextStyle(color: Colors.white)),
           onPressed: () {
             curTranscript["in_progress"]
-                ? launch(curTranscript["transcript_file_path"])
+                ? launch(
+                    curTranscript["transcript_file_path"] ??
+                        'https://user-images.githubusercontent.com/1825286/26859182-9d8c266c-4afb-11e7-8913-93d29b3f47e5.png',
+                    forceWebView: true,
+                    enableJavaScript: true)
                 : _scafKey.currentState.showSnackBar(
                     SnackBar(
                       content: Text(
@@ -166,8 +171,11 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
           label: Text(curDoc["title"], style: TextStyle(color: Colors.white)),
           onPressed: () {
             curDoc["in_progress"]
-                ? launch(curDoc["misc_doc_path"] ??
-                    'https://user-images.githubusercontent.com/1825286/26859182-9d8c266c-4afb-11e7-8913-93d29b3f47e5.png')
+                ? launch(
+                    curDoc["misc_doc_path"] ??
+                        'https://user-images.githubusercontent.com/1825286/26859182-9d8c266c-4afb-11e7-8913-93d29b3f47e5.png',
+                    forceWebView: true,
+                    enableJavaScript: true)
                 : _scafKey.currentState.showSnackBar(
                     SnackBar(
                       content: Text(
@@ -200,9 +208,9 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
         child: CachedNetworkImage(
           imageUrl:
               "https://www.wpr.org/sites/default/files/bascom_hall_summer.jpg",
-          placeholder: (context, url) => Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Center(child: CircularProgressIndicator()),
+          placeholder: (context, url) => CardSkeleton(
+            padding: 0,
+            isBottomLinesActive: false,
           ),
           errorWidget: (context, url, error) {
             _scafKey.currentState.showSnackBar(
@@ -525,8 +533,12 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                       );
                     }
                   }
-                  return Center(
-                    child: CircularProgressIndicator(),
+                  return Padding(
+                    padding: EdgeInsets.only(top: 60),
+                    child: CardListSkeleton(
+                      isBottomLinesActive: false,
+                      length: 10,
+                    ),
                   );
                 },
               ),
@@ -654,8 +666,9 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                       );
                     }
                   }
-                  return Center(
-                    child: CircularProgressIndicator(),
+                  return CardListSkeleton(
+                    isBottomLinesActive: false,
+                    length: 10,
                   );
                 },
               ),
