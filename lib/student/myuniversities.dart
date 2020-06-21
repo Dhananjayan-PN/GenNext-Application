@@ -4,6 +4,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import '../shimmer_skeleton.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
@@ -473,7 +474,6 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                       ),
                     );
                   }
-
                   if (snapshot.hasData) {
                     if (snapshot.data.length == 0) {
                       return Padding(
@@ -659,8 +659,12 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                       );
                     }
                   }
-                  return Center(
-                    child: CircularProgressIndicator(),
+                  return Padding(
+                    padding: EdgeInsets.only(top: 60),
+                    child: CardListSkeleton(
+                      isBottomLinesActive: false,
+                      length: 10,
+                    ),
                   );
                 },
               ),
@@ -789,8 +793,12 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                       );
                     }
                   }
-                  return Center(
-                    child: CircularProgressIndicator(),
+                  return Padding(
+                    padding: EdgeInsets.only(top: 60),
+                    child: CardListSkeleton(
+                      isBottomLinesActive: false,
+                      length: 10,
+                    ),
                   );
                 },
               ),

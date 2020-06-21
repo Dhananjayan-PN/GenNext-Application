@@ -3,6 +3,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:http/http.dart' as http;
+import '../shimmer_skeleton.dart';
 import 'package:quill_delta/quill_delta.dart';
 import 'package:quill_zefyr_bijection/quill_zefyr_bijection.dart';
 import 'dart:async';
@@ -255,8 +256,12 @@ class _EssaysScreenState extends State<EssaysScreen> {
                 );
               }
             }
-            return Center(
-              child: CircularProgressIndicator(),
+            return Padding(
+              padding: EdgeInsets.only(top: 60),
+              child: CardListSkeleton(
+                isBottomLinesActive: false,
+                length: 10,
+              ),
             );
           },
         ),

@@ -78,7 +78,9 @@ class _CardSkeletonState extends State<CardSkeleton>
       builder: (context, child) {
         return Padding(
           padding: EdgeInsets.only(
-              top: widget.padding, left: widget.padding, right: widget.padding),
+              top: widget.padding - 2,
+              left: widget.padding,
+              right: widget.padding),
           child: Card(
             clipBehavior: Clip.antiAlias,
             shape: RoundedRectangleBorder(
