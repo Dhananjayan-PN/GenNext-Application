@@ -418,7 +418,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
                     }
                   }
                   return Padding(
-                    padding: EdgeInsets.only(top: 60),
+                    padding: EdgeInsets.only(top: 70),
                     child: CardListSkeleton(
                       isBottomLinesActive: false,
                       length: 10,
@@ -552,7 +552,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
                     }
                   }
                   return Padding(
-                    padding: EdgeInsets.only(top: 60),
+                    padding: EdgeInsets.only(top: 70),
                     child: CardListSkeleton(
                       isBottomLinesActive: false,
                       length: 10,
