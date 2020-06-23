@@ -28,7 +28,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
   String filter1;
   String filter2;
   Future completedApps;
-  Future pendingApp;
+  Future pendingApps;
 
   @override
   void initState() {
