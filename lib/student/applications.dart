@@ -198,18 +198,18 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
     if (timeleft is int) {
       timeleft = timeleft.toString() + ' days';
     }
-    List<BoxShadow> elevationShadow = kElevationToShadow[9];
+    List<BoxShadow> elevationShadow = kElevationToShadow[1];
     return Padding(
       padding: EdgeInsets.only(top: 5, left: 10, right: 10),
-      child: Container(
-        decoration: BoxDecoration(
-          boxShadow: [...elevationShadow],
-        ),
+      child: Material(
+        shadowColor: Colors.grey.withOpacity(0.5),
+        color: Colors.transparent,
+        elevation: 10,
         child: Card(
           clipBehavior: Clip.antiAlias,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10))),
-          elevation: 2,
+          elevation: 0,
           child: CachedNetworkImage(
             imageUrl:
                 "https://www.wpr.org/sites/default/files/bascom_hall_summer.jpg",
