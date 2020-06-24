@@ -171,7 +171,7 @@ class _DashBoardState extends State<DashBoard> {
                 );
               } else {
                 return Container(
-                  height: 270,
+                  height: 280,
                   child: Swiper(
                     loop: snapshot.data.length == 1 ? false : true,
                     itemCount: snapshot.data.length,
