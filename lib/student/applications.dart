@@ -198,177 +198,183 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
     if (timeleft is int) {
       timeleft = timeleft.toString() + ' days';
     }
+    List<BoxShadow> elevationShadow = kElevationToShadow[9];
     return Padding(
       padding: EdgeInsets.only(top: 5, left: 10, right: 10),
-      child: Card(
-        clipBehavior: Clip.antiAlias,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10))),
-        elevation: 10,
-        child: CachedNetworkImage(
-          imageUrl:
-              "https://www.wpr.org/sites/default/files/bascom_hall_summer.jpg",
-          placeholder: (context, url) => CardSkeleton(
-            padding: 0,
-            isBottomLinesActive: false,
-          ),
-          errorWidget: (context, url, error) {
-            _scafKey.currentState.showSnackBar(
-              SnackBar(
-                content: Text(
-                  'Failed to fetch data. Check your internet connection and try again',
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            );
-            return Icon(Icons.error);
-          },
-          imageBuilder: (context, imageProvider) => Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                alignment: Alignment.center,
-                colorFilter: ColorFilter.mode(
-                    Colors.black.withAlpha(160), BlendMode.darken),
-                image: imageProvider,
-                fit: BoxFit.cover,
-              ),
+      child: Container(
+        decoration: BoxDecoration(
+          boxShadow: [...elevationShadow],
+        ),
+        child: Card(
+          clipBehavior: Clip.antiAlias,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10))),
+          elevation: 2,
+          child: CachedNetworkImage(
+            imageUrl:
+                "https://www.wpr.org/sites/default/files/bascom_hall_summer.jpg",
+            placeholder: (context, url) => CardSkeleton(
+              padding: 0,
+              isBottomLinesActive: false,
             ),
-            child: custom.ExpansionTile(
-              key: Key(uni['application_id'].toString()),
-              title: Padding(
-                padding: EdgeInsets.only(top: 8),
-                child: Text(
-                  uni['university'],
-                  style: TextStyle(color: Colors.white),
+            errorWidget: (context, url, error) {
+              _scafKey.currentState.showSnackBar(
+                SnackBar(
+                  content: Text(
+                    'Failed to fetch data. Check your internet connection and try again',
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              );
+              return Icon(Icons.error);
+            },
+            imageBuilder: (context, imageProvider) => Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  alignment: Alignment.center,
+                  colorFilter: ColorFilter.mode(
+                      Colors.black.withAlpha(160), BlendMode.darken),
+                  image: imageProvider,
+                  fit: BoxFit.cover,
                 ),
               ),
-              subtitle: Padding(
-                padding: EdgeInsets.only(bottom: 8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      'Due: ' +
-                          DateFormat.yMMMMd('en_US')
-                              .format(deadline.toLocal()) +
-                          ' ($timeleft)',
-                      style: TextStyle(fontSize: 14, color: timecolor),
-                    ),
-                    uni["completion_status"]
-                        ? Text('Completed',
-                            style: TextStyle(
-                              color: Colors.green,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                            ))
-                        : Text(
-                            'Pending',
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14,
-                            ),
-                          )
-                  ],
+              child: custom.ExpansionTile(
+                key: Key(uni['application_id'].toString()),
+                title: Padding(
+                  padding: EdgeInsets.only(top: 8),
+                  child: Text(
+                    uni['university'],
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
+                subtitle: Padding(
+                  padding: EdgeInsets.only(bottom: 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        'Due: ' +
+                            DateFormat.yMMMMd('en_US')
+                                .format(deadline.toLocal()) +
+                            ' ($timeleft)',
+                        style: TextStyle(fontSize: 14, color: timecolor),
+                      ),
+                      uni["completion_status"]
+                          ? Text('Completed',
+                              style: TextStyle(
+                                color: Colors.green,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14,
+                              ))
+                          : Text(
+                              'Pending',
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                              ),
+                            )
+                    ],
+                  ),
+                ),
+                children: <Widget>[
+                  Divider(
+                    color: Colors.white70,
+                    indent: 10,
+                    endIndent: 10,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 5, left: 20),
+                    child: Row(
+                      children: <Widget>[
+                        Text(
+                          'Essays',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 25, right: 30, top: 5),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Wrap(
+                        runAlignment: WrapAlignment.start,
+                        children: essays,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10, left: 20),
+                    child: Row(
+                      children: <Widget>[
+                        Text(
+                          'Transcripts',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 30, right: 30),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Wrap(
+                        runAlignment: WrapAlignment.start,
+                        children: transcripts,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10, left: 20),
+                    child: Row(
+                      children: <Widget>[
+                        Text(
+                          'Misc Documents',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w900),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 30, right: 30),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Wrap(
+                        runAlignment: WrapAlignment.start,
+                        children: misc,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10, bottom: 20),
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          splashColor: Colors.blue[900],
+                          child: Text('View University',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.w900)),
+                          onTap: () {},
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              children: <Widget>[
-                Divider(
-                  color: Colors.white70,
-                  indent: 10,
-                  endIndent: 10,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 5, left: 20),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        'Essays',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 25, right: 30, top: 5),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Wrap(
-                      runAlignment: WrapAlignment.start,
-                      children: essays,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10, left: 20),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        'Transcripts',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 30, right: 30),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Wrap(
-                      runAlignment: WrapAlignment.start,
-                      children: transcripts,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10, left: 20),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        'Misc Documents',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w900),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 30, right: 30),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Wrap(
-                      runAlignment: WrapAlignment.start,
-                      children: misc,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10, bottom: 20),
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        splashColor: Colors.blue[900],
-                        child: Text('View University',
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.blue,
-                                fontWeight: FontWeight.w900)),
-                        onTap: () {},
-                      ),
-                    ),
-                  ),
-                ),
-              ],
             ),
           ),
         ),
