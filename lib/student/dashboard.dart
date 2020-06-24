@@ -36,6 +36,20 @@ class _DashBoardState extends State<DashBoard> {
     recommendedUnis = getRecommendedUnis();
   }
 
+  Color colorPicker(double rating) {
+    if (0 <= rating && rating < 30) {
+      return Colors.red;
+    } else if (30 <= rating && rating < 60) {
+      return Colors.orange;
+    } else if (60 <= rating && rating < 80) {
+      return Colors.yellow;
+    } else if (80 <= rating && rating <= 100) {
+      return Colors.green;
+    } else {
+      return Colors.white;
+    }
+  }
+
   Future<void> getRecommendedUnis() async {
     final response = await http.get(
       dom + 'api/student/recommend-universities',
@@ -222,9 +236,9 @@ class _DashBoardState extends State<DashBoard> {
                                         percent: snapshot.data[index]
                                                 ["match_rating"] /
                                             100,
-                                        center: new Text(
+                                        center: Text(
                                           " ${snapshot.data[index]["match_rating"].toString().substring(0, 4)}%",
-                                          style: new TextStyle(
+                                          style: TextStyle(
                                               color:
                                                   Colors.white.withOpacity(0.8),
                                               fontSize: 11.5),
@@ -232,14 +246,15 @@ class _DashBoardState extends State<DashBoard> {
                                         circularStrokeCap:
                                             CircularStrokeCap.round,
                                         backgroundColor: Colors.transparent,
-                                        progressColor: Colors.green,
+                                        progressColor: colorPicker(snapshot
+                                            .data[index]["match_rating"]),
                                       ),
                                     ],
                                   ),
                                 ),
                                 Spacer(),
                                 Padding(
-                                  padding: const EdgeInsets.only(left: 15),
+                                  padding: EdgeInsets.only(left: 15),
                                   child: Text(
                                     snapshot.data[index]['university_name'],
                                     style: TextStyle(
@@ -247,12 +262,12 @@ class _DashBoardState extends State<DashBoard> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(
-                                      bottom: 14, left: 15),
+                                  padding:
+                                      EdgeInsets.only(bottom: 14, left: 15),
                                   child: Text(
                                     snapshot.data[index]['university_location'],
                                     style: TextStyle(
-                                        color: Colors.white70, fontSize: 17),
+                                        color: Colors.white70, fontSize: 16),
                                   ),
                                 ),
                               ],
