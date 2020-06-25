@@ -112,25 +112,30 @@ class _DashBoardState extends State<DashBoard> {
           future: recommendedUnis.timeout(Duration(seconds: 10)),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return Card(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10))),
-                elevation: 10,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Icon(
-                        Icons.error_outline,
-                        size: 30,
-                        color: Colors.red.withOpacity(0.9),
-                      ),
-                      Text(
-                        'Unable to establish a connection with our servers.\nCheck your connection and try again later.',
-                        style: TextStyle(color: Colors.black54),
-                        textAlign: TextAlign.center,
-                      )
-                    ],
+              return Padding(
+                padding: EdgeInsets.only(left: 20, right: 20),
+                child: Card(
+                  margin: EdgeInsets.only(top: 20, bottom: 30),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  elevation: 6,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 70, bottom: 50),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(
+                          Icons.error_outline,
+                          size: 30,
+                          color: Colors.red.withOpacity(0.9),
+                        ),
+                        Text(
+                          'Unable to establish a connection with our servers.\nCheck your connection and try again later.',
+                          style: TextStyle(color: Colors.black54),
+                          textAlign: TextAlign.center,
+                        )
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -142,17 +147,21 @@ class _DashBoardState extends State<DashBoard> {
                   child: Card(
                     margin: EdgeInsets.only(top: 20, bottom: 30),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(15))),
-                    elevation: 10,
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                    elevation: 6,
                     child: Padding(
-                      padding: EdgeInsets.only(top: 20, bottom: 30),
+                      padding: EdgeInsets.only(top: 50, bottom: 50),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Icon(
-                            Icons.sentiment_neutral,
-                            size: 40,
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 10),
+                            child: Icon(
+                              Icons.assessment,
+                              size: 35,
+                              color: Colors.black.withOpacity(0.75),
+                            ),
                           ),
                           Text(
                             "No recommendations at the moment",
@@ -175,7 +184,7 @@ class _DashBoardState extends State<DashBoard> {
                   child: Swiper(
                     loop: snapshot.data.length == 1 ? false : true,
                     itemCount: snapshot.data.length,
-                    viewportFraction: 0.87,
+                    viewportFraction: 0.89,
                     scale: 0.9,
                     itemBuilder: (BuildContext context, int index) {
                       return Card(
@@ -184,7 +193,7 @@ class _DashBoardState extends State<DashBoard> {
                         shape: RoundedRectangleBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(10))),
-                        elevation: 10,
+                        elevation: 6,
                         child: CachedNetworkImage(
                           imageUrl:
                               "https://www.wpr.org/sites/default/files/bascom_hall_summer.jpg",
@@ -280,8 +289,9 @@ class _DashBoardState extends State<DashBoard> {
                 );
               }
             }
-            return Container(
-                height: 200, child: Center(child: CircularProgressIndicator()));
+            return DashCardSkeleton(
+              padding: 20,
+            );
           },
         ),
       ],
