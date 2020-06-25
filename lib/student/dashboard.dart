@@ -423,14 +423,14 @@ class _DashBoardState extends State<DashBoard> {
                 );
               } else {
                 return Container(
-                  height: 225,
+                  height: 235,
                   child: Swiper(
                     loop: false,
                     pagination: snapshot.data.length == 1
                         ? null
                         : SwiperPagination(margin: EdgeInsets.all(0)),
                     itemCount: snapshot.data.length,
-                    viewportFraction: 0.80,
+                    viewportFraction: 0.83,
                     scale: 0.9,
                     itemBuilder: (BuildContext context, int index) {
                       DateTime sessionDateTime = DateTime.parse(
@@ -513,7 +513,7 @@ class _DashBoardState extends State<DashBoard> {
                                   snapshot.data[index]['subject_of_session'],
                                   style: TextStyle(
                                       color: Colors.black87,
-                                      fontSize: 23,
+                                      fontSize: 21,
                                       fontWeight: FontWeight.w500),
                                 ),
                               ),
