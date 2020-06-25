@@ -250,7 +250,7 @@ class _DashCardSkeletonState extends State<DashCardSkeleton>
               color: Colors.white,
               padding: EdgeInsets.all(12),
               child: Container(
-                height: 205,
+                height: 185,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,

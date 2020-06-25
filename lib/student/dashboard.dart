@@ -29,11 +29,13 @@ class _DashBoardState extends State<DashBoard> {
   _DashBoardState({this.user});
 
   Future recommendedUnis;
+  Future upcomingSessions;
 
   @override
   void initState() {
     super.initState();
     recommendedUnis = getRecommendedUnis();
+    upcomingSessions = getUpcomingSessions();
   }
 
   Color colorPicker(double rating) {
@@ -62,11 +64,28 @@ class _DashBoardState extends State<DashBoard> {
     }
   }
 
+  Future<void> getUpcomingSessions() async {
+    final response =
+        await http.get(dom + 'api/student/get-counselor-sessions', headers: {
+      HttpHeaders.authorizationHeader: 'Token $tok',
+    });
+    if (response.statusCode == 200) {
+      List sessions = json.decode(response.body)['session_data'];
+      List upcoming = [];
+      for (var i = 0; sessions.length < 4 ? i < sessions.length : i < 5; i++) {
+        upcoming.add(sessions[i]);
+      }
+      return upcoming;
+    } else {
+      throw ('error');
+    }
+  }
+
   Widget build(BuildContext context) {
     return ListView(
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(left: 20, top: 20),
+          padding: EdgeInsets.only(left: 20, top: 25),
           child: Text(
             'Hello,',
             style: TextStyle(color: Colors.black45, fontSize: 25),
@@ -113,24 +132,28 @@ class _DashBoardState extends State<DashBoard> {
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Padding(
-                padding: EdgeInsets.only(left: 20, right: 20),
+                padding: EdgeInsets.only(left: 25, right: 25),
                 child: Card(
                   margin: EdgeInsets.only(top: 20, bottom: 30),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10))),
                   elevation: 6,
                   child: Padding(
-                    padding: EdgeInsets.only(top: 70, bottom: 50),
+                    padding:
+                        EdgeInsets.only(left: 5, right: 5, top: 55, bottom: 50),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Icon(
-                          Icons.error_outline,
-                          size: 30,
-                          color: Colors.red.withOpacity(0.9),
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 10),
+                          child: Icon(
+                            Icons.error_outline,
+                            size: 35,
+                            color: Colors.red.withOpacity(0.75),
+                          ),
                         ),
                         Text(
-                          'Unable to establish a connection with our servers.\nCheck your connection and try again later.',
+                          'Unable to establish a connection\nwith our servers.\nCheck your connection and try again later.',
                           style: TextStyle(color: Colors.black54),
                           textAlign: TextAlign.center,
                         )
@@ -180,11 +203,11 @@ class _DashBoardState extends State<DashBoard> {
                 );
               } else {
                 return Container(
-                  height: 280,
+                  height: 260,
                   child: Swiper(
                     loop: snapshot.data.length == 1 ? false : true,
                     itemCount: snapshot.data.length,
-                    viewportFraction: 0.89,
+                    viewportFraction: 0.87,
                     scale: 0.9,
                     itemBuilder: (BuildContext context, int index) {
                       return Card(
@@ -236,8 +259,8 @@ class _DashBoardState extends State<DashBoard> {
                                       CircularPercentIndicator(
                                         footer: Text('Match',
                                             style: TextStyle(
-                                                color: Colors.white
-                                                    .withOpacity(0.8),
+                                                fontWeight: FontWeight.w300,
+                                                color: Colors.white,
                                                 fontSize: 10)),
                                         radius: 45.0,
                                         lineWidth: 2.5,
@@ -248,8 +271,8 @@ class _DashBoardState extends State<DashBoard> {
                                         center: Text(
                                           " ${snapshot.data[index]["match_rating"].toString().substring(0, 4)}%",
                                           style: TextStyle(
-                                              color:
-                                                  Colors.white.withOpacity(0.8),
+                                              fontWeight: FontWeight.w300,
+                                              color: Colors.white,
                                               fontSize: 11.5),
                                         ),
                                         circularStrokeCap:
@@ -276,11 +299,240 @@ class _DashBoardState extends State<DashBoard> {
                                   child: Text(
                                     snapshot.data[index]['university_location'],
                                     style: TextStyle(
-                                        color: Colors.white70, fontSize: 16),
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.white70,
+                                        fontSize: 16),
                                   ),
                                 ),
                               ],
                             ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                );
+              }
+            }
+            return DashCardSkeleton(
+              padding: 20,
+            );
+          },
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 10, left: 20, right: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'Upcoming Sessions',
+                style: TextStyle(color: Colors.black87, fontSize: 19),
+              ),
+              Spacer(),
+              InkWell(
+                child: Text(
+                  'See all',
+                  style: TextStyle(color: Colors.blue, fontSize: 15),
+                ),
+                onTap: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    PageTransition(
+                        type: PageTransitionType.fade, child: ScheduleScreen()),
+                    (Route<dynamic> route) => false,
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+        FutureBuilder(
+          future: upcomingSessions.timeout(Duration(seconds: 10)),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Padding(
+                padding: EdgeInsets.only(left: 25, right: 25),
+                child: Card(
+                  margin: EdgeInsets.only(top: 20, bottom: 30),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  elevation: 6,
+                  child: Padding(
+                    padding:
+                        EdgeInsets.only(left: 5, right: 5, top: 55, bottom: 50),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 10),
+                          child: Icon(
+                            Icons.error_outline,
+                            size: 35,
+                            color: Colors.red.withOpacity(0.75),
+                          ),
+                        ),
+                        Text(
+                          'Unable to establish a connection\nwith our servers.\nCheck your connection and try again later.',
+                          style: TextStyle(color: Colors.black54),
+                          textAlign: TextAlign.center,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }
+            if (snapshot.hasData) {
+              if (snapshot.data.length == 0) {
+                return Padding(
+                  padding: EdgeInsets.only(left: 25, right: 25),
+                  child: Card(
+                    margin: EdgeInsets.only(top: 20, bottom: 30),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                    elevation: 6,
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 50, bottom: 50),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 10),
+                            child: Icon(
+                              Icons.schedule,
+                              size: 35,
+                              color: Colors.black.withOpacity(0.75),
+                            ),
+                          ),
+                          Text(
+                            "No upcoming sessions",
+                            style: TextStyle(color: Colors.black54),
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            "Enjoy your day!",
+                            style: TextStyle(color: Colors.black54),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              } else {
+                return Container(
+                  height: 225,
+                  child: Swiper(
+                    loop: false,
+                    pagination: snapshot.data.length == 1
+                        ? null
+                        : SwiperPagination(margin: EdgeInsets.all(0)),
+                    itemCount: snapshot.data.length,
+                    viewportFraction: 0.80,
+                    scale: 0.9,
+                    itemBuilder: (BuildContext context, int index) {
+                      DateTime sessionDateTime = DateTime.parse(
+                              snapshot.data[index]['session_timestamp'])
+                          .toLocal();
+                      final int hour =
+                          snapshot.data[index]['session_duration'] ~/ 60;
+                      final int minutes =
+                          snapshot.data[index]['session_duration'] % 60;
+                      return Card(
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        margin: EdgeInsets.only(top: 20, bottom: 30),
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        elevation: 6,
+                        child: Padding(
+                          padding:
+                              EdgeInsets.only(top: 10, left: 20, right: 20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: <Widget>[
+                                  Text(
+                                    DateFormat.d().format(sessionDateTime),
+                                    style: TextStyle(
+                                        color: Colors.black87,
+                                        fontSize: 38,
+                                        fontWeight: FontWeight.w200),
+                                  ),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.only(left: 3, bottom: 2.9),
+                                    child: Text(
+                                      DateFormat.MMM()
+                                          .format(sessionDateTime)
+                                          .toUpperCase(),
+                                      style: TextStyle(
+                                          color: Colors.black87,
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.only(left: 2, bottom: 12),
+                                    child: Text(
+                                      hour == 0
+                                          ? minutes.toString() + 'm'
+                                          : hour.toString() +
+                                              'h ' +
+                                              minutes.toString() +
+                                              'm',
+                                      style: TextStyle(
+                                          color: Colors.blue,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w200),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 2, bottom: 0),
+                                child: Text(
+                                  DateFormat.jm()
+                                      .format(sessionDateTime)
+                                      .toUpperCase(),
+                                  style: TextStyle(
+                                      color: Colors.black87,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w200),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 2, top: 13),
+                                child: Text(
+                                  snapshot.data[index]['subject_of_session'],
+                                  style: TextStyle(
+                                      color: Colors.black87,
+                                      fontSize: 23,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                              snapshot.data[index]['session_notes'] == ''
+                                  ? Container()
+                                  : Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 3, top: 3, right: 8),
+                                      child: Text(
+                                        snapshot.data[index]['session_notes'],
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            color: Colors.black87,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w200),
+                                      ),
+                                    ),
+                            ],
                           ),
                         ),
                       );
