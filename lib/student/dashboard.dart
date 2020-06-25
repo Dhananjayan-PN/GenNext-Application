@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:badges/badges.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import '../shimmer_skeleton.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'schedule.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -668,7 +669,7 @@ class _DashBoardState extends State<DashBoard> {
           child: Card(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(15))),
-            elevation: 10,
+            elevation: 6,
             child: Column(
               children: <Widget>[
                 Padding(
@@ -701,7 +702,7 @@ class _DashBoardState extends State<DashBoard> {
                       Spacer(),
                       saved
                           ? Padding(
-                              padding: EdgeInsets.only(right: 10),
+                              padding: EdgeInsets.only(right: 13),
                               child: Icon(
                                 Icons.check,
                                 color: Colors.green,
@@ -782,8 +783,12 @@ class _DashBoardState extends State<DashBoard> {
                       }
                       return Padding(
                         padding: EdgeInsets.only(
-                            top: 30, left: 20, right: 20, bottom: 30),
-                        child: Center(child: CircularProgressIndicator()),
+                            top: 30, left: 20, right: 20, bottom: 50),
+                        child: Center(
+                            child: SpinKitWave(
+                          color: Colors.grey.withOpacity(0.4),
+                          size: 30,
+                        )),
                       );
                     })
               ],
