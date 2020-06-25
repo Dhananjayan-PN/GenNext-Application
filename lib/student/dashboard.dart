@@ -24,18 +24,26 @@ class DashBoard extends StatefulWidget {
 }
 
 class _DashBoardState extends State<DashBoard> {
-  GlobalKey<ScaffoldState> _scafKey = GlobalKey<ScaffoldState>();
   final User user;
   _DashBoardState({this.user});
+  GlobalKey<ScaffoldState> _scafKey = GlobalKey<ScaffoldState>();
+  TextEditingController studentnotes = TextEditingController();
+
+  int userId;
+  bool saved = false;
+  bool saving = true;
+  bool savingfailed = false;
 
   Future recommendedUnis;
   Future upcomingSessions;
+  Future studentNotes;
 
   @override
   void initState() {
     super.initState();
     recommendedUnis = getRecommendedUnis();
     upcomingSessions = getUpcomingSessions();
+    studentNotes = getStudentNotes();
   }
 
   Color colorPicker(double rating) {
@@ -81,6 +89,115 @@ class _DashBoardState extends State<DashBoard> {
     }
   }
 
+  Future<void> getStudentNotes() async {
+    saving = true;
+    final response =
+        await http.get(dom + 'api/counselor/get-counselor-notes', headers: {
+      HttpHeaders.authorizationHeader: 'Token $tok',
+    });
+    if (response.statusCode == 200) {
+      setState(() {
+        saving = false;
+        saved = true;
+      });
+      userId = json.decode(response.body)['counselor_id'];
+      String notes = json.decode(response.body)['counselor_notes'];
+      return notes;
+    } else {
+      setState(() {
+        saving = false;
+        savingfailed = true;
+      });
+      throw ('error');
+    }
+  }
+
+  Future<void> editStudentNotes() async {
+    final response = await http.put(
+      dom + 'api/counselor/edit-counselor-notes',
+      headers: {
+        HttpHeaders.authorizationHeader: "Token $tok",
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{"user_id": userId, "notes": studentnotes.text},
+      ),
+    );
+    if (response.statusCode == 200) {
+      if (json.decode(response.body)['response'] ==
+          'Notes Successfuly Updated.') {
+        setState(() {
+          saving = false;
+          saved = true;
+        });
+      } else {
+        setState(() {
+          saving = false;
+          savingfailed = true;
+        });
+        _error();
+      }
+    } else {
+      setState(() {
+        saving = false;
+        savingfailed = true;
+      });
+      _error();
+    }
+  }
+
+  _editStudentNotes() {
+    setState(() {
+      saved = false;
+      saving = true;
+    });
+    editStudentNotes();
+  }
+
+  _error() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(0),
+          elevation: 20,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          content: Container(
+            height: 150,
+            width: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            ),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(
+                    Icons.error_outline,
+                    size: 40,
+                    color: Colors.red.withOpacity(0.9),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Text(
+                      'Unable to establish a connection with our servers.\nCheck your connection and try again later.',
+                      style: TextStyle(color: Colors.black, fontSize: 12),
+                      textAlign: TextAlign.center,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Widget build(BuildContext context) {
     return ListView(
       children: <Widget>[
@@ -99,7 +216,7 @@ class _DashBoardState extends State<DashBoard> {
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(top: 30, left: 20, right: 20),
+          padding: EdgeInsets.only(top: 25, left: 20, right: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -546,6 +663,133 @@ class _DashBoardState extends State<DashBoard> {
             );
           },
         ),
+        Padding(
+          padding: EdgeInsets.only(bottom: 20, top: 20, left: 20, right: 20),
+          child: Card(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15))),
+            elevation: 10,
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(top: 10, bottom: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Spacer(),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(right: 5),
+                            child: Icon(
+                              Icons.edit,
+                              color: Colors.black.withOpacity(0.8),
+                            ),
+                          ),
+                          Text(
+                            'Notepad',
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black.withOpacity(0.8)),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                      Spacer(),
+                      saved
+                          ? Padding(
+                              padding: EdgeInsets.only(right: 10),
+                              child: Icon(
+                                Icons.check,
+                                color: Colors.green,
+                              ),
+                            )
+                          : saving
+                              ? Padding(
+                                  padding: EdgeInsets.only(right: 14),
+                                  child: SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 3,
+                                    ),
+                                  ),
+                                )
+                              : savingfailed
+                                  ? Padding(
+                                      padding: EdgeInsets.only(right: 10),
+                                      child: Icon(
+                                        Icons.priority_high,
+                                        color: Colors.red,
+                                      ),
+                                    )
+                                  : Container(),
+                    ],
+                  ),
+                ),
+                Text(
+                  "Changes will be synced across devices",
+                  style: TextStyle(
+                      color: Colors.black54,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w400),
+                  textAlign: TextAlign.center,
+                ),
+                Divider(thickness: 0, indent: 25, endIndent: 25),
+                FutureBuilder(
+                    future: studentNotes.timeout(Duration(seconds: 10)),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        saving = false;
+                        savingfailed = true;
+                        return Padding(
+                          padding: EdgeInsets.only(
+                              top: 00, left: 20, right: 20, bottom: 15),
+                          child: Text(
+                            'Unable to load your notes. Try again later',
+                            style: TextStyle(fontSize: 12, color: Colors.red),
+                            textAlign: TextAlign.center,
+                          ),
+                        );
+                      }
+                      if (snapshot.hasData) {
+                        saving = false;
+                        saved = true;
+                        return Padding(
+                          padding: EdgeInsets.only(
+                              top: 10, left: 20, right: 20, bottom: 10),
+                          child: TextField(
+                            controller: studentnotes,
+                            autocorrect: true,
+                            maxLines: null,
+                            decoration: InputDecoration(
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black87),
+                                  borderRadius: BorderRadius.circular(10)),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              hintText:
+                                  'Take note of your tasks, plans, thoughts...',
+                              hintStyle: TextStyle(
+                                  color: Colors.black54, fontSize: 14),
+                            ),
+                            onChanged: (value) => _editStudentNotes(),
+                          ),
+                        );
+                      }
+                      return Padding(
+                        padding: EdgeInsets.only(
+                            top: 30, left: 20, right: 20, bottom: 30),
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    })
+              ],
+            ),
+          ),
+        )
       ],
     );
   }
