@@ -21,6 +21,8 @@ import 'schedule.dart';
 User newUser;
 String tok = token;
 String dom = domain;
+Widget curPage = StudentHomeScreen(user: newUser);
+PageController _controller;
 final navlistelements = [
   ['Home', StudentHomeScreen(user: newUser), Icons.home],
   ['My Profile', ProfileScreen(), Icons.account_box],
@@ -31,7 +33,6 @@ final navlistelements = [
   ['My Applications', ApplicationsScreen(), Icons.assignment],
   ['My Essays', EssaysScreen(), Icons.edit]
 ];
-PageController _controller;
 
 class NavDrawer extends StatelessWidget {
   final String name;
@@ -55,11 +56,15 @@ class NavDrawer extends StatelessWidget {
         ),
         onTap: () {
           Navigator.pop(context);
-          Navigator.pushAndRemoveUntil(
-            context,
-            PageTransition(type: PageTransitionType.fade, child: element[1]),
-            (Route<dynamic> route) => false,
-          );
+          if (curPage == element[1]) {
+          } else {
+            curPage = element[1];
+            Navigator.pushAndRemoveUntil(
+              context,
+              PageTransition(type: PageTransitionType.fade, child: element[1]),
+              (Route<dynamic> route) => false,
+            );
+          }
         },
       ));
       navlist.add(
