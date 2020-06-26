@@ -131,7 +131,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
           return AlertDialog(
               elevation: 20,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
               title: Center(child: Text('Top Majors')),
               content: ListView(
                 children: topMajorsChips,

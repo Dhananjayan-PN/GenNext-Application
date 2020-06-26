@@ -118,13 +118,13 @@ class ScheduleScreenState extends State<ScheduleScreen> {
               contentPadding: EdgeInsets.all(0),
               elevation: 20,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
               content: Container(
                 height: 150,
                 width: 80,
                 decoration: BoxDecoration(
                   shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
                 ),
                 child: Center(
                   child: Column(
@@ -200,13 +200,13 @@ class ScheduleScreenState extends State<ScheduleScreen> {
               contentPadding: EdgeInsets.all(0),
               elevation: 20,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
               content: Container(
                 height: 150,
                 width: 80,
                 decoration: BoxDecoration(
                   shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
                 ),
                 child: Center(
                   child: Column(
@@ -271,13 +271,13 @@ class ScheduleScreenState extends State<ScheduleScreen> {
               contentPadding: EdgeInsets.all(0),
               elevation: 20,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
               content: Container(
                 height: 150,
                 width: 80,
                 decoration: BoxDecoration(
                   shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
                 ),
                 child: Center(
                   child: Column(
@@ -338,13 +338,13 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           contentPadding: EdgeInsets.all(0),
           elevation: 20,
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
           content: Container(
             height: 150,
             width: 80,
             decoration: BoxDecoration(
               shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
             ),
             child: Center(
               child: Column(
@@ -384,13 +384,13 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           contentPadding: EdgeInsets.all(0),
           elevation: 20,
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
           content: Container(
             height: 150,
             width: 80,
             decoration: BoxDecoration(
               shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
             ),
             child: Center(
               child: Column(
@@ -435,7 +435,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           contentPadding: EdgeInsets.all(0),
           elevation: 20,
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
           title: Center(
               child: Text('Create Session',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))),
@@ -443,7 +443,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
             ),
             child: Form(
               key: _formKey,
@@ -623,7 +623,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           contentPadding: EdgeInsets.all(0),
           elevation: 20,
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
           title: Center(
               child: Text('Edit Session',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))),
@@ -631,7 +631,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
             ),
             child: Form(
               key: _formKey,
@@ -790,16 +790,16 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           contentPadding: EdgeInsets.all(0),
           elevation: 20,
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
           content: Container(
             decoration: BoxDecoration(
               shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
             ),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Padding(
                   padding: EdgeInsets.only(top: 20),

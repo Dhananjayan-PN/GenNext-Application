@@ -173,13 +173,13 @@ class _DashBoardState extends State<DashBoard> {
           contentPadding: EdgeInsets.all(0),
           elevation: 20,
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
           content: Container(
             height: 150,
             width: 80,
             decoration: BoxDecoration(
               shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
             ),
             child: Center(
               child: Column(

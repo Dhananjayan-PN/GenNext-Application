@@ -222,6 +222,7 @@ class HomeAppBarState extends State<HomeAppBar> {
   }
 
   int counter = notifications.length;
+
   @override
   Widget build(BuildContext context) {
     return GradientAppBar(
