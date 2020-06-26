@@ -110,11 +110,11 @@ class NavDrawer extends StatelessWidget {
                   contentPadding: EdgeInsets.all(0),
                   elevation: 20,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20.0))),
+                      borderRadius: BorderRadius.all(Radius.circular(13.0))),
                   content: Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                      borderRadius: BorderRadius.all(Radius.circular(13.0)),
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -130,7 +130,7 @@ class NavDrawer extends StatelessWidget {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(top: 10),
+                          padding: EdgeInsets.only(top: 15),
                           child: Text(
                             'Are you sure you want to sign out?',
                             style: TextStyle(color: Colors.black),

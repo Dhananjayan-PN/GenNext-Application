@@ -11,91 +11,6 @@ import 'counselor/home.dart';
 import 'signup.dart';
 import 'usermodel.dart';
 
-class CustomDialog extends StatelessWidget {
-  final String title, description, buttonText;
-
-  CustomDialog({
-    @required this.title,
-    @required this.description,
-    @required this.buttonText,
-  });
-
-  dialogContent(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        Container(
-          padding: EdgeInsets.only(
-            top: 24,
-            bottom: 16,
-            left: 16,
-            right: 16,
-          ),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black26,
-                blurRadius: 10.0,
-                offset: Offset(0.0, 10.0),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              SizedBox(height: 16.0),
-              Text(
-                description,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16.0,
-                ),
-              ),
-              SizedBox(height: 24.0),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: FlatButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(9.0),
-                      side: BorderSide(color: Colors.cyan[600])),
-                  color: Colors.cyanAccent[400],
-                  splashColor: Colors.blueAccent,
-                  onPressed: () {
-                    SystemChannels.platform.invokeMethod('SystemNavigator.pop');
-                  },
-                  child: Text(buttonText),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: Colors.cyan[600]),
-      ),
-      elevation: 2.0,
-      backgroundColor: Colors.transparent,
-      child: dialogContent(context),
-    );
-  }
-}
-
 class LoginPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _LoginPageState();
@@ -195,53 +110,7 @@ class _LoginPageState extends State<LoginPage> {
   void validateAndSave() {
     final form = formKey.currentState;
     if (form.validate()) {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            contentPadding: EdgeInsets.all(0),
-            elevation: 20,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(20.0))),
-            content: Container(
-              height: 150,
-              width: 80,
-              decoration: BoxDecoration(
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
-              ),
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 50,
-                      width: 50,
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                        strokeWidth: 3.0,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 23.0),
-                      child: Text(
-                        "Signing you in...",
-                        style: TextStyle(color: Colors.white, fontSize: 15),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        },
-      );
+      _signingIn();
       Future.delayed(Duration(milliseconds: 100), () {
         _loginUser(username.text, password.text).timeout(Duration(seconds: 8),
             onTimeout: () {
@@ -256,6 +125,56 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  _signingIn() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(0),
+          elevation: 20,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          content: Container(
+            height: 150,
+            width: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
+            ),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 50,
+                    width: 50,
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      strokeWidth: 3.0,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 23.0),
+                    child: Text(
+                      "Signing you in...",
+                      style: TextStyle(color: Colors.white, fontSize: 15),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   _error() {
     showDialog(
       context: context,
@@ -265,13 +184,13 @@ class _LoginPageState extends State<LoginPage> {
           contentPadding: EdgeInsets.all(0),
           elevation: 20,
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
           content: Container(
             height: 150,
             width: 80,
             decoration: BoxDecoration(
               shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
               gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -313,13 +232,13 @@ class _LoginPageState extends State<LoginPage> {
           contentPadding: EdgeInsets.all(0),
           elevation: 20,
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
           content: Container(
             height: 150,
             width: 80,
             decoration: BoxDecoration(
               shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
               gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -463,7 +382,7 @@ class _LoginPageState extends State<LoginPage> {
                             controller: username,
                             validator: (value) {
                               return value.isEmpty
-                                  ? 'Enter valid username'
+                                  ? 'Enter your username'
                                   : null;
                             },
                             onSaved: (value) => _username = value,
@@ -490,7 +409,9 @@ class _LoginPageState extends State<LoginPage> {
                             key: ValueKey('Password'),
                             controller: password,
                             validator: (String value) {
-                              return value.isEmpty ? 'Enter a password' : null;
+                              return value.isEmpty
+                                  ? 'Enter your password'
+                                  : null;
                             },
                             onSaved: (value) => _password = value,
                             style: TextStyle(
