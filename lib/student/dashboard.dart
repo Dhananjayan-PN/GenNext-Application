@@ -3,7 +3,7 @@ import 'package:gennextapp/student/allunis.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
-import 'package:badges/badges.dart';
+// import 'package:badges/badges.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import '../shimmer_skeleton.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -97,13 +97,22 @@ class _DashBoardState extends State<DashBoard> {
       HttpHeaders.authorizationHeader: 'Token $tok',
     });
     if (response.statusCode == 200) {
-      setState(() {
-        saving = false;
-        saved = true;
-      });
+      final result = json.decode(response.body);
       userId = json.decode(response.body)['counselor_id'];
-      String notes = json.decode(response.body)['counselor_notes'];
-      return notes;
+      if (result['response'] == 'Access Denied.') {
+        setState(() {
+          saving = false;
+          savingfailed = true;
+        });
+        throw ('error');
+      } else {
+        setState(() {
+          saving = false;
+          saved = true;
+        });
+        String notes = json.decode(response.body)['counselor_notes'];
+        return notes;
+      }
     } else {
       setState(() {
         saving = false;
@@ -252,7 +261,7 @@ class _DashBoardState extends State<DashBoard> {
               return Padding(
                 padding: EdgeInsets.only(left: 25, right: 25),
                 child: Card(
-                  margin: EdgeInsets.only(top: 20, bottom: 30),
+                  margin: EdgeInsets.only(top: 20, bottom: 20),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10))),
                   elevation: 6,
@@ -284,9 +293,9 @@ class _DashBoardState extends State<DashBoard> {
             if (snapshot.hasData) {
               if (snapshot.data.length == 0) {
                 return Padding(
-                  padding: EdgeInsets.only(left: 20, right: 20),
+                  padding: EdgeInsets.only(left: 25, right: 25),
                   child: Card(
-                    margin: EdgeInsets.only(top: 20, bottom: 30),
+                    margin: EdgeInsets.only(top: 20, bottom: 25),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10))),
                     elevation: 6,
@@ -432,8 +441,11 @@ class _DashBoardState extends State<DashBoard> {
                 );
               }
             }
-            return DashCardSkeleton(
-              padding: 20,
+            return Padding(
+              padding: EdgeInsets.only(bottom: 25),
+              child: DashCardSkeleton(
+                padding: 20,
+              ),
             );
           },
         ),
@@ -712,12 +724,10 @@ class _DashBoardState extends State<DashBoard> {
                               ? Padding(
                                   padding: EdgeInsets.only(right: 14),
                                   child: SizedBox(
-                                    height: 20,
-                                    width: 20,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 3,
-                                    ),
-                                  ),
+                                      height: 20,
+                                      width: 20,
+                                      child: SpinKitThreeBounce(
+                                          color: Colors.black87, size: 10)),
                                 )
                               : savingfailed
                                   ? Padding(
@@ -748,10 +758,11 @@ class _DashBoardState extends State<DashBoard> {
                         savingfailed = true;
                         return Padding(
                           padding: EdgeInsets.only(
-                              top: 00, left: 20, right: 20, bottom: 15),
+                              top: 20, left: 20, right: 20, bottom: 30),
                           child: Text(
                             'Unable to load your notes. Try again later',
-                            style: TextStyle(fontSize: 12, color: Colors.red),
+                            style:
+                                TextStyle(fontSize: 12, color: Colors.black54),
                             textAlign: TextAlign.center,
                           ),
                         );

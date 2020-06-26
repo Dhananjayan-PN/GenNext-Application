@@ -2,6 +2,7 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/rendering.dart';
 import 'package:searchable_dropdown/searchable_dropdown.dart';
 import 'package:http/http.dart' as http;
@@ -353,9 +354,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                   SizedBox(
                     height: 50,
                     width: 50,
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-                      strokeWidth: 3.0,
+                    child: SpinKitWave(
+                      color: Colors.white,
+                      size: 30,
                     ),
                   ),
                   Padding(

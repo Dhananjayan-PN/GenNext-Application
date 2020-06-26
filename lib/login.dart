@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
@@ -154,9 +155,9 @@ class _LoginPageState extends State<LoginPage> {
                   SizedBox(
                     height: 50,
                     width: 50,
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      strokeWidth: 3.0,
+                    child: SpinKitWave(
+                      color: Colors.white,
+                      size: 30,
                     ),
                   ),
                   Padding(
@@ -322,13 +323,13 @@ class _LoginPageState extends State<LoginPage> {
                       child: Align(
                         alignment: Alignment.center,
                         child: Padding(
-                          padding: EdgeInsets.only(bottom: 4),
+                          padding: EdgeInsets.only(bottom: 1.3),
                           child: Text(
-                            'Are you future-ready ?   ',
+                            'Are you future-ready ?  ',
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
+                              fontSize: 19,
+                              fontWeight: FontWeight.w300,
                             ),
                             textAlign: TextAlign.right,
                           ),
@@ -351,7 +352,7 @@ class _LoginPageState extends State<LoginPage> {
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 45,
-                                fontWeight: FontWeight.w900,
+                                fontWeight: FontWeight.w500,
                               ),
                             )),
                       ),
@@ -460,14 +461,14 @@ class _LoginPageState extends State<LoginPage> {
                         },
                         child: Center(
                           child: Padding(
-                            padding: EdgeInsets.only(bottom: 2),
+                            padding: EdgeInsets.only(bottom: 1),
                             child: Text(
                               'Sign In',
                               key: ValueKey('button'),
                               style: TextStyle(
                                 color: Color(0xff00AEEF),
                                 fontSize: 19,
-                                fontWeight: FontWeight.w700,
+                                fontWeight: FontWeight.w400,
                               ),
                               textAlign: TextAlign.center,
                             ),
