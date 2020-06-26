@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gennextapp/student/allunis.dart';
+import 'package:gennextapp/student/chat.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
@@ -29,12 +30,10 @@ class _DashBoardState extends State<DashBoard> {
   _DashBoardState({this.user});
   GlobalKey<ScaffoldState> _scafKey = GlobalKey<ScaffoldState>();
   TextEditingController studentnotes = TextEditingController();
-
   int userId;
   bool saved = false;
   bool saving = true;
   bool savingfailed = false;
-
   Future recommendedUnis;
   Future upcomingSessions;
   Future studentNotes;
@@ -212,7 +211,7 @@ class _DashBoardState extends State<DashBoard> {
     return ListView(
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(left: 20, top: 25),
+          padding: EdgeInsets.only(left: 20, top: 18),
           child: Text(
             'Hello,',
             style: TextStyle(color: Colors.black45, fontSize: 25),
@@ -226,7 +225,7 @@ class _DashBoardState extends State<DashBoard> {
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(top: 25, left: 20, right: 20),
+          padding: EdgeInsets.only(top: 20, left: 20, right: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -242,6 +241,7 @@ class _DashBoardState extends State<DashBoard> {
                   style: TextStyle(color: Colors.blue, fontSize: 15),
                 ),
                 onTap: () {
+                  curPage = AllUniversitiesScreen();
                   Navigator.pushAndRemoveUntil(
                     context,
                     PageTransition(
@@ -450,7 +450,7 @@ class _DashBoardState extends State<DashBoard> {
           },
         ),
         Padding(
-          padding: EdgeInsets.only(top: 10, left: 20, right: 20),
+          padding: EdgeInsets.only(top: 5, left: 20, right: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -466,6 +466,7 @@ class _DashBoardState extends State<DashBoard> {
                   style: TextStyle(color: Colors.blue, fontSize: 15),
                 ),
                 onTap: () {
+                  curPage = ScheduleScreen();
                   Navigator.pushAndRemoveUntil(
                     context,
                     PageTransition(
