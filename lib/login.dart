@@ -12,6 +12,22 @@ import 'counselor/home.dart';
 import 'signup.dart';
 import 'usermodel.dart';
 
+Route logoutRoute() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => LoginPage(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(0.0, -1.0);
+      var end = Offset.zero;
+      var curve = Curves.ease;
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
+}
+
 class LoginPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _LoginPageState();
@@ -26,6 +42,33 @@ class _LoginPageState extends State<LoginPage> {
   String _username;
   String _password;
   User user;
+
+  Route homepageRoute(String role) {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => role == 'S'
+          ? StudentHomeScreen(user: user)
+          : role == 'C'
+              ? CounselorHomeScreen(user: user)
+              : role == 'R'
+                  ? Container() //University Rep Page
+                  : role == 'A'
+                      ? Container() //Admin Page
+                      : null,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var begin = Offset(0.0, 1.0);
+        var end = Offset.zero;
+        var curve = Curves.ease;
+
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    );
+  }
 
   Future<void> _loginUser(String uname, String pass) async {
     try {
@@ -45,56 +88,17 @@ class _LoginPageState extends State<LoginPage> {
         if (response.statusCode == 200) {
           user = User.fromJson(json.decode(response.body));
           Navigator.pop(context);
-          switch (user.usertype) {
-            case 'S':
-              {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  PageTransition(
-                      type: PageTransitionType.downToUp,
-                      child: StudentHomeScreen(user: user)),
-                  (Route<dynamic> route) => false,
-                );
-              }
-              break;
-
-            case 'C':
-              {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  PageTransition(
-                      type: PageTransitionType.downToUp,
-                      child: CounselorHomeScreen(user: user)),
-                  (Route<dynamic> route) => false,
-                );
-              }
-              break;
-
-            case 'R':
-              {
-                //Take to rep page
-              }
-              break;
-
-            case 'A':
-              {
-                //Take to admin page
-              }
-              break;
-
-            default:
-              {
-                print('failed to login');
-                username.clear();
-                password.clear();
-                Navigator.pop(context);
-                _error();
-              }
-              break;
+          Route route = homepageRoute(user.usertype);
+          if (route != null) {
+            Navigator.of(context).push(route);
+          } else {
+            username.clear();
+            password.clear();
+            Navigator.pop(context);
+            _error();
           }
         }
       } else {
-        print('failed to login');
         username.clear();
         password.clear();
         Navigator.pop(context);

@@ -115,11 +115,11 @@ class NavDrawer extends StatelessWidget {
                   contentPadding: EdgeInsets.all(0),
                   elevation: 20,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(13.0))),
+                      borderRadius: BorderRadius.all(Radius.circular(15.0))),
                   content: Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.all(Radius.circular(13.0)),
+                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -127,7 +127,7 @@ class NavDrawer extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Padding(
-                          padding: EdgeInsets.only(top: 20),
+                          padding: EdgeInsets.only(top: 30),
                           child: Icon(
                             Icons.power_settings_new,
                             size: 40,
@@ -162,13 +162,8 @@ class NavDrawer extends StatelessWidget {
                       ),
                       onPressed: () {
                         Navigator.pop(context);
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          PageTransition(
-                              type: PageTransitionType.upToDown,
-                              child: LoginPage()),
-                          (Route<dynamic> route) => false,
-                        );
+                        Navigator.of(context).pushAndRemoveUntil(
+                            logoutRoute(), (route) => false);
                       },
                     ),
                   ],
@@ -210,6 +205,8 @@ class HomeAppBar extends StatefulWidget with PreferredSizeWidget {
 }
 
 class HomeAppBarState extends State<HomeAppBar> {
+  int counter = notifications.length;
+
   @override
   void initState() {
     super.initState();
@@ -225,8 +222,6 @@ class HomeAppBarState extends State<HomeAppBar> {
   bool myInterceptor(bool stopDefaultButtonEvent) {
     return true;
   }
-
-  int counter = notifications.length;
 
   @override
   Widget build(BuildContext context) {
@@ -246,15 +241,11 @@ class HomeAppBarState extends State<HomeAppBar> {
                 icon: Icon(Icons.notifications, size: 28),
                 alignment: Alignment.bottomLeft,
                 onPressed: () {
-                  setState(() {
-                    Navigator.push(
-                        context,
-                        PageTransition(
-                            curve: Curves.ease,
-                            duration: Duration(milliseconds: 500),
-                            type: PageTransitionType.rightToLeft,
-                            child: NotificationScreen()));
-                  });
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.fade,
+                          child: NotificationScreen()));
                 }),
             counter != 0
                 ? Positioned(
@@ -289,7 +280,8 @@ class HomeAppBarState extends State<HomeAppBar> {
             setState(
               () {
                 _controller.animateToPage(1,
-                    duration: Duration(milliseconds: 600), curve: Curves.ease);
+                    duration: Duration(milliseconds: 600),
+                    curve: Curves.easeInOut);
               },
             );
           },
@@ -302,7 +294,6 @@ class HomeAppBarState extends State<HomeAppBar> {
 class StudentHomeScreen extends StatefulWidget {
   final User user;
   StudentHomeScreen({this.user});
-  // This widget defines the homepage of the application
   @override
   _StudentHomeScreenState createState() => _StudentHomeScreenState(user: user);
 }
@@ -344,7 +335,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
               ),
               appBar: HomeAppBar(),
               body: DashBoard(user: user)),
-          AllChats()
+          AllChats(pgcontroller: _controller)
         ],
       ),
     );

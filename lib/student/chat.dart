@@ -36,6 +36,8 @@ List chats = [
 ];
 
 class AllChats extends StatefulWidget {
+  final PageController pgcontroller;
+  AllChats({this.pgcontroller});
   @override
   _AllChatsState createState() => _AllChatsState();
 }
@@ -145,15 +147,9 @@ class _AllChatsState extends State<AllChats> {
                 color: Colors.white,
               ),
               onPressed: () {
-                Navigator.pop(context);
-                Navigator.push(
-                    context,
-                    PageTransition(
-                        duration: Duration(milliseconds: 600),
-                        type: PageTransitionType.leftToRight,
-                        child: StudentHomeScreen(
-                          user: newUser,
-                        )));
+                widget.pgcontroller.animateToPage(0,
+                    duration: Duration(milliseconds: 600),
+                    curve: Curves.easeInOut);
               }),
           actions: <Widget>[
             IconButton(

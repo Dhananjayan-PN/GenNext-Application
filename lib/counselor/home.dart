@@ -20,6 +20,8 @@ import 'connectwithunis.dart';
 User newUser;
 String tok = token;
 String dom = domain;
+Widget curPage = CounselorHomeScreen(user: newUser);
+PageController _controller;
 final navlistelements = [
   ['Home', CounselorHomeScreen(user: newUser), Icons.home],
   ['My Students', MyStudentsScreen(), Icons.group],
@@ -29,7 +31,6 @@ final navlistelements = [
   ['My Universities', MyUniversitiesScreen(), Icons.account_balance],
   ['Connect with Universities', ConnectUniversitiesScreen(), Icons.link]
 ];
-PageController _controller;
 
 class NavDrawer extends StatelessWidget {
   final String name;
@@ -53,15 +54,19 @@ class NavDrawer extends StatelessWidget {
         ),
         onTap: () {
           Navigator.pop(context);
-          Navigator.pushAndRemoveUntil(
-            context,
-            PageTransition(type: PageTransitionType.fade, child: element[1]),
-            (Route<dynamic> route) => false,
-          );
+          if (curPage == element[1]) {
+          } else {
+            curPage = element[1];
+            Navigator.pushAndRemoveUntil(
+              context,
+              PageTransition(type: PageTransitionType.fade, child: element[1]),
+              (Route<dynamic> route) => false,
+            );
+          }
         },
       ));
       navlist.add(
-        Divider(thickness: 0),
+        Divider(),
       );
     }
     return Drawer(
@@ -108,11 +113,11 @@ class NavDrawer extends StatelessWidget {
                   contentPadding: EdgeInsets.all(0),
                   elevation: 20,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(13.0))),
+                      borderRadius: BorderRadius.all(Radius.circular(15.0))),
                   content: Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.all(Radius.circular(13.0)),
+                      borderRadius: BorderRadius.all(Radius.circular(15.0)),
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -120,7 +125,7 @@ class NavDrawer extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Padding(
-                          padding: EdgeInsets.only(top: 20),
+                          padding: EdgeInsets.only(top: 30),
                           child: Icon(
                             Icons.power_settings_new,
                             size: 40,
@@ -128,10 +133,13 @@ class NavDrawer extends StatelessWidget {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(top: 10),
+                          padding: EdgeInsets.only(left: 5, right: 5, top: 10),
                           child: Text(
                             'Are you sure you want to sign out?',
-                            style: TextStyle(color: Colors.black),
+                            style: TextStyle(
+                                fontSize: 14.3,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w300),
                             textAlign: TextAlign.center,
                           ),
                         )
@@ -155,13 +163,8 @@ class NavDrawer extends StatelessWidget {
                       ),
                       onPressed: () {
                         Navigator.pop(context);
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          PageTransition(
-                              type: PageTransitionType.upToDown,
-                              child: LoginPage()),
-                          (Route<dynamic> route) => false,
-                        );
+                        Navigator.of(context).pushAndRemoveUntil(
+                            logoutRoute(), (route) => false);
                       },
                     ),
                   ],
@@ -203,6 +206,8 @@ class HomeAppBar extends StatefulWidget with PreferredSizeWidget {
 }
 
 class HomeAppBarState extends State<HomeAppBar> {
+  int counter = notifications.length;
+
   @override
   void initState() {
     super.initState();
@@ -219,7 +224,6 @@ class HomeAppBarState extends State<HomeAppBar> {
     return true;
   }
 
-  int counter = notifications.length;
   @override
   Widget build(BuildContext context) {
     return GradientAppBar(
@@ -238,15 +242,11 @@ class HomeAppBarState extends State<HomeAppBar> {
                 icon: Icon(Icons.notifications, size: 28),
                 alignment: Alignment.bottomLeft,
                 onPressed: () {
-                  setState(() {
-                    Navigator.push(
-                        context,
-                        PageTransition(
-                            curve: Curves.ease,
-                            duration: Duration(milliseconds: 500),
-                            type: PageTransitionType.rightToLeft,
-                            child: NotificationScreen()));
-                  });
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.fade,
+                          child: NotificationScreen()));
                 }),
             counter != 0
                 ? Positioned(
@@ -281,7 +281,8 @@ class HomeAppBarState extends State<HomeAppBar> {
             setState(
               () {
                 _controller.animateToPage(1,
-                    duration: Duration(milliseconds: 600), curve: Curves.ease);
+                    duration: Duration(milliseconds: 600),
+                    curve: Curves.easeInOut);
               },
             );
           },
@@ -337,7 +338,7 @@ class _CounselorHomeScreenState extends State<CounselorHomeScreen> {
               ),
               appBar: HomeAppBar(),
               body: DashBoard(user: user)),
-          AllChats()
+          AllChats(pgcontroller: _controller)
         ],
       ),
     );

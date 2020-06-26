@@ -128,14 +128,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
             ),
             onPressed: () {
               Navigator.pop(context);
-              Navigator.push(
-                context,
-                PageTransition(
-                  duration: Duration(milliseconds: 500),
-                  type: PageTransitionType.leftToRightWithFade,
-                  child: CounselorHomeScreen(user: newUser),
-                ),
-              );
             },
           ),
           title: Text(
