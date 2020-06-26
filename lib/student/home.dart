@@ -135,10 +135,13 @@ class NavDrawer extends StatelessWidget {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(top: 15),
+                          padding: EdgeInsets.only(left: 5, right: 5, top: 10),
                           child: Text(
                             'Are you sure you want to sign out?',
-                            style: TextStyle(color: Colors.black),
+                            style: TextStyle(
+                                fontSize: 14.3,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w300),
                             textAlign: TextAlign.center,
                           ),
                         )
