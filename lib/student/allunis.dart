@@ -92,6 +92,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
       if (result['Response'] == 'University successfully favorited.') {
         _scafKey.currentState.showSnackBar(
           SnackBar(
+            duration: Duration(seconds: 2),
             content: Text(
               'University Favorited',
               textAlign: TextAlign.center,
@@ -102,6 +103,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
       } else if (result['Response'] == 'University successfully unfavorited.') {
         _scafKey.currentState.showSnackBar(
           SnackBar(
+            duration: Duration(seconds: 2),
             content: Text(
               'University Unfavorited',
               textAlign: TextAlign.center,
@@ -112,6 +114,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
       } else {
         _scafKey.currentState.showSnackBar(
           SnackBar(
+            duration: Duration(seconds: 2),
             content: Text(
               'Unable to send request. Try again later.',
               textAlign: TextAlign.center,
@@ -123,6 +126,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
     } else {
       _scafKey.currentState.showSnackBar(
         SnackBar(
+          duration: Duration(seconds: 2),
           content: Text(
             'Unable to send request. Try again later.',
             textAlign: TextAlign.center,
@@ -202,9 +206,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
                           ? Icon(Icons.star, color: Colors.white)
                           : Icon(Icons.star_border, color: Colors.white),
                       onTap: () {
-                        setState(() {
-                          editFavorited(unis[index]);
-                        });
+                        editFavorited(unis[index]);
                       },
                     ),
                     Padding(

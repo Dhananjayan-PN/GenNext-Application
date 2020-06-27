@@ -108,6 +108,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
       if (result['Response'] == 'University successfully favorited.') {
         _scafKey.currentState.showSnackBar(
           SnackBar(
+            duration: Duration(seconds: 2),
             content: Text(
               'University Favorited',
               textAlign: TextAlign.center,
@@ -118,6 +119,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
       } else if (result['Response'] == 'University successfully unfavorited.') {
         _scafKey.currentState.showSnackBar(
           SnackBar(
+            duration: Duration(seconds: 2),
             content: Text(
               'University Unfavorited',
               textAlign: TextAlign.center,
@@ -128,6 +130,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
       } else {
         _scafKey.currentState.showSnackBar(
           SnackBar(
+            duration: Duration(seconds: 2),
             content: Text(
               'Unable to send request. Try again later.',
               textAlign: TextAlign.center,
@@ -139,12 +142,14 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
     } else {
       _scafKey.currentState.showSnackBar(
         SnackBar(
+          duration: Duration(seconds: 2),
           content: Text(
             'Unable to send request. Try again later.',
             textAlign: TextAlign.center,
           ),
         ),
       );
+      refresh();
     }
   }
 
@@ -200,96 +205,8 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   }
 
   Widget buildCard(snapshot, int index) {
-    var _isStarred = true;
     unis = snapshot;
-    List<Widget> topmajors = [];
-    List<Widget> standoutfactors = [];
-    List<Widget> degreelevels = [];
-    List<Widget> testing = [];
-    for (var i = 0; i < unis[index]['top_majors'].length; i++) {
-      topmajors.add(
-        Padding(
-          padding: EdgeInsets.only(right: 3),
-          child: Theme(
-            data: ThemeData(canvasColor: Colors.transparent),
-            child: Chip(
-              labelPadding:
-                  EdgeInsets.only(left: 3, right: 3, top: 1, bottom: 1),
-              elevation: 5,
-              backgroundColor: Colors.black26,
-              shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
-              label: Text(
-                unis[index]['top_majors'][i],
-                style: TextStyle(fontSize: 13, color: Colors.white),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-    for (var i = 0; i < unis[index]['stand_out_factors'].length; i++) {
-      standoutfactors.add(
-        Padding(
-          padding: EdgeInsets.only(right: 3),
-          child: Theme(
-            data: ThemeData(canvasColor: Colors.transparent),
-            child: Chip(
-              labelPadding:
-                  EdgeInsets.only(left: 3, right: 3, top: 1, bottom: 1),
-              elevation: 5,
-              backgroundColor: Colors.black26,
-              shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
-              label: Text(
-                unis[index]['stand_out_factors'][i],
-                style: TextStyle(fontSize: 13, color: Colors.white),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-    for (var i = 0; i < unis[index]['degree_levels'].length; i++) {
-      degreelevels.add(
-        Padding(
-          padding: EdgeInsets.only(right: 3),
-          child: Theme(
-            data: ThemeData(canvasColor: Colors.transparent),
-            child: Chip(
-              labelPadding:
-                  EdgeInsets.only(left: 3, right: 3, top: 1, bottom: 1),
-              elevation: 5,
-              backgroundColor: Colors.black26,
-              shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
-              label: Text(
-                unis[index]['degree_levels'][i],
-                style: TextStyle(fontSize: 13, color: Colors.white),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-    for (var i = 0; i < unis[index]['testing_requirements'].length; i++) {
-      testing.add(
-        Padding(
-          padding: EdgeInsets.only(right: 3),
-          child: Theme(
-            data: ThemeData(canvasColor: Colors.transparent),
-            child: Chip(
-              labelPadding:
-                  EdgeInsets.only(left: 3, right: 3, top: 1, bottom: 1),
-              elevation: 5,
-              backgroundColor: Colors.black26,
-              shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
-              label: Text(
-                unis[index]['testing_requirements'][i],
-                style: TextStyle(fontSize: 13, color: Colors.white),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
+    unis[index]['favorited_status'] = true;
     return Padding(
       padding: EdgeInsets.only(top: 5, left: 10, right: 10),
       child: Card(
@@ -340,13 +257,9 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                 trailing: Wrap(
                   children: <Widget>[
                     InkWell(
-                      child: _isStarred
-                          ? Icon(Icons.star, color: Colors.white)
-                          : Icon(Icons.star_border, color: Colors.white),
+                      child: Icon(Icons.star, color: Colors.white),
                       onTap: () {
-                        setState(() {
-                          _isStarred = !_isStarred;
-                        });
+                        editFavorited(unis[index]);
                       },
                     ),
                     Padding(
@@ -370,7 +283,6 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   }
 
   Widget buildCollegeListCard(uni) {
-    uni['requesting'] = false;
     Widget uniCard = Padding(
       padding: EdgeInsets.only(top: 5, left: 10, right: 10),
       child: Material(
@@ -788,14 +700,14 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                                   padding: EdgeInsets.only(
                                       top: 5, left: 30, right: 30),
                                   child: Text(
-                                    "Looks like you haven't added\nany universites yet :(",
+                                    "Looks like you haven't\nfavorited any universites",
                                     style: TextStyle(color: Colors.black54),
                                     textAlign: TextAlign.center,
                                   )),
                               Padding(
                                 padding: EdgeInsets.only(top: 3),
                                 child: Text(
-                                    "Head over to the 'Explore Universities' section to get started!",
+                                    "Head over to Explore to favorite some",
                                     style: TextStyle(color: Colors.black54),
                                     textAlign: TextAlign.center),
                               )
