@@ -60,7 +60,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
     );
     if (response.statusCode == 200) {
-      return json.decode(response.body)['application_data'];
+      return json.decode(response.body)['completed_application_data'];
     } else {
       throw 'failed';
     }
@@ -72,7 +72,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
     );
     if (response.statusCode == 200) {
-      return json.decode(response.body)['application_data'];
+      return json.decode(response.body)['incomplete_application_data'];
     } else {
       throw 'failed';
     }
@@ -86,108 +86,6 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
   }
 
   Widget buildCard(uni) {
-    List<Widget> essays = [];
-    List<Widget> transcripts = [];
-    List<Widget> misc = [];
-    for (var i = 0; i < uni["essay_data"].length; i++) {
-      final curEssay = uni["essay_data"][i];
-      essays.add(Card(
-        shape: RoundedRectangleBorder(
-            side: BorderSide(color: Colors.white30, width: 1),
-            borderRadius: BorderRadius.all(Radius.circular(10))),
-        color: Colors.black.withOpacity(0.2),
-        child: ListTile(
-          dense: true,
-          title: Text(
-            curEssay["essay_title"],
-            style: TextStyle(color: Colors.white),
-          ),
-          subtitle: curEssay["in_progress"] &&
-                  curEssay["essay_approval_status"] == "Y"
-              ? Text('Completed', style: TextStyle(color: Colors.green))
-              : curEssay["in_progress"] &&
-                      curEssay["essay_approval_status"] == "N"
-                  ? Text('In Progress', style: TextStyle(color: Colors.yellow))
-                  : Text('Not Started', style: TextStyle(color: Colors.red)),
-          trailing: IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.arrow_forward,
-              color: Colors.white,
-            ),
-          ),
-        ),
-      ));
-    }
-    for (var i = 0; i < uni["transcript_data"].length; i++) {
-      final curTranscript = uni["transcript_data"][i];
-      transcripts.add(Theme(
-        data: ThemeData(canvasColor: Colors.black.withOpacity(0.3)),
-        child: ActionChip(
-          key: Key(curTranscript["transcript_id"].toString()),
-          avatar: curTranscript["in_progress"]
-              ? Icon(Icons.check, color: Colors.green)
-              : Icon(Icons.priority_high, color: Colors.red),
-          labelPadding: EdgeInsets.only(left: 2, right: 5),
-          backgroundColor: Colors.black.withOpacity(0.2),
-          shape: RoundedRectangleBorder(
-              side: BorderSide(color: Colors.white30, width: 0.5),
-              borderRadius: BorderRadius.all(Radius.circular(10))),
-          label: Text(curTranscript["title"],
-              style: TextStyle(color: Colors.white)),
-          onPressed: () {
-            curTranscript["in_progress"]
-                ? launch(
-                    curTranscript["transcript_file_path"] ??
-                        'https://user-images.githubusercontent.com/1825286/26859182-9d8c266c-4afb-11e7-8913-93d29b3f47e5.png',
-                    forceWebView: true,
-                    enableJavaScript: true)
-                : _scafKey.currentState.showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        'No Document Uploaded',
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  );
-          },
-        ),
-      ));
-    }
-    for (var i = 0; i < uni["misc_doc_data"].length; i++) {
-      final curDoc = uni["misc_doc_data"][i];
-      misc.add(Theme(
-        data: ThemeData(canvasColor: Colors.black.withOpacity(0.3)),
-        child: ActionChip(
-          key: Key(curDoc["misc_doc_id"].toString()),
-          avatar: curDoc["in_progress"]
-              ? Icon(Icons.check, color: Colors.green)
-              : Icon(Icons.priority_high, color: Colors.red),
-          labelPadding: EdgeInsets.only(left: 2, right: 5),
-          backgroundColor: Colors.black.withOpacity(0.2),
-          shape: RoundedRectangleBorder(
-              side: BorderSide(color: Colors.white30, width: 0.5),
-              borderRadius: BorderRadius.all(Radius.circular(10))),
-          label: Text(curDoc["title"], style: TextStyle(color: Colors.white)),
-          onPressed: () {
-            curDoc["in_progress"]
-                ? launch(
-                    curDoc["misc_doc_path"] ??
-                        'https://user-images.githubusercontent.com/1825286/26859182-9d8c266c-4afb-11e7-8913-93d29b3f47e5.png',
-                    forceWebView: true,
-                    enableJavaScript: true)
-                : _scafKey.currentState.showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        'No Document Uploaded',
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  );
-          },
-        ),
-      ));
-    }
     DateTime deadline = DateTime.parse(uni["application_deadline"]).toLocal();
     var timeleft = DateTime.now().isBefore(deadline)
         ? deadline.difference(DateTime.now()).inDays
@@ -238,10 +136,11 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                   fit: BoxFit.cover,
                 ),
               ),
-              child: custom.ExpansionTile(
+              child: ListTile(
+                isThreeLine: true,
                 key: Key(uni['application_id'].toString()),
                 title: Padding(
-                  padding: EdgeInsets.only(top: 8),
+                  padding: EdgeInsets.only(top: 1),
                   child: Text(
                     uni['university'],
                     style: TextStyle(color: Colors.white),
@@ -270,110 +169,27 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                               'Pending',
                               style: TextStyle(
                                 color: Colors.red,
-                                fontWeight: FontWeight.w600,
+                                fontWeight: FontWeight.w500,
                                 fontSize: 14,
                               ),
                             )
                     ],
                   ),
                 ),
-                children: <Widget>[
-                  Divider(
-                    color: Colors.white70,
-                    indent: 10,
-                    endIndent: 10,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 5, left: 20),
-                    child: Row(
-                      children: <Widget>[
-                        Text(
-                          'Essays',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700),
+                trailing: Wrap(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(left: 8.0, top: 15),
+                      child: InkWell(
+                        child: Icon(
+                          Icons.more_vert,
+                          color: Colors.white,
                         ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 25, right: 30, top: 5),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Wrap(
-                        runAlignment: WrapAlignment.start,
-                        children: essays,
+                        onTap: () {},
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10, left: 20),
-                    child: Row(
-                      children: <Widget>[
-                        Text(
-                          'Transcripts',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 30, right: 30),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Wrap(
-                        runAlignment: WrapAlignment.start,
-                        children: transcripts,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10, left: 20),
-                    child: Row(
-                      children: <Widget>[
-                        Text(
-                          'Misc Documents',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w900),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 30, right: 30),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Wrap(
-                        runAlignment: WrapAlignment.start,
-                        children: misc,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10, bottom: 20),
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          splashColor: Colors.blue[900],
-                          child: Text('View University',
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.blue,
-                                  fontWeight: FontWeight.w900)),
-                          onTap: () {},
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -463,7 +279,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                   if (snapshot.hasData) {
                     if (snapshot.data.length == 0) {
                       return Padding(
-                        padding: EdgeInsets.only(bottom: 70),
+                        padding: EdgeInsets.only(bottom: 100),
                         child: Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -472,14 +288,14 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                                   padding: EdgeInsets.only(
                                       top: 5, left: 30, right: 30),
                                   child: Text(
-                                    "There aren't any completed applications at the time",
+                                    "No completed Applications at the time",
                                     style: TextStyle(color: Colors.black54),
                                     textAlign: TextAlign.center,
                                   )),
                               Padding(
                                 padding: EdgeInsets.only(top: 3),
                                 child: Text(
-                                    "Complete a few from the 'Pending' tab to see them show up here!",
+                                    "Complete a few from the 'Pending' tab to\nsee them show up here!",
                                     style: TextStyle(color: Colors.black54),
                                     textAlign: TextAlign.center),
                               )
