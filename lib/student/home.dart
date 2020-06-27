@@ -12,6 +12,7 @@ import 'dashboard.dart';
 import 'notifications.dart';
 import 'essays.dart';
 import 'profile.dart';
+import 'documents.dart';
 import 'myuniversities.dart';
 import 'allunis.dart';
 import 'applications.dart';
@@ -25,13 +26,14 @@ Widget curPage = StudentHomeScreen(user: newUser);
 PageController _controller;
 final navlistelements = [
   ['Home', StudentHomeScreen(user: newUser), Icons.home],
-  ['My Profile', ProfileScreen(), Icons.account_box],
-  ['Counselling', CounsellingScreen(), Icons.person],
+  ['Counselling', CounsellingScreen(), Icons.people],
   ['Schedule', ScheduleScreen(), Icons.date_range],
-  ['My Universities', MyUniversitiesScreen(), Icons.account_balance],
   ['Explore Universities', AllUniversitiesScreen(), Icons.explore],
+  ['My Profile', ProfileScreen(), Icons.account_box],
+  ['My Universities', MyUniversitiesScreen(), Icons.account_balance],
+  ['My Documents', DocumentsScreen(), Icons.description],
   ['My Applications', ApplicationsScreen(), Icons.assignment],
-  ['My Essays', EssaysScreen(), Icons.edit]
+  ['My Essays', EssaysScreen(), Icons.edit],
 ];
 
 class NavDrawer extends StatelessWidget {
