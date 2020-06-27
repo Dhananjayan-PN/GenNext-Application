@@ -25,6 +25,8 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   String filter1;
   String filter2;
   List unis;
+  bool isStarred;
+
   Future collegeList;
   Future favoritedList;
 
@@ -310,8 +312,8 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   }
 
   Widget buildCollegeListCard(uni) {
-    var _isStarred = false;
-    return Padding(
+    isStarred = uni['favorited_status'];
+    Widget uniCard = Padding(
       padding: EdgeInsets.only(top: 5, left: 10, right: 10),
       child: Material(
         color: Colors.transparent,
@@ -365,12 +367,12 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                     trailing: Wrap(
                       children: <Widget>[
                         InkWell(
-                          child: uni['favorited_status']
+                          child: isStarred
                               ? Icon(Icons.star, color: Colors.white)
                               : Icon(Icons.star_border, color: Colors.white),
                           onTap: () {
                             setState(() {
-                              _isStarred = !_isStarred;
+                              isStarred = !isStarred;
                             });
                           },
                         ),
@@ -393,6 +395,11 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
           ),
         ),
       ),
+    );
+    return Draggable(
+      feedback: uniCard,
+      child: uniCard,
+      childWhenDragging: Container(),
     );
   }
 
