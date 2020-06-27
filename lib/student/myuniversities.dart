@@ -97,6 +97,56 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
     }
   }
 
+  Future<void> editFavoritedStatus(String id, bool curStatus) async {
+    final statString = curStatus ? 'unfavorite' : 'favorite';
+    final response = await http.put(
+      dom + 'api/student/edit-favorite-status/$id/$statString',
+      headers: {HttpHeaders.authorizationHeader: "Token $tok"},
+    );
+    if (response.statusCode == 200) {
+      final result = json.decode(response.body);
+      if (result['Response'] == 'University successfully favorited.') {
+        _scafKey.currentState.showSnackBar(
+          SnackBar(
+            content: Text(
+              'University successfully favorited!',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+      } else if (result['Response'] == 'University successfully unfavorited.') {
+        _scafKey.currentState.showSnackBar(
+          SnackBar(
+            content: Text(
+              'University successfully unfavorited!',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+      } else {
+        _scafKey.currentState.showSnackBar(
+          SnackBar(
+            content: Text(
+              'Unable to send request. Check your connection and try again later.',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+      }
+    } else {
+      _scafKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(
+            'Unable to send request. Check your connection and try again later.',
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+  }
+
+  editFavorited(String id, bool curSttatus) {}
+
   void refresh() {
     setState(() {
       favoritedList = getFavorited();
@@ -371,10 +421,10 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                               ? Icon(Icons.star, color: Colors.white)
                               : Icon(Icons.star_border, color: Colors.white),
                           onTap: () {
-                            setState(() {
-                              uni['favorited_status'] =
-                                  !uni['favorited_status'];
-                            });
+                            editFavoritedStatus(uni["university_id"],
+                                    uni['favorited_status'])
+                                .timeout(Duration(seconds: 10));
+                            setState(() {});
                           },
                         ),
                         Padding(
