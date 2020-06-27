@@ -82,7 +82,7 @@ class _LoginPageState extends State<LoginPage> {
       if (result.statusCode == 200) {
         token = json.decode(result.body)['token'];
         final response = await http.get(
-          domain + 'authenticate/$uname',
+          domain + 'authenticate/details',
           headers: {HttpHeaders.authorizationHeader: "Token $token"},
         );
         if (response.statusCode == 200) {

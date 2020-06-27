@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gennextapp/student/allunis.dart';
-import 'package:gennextapp/student/chat.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
@@ -34,6 +33,7 @@ class _DashBoardState extends State<DashBoard> {
   bool saved = false;
   bool saving = true;
   bool savingfailed = false;
+
   Future recommendedUnis;
   Future upcomingSessions;
   Future studentNotes;
@@ -91,13 +91,12 @@ class _DashBoardState extends State<DashBoard> {
 
   Future<void> getStudentNotes() async {
     saving = true;
-    final response =
-        await http.get(dom + 'api/counselor/get-counselor-notes', headers: {
+    final response = await http.get(dom + 'authenticate/get-notes', headers: {
       HttpHeaders.authorizationHeader: 'Token $tok',
     });
     if (response.statusCode == 200) {
       final result = json.decode(response.body);
-      userId = json.decode(response.body)['counselor_id'];
+      userId = json.decode(response.body)['user_id'];
       if (result['response'] == 'Access Denied.') {
         setState(() {
           saving = false;
@@ -109,7 +108,7 @@ class _DashBoardState extends State<DashBoard> {
           saving = false;
           saved = true;
         });
-        String notes = json.decode(response.body)['counselor_notes'];
+        String notes = json.decode(response.body)['notes'];
         return notes;
       }
     } else {
@@ -123,7 +122,7 @@ class _DashBoardState extends State<DashBoard> {
 
   Future<void> editStudentNotes() async {
     final response = await http.put(
-      dom + 'api/counselor/edit-counselor-notes',
+      dom + 'authenticate/edit-notes',
       headers: {
         HttpHeaders.authorizationHeader: "Token $tok",
         'Content-Type': 'application/json; charset=UTF-8'
@@ -773,7 +772,7 @@ class _DashBoardState extends State<DashBoard> {
                         saved = true;
                         return Padding(
                           padding: EdgeInsets.only(
-                              top: 10, left: 20, right: 20, bottom: 10),
+                              top: 0, left: 20, right: 20, bottom: 10),
                           child: TextField(
                             controller: studentnotes,
                             autocorrect: true,
