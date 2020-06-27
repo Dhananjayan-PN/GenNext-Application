@@ -97,7 +97,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
     }
   }
 
-  Future<void> editFavoritedStatus(String id, bool curStatus) async {
+  Future<void> editFavoritedStatus(uni, int id, bool curStatus) async {
     final statString = curStatus ? 'unfavorite' : 'favorite';
     final response = await http.put(
       dom + 'api/student/edit-favorite-status/$id/$statString',
@@ -109,35 +109,38 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
         _scafKey.currentState.showSnackBar(
           SnackBar(
             content: Text(
-              'University successfully favorited!',
+              'University Favorited',
               textAlign: TextAlign.center,
             ),
           ),
         );
+        refresh();
       } else if (result['Response'] == 'University successfully unfavorited.') {
         _scafKey.currentState.showSnackBar(
           SnackBar(
             content: Text(
-              'University successfully unfavorited!',
+              'University Unfavorited',
               textAlign: TextAlign.center,
             ),
           ),
         );
+        refresh();
       } else {
         _scafKey.currentState.showSnackBar(
           SnackBar(
             content: Text(
-              'Unable to send request. Check your connection and try again later.',
+              'Unable to send request. Try again later.',
               textAlign: TextAlign.center,
             ),
           ),
         );
+        refresh();
       }
     } else {
       _scafKey.currentState.showSnackBar(
         SnackBar(
           content: Text(
-            'Unable to send request. Check your connection and try again later.',
+            'Unable to send request. Try again later.',
             textAlign: TextAlign.center,
           ),
         ),
@@ -145,7 +148,12 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
     }
   }
 
-  editFavorited(String id, bool curSttatus) {}
+  editFavorited(uni) {
+    Future.delayed(Duration(milliseconds: 200), () {
+      editFavoritedStatus(uni, uni['university_id'], uni['favorited_status'])
+          .timeout(Duration(seconds: 10));
+    });
+  }
 
   void refresh() {
     setState(() {
@@ -362,7 +370,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   }
 
   Widget buildCollegeListCard(uni) {
-    isStarred = uni['favorited_status'];
+    uni['requesting'] = false;
     Widget uniCard = Padding(
       padding: EdgeInsets.only(top: 5, left: 10, right: 10),
       child: Material(
@@ -421,10 +429,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                               ? Icon(Icons.star, color: Colors.white)
                               : Icon(Icons.star_border, color: Colors.white),
                           onTap: () {
-                            editFavoritedStatus(uni["university_id"],
-                                    uni['favorited_status'])
-                                .timeout(Duration(seconds: 10));
-                            setState(() {});
+                            editFavorited(uni);
                           },
                         ),
                         Padding(

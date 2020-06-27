@@ -81,6 +81,64 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
     }
   }
 
+  Future<void> editFavoritedStatus(uni, int id, bool curStatus) async {
+    final statString = curStatus ? 'unfavorite' : 'favorite';
+    final response = await http.put(
+      dom + 'api/student/edit-favorite-status/$id/$statString',
+      headers: {HttpHeaders.authorizationHeader: "Token $tok"},
+    );
+    if (response.statusCode == 200) {
+      final result = json.decode(response.body);
+      if (result['Response'] == 'University successfully favorited.') {
+        _scafKey.currentState.showSnackBar(
+          SnackBar(
+            content: Text(
+              'University Favorited',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+        refresh();
+      } else if (result['Response'] == 'University successfully unfavorited.') {
+        _scafKey.currentState.showSnackBar(
+          SnackBar(
+            content: Text(
+              'University Unfavorited',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+        refresh();
+      } else {
+        _scafKey.currentState.showSnackBar(
+          SnackBar(
+            content: Text(
+              'Unable to send request. Try again later.',
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+        refresh();
+      }
+    } else {
+      _scafKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(
+            'Unable to send request. Try again later.',
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+  }
+
+  editFavorited(uni) {
+    Future.delayed(Duration(milliseconds: 200), () {
+      editFavoritedStatus(uni, uni['university_id'], uni['favorited_status'])
+          .timeout(Duration(seconds: 10));
+    });
+  }
+
   void refresh() {
     setState(() {
       allUniList = getAllUniversities();
@@ -89,96 +147,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
   }
 
   Widget buildCard(snapshot, int index) {
-    var _isStarred = true;
     unis = snapshot;
-    List<Widget> topmajors = [];
-    List<Widget> standoutfactors = [];
-    List<Widget> degreelevels = [];
-    List<Widget> testing = [];
-    for (var i = 0; i < unis[index]['top_majors'].length; i++) {
-      topmajors.add(
-        Padding(
-          padding: EdgeInsets.only(right: 3),
-          child: Theme(
-            data: ThemeData(canvasColor: Colors.transparent),
-            child: Chip(
-              labelPadding:
-                  EdgeInsets.only(left: 3, right: 3, top: 1, bottom: 1),
-              elevation: 5,
-              backgroundColor: Colors.black26,
-              shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
-              label: Text(
-                unis[index]['top_majors'][i],
-                style: TextStyle(fontSize: 13, color: Colors.white),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-    for (var i = 0; i < unis[index]['stand_out_factors'].length; i++) {
-      standoutfactors.add(
-        Padding(
-          padding: EdgeInsets.only(right: 3),
-          child: Theme(
-            data: ThemeData(canvasColor: Colors.transparent),
-            child: Chip(
-              labelPadding:
-                  EdgeInsets.only(left: 3, right: 3, top: 1, bottom: 1),
-              elevation: 5,
-              backgroundColor: Colors.black26,
-              shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
-              label: Text(
-                unis[index]['stand_out_factors'][i],
-                style: TextStyle(fontSize: 13, color: Colors.white),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-    for (var i = 0; i < unis[index]['degree_levels'].length; i++) {
-      degreelevels.add(
-        Padding(
-          padding: EdgeInsets.only(right: 3),
-          child: Theme(
-            data: ThemeData(canvasColor: Colors.transparent),
-            child: Chip(
-              labelPadding:
-                  EdgeInsets.only(left: 3, right: 3, top: 1, bottom: 1),
-              elevation: 5,
-              backgroundColor: Colors.black26,
-              shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
-              label: Text(
-                unis[index]['degree_levels'][i],
-                style: TextStyle(fontSize: 13, color: Colors.white),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-    for (var i = 0; i < unis[index]['testing_requirements'].length; i++) {
-      testing.add(
-        Padding(
-          padding: EdgeInsets.only(right: 3),
-          child: Theme(
-            data: ThemeData(canvasColor: Colors.transparent),
-            child: Chip(
-              labelPadding:
-                  EdgeInsets.only(left: 3, right: 3, top: 1, bottom: 1),
-              elevation: 5,
-              backgroundColor: Colors.black26,
-              shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
-              label: Text(
-                unis[index]['testing_requirements'][i],
-                style: TextStyle(fontSize: 13, color: Colors.white),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
     return Padding(
       padding: EdgeInsets.only(top: 5, left: 10, right: 10),
       child: Card(
@@ -234,7 +203,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
                           : Icon(Icons.star_border, color: Colors.white),
                       onTap: () {
                         setState(() {
-                          _isStarred = !_isStarred;
+                          editFavorited(unis[index]);
                         });
                       },
                     ),
