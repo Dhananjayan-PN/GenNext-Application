@@ -46,28 +46,35 @@ class NavDrawer extends StatelessWidget {
     List<Widget> navlist = [];
     for (var i = 0; i < navlistelements.length; i++) {
       var element = navlistelements[i];
-      navlist.add(ListTile(
-        leading: Icon(
-          element[2],
-          size: 26,
-          color: Color(0xff00AEEF),
+      navlist.add(Padding(
+        padding: EdgeInsets.only(left: 5),
+        child: ListTile(
+          leading: Icon(
+            element[2],
+            size: 26,
+            color: Color(0xff00AEEF),
+          ),
+          title: Align(
+            alignment: Alignment(-1, 0),
+            child: Text(
+              element[0],
+              style: TextStyle(color: Colors.black, fontSize: 16.5),
+            ),
+          ),
+          onTap: () {
+            Navigator.pop(context);
+            if (curPage == element[1]) {
+            } else {
+              curPage = element[1];
+              Navigator.pushAndRemoveUntil(
+                context,
+                PageTransition(
+                    type: PageTransitionType.fade, child: element[1]),
+                (Route<dynamic> route) => false,
+              );
+            }
+          },
         ),
-        title: Text(
-          element[0],
-          style: TextStyle(color: Colors.black, fontSize: 16.5),
-        ),
-        onTap: () {
-          Navigator.pop(context);
-          if (curPage == element[1]) {
-          } else {
-            curPage = element[1];
-            Navigator.pushAndRemoveUntil(
-              context,
-              PageTransition(type: PageTransitionType.fade, child: element[1]),
-              (Route<dynamic> route) => false,
-            );
-          }
-        },
       ));
       navlist.add(
         Divider(),
@@ -78,31 +85,34 @@ class NavDrawer extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          UserAccountsDrawerHeader(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                  colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
+          Container(
+            height: 210,
+            child: UserAccountsDrawerHeader(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                    colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
+              ),
+              accountName: Text(name,
+                  style: TextStyle(color: Colors.white, fontSize: 18)),
+              accountEmail: Text(email,
+                  style: TextStyle(color: Colors.white, fontSize: 12)),
+              currentAccountPicture: CircleAvatar(
+                backgroundImage: CachedNetworkImageProvider(newUser.dp),
+                backgroundColor: Colors.blue[400],
+                radius: 30,
+              ),
+              onDetailsPressed: () {
+                Navigator.pop(context);
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  PageTransition(
+                      type: PageTransitionType.fade, child: ProfileScreen()),
+                  (Route<dynamic> route) => false,
+                );
+              },
             ),
-            accountName:
-                Text(name, style: TextStyle(color: Colors.white, fontSize: 18)),
-            accountEmail: Text(email,
-                style: TextStyle(color: Colors.white, fontSize: 12)),
-            currentAccountPicture: CircleAvatar(
-              backgroundImage: CachedNetworkImageProvider(newUser.dp),
-              backgroundColor: Colors.blue[400],
-              radius: 30,
-            ),
-            onDetailsPressed: () {
-              Navigator.pop(context);
-              Navigator.pushAndRemoveUntil(
-                context,
-                PageTransition(
-                    type: PageTransitionType.fade, child: ProfileScreen()),
-                (Route<dynamic> route) => false,
-              );
-            },
           ),
           Column(mainAxisSize: MainAxisSize.min, children: navlist),
           ListTile(
