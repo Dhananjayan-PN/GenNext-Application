@@ -367,12 +367,13 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                     trailing: Wrap(
                       children: <Widget>[
                         InkWell(
-                          child: isStarred
+                          child: uni['favorited_status']
                               ? Icon(Icons.star, color: Colors.white)
                               : Icon(Icons.star_border, color: Colors.white),
                           onTap: () {
                             setState(() {
-                              isStarred = !isStarred;
+                              uni['favorited_status'] =
+                                  !uni['favorited_status'];
                             });
                           },
                         ),
