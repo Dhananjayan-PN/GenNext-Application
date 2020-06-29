@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
-import 'package:grouped_list/grouped_list.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../shimmer_skeleton.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import '../shimmer_skeleton.dart';
+import '../boardview.dart';
+import '../board_item.dart';
+import '../board_list.dart';
+import '../boardview_controller.dart';
 import 'home.dart';
 
 class MyUniversitiesScreen extends StatefulWidget {
@@ -22,6 +25,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   var refreshKey2 = GlobalKey<RefreshIndicatorState>();
   TextEditingController controller1 = TextEditingController();
   TextEditingController controller2 = TextEditingController();
+  BoardViewController boardViewController = BoardViewController();
   String filter1;
   String filter2;
   List unis;
@@ -29,6 +33,8 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
 
   Future collegeList;
   Future favoritedList;
+
+  List listData = ["Reach", "Match", "Safety"];
 
   @override
   void initState() {
@@ -74,12 +80,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
     );
     if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      final List list = [];
-      list.addAll(data['safety_college_list_data']);
-      list.addAll(data['match_college_list_data']);
-      list.addAll(data['reach_college_list_data']);
-      return list;
+      return json.decode(response.body);
     } else {
       throw 'failed';
     }
@@ -165,43 +166,6 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
       favoritedList = getFavorited();
       collegeList = getCollegeList();
     });
-  }
-
-  showTopMajors(List topmajors) {
-    List<Widget> topMajorsChips = [];
-    for (var i = 0; i < topmajors.length; i++) {
-      topMajorsChips.add(
-        Padding(
-          padding: EdgeInsets.only(right: 3),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Chip(
-              labelPadding:
-                  EdgeInsets.only(left: 3, right: 3, top: 1, bottom: 1),
-              elevation: 5,
-              shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
-              label: Text(
-                topmajors[i],
-                style: TextStyle(fontSize: 13, color: Colors.black),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-    showDialog(
-        context: context,
-        barrierDismissible: true,
-        builder: (BuildContext context) {
-          return AlertDialog(
-              elevation: 20,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
-              title: Center(child: Text('Top Majors')),
-              content: ListView(
-                children: topMajorsChips,
-              ));
-        });
   }
 
   Widget buildCard(snapshot, int index) {
@@ -364,10 +328,43 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
         ),
       ),
     );
-    return Draggable(
-      feedback: uniCard,
-      child: uniCard,
-      childWhenDragging: Container(),
+    return BoardItem(
+        onStartDragItem:
+            (int listIndex, int itemIndex, BoardItemState state) {},
+        onDropItem: (int listIndex, int itemIndex, int oldListIndex,
+            int oldItemIndex, BoardItemState state) {
+          // Call API Update Call
+        },
+        onTapItem:
+            (int listIndex, int itemIndex, BoardItemState state) async {},
+        item: uniCard);
+  }
+
+  Widget buildBoardList(list, title) {
+    List<BoardItem> items = [];
+    for (int i = 0; i < list.length; i++) {
+      items.insert(i, buildCollegeListCard(list[i]));
+    }
+    return BoardList(
+      onStartDragList: (int listIndex) {},
+      onTapList: (int listIndex) async {},
+      onDropList: (int listIndex, int oldListIndex) {
+        var list = listData[oldListIndex];
+        listData.removeAt(oldListIndex);
+        listData.insert(listIndex, list);
+      },
+      headerBackgroundColor: Color.fromARGB(255, 235, 236, 240),
+      backgroundColor: Color.fromARGB(255, 235, 236, 240),
+      header: [
+        Expanded(
+            child: Padding(
+                padding: EdgeInsets.all(5),
+                child: Text(
+                  title,
+                  style: TextStyle(fontSize: 20),
+                ))),
+      ],
+      items: items,
     );
   }
 
@@ -490,6 +487,13 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                         ),
                       );
                     } else {
+                      List<BoardList> boardLists = [];
+                      boardLists.add(buildBoardList(
+                          snapshot.data["reach_college_list_data"], 'Reach'));
+                      boardLists.add(buildBoardList(
+                          snapshot.data["match_college_list_data"], 'Match'));
+                      boardLists.add(buildBoardList(
+                          snapshot.data["safety_college_list_data"], 'Safety'));
                       return Column(
                         children: <Widget>[
                           Padding(
@@ -517,119 +521,10 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                             ),
                           ),
                           Expanded(
-                            child: GroupedListView(
-                              order: null,
-                              elements: snapshot.data,
-                              groupBy: (element) => element['category'],
-                              groupSeparatorBuilder: (value) {
-                                return Padding(
-                                  padding: EdgeInsets.only(top: 20, bottom: 10),
-                                  child: Padding(
-                                    padding: EdgeInsets.only(left: 30),
-                                    child: Text(
-                                      '${value[0].toUpperCase()}${value.substring(1)}',
-                                      style: TextStyle(
-                                          color: Colors.black87,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w700),
-                                    ),
-                                  ),
-                                );
-                              },
-                              itemBuilder: (context, element) {
-                                return filter1 == null || filter1 == ""
-                                    ? buildCollegeListCard(element)
-                                    : element['university_name']
-                                            .toLowerCase()
-                                            .contains(filter1)
-                                        ? buildCollegeListCard(element)
-                                        : Container();
-                              },
+                            child: BoardView(
+                              lists: boardLists,
                             ),
-                          ),
-
-                          /*Text('Safety'),
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.only(top: 20.0),
-                              child: ListView.builder(
-                                  primary: true,
-                                  scrollDirection: Axis.vertical,
-                                  itemCount:
-                                      snapshot.data.elementAt(0).length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return filter == null || filter == ""
-                                        ? buildCard(
-                                            snapshot.data.elementAt(0), index)
-                                        : snapshot.data
-                                                .elementAt(0)[index]
-                                                    ['university_name']
-                                                .toLowerCase()
-                                                .contains(filter)
-                                            ? buildCard(
-                                                snapshot.data.elementAt(0),
-                                                index)
-                                            : Container();
-                                  }),
-                            ),
-                          ),
-                          Text('Match'),
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.only(top: 20.0),
-                              child: Scrollbar(
-                                child: ListView.builder(
-                                    primary: true,
-                                    scrollDirection: Axis.vertical,
-                                    itemCount:
-                                        snapshot.data.elementAt(1).length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return filter == null || filter == ""
-                                          ? buildCard(
-                                              snapshot.data.elementAt(1), index)
-                                          : snapshot.data
-                                                  .elementAt(1)[index]
-                                                      ['university_name']
-                                                  .toLowerCase()
-                                                  .contains(filter)
-                                              ? buildCard(
-                                                  snapshot.data.elementAt(1),
-                                                  index)
-                                              : Container();
-                                    }),
-                              ),
-                            ),
-                          ),
-                          Text('Reach'),
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.only(top: 20.0),
-                              child: Scrollbar(
-                                child: ListView.builder(
-                                    primary: true,
-                                    scrollDirection: Axis.vertical,
-                                    itemCount:
-                                        snapshot.data.elementAt(2).length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return filter == null || filter == ""
-                                          ? buildCard(
-                                              snapshot.data.elementAt(2), index)
-                                          : snapshot.data
-                                                  .elementAt(2)[index]
-                                                      ['university_name']
-                                                  .toLowerCase()
-                                                  .contains(filter)
-                                              ? buildCard(
-                                                  snapshot.data.elementAt(2),
-                                                  index)
-                                              : Container();
-                                    }),
-                              ),
-                            ),
-                          ),*/
+                          )
                         ],
                       );
                     }
