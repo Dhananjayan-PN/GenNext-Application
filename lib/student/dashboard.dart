@@ -677,7 +677,7 @@ class _DashBoardState extends State<DashBoard> {
           },
         ),
         Padding(
-          padding: EdgeInsets.only(bottom: 20, top: 20, left: 20, right: 20),
+          padding: EdgeInsets.only(bottom: 20, top: 15, left: 18, right: 18),
           child: Card(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(15))),
@@ -722,7 +722,7 @@ class _DashBoardState extends State<DashBoard> {
                             )
                           : saving
                               ? Padding(
-                                  padding: EdgeInsets.only(right: 14),
+                                  padding: EdgeInsets.only(right: 17),
                                   child: SizedBox(
                                       height: 20,
                                       width: 20,
