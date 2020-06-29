@@ -22,6 +22,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   final _formKey = GlobalKey<FormState>();
   GlobalKey<ScaffoldState> _scafKey = GlobalKey<ScaffoldState>();
   TextEditingController _subject = TextEditingController();
+  TextEditingController _reason = TextEditingController();
   TextEditingController _duration = TextEditingController();
   TextEditingController _notes = TextEditingController();
   TextEditingController _student = TextEditingController();
@@ -32,8 +33,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   Map<DateTime, List<List<dynamic>>> _events;
   Map<String, int> studentids = {};
   List _selectedEvents;
+  DateTime today;
   int cid;
-  bool expanded;
   bool fabVisible = true;
   Future sessions;
 
@@ -44,8 +45,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     _events = {};
     _calendarController = CalendarController();
     BackButtonInterceptor.add(myInterceptor);
-    _selectedDay = DateTime.now();
-    _selectedEvents = _events[_selectedDay] ?? [];
+    _selectedEvents = [];
   }
 
   @override
@@ -170,22 +170,15 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     }
   }
 
-  Future<void> editSession(int id, String complete) async {
+  Future<void> requestEditSession(int id, String message) async {
     final response = await http.put(
-      dom + 'api/counselor/edit-sessions-calendar',
+      dom + 'api/student/request-session-edit/$id',
       headers: {
         HttpHeaders.authorizationHeader: "Token $tok",
         'Content-Type': 'application/json; charset=UTF-8'
       },
       body: jsonEncode(
-        <String, dynamic>{
-          "session_id": id,
-          "subject_of_session": _subject.text,
-          "time_of_session": _newDateTime.toUtc().toIso8601String(),
-          "session_notes": _notes.text,
-          "session_duration": _duration.text,
-          "session_complete": complete
-        },
+        <String, dynamic>{"session_id": id, "student_message": message},
       ),
     );
     if (response.statusCode == 200) {
@@ -221,7 +214,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       Padding(
                         padding: EdgeInsets.only(top: 10),
                         child: Text(
-                          'Session successfully edited!\nRespective students will be notified',
+                          'Request successfully sent!\nYour counselor will be notified',
                           style: TextStyle(color: Colors.black, fontSize: 14),
                           textAlign: TextAlign.center,
                         ),
@@ -236,77 +229,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         refresh();
         setState(() {
           _selectedDay = _newDateTime;
-          _selectedEvents = _events[_selectedDay] ?? [];
-        });
-      } else {
-        Navigator.pop(context);
-        _error();
-        refresh();
-        setState(() {});
-      }
-    } else {
-      Navigator.pop(context);
-      _error();
-      refresh();
-      setState(() {});
-    }
-  }
-
-  Future<void> deleteSession(int id) async {
-    final response = await http.delete(
-      dom + 'api/counselor/delete-counselor-session/$id',
-      headers: {
-        HttpHeaders.authorizationHeader: "Token $tok",
-      },
-    );
-    if (response.statusCode == 200) {
-      if (json.decode(response.body)['Response'] ==
-          'Session successfully deleted!') {
-        Navigator.pop(context);
-        showDialog(
-          context: context,
-          barrierDismissible: true,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              contentPadding: EdgeInsets.all(0),
-              elevation: 20,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10.0))),
-              content: Container(
-                height: 150,
-                width: 80,
-                decoration: BoxDecoration(
-                  shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                ),
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Icon(
-                        Icons.check_circle_outline,
-                        size: 40,
-                        color: Colors.green,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 10),
-                        child: Text(
-                          'Session successfully deleted!\nRespective students will be notified',
-                          style: TextStyle(color: Colors.black, fontSize: 14),
-                          textAlign: TextAlign.center,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-        );
-        refresh();
-        setState(() {
-          _selectedDay = DateTime.now();
           _selectedEvents = _events[_selectedDay] ?? [];
         });
       } else {
@@ -355,8 +277,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                     height: 50,
                     width: 50,
                     child: SpinKitWave(
-                      color: Colors.white,
-                      size: 30,
+                      color: Colors.grey,
+                      size: 25,
                     ),
                   ),
                   Padding(
@@ -405,7 +327,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                   Padding(
                     padding: EdgeInsets.only(top: 10),
                     child: Text(
-                      'Unable to establish a connection with our servers.\nCheck your connection and try again later.',
+                      'Unable to establish a connection\nwith our servers.\nCheck your connection and try again later.',
                       style: TextStyle(color: Colors.black, fontSize: 12),
                       textAlign: TextAlign.center,
                     ),
@@ -612,12 +534,11 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     );
   }
 
-  _editSession(String student, DateTime time, int id, String complete) {
+  _rescheduleSession(int id, DateTime time) {
     showDialog(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        _newDateTime = time;
         return AlertDialog(
           titlePadding: EdgeInsets.only(top: 15),
           contentPadding: EdgeInsets.all(0),
@@ -625,7 +546,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
           title: Center(
-              child: Text('Edit Session',
+              child: Text('Reschedule Session',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))),
           content: Container(
             width: MediaQuery.of(context).size.width,
@@ -643,15 +564,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                     child: Divider(thickness: 0),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 15, left: 25, right: 25),
-                    child: Row(
-                      children: <Widget>[
-                        Text('Student: '),
-                        Text(student, style: TextStyle(color: Colors.black54))
-                      ],
-                    ),
-                  ),
-                  Padding(
                     padding: EdgeInsets.only(top: 10, left: 25, right: 25),
                     child: DateTimeField(
                       controller: _datetimecontroller,
@@ -660,7 +572,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                           borderSide:
                               BorderSide(color: Colors.blue, width: 0.0),
                         ),
-                        labelText: 'Date and Time',
+                        labelText: 'New Date and Time',
                         labelStyle: TextStyle(color: Colors.black54),
                       ),
                       format: DateFormat.yMd().add_jm(),
@@ -697,53 +609,13 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                           borderSide:
                               BorderSide(color: Colors.blue, width: 0.0),
                         ),
-                        labelText: 'Subject',
+                        labelText: 'Reason',
                         labelStyle: TextStyle(color: Colors.black54),
                       ),
                       validator: (value) {
                         if (value.isEmpty) {
-                          return 'Session subject is required to save';
+                          return 'Reason is required to send request';
                         }
-                        return null;
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10, left: 25, right: 25),
-                    child: TextFormField(
-                      keyboardType: TextInputType.number,
-                      controller: _duration,
-                      decoration: InputDecoration(
-                        border: UnderlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.blue, width: 0.0),
-                        ),
-                        labelText: 'Session Duration (mins)',
-                        labelStyle: TextStyle(color: Colors.black54),
-                      ),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Session duration is required to save';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 30, left: 25, right: 25),
-                    child: TextFormField(
-                      maxLines: null,
-                      keyboardType: TextInputType.multiline,
-                      controller: _notes,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.blue, width: 0.0),
-                        ),
-                        labelText: 'Session Notes',
-                        labelStyle: TextStyle(color: Colors.black54),
-                      ),
-                      validator: (value) {
                         return null;
                       },
                     ),
@@ -764,13 +636,15 @@ class ScheduleScreenState extends State<ScheduleScreen> {
             ),
             FlatButton(
               child: Text(
-                'Save',
+                'Send',
                 style: TextStyle(color: Colors.blue),
               ),
               onPressed: () {
                 if (_formKey.currentState.validate()) {
+                  String message =
+                      'Please reschedule session to ${_newDateTime.toUtc().toIso8601String()}. ';
                   Navigator.pop(context);
-                  editSession(id, complete);
+                  requestEditSession(id, message + _reason.text);
                   _loading();
                 }
               },
@@ -781,52 +655,64 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     );
   }
 
-  _deleteSession(int id) {
+  _cancelSession(int id) {
     showDialog(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
+          titlePadding: EdgeInsets.only(top: 15),
           contentPadding: EdgeInsets.all(0),
           elevation: 20,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          title: Center(
+              child: Text('Cancel Session',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))),
           content: Container(
+            width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.all(Radius.circular(10.0)),
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(top: 20),
-                  child: Icon(
-                    Icons.delete,
-                    size: 40,
-                    color: Colors.red.withOpacity(0.9),
+            child: Form(
+              key: _formKey,
+              child: ListView(
+                shrinkWrap: true,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: 5, left: 20, right: 20),
+                    child: Divider(thickness: 0),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 10),
-                  child: Text(
-                    'Are you sure you want to delete this session?',
-                    style: TextStyle(
-                      color: Colors.black,
+                  Padding(
+                    padding: EdgeInsets.only(top: 10, left: 25, right: 25),
+                    child: TextFormField(
+                      controller: _reason,
+                      decoration: InputDecoration(
+                        border: UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Colors.blue, width: 0.0),
+                        ),
+                        labelText: 'Reason',
+                        labelStyle: TextStyle(color: Colors.black54),
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Reason is required to send request';
+                        }
+                        return null;
+                      },
                     ),
-                    textAlign: TextAlign.center,
                   ),
-                )
-              ],
+                ],
+              ),
             ),
           ),
           actions: <Widget>[
             FlatButton(
               child: Text(
                 'Cancel',
-                style: TextStyle(color: Colors.blue),
+                style: TextStyle(color: Colors.red),
               ),
               onPressed: () {
                 Navigator.pop(context);
@@ -834,13 +720,16 @@ class ScheduleScreenState extends State<ScheduleScreen> {
             ),
             FlatButton(
               child: Text(
-                'Delete',
-                style: TextStyle(color: Colors.red),
+                'Send',
+                style: TextStyle(color: Colors.blue),
               ),
               onPressed: () {
-                Navigator.pop(context);
-                deleteSession(id);
-                _loading();
+                if (_formKey.currentState.validate()) {
+                  Navigator.pop(context);
+                  requestEditSession(
+                      id, 'Please cancel the session. ' + _reason.text);
+                  _loading();
+                }
               },
             ),
           ],
@@ -899,10 +788,32 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: 10, bottom: 5.5),
-                  child: InkWell(
+                  padding: EdgeInsets.only(left: 10, bottom: 4),
+                  child: PopupMenuButton(
                     child: Icon(Icons.more_vert),
-                    onTap: () {},
+                    itemBuilder: (BuildContext context) {
+                      return {'Reschedule', 'Cancel'}.map((String choice) {
+                        return PopupMenuItem<String>(
+                          height: 35,
+                          value: choice,
+                          child: Text(choice,
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.w400)),
+                        );
+                      }).toList();
+                    },
+                    onSelected: (value) {
+                      switch (value) {
+                        case 'Reschedule':
+                          _rescheduleSession(session[0], sessionDateTime);
+                          break;
+                        case 'Cancel':
+                          _cancelSession(session[0]);
+                          break;
+                      }
+                    },
                   ),
                 )
               ],
@@ -1108,13 +1019,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       centerHeaderTitle: true,
                     ),
                     headerVisible: true,
-                    onCalendarCreated: (first, last, format) {
-                      _selectedEvents = _events[_selectedDay] ?? [];
-                    },
                     onDaySelected: (date, events) {
                       setState(() {
                         _selectedDay = date;
-                        expanded = false;
                         _selectedEvents = events;
                       });
                     },
@@ -1175,22 +1082,31 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       },
                     ),
                   ),
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 10, left: 15, right: 15),
-                      child: ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          itemCount: _selectedEvents.length,
-                          itemBuilder: (context, index) {
-                            return buildEventCard(_selectedEvents[index]);
-                          }),
-                    ),
-                  )
+                  _events != {}
+                      ? Expanded(
+                          child: Padding(
+                            padding:
+                                EdgeInsets.only(top: 15, left: 15, right: 15),
+                            child: ListView.builder(
+                                scrollDirection: Axis.vertical,
+                                itemCount: _selectedEvents.length,
+                                itemBuilder: (context, index) {
+                                  return buildEventCard(_selectedEvents[index]);
+                                }),
+                          ),
+                        )
+                      : Center(
+                          child: Text(
+                            'No sessions in your calendar\nTap on + to request one',
+                            style:
+                                TextStyle(color: Colors.black87, fontSize: 15),
+                          ),
+                        )
                 ],
               );
             }
           }
-          return Center(child: CircularProgressIndicator());
+          return Center(child: SpinKitWave(color: Colors.grey[400], size: 30));
         },
       ),
     );
