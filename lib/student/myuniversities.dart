@@ -353,15 +353,18 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
         listData.removeAt(oldListIndex);
         listData.insert(listIndex, list);
       },
-      headerBackgroundColor: Color.fromARGB(255, 235, 236, 240),
-      backgroundColor: Color.fromARGB(255, 235, 236, 240),
+      headerBackgroundColor: Colors.white,
+      backgroundColor: Colors.white,
       header: [
         Expanded(
             child: Padding(
-                padding: EdgeInsets.all(5),
+                padding: EdgeInsets.only(left: 20, top: 5),
                 child: Text(
                   title,
-                  style: TextStyle(fontSize: 20),
+                  style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.w300,
+                      color: Colors.black87),
                 ))),
       ],
       items: items,
