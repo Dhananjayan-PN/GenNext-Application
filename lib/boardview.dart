@@ -305,7 +305,7 @@ class BoardViewState extends State<BoardView> {
       ListView.builder(
         physics: ClampingScrollPhysics(),
         itemCount: widget.lists.length,
-        scrollDirection: Axis.horizontal,
+        scrollDirection: Axis.vertical,
         controller: boardViewController,
         itemBuilder: (BuildContext context, int index) {
           if (widget.lists[index].boardView == null) {

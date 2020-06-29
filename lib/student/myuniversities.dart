@@ -353,8 +353,8 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
         listData.removeAt(oldListIndex);
         listData.insert(listIndex, list);
       },
-      headerBackgroundColor: Colors.white,
-      backgroundColor: Colors.white,
+      headerBackgroundColor: Colors.transparent,
+      backgroundColor: Colors.transparent,
       header: [
         Expanded(
             child: Padding(
@@ -525,9 +525,10 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                           ),
                           Expanded(
                             child: BoardView(
+                              width: MediaQuery.of(context).size.width - 16,
                               lists: boardLists,
                             ),
-                          )
+                          ),
                         ],
                       );
                     }
