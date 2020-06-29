@@ -4,7 +4,6 @@ import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/rendering.dart';
-import 'package:searchable_dropdown/searchable_dropdown.dart';
 import 'package:http/http.dart' as http;
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
@@ -23,9 +22,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   GlobalKey<ScaffoldState> _scafKey = GlobalKey<ScaffoldState>();
   TextEditingController _subject = TextEditingController();
   TextEditingController _reason = TextEditingController();
-  TextEditingController _duration = TextEditingController();
-  TextEditingController _notes = TextEditingController();
-  TextEditingController _student = TextEditingController();
   TextEditingController _datetimecontroller = TextEditingController();
   DateTime _newDateTime;
   DateTime _selectedDay;
@@ -34,7 +30,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   Map<String, int> studentids = {};
   List _selectedEvents;
   DateTime today;
-  int cid;
+  int studentId;
   bool fabVisible = true;
   Future sessions;
 
@@ -78,6 +74,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         });
         return 'No counselor';
       } else {
+        studentId = json.decode(response.body)['student_id'];
         return json.decode(response.body)['session_data'];
       }
     } else {
@@ -88,27 +85,25 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     }
   }
 
-  Future<void> requestSession(int id) async {
+  Future<void> requestSession() async {
     final response = await http.post(
-      dom + 'api/counselor/counselor-sessions/create/',
+      dom + 'api/student/request-counselor-session/',
       headers: <String, String>{
         HttpHeaders.authorizationHeader: "Token $tok",
         'Content-Type': 'application/json; charset=UTF-8'
       },
       body: json.encode(
         <String, dynamic>{
-          "student_id": id,
-          "counselor_id": cid,
+          "student_id": studentId,
           "subject_of_session": _subject.text,
           "time_of_session": _newDateTime.toUtc().toIso8601String(),
-          "session_notes": _notes.text,
-          "session_duration": _duration.text,
+          "student_message": _reason.text,
         },
       ),
     );
     if (response.statusCode == 200) {
       if (json.decode(response.body)['Response'] ==
-          'Session successfully created.') {
+          'Session request successfully sent.') {
         Navigator.pop(context);
         showDialog(
           context: context,
@@ -139,7 +134,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       Padding(
                         padding: EdgeInsets.only(top: 10),
                         child: Text(
-                          'Session successfully created!\nRespective students will be notified',
+                          'Request successfully sent!\nYour counselor will be notified',
                           style: TextStyle(color: Colors.black, fontSize: 14),
                           textAlign: TextAlign.center,
                         ),
@@ -182,8 +177,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
       ),
     );
     if (response.statusCode == 200) {
-      if (json.decode(response.body)['response'] ==
-          'Session Successfully edited!') {
+      if (json.decode(response.body)['Response'] ==
+          'Edit request successfully sent.') {
         Navigator.pop(context);
         showDialog(
           context: context,
@@ -327,7 +322,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                   Padding(
                     padding: EdgeInsets.only(top: 10),
                     child: Text(
-                      'Unable to establish a connection\nwith our servers.\nCheck your connection and try again later.',
+                      'Something went wrong.\nCheck your connection and try again later.',
                       style: TextStyle(color: Colors.black, fontSize: 12),
                       textAlign: TextAlign.center,
                     ),
@@ -342,11 +337,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   }
 
   _requestSession() {
-    String student;
-    _student.clear();
     _subject.clear();
-    _duration.clear();
-    _notes.clear();
+    _reason.clear();
     _datetimecontroller.clear();
     showDialog(
       context: context,
@@ -359,7 +351,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
           title: Center(
-              child: Text('Create Session',
+              child: Text('Request Session',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))),
           content: Container(
             width: MediaQuery.of(context).size.width,
@@ -375,36 +367,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                   Padding(
                     padding: EdgeInsets.only(top: 5, left: 20, right: 20),
                     child: Divider(thickness: 0),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10, left: 25, right: 25),
-                    child: SearchableDropdown.single(
-                      isCaseSensitiveSearch: false,
-                      dialogBox: true,
-                      menuBackgroundColor: Colors.white,
-                      icon: Icon(
-                        Icons.arrow_drop_down,
-                        size: 25,
-                        color: Colors.black,
-                      ),
-                      items: [],
-                      value: student,
-                      style: TextStyle(color: Colors.black),
-                      hint: Padding(
-                        padding: EdgeInsets.only(bottom: 5.0),
-                        child: Text(
-                          "Student",
-                          style: TextStyle(color: Colors.black54, fontSize: 16),
-                        ),
-                      ),
-                      searchHint: "Student",
-                      onChanged: (value) {
-                        setState(() {
-                          student = value;
-                        });
-                      },
-                      isExpanded: true,
-                    ),
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 10, left: 25, right: 25),
@@ -464,41 +426,23 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 10, left: 25, right: 25),
-                    child: TextFormField(
-                      keyboardType: TextInputType.number,
-                      controller: _duration,
-                      decoration: InputDecoration(
-                        border: UnderlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Colors.blue, width: 0.0),
-                        ),
-                        labelText: 'Session Duration (mins)',
-                        labelStyle: TextStyle(color: Colors.black54),
-                      ),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Session duration is required to save';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  Padding(
                     padding: EdgeInsets.only(top: 30, left: 25, right: 25),
                     child: TextFormField(
                       maxLines: null,
                       keyboardType: TextInputType.multiline,
-                      controller: _notes,
+                      controller: _reason,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderSide:
                               BorderSide(color: Colors.blue, width: 0.0),
                         ),
-                        labelText: 'Session Notes',
+                        labelText: 'Reason',
                         labelStyle: TextStyle(color: Colors.black54),
                       ),
                       validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Reason is required to send request';
+                        }
                         return null;
                       },
                     ),
@@ -519,12 +463,12 @@ class ScheduleScreenState extends State<ScheduleScreen> {
             ),
             FlatButton(
               child: Text(
-                'Create',
+                'Send',
                 style: TextStyle(color: Colors.blue),
               ),
               onPressed: () {
                 Navigator.pop(context);
-                requestSession(studentids[student]);
+                requestSession();
                 _loading();
               },
             ),
@@ -535,6 +479,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   }
 
   _rescheduleSession(int id, DateTime time) {
+    _reason.clear();
+    _datetimecontroller.clear();
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -656,6 +602,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   }
 
   _cancelSession(int id) {
+    _reason.clear();
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -831,7 +778,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                           fontWeight: FontWeight.w200),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 0.3),
+                      padding: EdgeInsets.only(left: 1),
                       child: Text(
                         DateFormat.MMM().format(sessionDateTime).toUpperCase(),
                         style: TextStyle(
