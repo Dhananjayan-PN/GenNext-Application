@@ -4,14 +4,11 @@ import 'package:page_transition/page_transition.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
+import '../checklist.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import '../shimmer_skeleton.dart';
-import '../boardview.dart';
-import '../board_item.dart';
-import '../board_list.dart';
-import '../boardview_controller.dart';
 import 'home.dart';
 
 class MyUniversitiesScreen extends StatefulWidget {
@@ -25,7 +22,6 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   var refreshKey2 = GlobalKey<RefreshIndicatorState>();
   TextEditingController controller1 = TextEditingController();
   TextEditingController controller2 = TextEditingController();
-  BoardViewController boardViewController = BoardViewController();
   String filter1;
   String filter2;
   List unis;
@@ -34,7 +30,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   Future collegeList;
   Future favoritedList;
 
-  List listData = ["Reach", "Match", "Safety"];
+  List categories = ['Reach', 'Match', 'Safety'];
 
   @override
   void initState() {
@@ -80,7 +76,11 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
     );
     if (response.statusCode == 200) {
-      return json.decode(response.body);
+      List list = [];
+      list.add(json.decode(response.body)['reach_college_list_data']);
+      list.add(json.decode(response.body)['match_college_list_data']);
+      list.add(json.decode(response.body)['safety_college_list_data']);
+      return list;
     } else {
       throw 'failed';
     }
@@ -328,47 +328,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
         ),
       ),
     );
-    return BoardItem(
-        onStartDragItem:
-            (int listIndex, int itemIndex, BoardItemState state) {},
-        onDropItem: (int listIndex, int itemIndex, int oldListIndex,
-            int oldItemIndex, BoardItemState state) {
-          // Call API Update Call
-        },
-        onTapItem:
-            (int listIndex, int itemIndex, BoardItemState state) async {},
-        item: uniCard);
-  }
-
-  Widget buildBoardList(list, title) {
-    List<BoardItem> items = [];
-    for (int i = 0; i < list.length; i++) {
-      items.insert(i, buildCollegeListCard(list[i]));
-    }
-    return BoardList(
-      onStartDragList: (int listIndex) {},
-      onTapList: (int listIndex) async {},
-      onDropList: (int listIndex, int oldListIndex) {
-        var list = listData[oldListIndex];
-        listData.removeAt(oldListIndex);
-        listData.insert(listIndex, list);
-      },
-      headerBackgroundColor: Colors.transparent,
-      backgroundColor: Colors.transparent,
-      header: [
-        Expanded(
-            child: Padding(
-                padding: EdgeInsets.only(left: 20, top: 5),
-                child: Text(
-                  title,
-                  style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.w300,
-                      color: Colors.black87),
-                ))),
-      ],
-      items: items,
-    );
+    return uniCard;
   }
 
   @override
@@ -490,46 +450,34 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                         ),
                       );
                     } else {
-                      List<BoardList> boardLists = [];
-                      boardLists.add(buildBoardList(
-                          snapshot.data["reach_college_list_data"], 'Reach'));
-                      boardLists.add(buildBoardList(
-                          snapshot.data["match_college_list_data"], 'Match'));
-                      boardLists.add(buildBoardList(
-                          snapshot.data["safety_college_list_data"], 'Safety'));
-                      return Column(
-                        children: <Widget>[
-                          Padding(
-                            padding:
-                                EdgeInsets.only(top: 5, left: 18, right: 30),
-                            child: Row(
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.only(top: 5, right: 6),
-                                  child: Icon(
-                                    Icons.search,
-                                    size: 30,
-                                    color: Colors.black54,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: TextField(
-                                    decoration: InputDecoration(
-                                        labelText: "Search",
-                                        contentPadding: EdgeInsets.all(2)),
-                                    controller: controller1,
-                                  ),
-                                ),
-                              ],
-                            ),
+                      List<ChecklistView> checklistsViews = [];
+                      for (var i = 0; i < snapshot.data.length; i++) {
+                        List<ChecklistItemView> subItems = [];
+                        for (var j = 0; j < snapshot.data[i].length; j++) {
+                          subItems.add(ChecklistItemView(
+                            title: buildCollegeListCard(snapshot.data[i][j]),
+                            canDrag: true,
+                            onDropItem: (oldListIndex, oldItemIndex, listIndex,
+                                itemIndex, state) {},
+                          ));
+                        }
+                        checklistsViews.add(ChecklistView(
+                          items: subItems,
+                          isOpen: true,
+                          canDrag: true,
+                          onDropChecklist: (oldIndex, newIndex, state) {},
+                          title: Padding(
+                            padding: EdgeInsets.only(left: 20, top: 20),
+                            child: Text(categories[i],
+                                style: TextStyle(
+                                    color: Colors.black87,
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.w300)),
                           ),
-                          Expanded(
-                            child: BoardView(
-                              width: MediaQuery.of(context).size.width - 16,
-                              lists: boardLists,
-                            ),
-                          ),
-                        ],
+                        ));
+                      }
+                      return ChecklistListView(
+                        checklists: checklistsViews,
                       );
                     }
                   }
