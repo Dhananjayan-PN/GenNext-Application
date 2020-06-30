@@ -285,7 +285,7 @@ class ChecklistListViewState extends State<ChecklistListView>
       cacheExtent: 2000,
       physics: NeverScrollableScrollPhysics(),
       controller: checklistController,
-      shrinkWrap: true,
+      shrinkWrap: false,
       children: checklistWidgets,
     )));
 

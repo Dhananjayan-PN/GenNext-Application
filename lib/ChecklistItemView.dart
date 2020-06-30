@@ -1,22 +1,20 @@
-library checklist;
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import 'ChecklistView.dart';
 
-
-typedef void OnDropItem(int oldListIndex,int oldItemIndex,int listIndex, int itemIndex, ChecklistItemViewState state);
-typedef void OnTapItem(int listIndex, int itemIndex, ChecklistItemViewState state);
-typedef void OnChanged(int listIndex, int itemIndex,bool val);
+typedef void OnDropItem(int oldListIndex, int oldItemIndex, int listIndex,
+    int itemIndex, ChecklistItemViewState state);
+typedef void OnTapItem(
+    int listIndex, int itemIndex, ChecklistItemViewState state);
+typedef void OnChanged(int listIndex, int itemIndex, bool val);
 typedef void OnStartDragItem(
     int listIndex, int itemIndex, ChecklistItemViewState state);
 
-class ChecklistItemView extends StatefulWidget{
-
-   ChecklistViewState checklist;
-   Widget title;
-   int index;
+class ChecklistItemView extends StatefulWidget {
+  ChecklistViewState checklist;
+  Widget title;
+  int index;
   bool value;
   OnDropItem onDropItem;
   OnTapItem onTapItem;
@@ -25,25 +23,37 @@ class ChecklistItemView extends StatefulWidget{
   OnStartDragItem onStartDragItem;
   Color backgroundColor;
 
-  ChecklistItemView({Key key, this.title,this.value, this.canDrag,this.index, this.checklist, this.onDropItem, this.onTapItem, this.onStartDragItem,this.onChanged, this.backgroundColor}) : super(key: key);
+  ChecklistItemView(
+      {Key key,
+      this.title,
+      this.value,
+      this.canDrag,
+      this.index,
+      this.checklist,
+      this.onDropItem,
+      this.onTapItem,
+      this.onStartDragItem,
+      this.onChanged,
+      this.backgroundColor})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
     return ChecklistItemViewState();
   }
-
 }
 
-class ChecklistItemViewState extends State<ChecklistItemView> with AutomaticKeepAliveClientMixin{
+class ChecklistItemViewState extends State<ChecklistItemView>
+    with AutomaticKeepAliveClientMixin {
   bool value = false;
   double height;
   double width;
   @override
   void initState() {
     super.initState();
-    if(widget.value == null){
+    if (widget.value == null) {
       value = false;
-    }else {
+    } else {
       value = widget.value;
     }
   }
@@ -52,11 +62,21 @@ class ChecklistItemViewState extends State<ChecklistItemView> with AutomaticKeep
   bool get wantKeepAlive => true;
 
   void onDropItem(int listIndex, int itemIndex) {
-    if(listIndex != null && itemIndex != null && widget.checklist != null && widget.checklist.widget.checklistState.checklistStates != null && widget.checklist.widget.checklistState.checklistStates.length > listIndex) {
+    if (listIndex != null &&
+        itemIndex != null &&
+        widget.checklist != null &&
+        widget.checklist.widget.checklistState.checklistStates != null &&
+        widget.checklist.widget.checklistState.checklistStates.length >
+            listIndex) {
       widget.checklist.widget.checklistState.checklistStates[listIndex]
           .setState(() {
         if (widget.onDropItem != null) {
-          widget.onDropItem(widget.checklist.widget.checklistState.oldListIndex,widget.checklist.widget.checklistState.oldItemIndex,listIndex, itemIndex, this);
+          widget.onDropItem(
+              widget.checklist.widget.checklistState.oldListIndex,
+              widget.checklist.widget.checklistState.oldItemIndex,
+              listIndex,
+              itemIndex,
+              this);
         }
         widget.checklist.widget.checklistState.draggedItemIndex = null;
         widget.checklist.widget.checklistState.draggedListIndex = null;
@@ -79,7 +99,8 @@ class ChecklistItemViewState extends State<ChecklistItemView> with AutomaticKeep
           widget.onStartDragItem(
               widget.checklist.widget.index, widget.index, this);
         }
-        widget.checklist.widget.checklistState.oldListIndex = widget.checklist.widget.index;
+        widget.checklist.widget.checklistState.oldListIndex =
+            widget.checklist.widget.index;
         widget.checklist.widget.checklistState.oldItemIndex = widget.index;
       });
     }
@@ -99,7 +120,7 @@ class ChecklistItemViewState extends State<ChecklistItemView> with AutomaticKeep
     }
     widget.checklist.itemStates.insert(widget.index, this);
     return GestureDetector(
-        onTap: (){
+        onTap: () {
           if (widget.onTapItem != null) {
             widget.onTapItem(widget.checklist.widget.index, widget.index, this);
           }
@@ -121,29 +142,39 @@ class ChecklistItemViewState extends State<ChecklistItemView> with AutomaticKeep
           widget.checklist.widget.checklistState.initialY = pos.dy;
         },
         onLongPress: () {
-          if(widget.canDrag == null || widget.canDrag == true) {
+          if (widget.canDrag == null || widget.canDrag == true) {
             _startDrag(widget, context);
           }
         },
-        child:Container(
-            color: (widget.backgroundColor != null)?widget.backgroundColor:Colors.white,
-            child:Column(
+        child: Container(
+            color: (widget.backgroundColor != null)
+                ? widget.backgroundColor
+                : Colors.white,
+            child: Column(
               children: <Widget>[
-                Row(children: <Widget>[
-                  (widget.value != null)?Checkbox(
-                    activeColor: Colors.blue,
-                    value: widget.value,onChanged: (val){
-                    setState(() {
-                      if(widget.onChanged != null){
-                        widget.onChanged(widget.checklist.widget.index,widget.index,val);
-                      }
-                      widget.value = val;
-                    });
-                  },):Container(),
-                  Expanded(child:widget.title),
-    ],),
+                Row(
+                  children: <Widget>[
+                    (widget.value != null)
+                        ? Checkbox(
+                            activeColor: Colors.blue,
+                            value: widget.value,
+                            onChanged: (val) {
+                              setState(() {
+                                if (widget.onChanged != null) {
+                                  widget.onChanged(
+                                      widget.checklist.widget.index,
+                                      widget.index,
+                                      val);
+                                }
+                                widget.value = val;
+                              });
+                            },
+                          )
+                        : Container(),
+                    Expanded(child: widget.title),
+                  ],
+                ),
               ],
             )));
   }
-
 }
