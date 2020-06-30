@@ -22,6 +22,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   var refreshKey2 = GlobalKey<RefreshIndicatorState>();
   TextEditingController controller1 = TextEditingController();
   TextEditingController controller2 = TextEditingController();
+  ScrollController scrollController = ScrollController();
   String filter1;
   String filter2;
   List unis;
@@ -248,14 +249,14 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
 
   Widget buildCollegeListCard(uni) {
     Widget uniCard = Padding(
-      padding: EdgeInsets.only(top: 5, left: 10, right: 10),
+      padding: EdgeInsets.only(top: 6, left: 10, right: 10, bottom: 2),
       child: Material(
         color: Colors.transparent,
         child: Card(
           clipBehavior: Clip.antiAlias,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10))),
-          elevation: 10,
+          elevation: 4,
           child: Material(
             color: Colors.transparent,
             child: CachedNetworkImage(
@@ -464,7 +465,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                         checklistsViews.add(ChecklistView(
                           items: subItems,
                           isOpen: true,
-                          canDrag: true,
+                          canDrag: false,
                           onDropChecklist: (oldIndex, newIndex, state) {},
                           title: Padding(
                             padding: EdgeInsets.only(left: 20, top: 20),
@@ -476,8 +477,12 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                           ),
                         ));
                       }
-                      return ChecklistListView(
-                        checklists: checklistsViews,
+                      return Padding(
+                        padding: EdgeInsets.only(top: 10),
+                        child: ChecklistListView(
+                          controller: scrollController,
+                          checklists: checklistsViews,
+                        ),
                       );
                     }
                   }
