@@ -110,36 +110,9 @@ class _EssaysScreenState extends State<EssaysScreen> {
                   Spacer(),
                   Padding(
                     padding: EdgeInsets.only(top: 5),
-                    child: PopupMenuButton(
-                      child: Icon(Icons.more_vert),
-                      itemBuilder: (BuildContext context) {
-                        return {'Edit Details', 'Delete'}.map((String choice) {
-                          return PopupMenuItem<String>(
-                            height: 35,
-                            value: choice,
-                            child: Text(choice,
-                                style: TextStyle(
-                                    fontSize: 13,
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.w400)),
-                          );
-                        }).toList();
-                      },
-                      onSelected: (value) {
-                        switch (value) {
-                          case 'Edit Details':
-                            break;
-                          case 'Delete':
-                            break;
-                        }
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 10, top: 5),
                     child: InkWell(
                       child: Icon(
-                        Icons.arrow_forward,
+                        Icons.create,
                         color: Colors.black.withOpacity(0.75),
                       ),
                       onTap: () {
@@ -168,6 +141,33 @@ class _EssaysScreenState extends State<EssaysScreen> {
                             ),
                           ),
                         );
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 10, top: 5),
+                    child: PopupMenuButton(
+                      child: Icon(Icons.more_vert),
+                      itemBuilder: (BuildContext context) {
+                        return {'Edit Details', 'Delete'}.map((String choice) {
+                          return PopupMenuItem<String>(
+                            height: 35,
+                            value: choice,
+                            child: Text(choice,
+                                style: TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.w400)),
+                          );
+                        }).toList();
+                      },
+                      onSelected: (value) {
+                        switch (value) {
+                          case 'Edit Details':
+                            break;
+                          case 'Delete':
+                            break;
+                        }
                       },
                     ),
                   ),
