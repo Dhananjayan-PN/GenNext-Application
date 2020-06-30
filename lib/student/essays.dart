@@ -259,7 +259,35 @@ class _EssaysScreenState extends State<EssaysScreen> {
       drawer: NavDrawer(
           name: newUser.firstname + ' ' + newUser.lastname,
           email: newUser.email),
-      appBar: CustomAppBar('Essays'),
+      appBar: GradientAppBar(
+          actions: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(right: 8),
+              child: IconButton(
+                icon: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                  size: 26,
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                        type: PageTransitionType.fade, child: NewEssayScreen()),
+                  );
+                },
+              ),
+            )
+          ],
+          title: Text(
+            'Essays',
+            maxLines: 1,
+            style: TextStyle(color: Colors.white),
+          ),
+          gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Color(0xff00AEEF), Color(0xff0072BC)])),
       body: RefreshIndicator(
         key: refreshKey,
         onRefresh: () {
@@ -469,21 +497,14 @@ class _EssayEditorState extends State<EssayEditor> {
       child: Scaffold(
           backgroundColor: Colors.white,
           appBar: GradientAppBar(
-            leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
             actions: <Widget>[
               FlatButton(
                 child: Text(
                   'SAVE',
                   style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.w500),
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 15),
                 ),
                 onPressed: () {
                   Navigator.pop(context);
@@ -536,7 +557,9 @@ class _EssayEditorState extends State<EssayEditor> {
                       padding: EdgeInsets.only(left: 15, right: 15),
                       child: ExpandText(
                         this.essayPrompt ?? '',
+                        expandOnGesture: true,
                         textAlign: TextAlign.left,
+                        style: TextStyle(color: Colors.black87, fontSize: 15),
                         arrowPadding: EdgeInsets.all(0),
                         maxLines: 1,
                       ),
@@ -593,5 +616,41 @@ class _EssayEditorState extends State<EssayEditor> {
             ],
           )),
     );
+  }
+}
+
+class NewEssayScreen extends StatefulWidget {
+  @override
+  _NewEssayScreenState createState() => _NewEssayScreenState();
+}
+
+class _NewEssayScreenState extends State<NewEssayScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: Colors.white,
+        appBar: GradientAppBar(
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  'DONE',
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.w500),
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            ],
+            title: Text(
+              'New Essay',
+              maxLines: 1,
+              style: TextStyle(color: Colors.white),
+            ),
+            gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xff00AEEF), Color(0xff0072BC)])),
+        body: Container());
   }
 }

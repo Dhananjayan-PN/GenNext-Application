@@ -242,6 +242,19 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                   ])),
             ],
           ),
+          actions: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(right: 8),
+              child: IconButton(
+                icon: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                  size: 26,
+                ),
+                onPressed: () {},
+              ),
+            )
+          ],
         ),
         body: TabBarView(
           children: <Widget>[
