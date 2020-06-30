@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:expand_widget/expand_widget.dart';
 import 'package:http/http.dart' as http;
 import '../shimmer_skeleton.dart';
 import 'package:quill_delta/quill_delta.dart';
@@ -69,6 +71,18 @@ class _EssaysScreenState extends State<EssaysScreen> {
     }
   }
 
+  Future<void> editEssay() async {}
+
+  Future<void> deleteEssay() async {}
+
+  Future<void> editEssaydetail() async {}
+
+  _editEssay() {}
+
+  _deleteEssay() {}
+
+  _editEssayDetails() {}
+
   Widget buildEssayCard(essay) {
     return Padding(
       padding: EdgeInsets.only(top: 5, left: 10, right: 10),
@@ -76,53 +90,162 @@ class _EssaysScreenState extends State<EssaysScreen> {
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10))),
-        elevation: 10,
+        elevation: 6,
         child: Material(
           color: Colors.transparent,
           child: ListTile(
             key: Key(essay['essay_id'].toString()),
-            title: Text(
-              essay['essay_title'],
-              style: TextStyle(color: Colors.black),
-            ),
-            subtitle: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(top: 5),
-                  child: Text(
-                    essay['university'].toString(),
-                    style: TextStyle(color: Colors.black54),
-                  ),
-                ),
-              ],
-            ),
-            trailing: IconButton(
-              icon: Transform.rotate(
-                  angle: 3.14159, child: Icon(Icons.keyboard_backspace)),
-              onPressed: () {
-                String studentString = essay['student_essay_content'] == ''
-                    ? '[{\"attributes\":{\"align\":\"justify\"},\"insert\":\"\\n\"},{\"insert\":\"\\n\"}]'
-                    : essay['student_essay_content'];
-                String counselorString = essay['counselor_essay_content'] == ''
-                    ? '[{\"attributes\":{\"align\":\"justify\"},\"insert\":\"\\n\"},{\"insert\":\"\\n\"}]'
-                    : essay['counselor_essay_content'];
-                Navigator.push(
-                  context,
-                  PageTransition(
-                    type: PageTransitionType.rightToLeft,
-                    child: EssayEditor(
-                      essayTitle: essay['essay_title'],
-                      studentEdit: QuillZefyrBijection.convertJSONToZefyrDelta(
-                          '{\"ops\":' + studentString + '}'),
-                      counselorEdit:
-                          QuillZefyrBijection.convertJSONToZefyrDelta(
-                              '{\"ops\":' + counselorString + '}'),
+            title: Padding(
+              padding: EdgeInsets.only(top: 5),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: 5),
+                    child: Text(
+                      essay['essay_title'],
+                      style: TextStyle(color: Colors.black, fontSize: 18),
                     ),
                   ),
-                );
-              },
+                  Spacer(),
+                  Padding(
+                    padding: EdgeInsets.only(top: 5),
+                    child: PopupMenuButton(
+                      child: Icon(Icons.more_vert),
+                      itemBuilder: (BuildContext context) {
+                        return {'Edit Details', 'Delete'}.map((String choice) {
+                          return PopupMenuItem<String>(
+                            height: 35,
+                            value: choice,
+                            child: Text(choice,
+                                style: TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.w400)),
+                          );
+                        }).toList();
+                      },
+                      onSelected: (value) {
+                        switch (value) {
+                          case 'Edit Details':
+                            break;
+                          case 'Delete':
+                            break;
+                        }
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 10, top: 5),
+                    child: InkWell(
+                      child: Icon(
+                        Icons.arrow_forward,
+                        color: Colors.black.withOpacity(0.75),
+                      ),
+                      onTap: () {
+                        String studentString = essay['student_essay_content'] ==
+                                ''
+                            ? '[{\"attributes\":{\"align\":\"justify\"},\"insert\":\"\\n\"},{\"insert\":\"\\n\"}]'
+                            : essay['student_essay_content'];
+                        String counselorString = essay[
+                                    'counselor_essay_content'] ==
+                                ''
+                            ? '[{\"attributes\":{\"align\":\"justify\"},\"insert\":\"\\n\"},{\"insert\":\"\\n\"}]'
+                            : essay['counselor_essay_content'];
+                        Navigator.push(
+                          context,
+                          PageTransition(
+                            type: PageTransitionType.rightToLeft,
+                            child: EssayEditor(
+                              essayTitle: essay['essay_title'],
+                              essayPrompt: essay['essay_prompt'],
+                              studentEdit:
+                                  QuillZefyrBijection.convertJSONToZefyrDelta(
+                                      '{\"ops\":' + studentString + '}'),
+                              counselorEdit:
+                                  QuillZefyrBijection.convertJSONToZefyrDelta(
+                                      '{\"ops\":' + counselorString + '}'),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            subtitle: Padding(
+              padding: EdgeInsets.only(bottom: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  essay['essay_approval_status'] == 'Y'
+                      ? Text(
+                          'Complete',
+                          style: TextStyle(
+                              color: Colors.green, fontWeight: FontWeight.w400),
+                        )
+                      : essay['essay_approval_status'] == 'N' &&
+                              essay['student_essay_content'] != ''
+                          ? Text(
+                              'In Progress',
+                              style: TextStyle(
+                                  color: Colors.orange,
+                                  fontWeight: FontWeight.w400),
+                            )
+                          : Text(
+                              'Pending',
+                              style: TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w400),
+                            ),
+                  if (essay['universities'].length != 0) ...[
+                    Padding(
+                      padding: EdgeInsets.only(top: 5),
+                      child: Stack(
+                        textDirection: TextDirection.ltr,
+                        overflow: Overflow.visible,
+                        children: <Widget>[
+                          essay['universities'].length == 1
+                              ? Positioned(
+                                  left: 20,
+                                  child: InkWell(
+                                    child: CircleAvatar(
+                                      radius: 17.8,
+                                      backgroundColor: Colors.blue,
+                                      child: CircleAvatar(
+                                        backgroundImage: CachedNetworkImageProvider(
+                                            'https://upload.wikimedia.org/wikipedia/en/thumb/4/4f/University_of_Massachusetts_Amherst_seal.svg/1200px-University_of_Massachusetts_Amherst_seal.svg.png'),
+                                        backgroundColor: Colors.blue[400],
+                                        radius: 17,
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      print('lmao');
+                                    },
+                                  ),
+                                )
+                              : Container(),
+                          InkWell(
+                            child: CircleAvatar(
+                              radius: 17.8,
+                              backgroundColor: Colors.blue,
+                              child: CircleAvatar(
+                                backgroundImage: CachedNetworkImageProvider(
+                                    'https://bloximages.chicago2.vip.townnews.com/madison.com/content/tncms/assets/v3/editorial/6/7a/67a00837-e31a-5fca-b89f-98985000d03e/5978bc84a81af.image.jpg'),
+                                backgroundColor: Colors.blue[400],
+                                radius: 17,
+                              ),
+                            ),
+                            onTap: () {},
+                          ),
+                        ],
+                      ),
+                    ),
+                  ]
+                ],
+              ),
             ),
           ),
         ),
@@ -274,11 +397,18 @@ class EssayEditor extends StatefulWidget {
   final Delta studentEdit;
   final Delta counselorEdit;
   final String essayTitle;
-  EssayEditor({this.essayTitle, this.studentEdit, this.counselorEdit});
+  final String essayPrompt;
+
+  EssayEditor(
+      {this.essayTitle,
+      this.essayPrompt,
+      this.studentEdit,
+      this.counselorEdit});
 
   @override
   _EssayEditorState createState() => _EssayEditorState(
       essayTitle: essayTitle,
+      essayPrompt: essayPrompt,
       studentEdit: studentEdit,
       counselorEdit: counselorEdit);
 }
@@ -287,6 +417,7 @@ class _EssayEditorState extends State<EssayEditor> {
   final Delta studentEdit;
   final Delta counselorEdit;
   final String essayTitle;
+  final String essayPrompt;
   ZefyrController _controller1;
   ZefyrController _controller2;
   FocusNode _focusNode1;
@@ -294,7 +425,11 @@ class _EssayEditorState extends State<EssayEditor> {
   NotusDocument studentDocument;
   NotusDocument counselorDocument;
 
-  _EssayEditorState({this.essayTitle, this.studentEdit, this.counselorEdit});
+  _EssayEditorState(
+      {this.essayTitle,
+      this.essayPrompt,
+      this.studentEdit,
+      this.counselorEdit});
 
   @override
   void initState() {
@@ -357,7 +492,8 @@ class _EssayEditorState extends State<EssayEditor> {
             ],
             title: Text(
               essayTitle,
-              style: TextStyle(color: Colors.white, fontSize: 20),
+              maxLines: 1,
+              style: TextStyle(color: Colors.white, fontSize: 17),
             ),
             gradient: LinearGradient(
                 begin: Alignment.topCenter,
@@ -381,19 +517,77 @@ class _EssayEditorState extends State<EssayEditor> {
           body: TabBarView(
             children: <Widget>[
               ZefyrScaffold(
-                child: ZefyrEditor(
-                  padding: EdgeInsets.all(16),
-                  controller: _controller1,
-                  focusNode: _focusNode1,
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(top: 13, left: 15, right: 15),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Prompt:',
+                          style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 15, right: 15),
+                      child: ExpandText(
+                        this.essayPrompt ?? '',
+                        textAlign: TextAlign.left,
+                        arrowPadding: EdgeInsets.all(0),
+                        maxLines: 1,
+                      ),
+                    ),
+                    Expanded(
+                      child: ZefyrEditor(
+                        padding: EdgeInsets.only(
+                            left: 16, right: 16, top: 0, bottom: 10),
+                        controller: _controller1,
+                        focusNode: _focusNode1,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               ZefyrScaffold(
-                child: ZefyrEditor(
-                  mode: ZefyrMode(
-                      canEdit: false, canFormat: false, canSelect: true),
-                  padding: EdgeInsets.all(16),
-                  controller: _controller2,
-                  focusNode: _focusNode2,
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(top: 13, left: 15, right: 15),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Prompt:',
+                          style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 15, right: 15),
+                      child: ExpandText(
+                        this.essayPrompt ?? '',
+                        textAlign: TextAlign.left,
+                        arrowPadding: EdgeInsets.all(0),
+                        maxLines: 1,
+                      ),
+                    ),
+                    Expanded(
+                      child: ZefyrEditor(
+                        mode: ZefyrMode(
+                            canEdit: false, canFormat: false, canSelect: true),
+                        padding: EdgeInsets.only(
+                            left: 16, right: 16, top: 0, bottom: 10),
+                        controller: _controller2,
+                        focusNode: _focusNode2,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
