@@ -271,7 +271,7 @@ class _CounsellingScreenState extends State<CounsellingScreen> {
                         shape: RoundedRectangleBorder(
                             borderRadius:
                                 BorderRadius.all(Radius.circular(15))),
-                        elevation: 10,
+                        elevation: 6,
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[

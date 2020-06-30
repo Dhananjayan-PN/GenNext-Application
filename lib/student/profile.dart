@@ -44,7 +44,7 @@ class ProfileScreenState extends State<ProfileScreen> {
         child: Card(
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(15))),
-          elevation: 20,
+          elevation: 6,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
