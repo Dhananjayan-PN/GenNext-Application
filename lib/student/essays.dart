@@ -128,7 +128,7 @@ class _EssaysScreenState extends State<EssaysScreen> {
                         Navigator.push(
                           context,
                           PageTransition(
-                            curve: Curves.linear,
+                            curve: Curves.ease,
                             type: PageTransitionType.rightToLeft,
                             child: EssayEditor(
                               essayTitle: essay['essay_title'],
