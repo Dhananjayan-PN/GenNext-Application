@@ -4,8 +4,7 @@ import 'package:back_button_interceptor/back_button_interceptor.dart';
 import '../shimmer_skeleton.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:url_launcher/url_launcher.dart';
-import '../custom_expansion_tile.dart' as custom;
+// import 'package:url_launcher/url_launcher.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -251,7 +250,14 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                   color: Colors.white,
                   size: 26,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                        type: PageTransitionType.fade,
+                        child: NewApplicationScreen()),
+                  );
+                },
               ),
             )
           ],
@@ -512,5 +518,36 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
         ),
       ),
     );
+  }
+}
+
+class NewApplicationScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: Colors.white,
+        appBar: GradientAppBar(
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  'DONE',
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.w500),
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            ],
+            title: Text(
+              'New Application',
+              maxLines: 1,
+              style: TextStyle(color: Colors.white),
+            ),
+            gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xff00AEEF), Color(0xff0072BC)])),
+        body: Container());
   }
 }
