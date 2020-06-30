@@ -12,16 +12,16 @@ typedef void OnStartDragItem(
     int listIndex, int itemIndex, ChecklistItemViewState state);
 
 class ChecklistItemView extends StatefulWidget {
-  ChecklistViewState checklist;
-  Widget title;
-  int index;
+  final ChecklistViewState checklist;
+  final Widget title;
+  final int index;
   bool value;
-  OnDropItem onDropItem;
-  OnTapItem onTapItem;
-  bool canDrag;
-  OnChanged onChanged;
-  OnStartDragItem onStartDragItem;
-  Color backgroundColor;
+  final OnDropItem onDropItem;
+  final OnTapItem onTapItem;
+  final bool canDrag;
+  final OnChanged onChanged;
+  final OnStartDragItem onStartDragItem;
+  final Color backgroundColor;
 
   ChecklistItemView(
       {Key key,
@@ -48,6 +48,7 @@ class ChecklistItemViewState extends State<ChecklistItemView>
   bool value = false;
   double height;
   double width;
+
   @override
   void initState() {
     super.initState();
