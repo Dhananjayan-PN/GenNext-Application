@@ -259,7 +259,7 @@ class _DashCardSkeletonState extends State<DashCardSkeleton>
                       padding: EdgeInsets.only(top: 60),
                       child: SpinKitWave(
                         type: SpinKitWaveType.start,
-                        color: Colors.grey.withOpacity(0.10),
+                        color: Colors.grey.withOpacity(0.15),
                         size: 40,
                       ),
                     ),

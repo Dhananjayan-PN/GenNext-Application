@@ -28,7 +28,7 @@ class DashBoard extends StatefulWidget {
 class _DashBoardState extends State<DashBoard> {
   final User user;
   _DashBoardState({this.user});
-  GlobalKey<ScaffoldState> _scafKey = GlobalKey<ScaffoldState>();
+
   TextEditingController studentnotes = TextEditingController();
   int userId;
   bool saved = false;
@@ -353,20 +353,17 @@ class _DashBoardState extends State<DashBoard> {
                         child: CachedNetworkImage(
                           imageUrl:
                               "https://www.wpr.org/sites/default/files/bascom_hall_summer.jpg",
-                          placeholder: (context, url) => CardSkeleton(
-                            padding: 0,
-                            isBottomLinesActive: false,
+                          placeholder: (context, url) => SpinKitWave(
+                            type: SpinKitWaveType.start,
+                            color: Colors.grey.withOpacity(0.20),
+                            size: 40,
                           ),
                           errorWidget: (context, url, error) {
-                            _scafKey.currentState.showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Failed to fetch data. Check your internet connection and try again',
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
+                            return Icon(
+                              Icons.error_outline,
+                              size: 30,
+                              color: Colors.red.withOpacity(0.8),
                             );
-                            return Icon(Icons.error);
                           },
                           imageBuilder: (context, imageProvider) => Container(
                             decoration: BoxDecoration(
