@@ -3,25 +3,7 @@ import 'package:flutter/material.dart';
 
 Duration _kExpand = Duration(milliseconds: 200);
 
-/// A single-line [ListTile] with a trailing button that expands or collapses
-/// the tile to reveal or hide the [children].
-///
-/// This widget is typically used with [ListView] to create an
-/// "expand / collapse" list entry. When used with scrolling widgets like
-/// [ListView], a unique [PageStorageKey] must be specified to enable the
-/// [ExpansionTile] to save and restore its expanded state when it is scrolled
-/// in and out of view.
-///
-/// See also:
-///
-///  * [ListTile], useful for creating expansion tile [children] when the
-///    expansion tile represents a sublist.
-///  * The "Expand/collapse" section of
-///    <https://material.io/guidelines/components/lists-controls.html>.
 class ExpansionTile extends StatefulWidget {
-  /// Creates a single-line [ListTile] with a trailing button that expands or collapses
-  /// the tile to reveal or hide the [children]. The [initiallyExpanded] property must
-  /// be non-null.
   ExpansionTile({
     Key key,
     this.leading,
@@ -36,49 +18,14 @@ class ExpansionTile extends StatefulWidget {
   })  : assert(initiallyExpanded != null),
         super(key: key);
 
-  /// A widget to display before the title.
-  ///
-  /// Typically a [CircleAvatar] widget.
   final Widget leading;
-
-  /// The primary content of the list item.
-  ///
-  /// Typically a [Text] widget.
   final Widget title;
-
-  /// Additional content displayed below the title.
-  ///
-  /// Typically a [Text] widget.
   final Widget subtitle;
-
-  /// Called when the tile expands or collapses.
-  ///
-  /// When the tile starts expanding, this function is called with the value
-  /// true. When the tile starts collapsing, this function is called with
-  /// the value false.
   final ValueChanged<bool> onExpansionChanged;
-
-  /// The widgets that are displayed when the tile expands.
-  ///
-  /// Typically [ListTile] widgets.
   final List<Widget> children;
-
-  /// The color to display behind the sublist when expanded.
   final Color backgroundColor;
-
-  /// A widget to display instead of a rotating arrow icon.
   final Widget trailing;
-
-  /// Specifies if the list tile is initially expanded (true) or collapsed (false, the default).
   final bool initiallyExpanded;
-
-  /// Specifies padding for the [ListTile].
-  ///
-  /// Analogous to [ListTile.contentPadding], this property defines the insets for
-  /// the [leading], [title], [subtitle] and [trailing] widgets. It does not inset
-  /// the expanded [children] widgets.
-  ///
-  /// When the value is null, the tile's padding is `EdgeInsets.symmetric(horizontal: 16.0)`.
   final EdgeInsetsGeometry tilePadding;
 
   @override
@@ -140,9 +87,7 @@ class _ExpansionTileState extends State<ExpansionTile>
       } else {
         _controller.reverse().then<void>((void value) {
           if (!mounted) return;
-          setState(() {
-            // Rebuild without widget.children.
-          });
+          setState(() {});
         });
       }
       PageStorage.of(context)?.writeState(context, _isExpanded);
