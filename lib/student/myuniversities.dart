@@ -4,7 +4,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
-import '../checklist.dart';
+import 'package:checklist/checklist.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -18,7 +18,6 @@ class MyUniversitiesScreen extends StatefulWidget {
 
 class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   GlobalKey<ScaffoldState> _scafKey = GlobalKey<ScaffoldState>();
-  var refreshKey1 = GlobalKey<RefreshIndicatorState>();
   var refreshKey2 = GlobalKey<RefreshIndicatorState>();
   TextEditingController controller1 = TextEditingController();
   TextEditingController controller2 = TextEditingController();
@@ -379,122 +378,103 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
         ),
         body: TabBarView(
           children: <Widget>[
-            RefreshIndicator(
-              key: refreshKey1,
-              onRefresh: () {
-                refresh();
-                return collegeList;
-              },
-              child: FutureBuilder(
-                future: collegeList.timeout(Duration(seconds: 10)),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
+            FutureBuilder(
+              future: collegeList.timeout(Duration(seconds: 10)),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Padding(
+                    padding: EdgeInsets.only(bottom: 40.0),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(
+                            Icons.error_outline,
+                            size: 30,
+                            color: Colors.red.withOpacity(0.9),
+                          ),
+                          Text(
+                            'Unable to establish a connection with our servers.\nCheck your connection and try again later.',
+                            style: TextStyle(color: Colors.black54),
+                            textAlign: TextAlign.center,
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                }
+                if (snapshot.hasData) {
+                  if (snapshot.data.length == 0) {
                     return Padding(
-                      padding: EdgeInsets.only(bottom: 40.0),
+                      padding: EdgeInsets.only(bottom: 100),
                       child: Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            Icon(
-                              Icons.error_outline,
-                              size: 30,
-                              color: Colors.red.withOpacity(0.9),
-                            ),
-                            Text(
-                              'Unable to establish a connection with our servers.\nCheck your connection and try again later.',
-                              style: TextStyle(color: Colors.black54),
-                              textAlign: TextAlign.center,
+                            Padding(
+                                padding: EdgeInsets.only(
+                                    top: 5, left: 30, right: 30),
+                                child: Text(
+                                  "You haven't added any universities to your college list yet",
+                                  style: TextStyle(color: Colors.black54),
+                                  textAlign: TextAlign.center,
+                                )),
+                            Padding(
+                              padding: EdgeInsets.only(top: 3),
+                              child: Text(
+                                  "Add a few from the 'Explore' page to\nsee them show up here!",
+                                  style: TextStyle(color: Colors.black54),
+                                  textAlign: TextAlign.center),
                             )
                           ],
                         ),
                       ),
                     );
-                  }
-                  if (snapshot.hasData) {
-                    if (snapshot.data.length == 0) {
-                      return Padding(
-                        padding: EdgeInsets.only(bottom: 70),
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Opacity(
-                                opacity: 0.9,
-                                child: Image.asset(
-                                  "images/snap.gif",
-                                  height: 100.0,
-                                  width: 100.0,
-                                ),
-                              ),
-                              Text(
-                                'Oh Snap!',
-                                style: TextStyle(
-                                    fontSize: 18, color: Colors.black54),
-                              ),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      top: 5, left: 30, right: 30),
-                                  child: Text(
-                                    "Looks like you haven't added\nany universites yet :(",
-                                    style: TextStyle(color: Colors.black54),
-                                    textAlign: TextAlign.center,
-                                  )),
-                              Padding(
-                                padding: EdgeInsets.only(top: 3),
-                                child: Text(
-                                    "Head over to the 'All Universities' section to get started!",
-                                    style: TextStyle(color: Colors.black54),
-                                    textAlign: TextAlign.center),
-                              )
-                            ],
-                          ),
-                        ),
-                      );
-                    } else {
-                      List<ChecklistView> checklistsViews = [];
-                      for (var i = 0; i < snapshot.data.length; i++) {
-                        List<ChecklistItemView> subItems = [];
-                        for (var j = 0; j < snapshot.data[i].length; j++) {
-                          subItems.add(ChecklistItemView(
-                            title: buildCollegeListCard(snapshot.data[i][j]),
-                            canDrag: true,
-                            onDropItem: (oldListIndex, oldItemIndex, listIndex,
-                                itemIndex, state) {},
-                          ));
-                        }
-                        checklistsViews.add(ChecklistView(
-                          items: subItems,
-                          isOpen: true,
-                          canDrag: false,
-                          onDropChecklist: (oldIndex, newIndex, state) {},
-                          title: Padding(
-                            padding: EdgeInsets.only(left: 20, top: 20),
-                            child: Text(categories[i],
-                                style: TextStyle(
-                                    color: Colors.black87,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.w300)),
-                          ),
+                  } else {
+                    List<ChecklistView> checklistsViews = [];
+                    for (var i = 0; i < snapshot.data.length; i++) {
+                      List<ChecklistItemView> subItems = [];
+                      for (var j = 0; j < snapshot.data[i].length; j++) {
+                        subItems.add(ChecklistItemView(
+                          title: buildCollegeListCard(snapshot.data[i][j]),
+                          onStartDragItem: (listIndex, itemIndex, state) {},
+                          canDrag: true,
+                          onDropItem: (oldListIndex, oldItemIndex, listIndex,
+                              itemIndex, state) {},
                         ));
                       }
-                      return Padding(
-                        padding: EdgeInsets.only(top: 10),
-                        child: ChecklistListView(
-                          controller: scrollController,
-                          checklists: checklistsViews,
+                      checklistsViews.add(ChecklistView(
+                        items: subItems,
+                        isOpen: true,
+                        canDrag: false,
+                        onDropChecklist: (oldIndex, newIndex, state) {},
+                        title: Padding(
+                          padding: EdgeInsets.only(left: 20, top: 20),
+                          child: Text(categories[i],
+                              style: TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.w300)),
                         ),
-                      );
+                      ));
                     }
+                    return Padding(
+                      padding: EdgeInsets.only(top: 10),
+                      child: ChecklistListView(
+                        controller: scrollController,
+                        checklists: checklistsViews,
+                      ),
+                    );
                   }
-                  return Padding(
-                    padding: EdgeInsets.only(top: 60),
-                    child: CardListSkeleton(
-                      isBottomLinesActive: false,
-                      length: 10,
-                    ),
-                  );
-                },
-              ),
+                }
+                return Padding(
+                  padding: EdgeInsets.only(top: 60),
+                  child: CardListSkeleton(
+                    isBottomLinesActive: false,
+                    length: 10,
+                  ),
+                );
+              },
             ),
             RefreshIndicator(
               key: refreshKey2,

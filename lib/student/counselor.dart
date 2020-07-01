@@ -114,7 +114,7 @@ class _CounsellingScreenState extends State<CounsellingScreen> {
                   padding: EdgeInsets.all(15),
                   child: Card(
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(15))),
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
                     elevation: 10,
                     child: Center(
                       child: Column(
@@ -196,7 +196,7 @@ class _CounsellingScreenState extends State<CounsellingScreen> {
                   padding: EdgeInsets.all(15),
                   child: Card(
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(15))),
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
                     elevation: 10,
                     child: Center(
                       child: Column(
@@ -269,7 +269,7 @@ class _CounsellingScreenState extends State<CounsellingScreen> {
                       child: Card(
                         shape: RoundedRectangleBorder(
                             borderRadius:
-                                BorderRadius.all(Radius.circular(15))),
+                                BorderRadius.all(Radius.circular(10))),
                         elevation: 6,
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
