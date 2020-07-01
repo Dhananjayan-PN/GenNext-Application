@@ -86,7 +86,7 @@ class _CardSkeletonState extends State<CardSkeleton>
             clipBehavior: Clip.antiAlias,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(10))),
-            elevation: 8,
+            elevation: 6,
             child: Container(
               color: Colors.white,
               padding: EdgeInsets.all(12),

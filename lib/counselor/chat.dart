@@ -79,7 +79,7 @@ class _AllChatsState extends State<AllChats> {
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(13))),
-        elevation: 8,
+        elevation: 6,
         child: ListTile(
           leading: CircleAvatar(
             radius: 25,
@@ -128,7 +128,7 @@ class _AllChatsState extends State<AllChats> {
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: FloatingActionButton(
             tooltip: 'New Chat',
-            elevation: 10,
+            elevation: 6,
             backgroundColor: Colors.blue,
             splashColor: Colors.blue[900],
             child: Icon(

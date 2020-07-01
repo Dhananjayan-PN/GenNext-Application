@@ -128,7 +128,7 @@ class _AllChatsState extends State<AllChats> {
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: FloatingActionButton(
             tooltip: 'New Chat',
-            elevation: 10,
+            elevation: 8,
             backgroundColor: Colors.blue,
             splashColor: Colors.blue[900],
             child: Icon(

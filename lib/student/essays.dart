@@ -398,7 +398,8 @@ class _EssaysScreenState extends State<EssaysScreen> {
                                       .toLowerCase()
                                       .contains(filter)
                                   ? buildEssayCard(snapshot.data[index])
-                                  : snapshot.data[index]['university']
+                                  : snapshot.data[index]['universities']
+                                          .toString()
                                           .toLowerCase()
                                           .contains(filter)
                                       ? buildEssayCard(snapshot.data[index])

@@ -170,7 +170,7 @@ class _DashBoardState extends State<DashBoard> {
       builder: (BuildContext context) {
         return AlertDialog(
           contentPadding: EdgeInsets.all(0),
-          elevation: 20,
+          elevation: 6,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
           content: Container(

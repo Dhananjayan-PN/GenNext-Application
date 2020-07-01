@@ -178,7 +178,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10))),
-        elevation: 10,
+        elevation: 6,
         child: CachedNetworkImage(
           imageUrl:
               "https://www.wpr.org/sites/default/files/bascom_hall_summer.jpg",
@@ -263,7 +263,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
           clipBehavior: Clip.antiAlias,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10))),
-          elevation: 4,
+          elevation: 6,
           child: Material(
             color: Colors.transparent,
             child: CachedNetworkImage(
@@ -358,7 +358,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
             name: newUser.firstname + ' ' + newUser.lastname,
             email: newUser.email),
         appBar: GradientAppBar(
-          elevation: 20,
+          elevation: 6,
           title: Text(
             'My Universities',
             style: TextStyle(

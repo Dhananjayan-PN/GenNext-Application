@@ -831,7 +831,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         visible: fabVisible,
         child: FloatingActionButton(
             tooltip: 'Request session',
-            elevation: 10,
+            elevation: 8,
             backgroundColor: Colors.blue,
             splashColor: Colors.blue[900],
             child: Icon(

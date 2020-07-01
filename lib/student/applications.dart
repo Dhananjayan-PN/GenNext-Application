@@ -216,7 +216,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
             name: newUser.firstname + ' ' + newUser.lastname,
             email: newUser.email),
         appBar: GradientAppBar(
-          elevation: 20,
+          elevation: 6,
           title: Text(
             'My Applications',
             style: TextStyle(

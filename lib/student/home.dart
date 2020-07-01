@@ -220,7 +220,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
   Widget build(BuildContext context) {
     return GradientAppBar(
-      elevation: 20,
+      elevation: 6,
       title: Text(
         titletext,
         style: TextStyle(
