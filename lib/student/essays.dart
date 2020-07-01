@@ -515,6 +515,7 @@ class _EssayEditorState extends State<EssayEditor> {
             title: Text(
               essayTitle,
               maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(color: Colors.white, fontSize: 17),
             ),
             gradient: LinearGradient(

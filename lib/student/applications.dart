@@ -535,27 +535,29 @@ class NewApplicationScreen extends StatelessWidget {
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: GradientAppBar(
-            actions: <Widget>[
-              FlatButton(
-                child: Text(
-                  'DONE',
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.w500),
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              )
-            ],
-            title: Text(
-              'New Application',
-              maxLines: 1,
-              style: TextStyle(color: Colors.white),
-            ),
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xff00AEEF), Color(0xff0072BC)])),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'DONE',
+                style:
+                    TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )
+          ],
+          title: Text(
+            'New Application',
+            maxLines: 1,
+            style: TextStyle(color: Colors.white),
+          ),
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xff00AEEF), Color(0xff0072BC)],
+          ),
+        ),
         body: Container());
   }
 }
