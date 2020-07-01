@@ -220,7 +220,9 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
           title: Text(
             'My Applications',
             style: TextStyle(
-                color: Colors.white, fontSize: 20, fontWeight: FontWeight.w400),
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
           ),
           gradient: LinearGradient(
               begin: Alignment.topCenter,
@@ -551,7 +553,9 @@ class NewApplicationScreen extends StatelessWidget {
           title: Text(
             'New Application',
             maxLines: 1,
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w400),
+            style: TextStyle(
+                color: Colors.white,
+                fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
           ),
           gradient: LinearGradient(
             begin: Alignment.topCenter,

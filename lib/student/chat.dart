@@ -4,11 +4,11 @@ import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'home.dart';
+// import 'home.dart';
 //import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'package:intl/intl.dart';
-//import 'dart:io';
+import 'dart:io';
 //import 'dart:convert';
 
 List chats = [
@@ -161,7 +161,9 @@ class _AllChatsState extends State<AllChats> {
           title: Text(
             'Chats',
             style: TextStyle(
-                color: Colors.white, fontSize: 20, fontWeight: FontWeight.w400),
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
           ),
           gradient: LinearGradient(
               begin: Alignment.topCenter,
@@ -420,7 +422,8 @@ class _OpenChatState extends State<OpenChat> {
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 20,
-                    fontWeight: FontWeight.w400),
+                    fontWeight:
+                        Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
               ),
             ),
           ],

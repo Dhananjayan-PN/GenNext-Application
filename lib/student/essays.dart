@@ -281,9 +281,11 @@ class _EssaysScreenState extends State<EssaysScreen> {
             )
           ],
           title: Text(
-            'Essays',
+            'My Essays',
             maxLines: 1,
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w400),
+            style: TextStyle(
+                color: Colors.white,
+                fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
           ),
           gradient: LinearGradient(
               begin: Alignment.topCenter,
@@ -519,7 +521,8 @@ class _EssayEditorState extends State<EssayEditor> {
               style: TextStyle(
                   color: Colors.white,
                   fontSize: 17,
-                  fontWeight: FontWeight.w400),
+                  fontWeight:
+                      Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
             ),
             gradient: LinearGradient(
                 begin: Alignment.topCenter,
@@ -650,8 +653,10 @@ class _NewEssayScreenState extends State<NewEssayScreen> {
             title: Text(
               'New Essay',
               maxLines: 1,
-              style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.w400),
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight:
+                      Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
             ),
             gradient: LinearGradient(
                 begin: Alignment.topCenter,

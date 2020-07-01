@@ -361,7 +361,10 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
           elevation: 20,
           title: Text(
             'My Universities',
-            style: TextStyle(color: Colors.white, fontSize: 20),
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
           ),
           gradient: LinearGradient(
               begin: Alignment.topCenter,
