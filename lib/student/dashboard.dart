@@ -214,7 +214,7 @@ class _DashBoardState extends State<DashBoard> {
           padding: EdgeInsets.only(left: 20, top: 18),
           child: Text(
             'Hello,',
-            style: TextStyle(color: Colors.black45, fontSize: 25),
+            style: TextStyle(color: Colors.black54, fontSize: 24),
           ),
         ),
         Padding(
@@ -460,7 +460,7 @@ class _DashBoardState extends State<DashBoard> {
             return Padding(
               padding: EdgeInsets.only(bottom: 25),
               child: DashCardSkeleton(
-                padding: 20,
+                padding: 18,
               ),
             );
           },
@@ -612,7 +612,7 @@ class _DashBoardState extends State<DashBoard> {
                                   ),
                                   Padding(
                                     padding:
-                                        EdgeInsets.only(left: 3, bottom: 2.9),
+                                        EdgeInsets.only(left: 2, bottom: 2.9),
                                     child: Text(
                                       DateFormat.MMM()
                                           .format(sessionDateTime)
@@ -637,7 +637,7 @@ class _DashBoardState extends State<DashBoard> {
                                       style: TextStyle(
                                           color: Colors.blue,
                                           fontSize: 18,
-                                          fontWeight: FontWeight.w200),
+                                          fontWeight: FontWeight.w300),
                                     ),
                                   ),
                                 ],

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'dart:io' show Platform;
 import 'login.dart';
 
 String token;
@@ -18,6 +19,7 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitUp,
     ]);
     return MaterialApp(
+      theme: Platform.isAndroid ? ThemeData(fontFamily: 'Roboto') : null,
       home: LoginPage(),
       debugShowCheckedModeBanner: false,
     );

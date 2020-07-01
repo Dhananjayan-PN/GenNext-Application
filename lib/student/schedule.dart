@@ -778,7 +778,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                           fontWeight: FontWeight.w200),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 1),
+                      padding: EdgeInsets.only(left: 1, bottom: 3),
                       child: Text(
                         DateFormat.MMM().format(sessionDateTime).toUpperCase(),
                         style: TextStyle(
