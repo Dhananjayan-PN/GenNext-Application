@@ -708,10 +708,10 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                   style: TextStyle(
                       color: Colors.black87,
                       fontSize: 30,
-                      fontWeight: FontWeight.w200),
+                      fontWeight: FontWeight.w100),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: 0.8, bottom: 3),
+                  padding: EdgeInsets.only(left: 1, bottom: 3),
                   child: Text(
                     sessionTime.substring(
                         sessionTime.length - 2, sessionTime.length),
@@ -775,16 +775,16 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       style: TextStyle(
                           color: Colors.black87,
                           fontSize: 15,
-                          fontWeight: FontWeight.w200),
+                          fontWeight: FontWeight.w300),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 1, bottom: 3),
+                      padding: EdgeInsets.only(left: 1.2, bottom: 0.6),
                       child: Text(
                         DateFormat.MMM().format(sessionDateTime).toUpperCase(),
                         style: TextStyle(
                             color: Colors.black,
                             fontSize: 14.8,
-                            fontWeight: FontWeight.w200),
+                            fontWeight: FontWeight.w300),
                       ),
                     ),
                   ]),

@@ -214,14 +214,20 @@ class _DashBoardState extends State<DashBoard> {
           padding: EdgeInsets.only(left: 20, top: 18),
           child: Text(
             'Hello,',
-            style: TextStyle(color: Colors.black54, fontSize: 24),
+            style: TextStyle(
+                color: Colors.black54,
+                fontSize: 24,
+                fontWeight: FontWeight.w300),
           ),
         ),
         Padding(
           padding: EdgeInsets.only(left: 20),
           child: Text(
             '${user.firstname}',
-            style: TextStyle(color: Colors.black87, fontSize: 25),
+            style: TextStyle(
+                color: Colors.black87,
+                fontSize: 25,
+                fontWeight: FontWeight.w400),
           ),
         ),
         Padding(
@@ -570,7 +576,7 @@ class _DashBoardState extends State<DashBoard> {
                 );
               } else {
                 return Container(
-                  height: 235,
+                  height: 230,
                   child: Swiper(
                     loop: false,
                     pagination: snapshot.data.length == 1
@@ -620,7 +626,7 @@ class _DashBoardState extends State<DashBoard> {
                                       style: TextStyle(
                                           color: Colors.black87,
                                           fontSize: 25,
-                                          fontWeight: FontWeight.w500),
+                                          fontWeight: FontWeight.w400),
                                     ),
                                   ),
                                   Spacer(),
@@ -637,13 +643,13 @@ class _DashBoardState extends State<DashBoard> {
                                       style: TextStyle(
                                           color: Colors.blue,
                                           fontSize: 18,
-                                          fontWeight: FontWeight.w300),
+                                          fontWeight: FontWeight.w200),
                                     ),
                                   ),
                                 ],
                               ),
                               Padding(
-                                padding: EdgeInsets.only(left: 2, bottom: 0),
+                                padding: EdgeInsets.only(left: 3, bottom: 0),
                                 child: Text(
                                   DateFormat.jm()
                                       .format(sessionDateTime)
@@ -660,8 +666,8 @@ class _DashBoardState extends State<DashBoard> {
                                   snapshot.data[index]['subject_of_session'],
                                   style: TextStyle(
                                       color: Colors.black87,
-                                      fontSize: 21,
-                                      fontWeight: FontWeight.w500),
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w400),
                                 ),
                               ),
                               snapshot.data[index]['session_notes'] == ''
@@ -674,9 +680,10 @@ class _DashBoardState extends State<DashBoard> {
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 2,
                                         style: TextStyle(
-                                            color: Colors.black87,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w200),
+                                            color:
+                                                Colors.black.withOpacity(0.6),
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w300),
                                       ),
                                     ),
                             ],

@@ -251,7 +251,8 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
           elevation: 20,
           title: Text(
             'Explore',
-            style: TextStyle(color: Colors.white, fontSize: 20),
+            style: TextStyle(
+                color: Colors.white, fontSize: 20, fontWeight: FontWeight.w400),
           ),
           gradient: LinearGradient(
               begin: Alignment.topCenter,

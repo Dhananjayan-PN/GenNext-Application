@@ -275,11 +275,12 @@ class _CounsellingScreenState extends State<CounsellingScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             ListTile(
+                              contentPadding: EdgeInsets.only(left: 20, top: 5),
                               leading: CircleAvatar(
                                 backgroundImage: CachedNetworkImageProvider(
                                     snapshot.data['counselor_profile_pic']),
                                 backgroundColor: Colors.blue[400],
-                                radius: 30,
+                                radius: 28,
                               ),
                               title: Text(
                                 snapshot.data['counselor_name'],

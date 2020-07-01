@@ -49,6 +49,7 @@ flutter:
     - family: Roboto
       fonts:
         - asset: fonts/Roboto-Regular.ttf
+          weight: 400
         - asset: fonts/Roboto-Italic.ttf
           style: italic
         - asset: fonts/Roboto-Thin.ttf

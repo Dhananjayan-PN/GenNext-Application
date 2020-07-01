@@ -160,7 +160,8 @@ class _AllChatsState extends State<AllChats> {
           centerTitle: true,
           title: Text(
             'Chats',
-            style: TextStyle(color: Colors.white, fontSize: 20),
+            style: TextStyle(
+                color: Colors.white, fontSize: 20, fontWeight: FontWeight.w400),
           ),
           gradient: LinearGradient(
               begin: Alignment.topCenter,
@@ -416,7 +417,10 @@ class _OpenChatState extends State<OpenChat> {
               padding: EdgeInsets.only(left: 15),
               child: Text(
                 otherUser,
-                style: TextStyle(color: Colors.white, fontSize: 20),
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400),
               ),
             ),
           ],
