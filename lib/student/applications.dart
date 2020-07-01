@@ -307,7 +307,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                                   padding: EdgeInsets.only(
                                       top: 5, left: 30, right: 30),
                                   child: Text(
-                                    "No completed Applications at the time",
+                                    "No Applications have been completed yet",
                                     style: TextStyle(color: Colors.black54),
                                     textAlign: TextAlign.center,
                                   )),
