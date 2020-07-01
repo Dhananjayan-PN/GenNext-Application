@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import '../shimmer_skeleton.dart';
@@ -32,6 +31,16 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
   @override
   void initState() {
     super.initState();
+    controller1.addListener(() {
+      setState(() {
+        filter1 = controller1.text.toLowerCase();
+      });
+    });
+    controller2.addListener(() {
+      setState(() {
+        filter2 = controller2.text.toLowerCase();
+      });
+    });
     completedApps = getCompletedApplications();
     pendingApps = getPendingApplications();
     BackButtonInterceptor.add(myInterceptor);
