@@ -8,7 +8,7 @@ class UniversityPage extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: GradientAppBar(
         title: Text(
-          'New Application',
+          'Univeristy Page',
           maxLines: 1,
           style: TextStyle(color: Colors.white),
         ),
