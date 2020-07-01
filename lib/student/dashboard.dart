@@ -5,7 +5,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
 // import 'package:badges/badges.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import '../shimmer_skeleton.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'schedule.dart';
@@ -13,6 +12,8 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'dart:async';
 import 'dart:convert';
 import '../usermodel.dart';
+import '../shimmer_skeleton.dart';
+import '../universitypage.dart';
 import 'dart:io';
 import 'home.dart';
 
@@ -372,65 +373,81 @@ class _DashBoardState extends State<DashBoard> {
                                 fit: BoxFit.cover,
                               ),
                             ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.only(top: 12, right: 13),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Spacer(),
-                                      CircularPercentIndicator(
-                                        footer: Text('Match',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w300,
-                                                color: Colors.white,
-                                                fontSize: 10)),
-                                        radius: 45.0,
-                                        lineWidth: 2.5,
-                                        animation: true,
-                                        percent: snapshot.data[index]
-                                                ["match_rating"] /
-                                            100,
-                                        center: Text(
-                                          " ${snapshot.data[index]["match_rating"].toString().substring(0, 4)}%",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w300,
-                                              color: Colors.white,
-                                              fontSize: 11.5),
-                                        ),
-                                        circularStrokeCap:
-                                            CircularStrokeCap.round,
-                                        backgroundColor: Colors.transparent,
-                                        progressColor: colorPicker(snapshot
-                                            .data[index]["match_rating"]),
+                            child: Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                splashColor: Colors.white.withOpacity(0.3),
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    PageTransition(
+                                        type: PageTransitionType.fade,
+                                        child: UniversityPage()),
+                                  );
+                                },
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.only(top: 12, right: 13),
+                                      child: Row(
+                                        children: <Widget>[
+                                          Spacer(),
+                                          CircularPercentIndicator(
+                                            footer: Text('Match',
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.w300,
+                                                    color: Colors.white,
+                                                    fontSize: 10)),
+                                            radius: 45.0,
+                                            lineWidth: 2.5,
+                                            animation: true,
+                                            percent: snapshot.data[index]
+                                                    ["match_rating"] /
+                                                100,
+                                            center: Text(
+                                              " ${snapshot.data[index]["match_rating"].toString().substring(0, 4)}%",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w300,
+                                                  color: Colors.white,
+                                                  fontSize: 11.5),
+                                            ),
+                                            circularStrokeCap:
+                                                CircularStrokeCap.round,
+                                            backgroundColor: Colors.transparent,
+                                            progressColor: colorPicker(snapshot
+                                                .data[index]["match_rating"]),
+                                          ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                    Spacer(),
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 15),
+                                      child: Text(
+                                        snapshot.data[index]['university_name'],
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 18),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.only(bottom: 14, left: 15),
+                                      child: Text(
+                                        snapshot.data[index]
+                                            ['university_location'],
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.white70,
+                                            fontSize: 16),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                Spacer(),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 15),
-                                  child: Text(
-                                    snapshot.data[index]['university_name'],
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 18),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:
-                                      EdgeInsets.only(bottom: 14, left: 15),
-                                  child: Text(
-                                    snapshot.data[index]['university_location'],
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.white70,
-                                        fontSize: 16),
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
                           ),
                         ),
