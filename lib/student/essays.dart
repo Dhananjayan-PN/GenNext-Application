@@ -97,6 +97,37 @@ class _EssaysScreenState extends State<EssaysScreen> {
 
   Future<void> editEssaydetail() async {}
 
+  Future<void> createEsssay(String title, String prompt) async {
+    final response = await http
+        .post(dom + 'api/student/create-essay/',
+            headers: {
+              HttpHeaders.authorizationHeader: "Token $tok",
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: jsonEncode(<String, dynamic>{
+              'user_id': newUser.id,
+              'essay_title': title,
+              'essay_prompt': prompt,
+              'student_essay_content': '',
+              'counselor_essay_content': ''
+            }))
+        .timeout(Duration(seconds: 10));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (data['Response'] == 'Essay successfully created.') {
+        Navigator.pop(context);
+        _success('create');
+        refresh();
+      } else {
+        Navigator.pop(context);
+        _error();
+      }
+    } else {
+      Navigator.pop(context);
+      _error();
+    }
+  }
+
   _deleteEssay(int id) {
     showDialog(
       context: context,
@@ -164,6 +195,13 @@ class _EssaysScreenState extends State<EssaysScreen> {
   }
 
   _editEssayDetails(int id) {}
+
+  _fetchEditDetails(BuildContext context) async {
+    final List details = await Navigator.push(
+        context, MaterialPageRoute(builder: (context) => NewEssayScreen()));
+    createEsssay(details[0], details[1]);
+    _loading();
+  }
 
   _loading() {
     showDialog(
@@ -286,8 +324,10 @@ class _EssaysScreenState extends State<EssaysScreen> {
                     padding: EdgeInsets.only(top: 10),
                     child: Text(
                       op == 'delete'
-                          ? 'Essay successfully deleted\nTap + to make a new on'
-                          : 'Essay successfully edited\nGet writing!',
+                          ? 'Essay successfully deleted\nTap + to make a new one'
+                          : op == 'create'
+                              ? 'Essay successfully created\nGet writing!'
+                              : 'Essay successfully edited\nGet writing!',
                       style: TextStyle(color: Colors.black, fontSize: 14),
                       textAlign: TextAlign.center,
                     ),
@@ -491,13 +531,7 @@ class _EssaysScreenState extends State<EssaysScreen> {
                   size: 26,
                 ),
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    PageTransition(
-                        type: PageTransitionType.fade, child: NewEssayScreen()),
-                  ).then((value) {
-                    refresh();
-                  });
+                  _fetchEditDetails(context);
                 },
               ),
             )
@@ -858,174 +892,11 @@ class NewEssayScreen extends StatefulWidget {
 class _NewEssayScreenState extends State<NewEssayScreen> {
   TextEditingController _title = TextEditingController();
   TextEditingController _prompt = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-  }
-
-  Future<void> createEsssay() async {
-    final response = await http
-        .post(dom + 'api/student/create-essay/',
-            headers: {
-              HttpHeaders.authorizationHeader: "Token $tok",
-              'Content-Type': 'application/json; charset=UTF-8',
-            },
-            body: jsonEncode(<String, dynamic>{
-              'user_id': newUser.id,
-              'essay_title': _title.text,
-              'essay_prompt': _prompt.text,
-              'student_essay_content': '',
-              'counselor_essay_content': ''
-            }))
-        .timeout(Duration(seconds: 10));
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      if (data['Response'] == 'Essay successfully created.') {
-        Navigator.pop(context);
-        _success();
-      } else {
-        Navigator.pop(context);
-        _error();
-      }
-    } else {
-      Navigator.pop(context);
-      _error();
-    }
-  }
-
-  _loading() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          contentPadding: EdgeInsets.all(0),
-          elevation: 20,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          content: Container(
-            height: 150,
-            width: 80,
-            decoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            ),
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(
-                    height: 50,
-                    width: 50,
-                    child: SpinKitWave(
-                      color: Colors.grey.withOpacity(0.8),
-                      size: 25,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 23.0),
-                    child: Text(
-                      "Saving your changes",
-                      style: TextStyle(color: Colors.black, fontSize: 15),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  _error() {
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          contentPadding: EdgeInsets.all(0),
-          elevation: 20,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          content: Container(
-            height: 150,
-            width: 80,
-            decoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            ),
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Icon(
-                    Icons.error_outline,
-                    size: 40,
-                    color: Colors.red.withOpacity(0.9),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Text(
-                      'Something went wrong.\nCheck your connection and try again later.',
-                      style: TextStyle(color: Colors.black, fontSize: 12),
-                      textAlign: TextAlign.center,
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  _success() {
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          contentPadding: EdgeInsets.all(0),
-          elevation: 20,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          content: Container(
-            height: 150,
-            width: 80,
-            decoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            ),
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Icon(
-                    Icons.check_circle_outline,
-                    size: 40,
-                    color: Colors.green,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Text(
-                      'Essay successfully created\nGet writing!',
-                      style: TextStyle(color: Colors.black, fontSize: 14),
-                      textAlign: TextAlign.center,
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
   }
 
   @override
@@ -1036,14 +907,15 @@ class _NewEssayScreenState extends State<NewEssayScreen> {
             actions: <Widget>[
               FlatButton(
                 child: Text(
-                  'DONE',
+                  'CREATE',
                   style: TextStyle(
                       color: Colors.white, fontWeight: FontWeight.w500),
                 ),
                 onPressed: () {
-                  Navigator.pop(context);
-                  _loading();
-                  createEsssay();
+                  if (_formKey.currentState.validate()) {
+                    List data = [_title.text, _prompt.text];
+                    Navigator.pop(context, data);
+                  }
                 },
               )
             ],
@@ -1059,6 +931,53 @@ class _NewEssayScreenState extends State<NewEssayScreen> {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [Color(0xff00AEEF), Color(0xff0072BC)])),
-        body: Container());
+        body: Padding(
+          padding: EdgeInsets.all(25),
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              children: <Widget>[
+                Text(
+                  'Title',
+                  style: TextStyle(fontSize: 25, color: Colors.black87),
+                ),
+                TextFormField(
+                  controller: _title,
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Enter a title';
+                    }
+                    return null;
+                  },
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 20),
+                  child: Text(
+                    'Prompt',
+                    style: TextStyle(fontSize: 25, color: Colors.black87),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 20),
+                  child: TextFormField(
+                    controller: _prompt,
+                    maxLines: null,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue, width: 0.0),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'An essay without a prompt? Really?';
+                      }
+                      return null;
+                    },
+                  ),
+                )
+              ],
+            ),
+          ),
+        ));
   }
 }
