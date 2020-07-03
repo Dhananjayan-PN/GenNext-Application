@@ -1,4 +1,5 @@
 class User {
+  int id;
   String email;
   String username;
   String firstname;
@@ -9,7 +10,8 @@ class User {
   String dp;
 
   User(
-      {this.email,
+      {this.id,
+      this.email,
       this.username,
       this.firstname,
       this.lastname,
@@ -20,6 +22,7 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
+      id: json['id'],
       email: json['email'],
       username: json['username'],
       firstname: json['first_name'],

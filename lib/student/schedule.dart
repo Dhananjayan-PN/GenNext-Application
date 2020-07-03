@@ -272,7 +272,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                     height: 50,
                     width: 50,
                     child: SpinKitWave(
-                      color: Colors.grey,
+                      color: Colors.grey.withOpacity(0.8),
                       size: 25,
                     ),
                   ),
@@ -280,7 +280,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                     padding: EdgeInsets.only(top: 23.0),
                     child: Text(
                       "Saving your changes",
-                      style: TextStyle(color: Colors.blue, fontSize: 15),
+                      style: TextStyle(color: Colors.black, fontSize: 15),
                     ),
                   ),
                 ],
