@@ -95,9 +95,9 @@ class _EssaysScreenState extends State<EssaysScreen> {
     }
   }
 
-  Future<void> editEssaydetail() async {}
+  Future<void> editEssayDetails(essay, String title, String prompt) async {}
 
-  Future<void> createEsssay(String title, String prompt) async {
+  Future<void> createEssay(String title, String prompt) async {
     final response = await http
         .post(dom + 'api/student/create-essay/',
             headers: {
@@ -194,12 +194,10 @@ class _EssaysScreenState extends State<EssaysScreen> {
     );
   }
 
-  _editEssayDetails(int id) {}
-
-  _fetchEditDetails(BuildContext context) async {
-    final List details = await Navigator.push(
-        context, MaterialPageRoute(builder: (context) => NewEssayScreen()));
-    createEsssay(details[0], details[1]);
+  _fetchCreateDetails(BuildContext context) async {
+    final List details = await Navigator.push(context,
+        MaterialPageRoute(builder: (context) => NewEssayScreen(op: 'Create')));
+    createEssay(details[0], details[1]);
     _loading();
   }
 
@@ -420,10 +418,18 @@ class _EssaysScreenState extends State<EssaysScreen> {
                           );
                         }).toList();
                       },
-                      onSelected: (value) {
+                      onSelected: (value) async {
                         switch (value) {
                           case 'Edit Details':
-                            _editEssayDetails(essay['essay_id']);
+                            final List details = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => NewEssayScreen(
+                                        op: 'Edit',
+                                        title: essay['essay_title'],
+                                        prompt: essay['essay_prompt'])));
+                            editEssayDetails(essay, details[0], details[1]);
+                            _loading();
                             break;
                           case 'Delete':
                             _deleteEssay(essay['essay_id']);
@@ -531,7 +537,7 @@ class _EssaysScreenState extends State<EssaysScreen> {
                   size: 26,
                 ),
                 onPressed: () {
-                  _fetchEditDetails(context);
+                  _fetchCreateDetails(context);
                 },
               ),
             )
@@ -678,6 +684,110 @@ class _EssaysScreenState extends State<EssaysScreen> {
         ),
       ),
     );
+  }
+}
+
+class NewEssayScreen extends StatefulWidget {
+  final String op;
+  final String title;
+  final String prompt;
+  NewEssayScreen({@required this.op, this.title, this.prompt});
+  @override
+  _NewEssayScreenState createState() => _NewEssayScreenState();
+}
+
+class _NewEssayScreenState extends State<NewEssayScreen> {
+  TextEditingController _title = TextEditingController();
+  TextEditingController _prompt = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _title.text = widget.title ?? '';
+    _prompt.text = widget.prompt ?? '';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: Colors.white,
+        appBar: GradientAppBar(
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  widget.op == 'Edit' ? 'SAVE' : 'CREATE',
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.w500),
+                ),
+                onPressed: () {
+                  if (_formKey.currentState.validate()) {
+                    List data = [_title.text, _prompt.text];
+                    Navigator.pop(context, data);
+                  }
+                },
+              )
+            ],
+            title: Text(
+              widget.op == 'Edit' ? 'Edit Essay Details' : 'New Essay',
+              maxLines: 1,
+              style: TextStyle(
+                  color: Colors.white,
+                  fontWeight:
+                      Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
+            ),
+            gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xff00AEEF), Color(0xff0072BC)])),
+        body: Padding(
+          padding: EdgeInsets.all(25),
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              children: <Widget>[
+                Text(
+                  'Title',
+                  style: TextStyle(fontSize: 25, color: Colors.black87),
+                ),
+                TextFormField(
+                  controller: _title,
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Enter a title';
+                    }
+                    return null;
+                  },
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 20),
+                  child: Text(
+                    'Prompt',
+                    style: TextStyle(fontSize: 25, color: Colors.black87),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 20),
+                  child: TextFormField(
+                    controller: _prompt,
+                    maxLines: null,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue, width: 0.0),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'An essay without a prompt? Really?';
+                      }
+                      return null;
+                    },
+                  ),
+                )
+              ],
+            ),
+          ),
+        ));
   }
 }
 
@@ -881,103 +991,5 @@ class _EssayEditorState extends State<EssayEditor> {
             ],
           )),
     );
-  }
-}
-
-class NewEssayScreen extends StatefulWidget {
-  @override
-  _NewEssayScreenState createState() => _NewEssayScreenState();
-}
-
-class _NewEssayScreenState extends State<NewEssayScreen> {
-  TextEditingController _title = TextEditingController();
-  TextEditingController _prompt = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: GradientAppBar(
-            actions: <Widget>[
-              FlatButton(
-                child: Text(
-                  'CREATE',
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.w500),
-                ),
-                onPressed: () {
-                  if (_formKey.currentState.validate()) {
-                    List data = [_title.text, _prompt.text];
-                    Navigator.pop(context, data);
-                  }
-                },
-              )
-            ],
-            title: Text(
-              'New Essay',
-              maxLines: 1,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight:
-                      Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
-            ),
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xff00AEEF), Color(0xff0072BC)])),
-        body: Padding(
-          padding: EdgeInsets.all(25),
-          child: Form(
-            key: _formKey,
-            child: ListView(
-              children: <Widget>[
-                Text(
-                  'Title',
-                  style: TextStyle(fontSize: 25, color: Colors.black87),
-                ),
-                TextFormField(
-                  controller: _title,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Enter a title';
-                    }
-                    return null;
-                  },
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 20),
-                  child: Text(
-                    'Prompt',
-                    style: TextStyle(fontSize: 25, color: Colors.black87),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 20),
-                  child: TextFormField(
-                    controller: _prompt,
-                    maxLines: null,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue, width: 0.0),
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'An essay without a prompt? Really?';
-                      }
-                      return null;
-                    },
-                  ),
-                )
-              ],
-            ),
-          ),
-        ));
   }
 }
