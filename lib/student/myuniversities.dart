@@ -156,7 +156,29 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
     }
   }
 
-  Future<void> add(int id, String category) {}
+  Future<void> add(int id, String category) async {
+    final response = await http.put(dom + 'api/student/college-list/add',
+        headers: {HttpHeaders.authorizationHeader: "Token $tok"},
+        body: jsonEncode(<String, dynamic>{
+          'student_id': newUser.id,
+          'university_id': id,
+          'college_category': category
+        }));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (data['Response'] == 'University successfully added.') {
+        Navigator.pop(context);
+        _success('added');
+        refresh();
+      } else {
+        Navigator.pop(context);
+        _error();
+      }
+    } else {
+      Navigator.pop(context);
+      _error();
+    }
+  }
 
   Future<void> remove(int id, String category) async {
     final response = await http.delete(
