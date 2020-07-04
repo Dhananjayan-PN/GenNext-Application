@@ -4,6 +4,7 @@ import '../shimmer_skeleton.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:page_transition/page_transition.dart';
 // import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -86,6 +87,235 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
     }
   }
 
+  Future<void> editApplication() async {}
+
+  Future<void> deleteApplication(int id) async {
+    final response = await http.delete(
+      dom + 'api/student/delete-application/$id',
+      headers: {HttpHeaders.authorizationHeader: "Token $tok"},
+    );
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (data['Response'] == 'Essay successfully deleted.') {
+        Navigator.pop(context);
+        _success('delete');
+        refresh();
+      } else {
+        Navigator.pop(context);
+        _error();
+      }
+    } else {
+      Navigator.pop(context);
+      _error();
+    }
+  }
+
+  _loading() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(0),
+          elevation: 20,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          content: Container(
+            height: 150,
+            width: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            ),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    height: 50,
+                    width: 50,
+                    child: SpinKitWave(
+                      color: Colors.grey.withOpacity(0.8),
+                      size: 25,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 23.0),
+                    child: Text(
+                      "Saving your changes",
+                      style: TextStyle(color: Colors.black, fontSize: 15),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  _error() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(0),
+          elevation: 20,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          content: Container(
+            height: 150,
+            width: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            ),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(
+                    Icons.error_outline,
+                    size: 40,
+                    color: Colors.red.withOpacity(0.9),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Text(
+                      'Something went wrong.\nCheck your connection and try again later.',
+                      style: TextStyle(color: Colors.black, fontSize: 12),
+                      textAlign: TextAlign.center,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  _success(String op) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(0),
+          elevation: 20,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          content: Container(
+            height: 150,
+            width: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            ),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(
+                    Icons.check_circle_outline,
+                    size: 40,
+                    color: Colors.green,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Text(
+                      op == 'delete'
+                          ? 'Application successfully deleted\nTap + to make a new one'
+                          : op == 'create'
+                              ? 'Application successfully created\nGet working!'
+                              : 'Application successfully edited!\nCome back anytime to make more changes',
+                      style: TextStyle(color: Colors.black, fontSize: 14),
+                      textAlign: TextAlign.center,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  _editApplication() {}
+
+  _deleteApplication(int id) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(0),
+          elevation: 20,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          content: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(top: 18),
+                  child: Icon(
+                    Icons.delete,
+                    size: 40,
+                    color: Colors.red.withOpacity(0.9),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 5),
+                  child: Text(
+                    'Are you sure you want to delete\nthis application?',
+                    style: TextStyle(color: Colors.black, fontSize: 14),
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: Colors.blue),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            FlatButton(
+              child: Text(
+                'Delete',
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+                deleteApplication(id);
+                _loading();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void refresh() {
     setState(() {
       completedApps = getCompletedApplications();
@@ -93,8 +323,9 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
     });
   }
 
-  Widget buildCard(uni) {
-    DateTime deadline = DateTime.parse(uni["application_deadline"]).toLocal();
+  Widget buildCard(application) {
+    DateTime deadline =
+        DateTime.parse(application["application_deadline"]).toLocal();
     var timeleft = DateTime.now().isBefore(deadline)
         ? deadline.difference(DateTime.now()).inDays
         : 'Passed';
@@ -145,11 +376,11 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
               ),
               child: ListTile(
                 isThreeLine: true,
-                key: Key(uni['application_id'].toString()),
+                key: Key(application['application_id'].toString()),
                 title: Padding(
                   padding: EdgeInsets.only(top: 1),
                   child: Text(
-                    uni['university'],
+                    application['university'],
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
@@ -165,7 +396,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                             ' ($timeleft)',
                         style: TextStyle(fontSize: 14, color: timecolor),
                       ),
-                      uni["completion_status"]
+                      application["completion_status"]
                           ? Text('Completed',
                               style: TextStyle(
                                 color: Colors.green,
@@ -187,12 +418,42 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                   children: <Widget>[
                     Padding(
                       padding: EdgeInsets.only(left: 8.0, top: 15),
-                      child: InkWell(
+                      child: PopupMenuButton(
                         child: Icon(
                           Icons.more_vert,
                           color: Colors.white,
                         ),
-                        onTap: () {},
+                        itemBuilder: (BuildContext context) {
+                          return {'Edit', 'Delete'}.map((String choice) {
+                            return PopupMenuItem<String>(
+                              height: 35,
+                              value: choice,
+                              child: Text(choice,
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      color: Colors.black87,
+                                      fontWeight: FontWeight.w400)),
+                            );
+                          }).toList();
+                        },
+                        onSelected: (value) async {
+                          switch (value) {
+                            case 'Edit':
+                              // final List details = await Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //         builder: (context) => NewEssayScreen(
+                              //             op: 'Edit',
+                              //             title: essay['essay_title'],
+                              //             prompt: essay['essay_prompt'])));
+                              // editEssayDetails(essay, details[0], details[1]);
+                              // _loading();
+                              break;
+                            case 'Delete':
+                              _deleteApplication(application['application_id']);
+                              break;
+                          }
+                        },
                       ),
                     ),
                   ],
