@@ -527,7 +527,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                     context,
                     PageTransition(
                         type: PageTransitionType.fade,
-                        child: NewApplicationScreen()),
+                        child: NewApplicationScreen(op: 'Create')),
                   );
                 },
               ),
