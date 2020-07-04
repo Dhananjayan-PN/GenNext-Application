@@ -3,6 +3,7 @@ import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'package:checklist/checklist.dart';
 import 'dart:async';
@@ -155,11 +156,234 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
     }
   }
 
+  Future<void> remove(int id, String category) async {
+    final response = await http.delete(
+      dom + 'api/student/delete-college-from-list/$id/$category',
+      headers: {HttpHeaders.authorizationHeader: "Token $tok"},
+    );
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (data['Response'] == 'University successfully deleted from list.') {
+        Navigator.pop(context);
+        _success('remove');
+        refresh();
+      } else {
+        Navigator.pop(context);
+        _error();
+      }
+    } else {
+      Navigator.pop(context);
+      _error();
+    }
+  }
+
   editFavorited(uni) {
     Future.delayed(Duration(milliseconds: 200), () {
       editFavoritedStatus(uni, uni['university_id'], uni['favorited_status'])
           .timeout(Duration(seconds: 10));
     });
+  }
+
+  removeFromList(int id, String category) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(0),
+          elevation: 20,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          content: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(top: 18),
+                  child: Icon(
+                    Icons.delete,
+                    size: 40,
+                    color: Colors.red.withOpacity(0.9),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 5),
+                  child: Text(
+                    'Are you sure you want to remove\nthis university from your list?',
+                    style: TextStyle(color: Colors.black, fontSize: 14),
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: Colors.blue),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            FlatButton(
+              child: Text(
+                'Delete',
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+                remove(id, category);
+                _loading();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  _loading() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(0),
+          elevation: 20,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          content: Container(
+            height: 150,
+            width: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            ),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    height: 50,
+                    width: 50,
+                    child: SpinKitWave(
+                      color: Colors.grey.withOpacity(0.8),
+                      size: 25,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 23.0),
+                    child: Text(
+                      "Saving your changes",
+                      style: TextStyle(color: Colors.black, fontSize: 15),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  _error() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(0),
+          elevation: 20,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          content: Container(
+            height: 150,
+            width: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            ),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(
+                    Icons.error_outline,
+                    size: 40,
+                    color: Colors.red.withOpacity(0.9),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Text(
+                      'Something went wrong.\nCheck your connection and try again later.',
+                      style: TextStyle(color: Colors.black, fontSize: 12),
+                      textAlign: TextAlign.center,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  _success(String op) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(0),
+          elevation: 20,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          content: Container(
+            height: 150,
+            width: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            ),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(
+                    Icons.check_circle_outline,
+                    size: 40,
+                    color: Colors.green,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Text(
+                      op == 'remove'
+                          ? 'University successfully removed\nfrom your list\nHead over to Explore to find a match'
+                          : 'University successfully moved\nGet writing!',
+                      style: TextStyle(color: Colors.black, fontSize: 14),
+                      textAlign: TextAlign.center,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   void refresh() {
@@ -317,13 +541,33 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                           },
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: 8.0),
-                          child: InkWell(
+                          padding: EdgeInsets.only(left: 10, right: 3),
+                          child: PopupMenuButton(
                             child: Icon(
                               Icons.more_vert,
                               color: Colors.white,
                             ),
-                            onTap: () {},
+                            itemBuilder: (BuildContext context) {
+                              return {'Remove'}.map((String choice) {
+                                return PopupMenuItem<String>(
+                                  height: 35,
+                                  value: choice,
+                                  child: Text(choice,
+                                      style: TextStyle(
+                                          fontSize: 13,
+                                          color: Colors.black87,
+                                          fontWeight: FontWeight.w400)),
+                                );
+                              }).toList();
+                            },
+                            onSelected: (value) async {
+                              switch (value) {
+                                case 'Remove':
+                                  removeFromList(
+                                      uni['university_id'], uni['category']);
+                                  break;
+                              }
+                            },
                           ),
                         ),
                       ],
