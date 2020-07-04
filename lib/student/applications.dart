@@ -417,7 +417,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                 trailing: Wrap(
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.only(left: 8.0, top: 15),
+                      padding: EdgeInsets.only(left: 8.0, top: 15, right: 4),
                       child: PopupMenuButton(
                         child: Icon(
                           Icons.more_vert,
@@ -793,7 +793,14 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
   }
 }
 
-class NewApplicationScreen extends StatelessWidget {
+class NewApplicationScreen extends StatefulWidget {
+  final String op;
+  NewApplicationScreen({@required this.op});
+  @override
+  _NewApplicationScreenState createState() => _NewApplicationScreenState();
+}
+
+class _NewApplicationScreenState extends State<NewApplicationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -802,7 +809,7 @@ class NewApplicationScreen extends StatelessWidget {
           actions: <Widget>[
             FlatButton(
               child: Text(
-                'DONE',
+                widget.op == 'Create' ? 'CREATE' : 'SAVE',
                 style:
                     TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
               ),
@@ -812,7 +819,7 @@ class NewApplicationScreen extends StatelessWidget {
             )
           ],
           title: Text(
-            'New Application',
+            widget.op == 'Create' ? 'New Application' : 'Edit Application',
             maxLines: 1,
             style: TextStyle(
                 color: Colors.white,
