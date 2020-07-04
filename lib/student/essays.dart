@@ -211,7 +211,7 @@ class _EssaysScreenState extends State<EssaysScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(top: 20),
+                  padding: EdgeInsets.only(top: 18),
                   child: Icon(
                     Icons.delete,
                     size: 40,
@@ -219,7 +219,7 @@ class _EssaysScreenState extends State<EssaysScreen> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 15),
+                  padding: EdgeInsets.only(top: 5),
                   child: Text(
                     'Are you sure you want to delete\nthis essay?',
                     style: TextStyle(color: Colors.black, fontSize: 14),
@@ -460,8 +460,10 @@ class _EssaysScreenState extends State<EssaysScreen> {
                             ),
                           ),
                         );
-                        editEssay(essay, editedEssayContent);
-                        _loading();
+                        if (editedEssayContent != null) {
+                          editEssay(essay, editedEssayContent);
+                          _loading();
+                        }
                       },
                     ),
                   ),
