@@ -156,6 +156,8 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
     }
   }
 
+  Future<void> add(int id, String category) {}
+
   Future<void> remove(int id, String category) async {
     final response = await http.delete(
       dom + 'api/student/delete-college-from-list/$id/$category',
@@ -249,6 +251,8 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
       },
     );
   }
+
+  addToList(int id, String category) {}
 
   _loading() {
     showDialog(
