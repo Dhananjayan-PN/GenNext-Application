@@ -72,7 +72,38 @@ class _EssaysScreenState extends State<EssaysScreen> {
     }
   }
 
-  Future<void> editEssay() async {}
+  Future<void> editEssay(essay, edited_essay_content) async {
+    final response = await http
+        .put(dom + 'api/student/edit-essay',
+            headers: {
+              HttpHeaders.authorizationHeader: "Token $tok",
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: jsonEncode(<String, dynamic>{
+              'essay_id': essay['essay_id'],
+              'essay_title': essay['essay_title'],
+              'essay_prompt': essay['essay_prompt'],
+              'student_essay_content': edited_essay_content,
+              'counselor_essay_content': essay['counselor_essay_content'],
+              'counselor_comments': essay['counselor_comments'],
+              'approval': essay['essay_approval_status']
+            }))
+        .timeout(Duration(seconds: 10));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (data['Response'] == 'Essay successfully edited.') {
+        Navigator.pop(context);
+        _success('saved');
+        refresh();
+      } else {
+        Navigator.pop(context);
+        _error();
+      }
+    } else {
+      Navigator.pop(context);
+      _error();
+    }
+  }
 
   Future<void> deleteEssay(int id) async {
     final response = await http.delete(
@@ -95,7 +126,38 @@ class _EssaysScreenState extends State<EssaysScreen> {
     }
   }
 
-  Future<void> editEssayDetails(essay, String title, String prompt) async {}
+  Future<void> editEssayDetails(essay, String title, String prompt) async {
+    final response = await http
+        .put(dom + 'api/student/edit-essay',
+            headers: {
+              HttpHeaders.authorizationHeader: "Token $tok",
+              'Content-Type': 'application/json; charset=UTF-8',
+            },
+            body: jsonEncode(<String, dynamic>{
+              'essay_id': essay['essay_id'],
+              'essay_title': title,
+              'essay_prompt': prompt,
+              'student_essay_content': essay['student_essay_content'],
+              'counselor_essay_content': essay['counselor_essay_content'],
+              'counselor_comments': essay['counselor_comments'],
+              'approval': essay['essay_approval_status']
+            }))
+        .timeout(Duration(seconds: 10));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (data['Response'] == 'Essay successfully edited.') {
+        Navigator.pop(context);
+        _success('edit');
+        refresh();
+      } else {
+        Navigator.pop(context);
+        _error();
+      }
+    } else {
+      Navigator.pop(context);
+      _error();
+    }
+  }
 
   Future<void> createEssay(String title, String prompt) async {
     final response = await http
@@ -325,7 +387,9 @@ class _EssaysScreenState extends State<EssaysScreen> {
                           ? 'Essay successfully deleted\nTap + to make a new one'
                           : op == 'create'
                               ? 'Essay successfully created\nGet writing!'
-                              : 'Essay successfully edited\nGet writing!',
+                              : op == 'saved'
+                                  ? 'Your changes have been saved\nCome back anytime to continue editing'
+                                  : 'Essay successfully edited\nGet writing!',
                       style: TextStyle(color: Colors.black, fontSize: 14),
                       textAlign: TextAlign.center,
                     ),
@@ -371,7 +435,7 @@ class _EssaysScreenState extends State<EssaysScreen> {
                         Icons.create,
                         color: Colors.black.withOpacity(0.75),
                       ),
-                      onTap: () {
+                      onTap: () async {
                         String studentString = essay['student_essay_content'] ==
                                 ''
                             ? '[{\"attributes\":{\"align\":\"justify\"},\"insert\":\"\\n\"},{\"insert\":\"\\n\"}]'
@@ -381,12 +445,10 @@ class _EssaysScreenState extends State<EssaysScreen> {
                                 ''
                             ? '[{\"attributes\":{\"align\":\"justify\"},\"insert\":\"\\n\"},{\"insert\":\"\\n\"}]'
                             : essay['counselor_essay_content'];
-                        Navigator.push(
+                        final editedEssayContent = Navigator.push(
                           context,
-                          PageTransition(
-                            curve: Curves.ease,
-                            type: PageTransitionType.rightToLeft,
-                            child: EssayEditor(
+                          MaterialPageRoute(
+                            builder: (context) => EssayEditor(
                               essayTitle: essay['essay_title'],
                               essayPrompt: essay['essay_prompt'],
                               studentEdit:
@@ -398,6 +460,8 @@ class _EssaysScreenState extends State<EssaysScreen> {
                             ),
                           ),
                         );
+                        editEssay(essay, editedEssayContent);
+                        _loading();
                       },
                     ),
                   ),
