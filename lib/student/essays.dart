@@ -72,7 +72,7 @@ class _EssaysScreenState extends State<EssaysScreen> {
     }
   }
 
-  Future<void> editEssay(essay, edited_essay_content) async {
+  Future<void> editEssay(essay, String editedEssayContent) async {
     final response = await http
         .put(dom + 'api/student/edit-essay',
             headers: {
@@ -83,7 +83,7 @@ class _EssaysScreenState extends State<EssaysScreen> {
               'essay_id': essay['essay_id'],
               'essay_title': essay['essay_title'],
               'essay_prompt': essay['essay_prompt'],
-              'student_essay_content': edited_essay_content,
+              'student_essay_content': editedEssayContent,
               'counselor_essay_content': essay['counselor_essay_content'],
               'counselor_comments': essay['counselor_comments'],
               'approval': essay['essay_approval_status']
@@ -388,7 +388,7 @@ class _EssaysScreenState extends State<EssaysScreen> {
                           : op == 'create'
                               ? 'Essay successfully created\nGet writing!'
                               : op == 'saved'
-                                  ? 'Your changes have been saved\nCome back anytime to continue editing'
+                                  ? 'Your changes have been saved\nCome back anytime to continue editing!'
                                   : 'Essay successfully edited\nGet writing!',
                       style: TextStyle(color: Colors.black, fontSize: 14),
                       textAlign: TextAlign.center,
@@ -445,7 +445,7 @@ class _EssaysScreenState extends State<EssaysScreen> {
                                 ''
                             ? '[{\"attributes\":{\"align\":\"justify\"},\"insert\":\"\\n\"},{\"insert\":\"\\n\"}]'
                             : essay['counselor_essay_content'];
-                        final editedEssayContent = Navigator.push(
+                        final editedEssayContent = await Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => EssayEditor(
@@ -552,9 +552,7 @@ class _EssaysScreenState extends State<EssaysScreen> {
                                         radius: 17,
                                       ),
                                     ),
-                                    onTap: () {
-                                      print('lmao');
-                                    },
+                                    onTap: () {},
                                   ),
                                 )
                               : Container(),
@@ -912,7 +910,6 @@ class _EssayEditorState extends State<EssayEditor> {
   }
 
   bool myInterceptor(bool stopDefaultButtonEvent) {
-    print("BACK BUTTON!");
     Navigator.pop(context);
     return true;
   }
@@ -941,7 +938,8 @@ class _EssayEditorState extends State<EssayEditor> {
                       fontSize: 15),
                 ),
                 onPressed: () {
-                  Navigator.pop(context);
+                  final data = jsonEncode(_controller1.document);
+                  Navigator.pop(context, data);
                 },
               )
             ],
