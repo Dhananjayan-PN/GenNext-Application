@@ -886,7 +886,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
       drawer: NavDrawer(
           name: newUser.firstname + ' ' + newUser.lastname,
           email: newUser.email),
-      appBar: CustomAppBar('Calendar'),
+      appBar: CustomAppBar('Schedule'),
       body: FutureBuilder(
         future: sessions.timeout(Duration(seconds: 10)),
         builder: (context, snapshot) {

@@ -3,6 +3,7 @@ import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:searchable_dropdown/searchable_dropdown.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'package:checklist/checklist.dart';
@@ -19,11 +20,14 @@ class MyUniversitiesScreen extends StatefulWidget {
 }
 
 class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
+  final _formKey = GlobalKey<FormState>();
   GlobalKey<ScaffoldState> _scafKey = GlobalKey<ScaffoldState>();
   var refreshKey2 = GlobalKey<RefreshIndicatorState>();
   TextEditingController controller1 = TextEditingController();
   TextEditingController controller2 = TextEditingController();
   ScrollController scrollController = ScrollController();
+  Map<String, int> uniIds = {};
+  List<DropdownMenuItem<String>> uniList = [];
   String filter1;
   String filter2;
   List unis;
@@ -48,6 +52,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
         filter2 = controller2.text.toLowerCase();
       });
     });
+    getAllUniversities();
     collegeList = getCollegeList();
     favoritedList = getFavorited();
   }
@@ -70,6 +75,31 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
               user: newUser,
             )));
     return true;
+  }
+
+  Future<void> getAllUniversities() async {
+    final response = await http.get(
+      dom + 'api/student/get-all-universities',
+      headers: {HttpHeaders.authorizationHeader: "Token $tok"},
+    );
+    if (response.statusCode == 200) {
+      List universities = json.decode(response.body)['university_data'];
+      for (var i = 0; i < universities.length; i++) {
+        var name = universities[i]['university_name'];
+        var id = universities[i]['university_id'];
+        uniIds[name] = id;
+        uniList.add(DropdownMenuItem<String>(
+          value: name,
+          child: Text(
+            name,
+            style: TextStyle(fontSize: 16),
+          ),
+        ));
+      }
+    } else {
+      Navigator.pop(context);
+      _error();
+    }
   }
 
   Future<void> getCollegeList() async {
@@ -274,7 +304,96 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
     );
   }
 
-  addToList(int id, String category) {}
+  addToList(String category) {
+    int uniID;
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          titlePadding: EdgeInsets.only(top: 15),
+          contentPadding: EdgeInsets.all(0),
+          elevation: 20,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          title: Center(
+              child: Text('Add to $category',
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))),
+          content: Container(
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            ),
+            child: Form(
+              key: _formKey,
+              child: ListView(
+                shrinkWrap: true,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: 5, left: 20, right: 20),
+                    child: Divider(thickness: 0),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10, left: 25, right: 25),
+                    child: SearchableDropdown.single(
+                      isCaseSensitiveSearch: false,
+                      dialogBox: true,
+                      menuBackgroundColor: Colors.white,
+                      icon: Icon(
+                        Icons.arrow_drop_down,
+                        size: 25,
+                        color: Colors.black,
+                      ),
+                      items: uniList,
+                      value: uniID,
+                      style: TextStyle(color: Colors.black),
+                      hint: Padding(
+                        padding: EdgeInsets.only(bottom: 5.0),
+                        child: Text(
+                          "University",
+                          style: TextStyle(color: Colors.black54, fontSize: 16),
+                        ),
+                      ),
+                      searchHint: "Pick a University",
+                      onChanged: (value) {
+                        setState(() {
+                          uniID = value;
+                        });
+                      },
+                      isExpanded: true,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            FlatButton(
+              child: Text(
+                'Add',
+                style: TextStyle(color: Colors.blue),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+                // requestSession();
+                // _loading();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   _loading() {
     showDialog(
@@ -739,11 +858,32 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                         onDropChecklist: (oldIndex, newIndex, state) {},
                         title: Padding(
                           padding: EdgeInsets.only(left: 20, top: 20),
-                          child: Text(categories[i],
-                              style: TextStyle(
-                                  color: Colors.black87,
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.w300)),
+                          child: Row(
+                            children: <Widget>[
+                              Text(
+                                categories[i],
+                                style: TextStyle(
+                                    color: Colors.black87,
+                                    fontSize: 25,
+                                    fontWeight: FontWeight.w300),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 2.5, top: 1),
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    child: Icon(
+                                      Icons.add,
+                                      color: Colors.blue[700],
+                                    ),
+                                    onTap: () {
+                                      addToList(categories[i]);
+                                    },
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ));
                     }
