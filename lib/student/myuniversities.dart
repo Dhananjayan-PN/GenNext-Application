@@ -28,6 +28,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   ScrollController scrollController = ScrollController();
   Map<String, int> uniIds = {};
   List<DropdownMenuItem<String>> uniList = [];
+  List collegelist;
   String filter1;
   String filter2;
   List unis;
@@ -52,9 +53,9 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
         filter2 = controller2.text.toLowerCase();
       });
     });
-    getAllUniversities();
     collegeList = getCollegeList();
     favoritedList = getFavorited();
+    getAvailableUniversities();
   }
 
   @override
@@ -77,24 +78,33 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
     return true;
   }
 
-  Future<void> getAllUniversities() async {
+  Future<void> getAvailableUniversities() async {
+    uniIds = {};
+    uniList = [];
     final response = await http.get(
       dom + 'api/student/get-all-universities',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
     );
+    collegelist = await collegeList;
     if (response.statusCode == 200) {
       List universities = json.decode(response.body)['university_data'];
       for (var i = 0; i < universities.length; i++) {
         var name = universities[i]['university_name'];
         var id = universities[i]['university_id'];
-        uniIds[name] = id;
-        uniList.add(DropdownMenuItem<String>(
-          value: name,
-          child: Text(
-            name,
-            style: TextStyle(fontSize: 16),
-          ),
-        ));
+        if (collegelist[0].every((uni) => uni['university_id'] != id) &&
+            collegelist[1].every((uni) => uni['university_id'] != id) &&
+            collegelist[2].every((uni) => uni['university_id'] != id)) {
+          uniIds[name] = id;
+          uniList.add(
+            DropdownMenuItem<String>(
+              value: name,
+              child: Text(
+                name,
+                style: TextStyle(fontSize: 16),
+              ),
+            ),
+          );
+        }
       }
     } else {
       Navigator.pop(context);
@@ -188,24 +198,25 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
 
   Future<void> add(int id, String category) async {
     final response = await http.put(dom + 'api/student/college-list/add',
-        headers: {HttpHeaders.authorizationHeader: "Token $tok"},
+        headers: {
+          HttpHeaders.authorizationHeader: "Token $tok",
+          'Content-Type': 'application/json; charset=UTF-8'
+        },
         body: jsonEncode(<String, dynamic>{
           'student_id': newUser.id,
           'university_id': id,
-          'college_category': category
+          'college_category':
+              category == 'Reach' ? 'R' : category == 'Match' ? 'M' : 'S'
         }));
+    print(jsonDecode(response.body));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       if (data['Response'] == 'University successfully added.') {
-        Navigator.pop(context);
-        _success('added');
         refresh();
       } else {
-        Navigator.pop(context);
         _error();
       }
     } else {
-      Navigator.pop(context);
       _error();
     }
   }
@@ -305,7 +316,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   }
 
   addToList(String category) {
-    int uniID;
+    String uniName;
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -346,7 +357,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                         color: Colors.black,
                       ),
                       items: uniList,
-                      value: uniID,
+                      value: uniName,
                       style: TextStyle(color: Colors.black),
                       hint: Padding(
                         padding: EdgeInsets.only(bottom: 5.0),
@@ -358,7 +369,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                       searchHint: "Pick a University",
                       onChanged: (value) {
                         setState(() {
-                          uniID = value;
+                          uniName = value;
                         });
                       },
                       isExpanded: true,
@@ -384,9 +395,12 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                 style: TextStyle(color: Colors.blue),
               ),
               onPressed: () {
-                Navigator.pop(context);
-                // requestSession();
-                // _loading();
+                if (uniName != null) {
+                  Navigator.pop(context);
+                  add(uniIds[uniName], category);
+                } else {
+                  return null;
+                }
               },
             ),
           ],
@@ -441,7 +455,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
     );
   }
 
-  _error() {
+  _error([String message]) {
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -471,7 +485,8 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                   Padding(
                     padding: EdgeInsets.only(top: 10),
                     child: Text(
-                      'Something went wrong.\nCheck your connection and try again later.',
+                      message ??
+                          'Something went wrong.\nCheck your connection and try again later.',
                       style: TextStyle(color: Colors.black, fontSize: 12),
                       textAlign: TextAlign.center,
                     ),
@@ -516,7 +531,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                     padding: EdgeInsets.only(top: 10),
                     child: Text(
                       op == 'remove'
-                          ? 'University successfully removed\nfrom your list\nHead over to Explore to find a match'
+                          ? 'University successfully removed\nHead over to Explore to find more'
                           : 'University successfully moved\nGet writing!',
                       style: TextStyle(color: Colors.black, fontSize: 14),
                       textAlign: TextAlign.center,
@@ -535,6 +550,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
     setState(() {
       favoritedList = getFavorited();
       collegeList = getCollegeList();
+      getAvailableUniversities();
     });
   }
 
@@ -859,6 +875,8 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                         title: Padding(
                           padding: EdgeInsets.only(left: 20, top: 20),
                           child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
                               Text(
                                 categories[i],
@@ -868,7 +886,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                                     fontWeight: FontWeight.w300),
                               ),
                               Padding(
-                                padding: EdgeInsets.only(left: 2.5, top: 1),
+                                padding: EdgeInsets.only(left: 1, top: 2),
                                 child: Material(
                                   color: Colors.transparent,
                                   child: InkWell(
@@ -877,7 +895,12 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                                       color: Colors.blue[700],
                                     ),
                                     onTap: () {
-                                      addToList(categories[i]);
+                                      if (uniList.isNotEmpty) {
+                                        addToList(categories[i]);
+                                      } else {
+                                        _error(
+                                            'There are no more universities available\nCome back some other time to try again');
+                                      }
                                     },
                                   ),
                                 ),
