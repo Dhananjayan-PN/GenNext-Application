@@ -170,8 +170,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
         body: jsonEncode(<String, dynamic>{
           'student_id': newUser.id,
           'university_id': id,
-          'college_category':
-              category == 'reach' ? 'R' : category == 'match' ? 'M' : 'S'
+          'college_category': category
         }));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
@@ -269,8 +268,10 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
       },
     );
     if (data != null) {
+      String catString =
+          data == ListGroup.reach ? 'R' : data == ListGroup.match ? 'M' : 'S';
       _loading();
-      add(id, data.toString());
+      add(id, catString);
     }
   }
 

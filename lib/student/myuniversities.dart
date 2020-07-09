@@ -423,9 +423,9 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
         return AddToListDialog();
       },
     );
-    String catString =
-        data == ListGroup.reach ? 'R' : data == ListGroup.match ? 'M' : 'S';
     if (data != null) {
+      String catString =
+          data == ListGroup.reach ? 'R' : data == ListGroup.match ? 'M' : 'S';
       _loading();
       add(id, catString);
     }
