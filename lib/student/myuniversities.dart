@@ -252,7 +252,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
 
   Future<void> changeCategory(int id, String category) async {
     final response = await http.put(
-      dom + 'api/student/college-list/add',
+      dom + 'api/student/college-list/change',
       headers: {
         HttpHeaders.authorizationHeader: "Token $tok",
         'Content-Type': 'application/json; charset=UTF-8'
@@ -267,7 +267,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
     );
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      if (data['Response'] == 'University successfully added.') {
+      if (data['Response'] == 'University successfully changed.') {
         refresh();
       } else {
         _error();
@@ -601,8 +601,8 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
 
   void refresh() {
     setState(() {
-      favoritedList = getFavorited();
       collegeList = getCollegeList();
+      favoritedList = getFavorited();
       getAvailableUniversities();
     });
   }
