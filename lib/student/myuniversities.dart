@@ -14,6 +14,8 @@ import '../universitypage.dart';
 import '../shimmer_skeleton.dart';
 import 'home.dart';
 
+enum ListGroup { reach, match, safety }
+
 class MyUniversitiesScreen extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => MyUniversitiesScreenState();
@@ -197,6 +199,10 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   }
 
   Future<void> add(int id, String category) async {
+    String catString = category == ListGroup.reach
+        ? 'R'
+        : category == ListGroup.match ? 'M' : 'S';
+    print(catString);
     final response = await http.put(dom + 'api/student/college-list/add',
         headers: {
           HttpHeaders.authorizationHeader: "Token $tok",
@@ -205,13 +211,13 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
         body: jsonEncode(<String, dynamic>{
           'student_id': newUser.id,
           'university_id': id,
-          'college_category':
-              category == 'Reach' ? 'R' : category == 'Match' ? 'M' : 'S'
+          'college_category': category
         }));
-    print(jsonDecode(response.body));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       if (data['Response'] == 'University successfully added.') {
+        Navigator.pop(context);
+        _success('added');
         refresh();
       } else {
         _error();
@@ -300,7 +306,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
             ),
             FlatButton(
               child: Text(
-                'Delete',
+                'Remove',
                 style: TextStyle(color: Colors.red),
               ),
               onPressed: () {
@@ -407,6 +413,22 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
         );
       },
     );
+  }
+
+  addToListFF(int id, String name) async {
+    ListGroup data = await showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AddToListDialog();
+      },
+    );
+    String catString =
+        data == ListGroup.reach ? 'R' : data == ListGroup.match ? 'M' : 'S';
+    if (data != null) {
+      _loading();
+      add(id, catString);
+    }
   }
 
   _loading() {
@@ -532,7 +554,9 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                     child: Text(
                       op == 'remove'
                           ? 'University successfully removed\nHead over to Explore to find more'
-                          : 'University successfully moved\nGet writing!',
+                          : op == 'added'
+                              ? 'University successfully added\nGo to My Universities to\nmanage your college list'
+                              : 'University successfully moved\nGet writing!',
                       style: TextStyle(color: Colors.black, fontSize: 14),
                       textAlign: TextAlign.center,
                     ),
@@ -607,7 +631,8 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                 trailing: Wrap(
                   children: <Widget>[
                     InkWell(
-                      child: Icon(Icons.star, color: Colors.white),
+                      child: Icon(Icons.star,
+                          size: 25.5, color: Colors.yellow[700]),
                       onTap: () {
                         editFavorited(unis[index]);
                       },
@@ -615,11 +640,24 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                     Padding(
                       padding: EdgeInsets.only(left: 8.0),
                       child: InkWell(
-                        child: Icon(
-                          Icons.more_vert,
-                          color: Colors.white,
-                        ),
-                        onTap: () {},
+                        child: unis[index]['in_college_list']
+                            ? Icon(
+                                Icons.check,
+                                size: 26,
+                                color: Colors.green,
+                              )
+                            : Icon(
+                                Icons.add,
+                                size: 26,
+                                color: Colors.blue,
+                              ),
+                        onTap: () {
+                          unis[index]['in_college_list']
+                              ? removeFromList(unis[index]['university_id'],
+                                  unis[index]['category'])
+                              : addToListFF(unis[index]['university_id'],
+                                  unis[index]['university_name']);
+                        },
                       ),
                     ),
                   ],
@@ -695,39 +733,31 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                       children: <Widget>[
                         InkWell(
                           child: uni['favorited_status']
-                              ? Icon(Icons.star, color: Colors.white)
-                              : Icon(Icons.star_border, color: Colors.white),
+                              ? Icon(Icons.star,
+                                  size: 25.5, color: Colors.yellow[700])
+                              : Icon(Icons.star_border,
+                                  size: 25.5, color: Colors.yellow[700]),
                           onTap: () {
                             editFavorited(uni);
                           },
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: 10, right: 3),
-                          child: PopupMenuButton(
-                            child: Icon(
-                              Icons.more_vert,
-                              color: Colors.white,
-                            ),
-                            itemBuilder: (BuildContext context) {
-                              return {'Remove'}.map((String choice) {
-                                return PopupMenuItem<String>(
-                                  height: 35,
-                                  value: choice,
-                                  child: Text(choice,
-                                      style: TextStyle(
-                                          fontSize: 13,
-                                          color: Colors.black87,
-                                          fontWeight: FontWeight.w400)),
-                                );
-                              }).toList();
-                            },
-                            onSelected: (value) async {
-                              switch (value) {
-                                case 'Remove':
-                                  removeFromList(
-                                      uni['university_id'], uni['category']);
-                                  break;
-                              }
+                          padding: EdgeInsets.only(left: 9, right: 2),
+                          child: InkWell(
+                            child: uni['in_college_list']
+                                ? Icon(
+                                    Icons.check,
+                                    size: 26,
+                                    color: Colors.green,
+                                  )
+                                : Icon(
+                                    Icons.add,
+                                    size: 26,
+                                    color: Colors.blue,
+                                  ),
+                            onTap: () {
+                              removeFromList(
+                                  uni['university_id'], uni['category']);
                             },
                           ),
                         ),
@@ -1065,6 +1095,101 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class AddToListDialog extends StatefulWidget {
+  @override
+  _AddToListDialogState createState() => _AddToListDialogState();
+}
+
+class _AddToListDialogState extends State<AddToListDialog> {
+  ListGroup _listGroup = ListGroup.reach;
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      titlePadding: EdgeInsets.only(top: 15),
+      contentPadding: EdgeInsets.all(0),
+      elevation: 20,
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10.0))),
+      title: Center(
+          child: Text('Add to College List',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))),
+      content: Container(
+        width: MediaQuery.of(context).size.width,
+        decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+        ),
+        child: ListView(
+          shrinkWrap: true,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(top: 5, left: 20, right: 20),
+              child: Divider(thickness: 0),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 25, right: 25),
+              child: Column(
+                children: <Widget>[
+                  RadioListTile(
+                    title: Text('Reach'),
+                    value: ListGroup.reach,
+                    groupValue: _listGroup,
+                    onChanged: (ListGroup value) {
+                      setState(() {
+                        _listGroup = value;
+                      });
+                    },
+                  ),
+                  RadioListTile(
+                    title: Text('Match'),
+                    value: ListGroup.match,
+                    groupValue: _listGroup,
+                    onChanged: (ListGroup value) {
+                      setState(() {
+                        _listGroup = value;
+                      });
+                    },
+                  ),
+                  RadioListTile(
+                    title: Text('Safety'),
+                    value: ListGroup.safety,
+                    groupValue: _listGroup,
+                    onChanged: (ListGroup value) {
+                      setState(() {
+                        _listGroup = value;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: <Widget>[
+        FlatButton(
+          child: Text(
+            'Cancel',
+            style: TextStyle(color: Colors.red),
+          ),
+          onPressed: () {
+            Navigator.pop(context, null);
+          },
+        ),
+        FlatButton(
+          child: Text(
+            'Add',
+            style: TextStyle(color: Colors.blue),
+          ),
+          onPressed: () {
+            Navigator.pop(context, _listGroup);
+          },
+        ),
+      ],
     );
   }
 }
