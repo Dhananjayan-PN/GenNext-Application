@@ -198,26 +198,28 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
     }
   }
 
-  Future<void> add(int id, String category) async {
-    String catString = category == ListGroup.reach
-        ? 'R'
-        : category == ListGroup.match ? 'M' : 'S';
-    print(catString);
-    final response = await http.put(dom + 'api/student/college-list/add',
-        headers: {
-          HttpHeaders.authorizationHeader: "Token $tok",
-          'Content-Type': 'application/json; charset=UTF-8'
-        },
-        body: jsonEncode(<String, dynamic>{
+  Future<void> add(int id, String category, String op) async {
+    final response = await http.put(
+      dom + 'api/student/college-list/add',
+      headers: {
+        HttpHeaders.authorizationHeader: "Token $tok",
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{
           'student_id': newUser.id,
           'university_id': id,
           'college_category': category
-        }));
+        },
+      ),
+    );
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       if (data['Response'] == 'University successfully added.') {
-        Navigator.pop(context);
-        _success('added');
+        if (op == 'FF') {
+          Navigator.pop(context);
+          _success('added');
+        }
         refresh();
       } else {
         _error();
@@ -244,6 +246,33 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
       }
     } else {
       Navigator.pop(context);
+      _error();
+    }
+  }
+
+  Future<void> changeCategory(int id, String category) async {
+    final response = await http.put(
+      dom + 'api/student/college-list/add',
+      headers: {
+        HttpHeaders.authorizationHeader: "Token $tok",
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{
+          'student_id': newUser.id,
+          'university_id': id,
+          'new_college_category': category
+        },
+      ),
+    );
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (data['Response'] == 'University successfully added.') {
+        refresh();
+      } else {
+        _error();
+      }
+    } else {
       _error();
     }
   }
@@ -403,7 +432,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
               onPressed: () {
                 if (uniName != null) {
                   Navigator.pop(context);
-                  add(uniIds[uniName], category);
+                  add(uniIds[uniName], category, 'CL');
                 } else {
                   return null;
                 }
@@ -427,7 +456,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
       String catString =
           data == ListGroup.reach ? 'R' : data == ListGroup.match ? 'M' : 'S';
       _loading();
-      add(id, catString);
+      add(id, catString, 'FF');
     }
   }
 
@@ -891,7 +920,16 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                           onStartDragItem: (listIndex, itemIndex, state) {},
                           canDrag: true,
                           onDropItem: (oldListIndex, oldItemIndex, listIndex,
-                              itemIndex, state) {},
+                              itemIndex, state) {
+                            if (listIndex != oldListIndex) {
+                              Map uni = snapshot.data[i][j];
+                              changeCategory(
+                                  uni['university_id'],
+                                  listIndex == 0
+                                      ? 'R'
+                                      : listIndex == 1 ? 'M' : 'S');
+                            }
+                          },
                         ));
                       }
                       checklistsViews.add(ChecklistView(
