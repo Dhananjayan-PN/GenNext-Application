@@ -115,6 +115,7 @@ class NavDrawer extends StatelessWidget {
               ),
               onDetailsPressed: () {
                 Navigator.pop(context);
+                curPage = ProfileScreen();
                 Navigator.pushAndRemoveUntil(
                   context,
                   PageTransition(
