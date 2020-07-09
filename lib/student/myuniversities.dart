@@ -155,7 +155,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
           SnackBar(
             duration: Duration(seconds: 2),
             content: Text(
-              'University Favorited',
+              'University Starred',
               textAlign: TextAlign.center,
             ),
           ),
@@ -166,7 +166,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
           SnackBar(
             duration: Duration(seconds: 2),
             content: Text(
-              'University Unfavorited',
+              'University Unstarred',
               textAlign: TextAlign.center,
             ),
           ),
@@ -824,7 +824,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                     Icon(Icons.star),
                     Padding(
                       padding: EdgeInsets.only(left: 3.0),
-                      child: Text('Favorited'),
+                      child: Text('Starred'),
                     )
                   ])),
             ],
@@ -1014,14 +1014,13 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                                   padding: EdgeInsets.only(
                                       top: 5, left: 30, right: 30),
                                   child: Text(
-                                    "Looks like you haven't\nfavorited any universites",
+                                    "Looks like you haven't\starred any universites",
                                     style: TextStyle(color: Colors.black54),
                                     textAlign: TextAlign.center,
                                   )),
                               Padding(
                                 padding: EdgeInsets.only(top: 3),
-                                child: Text(
-                                    "Head over to Explore to favorite some",
+                                child: Text("Head over to Explore to star some",
                                     style: TextStyle(color: Colors.black54),
                                     textAlign: TextAlign.center),
                               )
