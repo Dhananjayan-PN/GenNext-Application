@@ -679,99 +679,96 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
 
   Widget buildCollegeListCard(uni) {
     Widget uniCard = Padding(
-      padding: EdgeInsets.only(top: 6, left: 10, right: 10, bottom: 2),
-      child: Material(
-        color: Colors.transparent,
-        child: Card(
-          clipBehavior: Clip.antiAlias,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10))),
-          elevation: 6,
-          child: Material(
-            color: Colors.transparent,
-            child: CachedNetworkImage(
-              imageUrl:
-                  "https://www.wpr.org/sites/default/files/bascom_hall_summer.jpg",
-              placeholder: (context, url) => CardSkeleton(
-                padding: 0,
-                isBottomLinesActive: false,
-              ),
-              errorWidget: (context, url, error) {
-                _scafKey.currentState.showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'Failed to fetch data. Check your internet connection and try again',
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                );
-                return Icon(Icons.error);
-              },
-              imageBuilder: (context, imageProvider) => Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    alignment: Alignment.center,
-                    colorFilter: ColorFilter.mode(
-                        Colors.black.withAlpha(160), BlendMode.darken),
-                    image: imageProvider,
-                    fit: BoxFit.cover,
+      padding: EdgeInsets.only(top: 4, left: 10, right: 10),
+      child: Card(
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        elevation: 6,
+        child: Material(
+          color: Colors.transparent,
+          child: CachedNetworkImage(
+            imageUrl:
+                "https://www.wpr.org/sites/default/files/bascom_hall_summer.jpg",
+            placeholder: (context, url) => CardSkeleton(
+              padding: 0,
+              isBottomLinesActive: false,
+            ),
+            errorWidget: (context, url, error) {
+              _scafKey.currentState.showSnackBar(
+                SnackBar(
+                  content: Text(
+                    'Failed to fetch data. Check your internet connection and try again',
+                    textAlign: TextAlign.center,
                   ),
                 ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: ListTile(
-                    key: Key(uni['university_id'].toString()),
-                    title: Text(
-                      uni['university_name'],
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    subtitle: Text(
-                      uni['university_location'],
-                      style: TextStyle(color: Colors.white.withOpacity(0.8)),
-                    ),
-                    trailing: Wrap(
-                      children: <Widget>[
-                        InkWell(
-                          child: uni['favorited_status']
-                              ? Icon(Icons.star,
-                                  size: 25.5, color: Colors.yellow[700])
-                              : Icon(Icons.star_border,
-                                  size: 25.5, color: Colors.yellow[700]),
+              );
+              return Icon(Icons.error);
+            },
+            imageBuilder: (context, imageProvider) => Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  alignment: Alignment.center,
+                  colorFilter: ColorFilter.mode(
+                      Colors.black.withAlpha(160), BlendMode.darken),
+                  image: imageProvider,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: ListTile(
+                  key: Key(uni['university_id'].toString()),
+                  title: Text(
+                    uni['university_name'],
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  subtitle: Text(
+                    uni['university_location'],
+                    style: TextStyle(color: Colors.white.withOpacity(0.8)),
+                  ),
+                  trailing: Wrap(
+                    children: <Widget>[
+                      InkWell(
+                        child: uni['favorited_status']
+                            ? Icon(Icons.star,
+                                size: 25.5, color: Colors.yellow[700])
+                            : Icon(Icons.star_border,
+                                size: 25.5, color: Colors.yellow[700]),
+                        onTap: () {
+                          editFavorited(uni);
+                        },
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 9, right: 2),
+                        child: InkWell(
+                          child: uni['in_college_list']
+                              ? Icon(
+                                  Icons.check,
+                                  size: 26,
+                                  color: Colors.green,
+                                )
+                              : Icon(
+                                  Icons.add,
+                                  size: 26,
+                                  color: Colors.blue,
+                                ),
                           onTap: () {
-                            editFavorited(uni);
+                            removeFromList(
+                                uni['university_id'], uni['category']);
                           },
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 9, right: 2),
-                          child: InkWell(
-                            child: uni['in_college_list']
-                                ? Icon(
-                                    Icons.check,
-                                    size: 26,
-                                    color: Colors.green,
-                                  )
-                                : Icon(
-                                    Icons.add,
-                                    size: 26,
-                                    color: Colors.blue,
-                                  ),
-                            onTap: () {
-                              removeFromList(
-                                  uni['university_id'], uni['category']);
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        PageTransition(
-                            type: PageTransitionType.fade,
-                            child: UniversityPage()),
-                      );
-                    },
+                      ),
+                    ],
                   ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.fade,
+                          child: UniversityPage()),
+                    );
+                  },
                 ),
               ),
             ),
