@@ -553,10 +553,10 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                     padding: EdgeInsets.only(top: 10),
                     child: Text(
                       op == 'remove'
-                          ? 'University successfully removed\nHead over to Explore to find more'
+                          ? 'University successfully removed.\nHead over to Explore to find more!'
                           : op == 'added'
-                              ? 'University successfully added\nGo to My Universities to\nmanage your college list'
-                              : 'University successfully moved\nGet writing!',
+                              ? 'University successfully added.\nTime to get working!'
+                              : 'University successfully moved.\nGet writing!',
                       style: TextStyle(color: Colors.black, fontSize: 14),
                       textAlign: TextAlign.center,
                     ),
