@@ -579,14 +579,14 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                                   padding: EdgeInsets.only(
                                       top: 5, left: 30, right: 30),
                                   child: Text(
-                                    "No Applications have been completed yet",
+                                    "You haven't completed any applications yet.",
                                     style: TextStyle(color: Colors.black54),
                                     textAlign: TextAlign.center,
                                   )),
                               Padding(
                                 padding: EdgeInsets.only(top: 3),
                                 child: Text(
-                                    "Complete a few from the 'Pending' tab to\nsee them show up here!",
+                                    "Complete a few to see them show up here!",
                                     style: TextStyle(color: Colors.black54),
                                     textAlign: TextAlign.center),
                               )
@@ -690,36 +690,22 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                   if (snapshot.hasData) {
                     if (snapshot.data.length == 0) {
                       return Padding(
-                        padding: EdgeInsets.only(bottom: 70),
+                        padding: EdgeInsets.only(bottom: 100),
                         child: Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              Opacity(
-                                opacity: 0.9,
-                                child: Image.asset(
-                                  "images/snap.gif",
-                                  height: 100.0,
-                                  width: 100.0,
-                                ),
-                              ),
-                              Text(
-                                'Oh Snap!',
-                                style: TextStyle(
-                                    fontSize: 18, color: Colors.black54),
-                              ),
                               Padding(
                                   padding: EdgeInsets.only(
                                       top: 5, left: 30, right: 30),
                                   child: Text(
-                                    "Looks like you haven't added\nany universites yet :(",
+                                    "There are no pending applications at the time.",
                                     style: TextStyle(color: Colors.black54),
                                     textAlign: TextAlign.center,
                                   )),
                               Padding(
                                 padding: EdgeInsets.only(top: 3),
-                                child: Text(
-                                    "Head over to the 'Explore Universities' section to get started!",
+                                child: Text("Tap + to create one in no time!",
                                     style: TextStyle(color: Colors.black54),
                                     textAlign: TextAlign.center),
                               )

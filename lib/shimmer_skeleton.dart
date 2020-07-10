@@ -353,7 +353,7 @@ class _CardPlaceHolderState extends State<CardPlaceHolder>
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
     return Container(
-      color: Colors.grey[500],
+      color: Colors.grey[400],
       padding: EdgeInsets.all(12),
       child: Column(
         mainAxisSize: MainAxisSize.min,
