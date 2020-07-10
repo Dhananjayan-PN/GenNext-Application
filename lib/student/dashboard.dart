@@ -355,7 +355,11 @@ class _DashBoardState extends State<DashBoard> {
                               .toString()),
                           imageUrl: snapshot.data[index]['image_url'] ??
                               'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
-                          placeholder: (context, url) => CardPlaceHolder(),
+                          placeholder: (context, url) => SpinKitWave(
+                            type: SpinKitWaveType.start,
+                            color: Colors.grey.withOpacity(0.20),
+                            size: 40,
+                          ),
                           errorWidget: (context, url, error) => Padding(
                             padding: EdgeInsets.all(21),
                             child: Icon(

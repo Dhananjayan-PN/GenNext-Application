@@ -353,7 +353,7 @@ class _CardPlaceHolderState extends State<CardPlaceHolder>
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
     return Container(
-      color: Colors.grey[800],
+      color: Colors.grey[500],
       padding: EdgeInsets.all(12),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -367,12 +367,12 @@ class _CardPlaceHolderState extends State<CardPlaceHolder>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  height: height * 0.01,
+                  height: height * 0.0099,
                   width: width * 0.5,
                   decoration: myDarkBoxDec(animation),
                 ),
                 Container(
-                  height: height * 0.01,
+                  height: height * 0.0099,
                   width: width * 0.3,
                   decoration: myDarkBoxDec(animation),
                 ),
