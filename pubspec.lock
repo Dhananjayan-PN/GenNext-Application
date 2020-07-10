@@ -134,13 +134,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
-  dynamic_url_image_cache:
-    dependency: "direct main"
-    description:
-      name: dynamic_url_image_cache
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.4"
   expand_widget:
     dependency: "direct main"
     description:

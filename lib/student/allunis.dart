@@ -1,9 +1,7 @@
-import 'package:dynamic_url_image_cache/dynamic_url_image_cache.dart';
 import 'package:flutter/material.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-// import 'package:dynamic_url_image_cache/dynamic_url_image_cache.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../shimmer_skeleton.dart';

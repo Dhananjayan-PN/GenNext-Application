@@ -28,7 +28,6 @@ dependencies:
       commit: 9b032d8
   quill_zefyr_bijection: ^0.3.0
   url_launcher: ^5.4.11
-  dynamic_url_image_cache: ^0.0.4
   percent_indicator: "^2.1.5"
   flutter_spinkit: "^4.1.2"
   checklist: ^0.1.4
