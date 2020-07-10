@@ -621,23 +621,18 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
             borderRadius: BorderRadius.all(Radius.circular(10))),
         elevation: 6,
         child: CachedNetworkImage(
-          imageUrl:
-              "https://www.wpr.org/sites/default/files/bascom_hall_summer.jpg",
-          placeholder: (context, url) => CardSkeleton(
-            padding: 0,
-            isBottomLinesActive: false,
+          key: Key(unis[index]['university_name'].toString()),
+          imageUrl: unis[index]['image_url'] ??
+              'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
+          placeholder: (context, url) => CardPlaceHolder(),
+          errorWidget: (context, url, error) => Padding(
+            padding: EdgeInsets.all(21),
+            child: Icon(
+              Icons.error,
+              size: 30,
+              color: Colors.red.withOpacity(0.8),
+            ),
           ),
-          errorWidget: (context, url, error) {
-            _scafKey.currentState.showSnackBar(
-              SnackBar(
-                content: Text(
-                  'Failed to fetch data. Check your internet connection and try again',
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            );
-            return Icon(Icons.error);
-          },
           imageBuilder: (context, imageProvider) => Container(
             decoration: BoxDecoration(
               image: DecorationImage(
@@ -716,27 +711,22 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10))),
-        elevation: 6,
+        elevation: 5,
         child: Material(
           color: Colors.transparent,
           child: CachedNetworkImage(
-            imageUrl:
-                "https://www.wpr.org/sites/default/files/bascom_hall_summer.jpg",
-            placeholder: (context, url) => CardSkeleton(
-              padding: 0,
-              isBottomLinesActive: false,
+            key: Key(uni['university_name'].toString()),
+            imageUrl: uni['image_url'] ??
+                'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
+            placeholder: (context, url) => CardPlaceHolder(),
+            errorWidget: (context, url, error) => Padding(
+              padding: EdgeInsets.all(21),
+              child: Icon(
+                Icons.error,
+                size: 30,
+                color: Colors.red.withOpacity(0.8),
+              ),
             ),
-            errorWidget: (context, url, error) {
-              _scafKey.currentState.showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'Failed to fetch data. Check your internet connection and try again',
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              );
-              return Icon(Icons.error);
-            },
             imageBuilder: (context, imageProvider) => Container(
               decoration: BoxDecoration(
                 image: DecorationImage(

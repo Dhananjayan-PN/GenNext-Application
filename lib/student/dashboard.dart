@@ -351,20 +351,19 @@ class _DashBoardState extends State<DashBoard> {
                                 BorderRadius.all(Radius.circular(10))),
                         elevation: 6,
                         child: CachedNetworkImage(
-                          imageUrl:
-                              "https://www.wpr.org/sites/default/files/bascom_hall_summer.jpg",
-                          placeholder: (context, url) => SpinKitWave(
-                            type: SpinKitWaveType.start,
-                            color: Colors.grey.withOpacity(0.20),
-                            size: 40,
-                          ),
-                          errorWidget: (context, url, error) {
-                            return Icon(
-                              Icons.error_outline,
+                          key: Key(snapshot.data[index]['university_name']
+                              .toString()),
+                          imageUrl: snapshot.data[index]['image_url'] ??
+                              'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
+                          placeholder: (context, url) => CardPlaceHolder(),
+                          errorWidget: (context, url, error) => Padding(
+                            padding: EdgeInsets.all(21),
+                            child: Icon(
+                              Icons.error,
                               size: 30,
                               color: Colors.red.withOpacity(0.8),
-                            );
-                          },
+                            ),
+                          ),
                           imageBuilder: (context, imageProvider) => Container(
                             decoration: BoxDecoration(
                               image: DecorationImage(

@@ -25,6 +25,30 @@ Decoration myBoxDec(animation, {isCircle = false}) {
   );
 }
 
+Decoration myDarkBoxDec(animation, {isCircle = false}) {
+  return BoxDecoration(
+    shape: isCircle ? BoxShape.circle : BoxShape.rectangle,
+    gradient: LinearGradient(
+      begin: Alignment.centerLeft,
+      end: Alignment.centerRight,
+      colors: [
+        Colors.grey[700],
+        Colors.grey[600],
+        Colors.grey[700],
+        // Color(0xfff6f7f9),
+      ],
+      stops: [
+        // animation.value * 0.1,
+        animation.value - 1,
+        animation.value,
+        animation.value + 1,
+        // animation.value + 5,
+        // 1.0,
+      ],
+    ),
+  );
+}
+
 class CardSkeleton extends StatefulWidget {
   final bool isCircularImage;
   final bool isBottomLinesActive;
@@ -282,6 +306,81 @@ class _DashCardSkeletonState extends State<DashCardSkeleton>
           ),
         );
       },
+    );
+  }
+}
+
+class CardPlaceHolder extends StatefulWidget {
+  @override
+  _CardPlaceHolderState createState() => _CardPlaceHolderState();
+}
+
+class _CardPlaceHolderState extends State<CardPlaceHolder>
+    with SingleTickerProviderStateMixin {
+  AnimationController _controller;
+  Animation<double> animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 1),
+    );
+
+    animation = Tween<double>(begin: -1.0, end: 2.0).animate(
+        CurvedAnimation(curve: Curves.easeInOutSine, parent: _controller));
+
+    animation.addStatusListener((status) {
+      if (status == AnimationStatus.completed ||
+          status == AnimationStatus.dismissed) {
+        _controller.repeat();
+      } else if (status == AnimationStatus.dismissed) {
+        _controller.forward();
+      }
+    });
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
+    return Container(
+      color: Colors.grey[800],
+      padding: EdgeInsets.all(12),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            height: width * 0.13,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  height: height * 0.01,
+                  width: width * 0.5,
+                  decoration: myDarkBoxDec(animation),
+                ),
+                Container(
+                  height: height * 0.01,
+                  width: width * 0.3,
+                  decoration: myDarkBoxDec(animation),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
