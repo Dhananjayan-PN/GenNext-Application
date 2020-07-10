@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import '../shimmer_skeleton.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
+import 'package:searchable_dropdown/searchable_dropdown.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 // import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -787,8 +789,135 @@ class NewApplicationScreen extends StatefulWidget {
 }
 
 class _NewApplicationScreenState extends State<NewApplicationScreen> {
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  TextEditingController _notes = TextEditingController();
+  TextEditingController _datetimecontroller = TextEditingController();
+  DateTime _deadline;
+  Map<String, int> uniIds = {};
+  List<DropdownMenuItem<String>> uniList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getAvailableUniversities();
+  }
+
+  Future<void> getAvailableUniversities() async {
+    uniIds = {};
+    uniList = [];
+    final response = await http.get(
+      dom + 'api/student/get-all-universities',
+      headers: {HttpHeaders.authorizationHeader: "Token $tok"},
+    );
+    if (response.statusCode == 200) {
+      List universities = json.decode(response.body)['university_data'];
+      for (var i = 0; i < universities.length; i++) {
+        var name = universities[i]['university_name'];
+        var id = universities[i]['university_id'];
+        uniIds[name] = id;
+        uniList.add(
+          DropdownMenuItem<String>(
+            value: name,
+            child: Text(
+              name,
+              style: TextStyle(fontSize: 15),
+            ),
+          ),
+        );
+      }
+    } else {
+      Navigator.pop(context);
+      _error();
+    }
+  }
+
+  _loading() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(0),
+          elevation: 20,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          content: Container(
+            height: 150,
+            width: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            ),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    height: 50,
+                    width: 50,
+                    child: SpinKitWave(
+                      color: Colors.grey.withOpacity(0.8),
+                      size: 25,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  _error([String message]) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(0),
+          elevation: 20,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          content: Container(
+            height: 150,
+            width: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            ),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(
+                    Icons.error_outline,
+                    size: 40,
+                    color: Colors.red.withOpacity(0.9),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Text(
+                      message ??
+                          'Something went wrong.\nCheck your connection and try again later.',
+                      style: TextStyle(color: Colors.black, fontSize: 12),
+                      textAlign: TextAlign.center,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    String uniName;
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: GradientAppBar(
@@ -817,6 +946,118 @@ class _NewApplicationScreenState extends State<NewApplicationScreen> {
             colors: [Color(0xff00AEEF), Color(0xff0072BC)],
           ),
         ),
-        body: Container());
+        body: Padding(
+          padding: EdgeInsets.only(top: 30),
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(left: 25),
+                  child: Text(
+                    'University',
+                    style: TextStyle(fontSize: 25, color: Colors.black87),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 25, right: 40),
+                  child: SearchableDropdown.single(
+                    isCaseSensitiveSearch: false,
+                    dialogBox: true,
+                    menuBackgroundColor: Colors.white,
+                    icon: Icon(
+                      Icons.arrow_drop_down,
+                      size: 25,
+                      color: Colors.black,
+                    ),
+                    items: uniList,
+                    value: uniName,
+                    style: TextStyle(color: Colors.black),
+                    hint: Padding(
+                      padding: EdgeInsets.only(top: 12, bottom: 10),
+                      child: Text(
+                        "University",
+                        style: TextStyle(color: Colors.black54, fontSize: 15),
+                      ),
+                    ),
+                    searchHint: "Pick a University",
+                    onChanged: (value) {
+                      setState(() {
+                        uniName = value;
+                      });
+                    },
+                    isExpanded: true,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 25, top: 25),
+                  child: Text(
+                    'Deadline',
+                    style: TextStyle(fontSize: 25, color: Colors.black87),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 25, right: 40),
+                  child: DateTimeField(
+                    controller: _datetimecontroller,
+                    decoration: InputDecoration(
+                      border: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue, width: 0.0),
+                      ),
+                    ),
+                    format: DateFormat.yMd().add_jm(),
+                    onChanged: (value) {
+                      setState(() {
+                        _deadline = value;
+                      });
+                    },
+                    onShowPicker: (context, currentValue) async {
+                      final _date = await showDatePicker(
+                          context: context,
+                          firstDate: DateTime(1900),
+                          initialDate: currentValue ?? DateTime.now(),
+                          lastDate: DateTime(2150));
+                      if (_date != null) {
+                        final _time = await showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay.fromDateTime(
+                              currentValue ?? DateTime.now()),
+                        );
+                        return DateTimeField.combine(_date, _time);
+                      } else {
+                        return currentValue;
+                      }
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 25, top: 30),
+                  child: Text(
+                    'Notes',
+                    style: TextStyle(fontSize: 25, color: Colors.black87),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 25, top: 20, right: 35),
+                  child: TextFormField(
+                    controller: _notes,
+                    maxLines: null,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue, width: 0.0),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'An essay without a prompt? Really?';
+                      }
+                      return null;
+                    },
+                  ),
+                )
+              ],
+            ),
+          ),
+        ));
   }
 }
