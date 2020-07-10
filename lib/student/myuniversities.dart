@@ -268,7 +268,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       if (data['Response'] == 'University successfully changed.') {
-        refresh();
+        // refresh();
       } else {
         _error();
       }
@@ -432,7 +432,10 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
               onPressed: () {
                 if (uniName != null) {
                   Navigator.pop(context);
-                  add(uniIds[uniName], category, 'CL');
+                  String catString = category == 'Reach'
+                      ? 'R'
+                      : category == 'Match' ? 'M' : 'S';
+                  add(uniIds[uniName], catString, 'CL');
                 } else {
                   return null;
                 }
@@ -1027,35 +1030,23 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                   if (snapshot.hasData) {
                     if (snapshot.data.length == 0) {
                       return Padding(
-                        padding: EdgeInsets.only(bottom: 70),
+                        padding: EdgeInsets.only(bottom: 100),
                         child: Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              Opacity(
-                                opacity: 0.9,
-                                child: Image.asset(
-                                  "images/snap.gif",
-                                  height: 100.0,
-                                  width: 100.0,
-                                ),
-                              ),
-                              Text(
-                                'Oh Snap!',
-                                style: TextStyle(
-                                    fontSize: 18, color: Colors.black54),
-                              ),
                               Padding(
                                   padding: EdgeInsets.only(
                                       top: 5, left: 30, right: 30),
                                   child: Text(
-                                    "Looks like you haven't\starred any universites",
+                                    "You haven't starred any universites yet.",
                                     style: TextStyle(color: Colors.black54),
                                     textAlign: TextAlign.center,
                                   )),
                               Padding(
                                 padding: EdgeInsets.only(top: 3),
-                                child: Text("Head over to Explore to star some",
+                                child: Text(
+                                    "Explore and star some to see them show up here!",
                                     style: TextStyle(color: Colors.black54),
                                     textAlign: TextAlign.center),
                               )
