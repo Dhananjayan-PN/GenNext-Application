@@ -448,7 +448,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
               image: DecorationImage(
                 alignment: Alignment.center,
                 colorFilter: ColorFilter.mode(
-                    Colors.black.withAlpha(160), BlendMode.darken),
+                    Colors.black.withAlpha(150), BlendMode.darken),
                 image: imageProvider,
                 fit: BoxFit.cover,
               ),
@@ -456,14 +456,17 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
             child: Material(
               color: Colors.transparent,
               child: ListTile(
-                key: Key(unis[index]['university_id'].toString()),
                 title: Text(
                   unis[index]['university_name'],
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500),
                 ),
                 subtitle: Text(
                   unis[index]['university_location'],
-                  style: TextStyle(color: Colors.white.withOpacity(0.8)),
+                  style: TextStyle(
+                      color: Colors.white.withOpacity(0.9), fontSize: 13.5),
                 ),
                 trailing: Wrap(
                   children: <Widget>[
@@ -478,7 +481,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
                       },
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 9, right: 2),
+                      padding: EdgeInsets.only(left: 8),
                       child: InkWell(
                         child: unis[index]['in_college_list']
                             ? Icon(

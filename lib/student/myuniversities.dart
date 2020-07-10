@@ -621,7 +621,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
             borderRadius: BorderRadius.all(Radius.circular(10))),
         elevation: 6,
         child: CachedNetworkImage(
-          key: Key(unis[index]['university_name'].toString()),
+          key: Key(unis[index]['university_id'].toString()),
           imageUrl: unis[index]['image_url'] ??
               'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
           placeholder: (context, url) => CardPlaceHolder(),
@@ -638,7 +638,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
               image: DecorationImage(
                 alignment: Alignment.center,
                 colorFilter: ColorFilter.mode(
-                    Colors.black.withAlpha(160), BlendMode.darken),
+                    Colors.black.withAlpha(150), BlendMode.darken),
                 image: imageProvider,
                 fit: BoxFit.cover,
               ),
@@ -649,11 +649,15 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                 key: Key(unis[index]['university_id'].toString()),
                 title: Text(
                   unis[index]['university_name'],
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500),
                 ),
                 subtitle: Text(
                   unis[index]['university_location'],
-                  style: TextStyle(color: Colors.white.withOpacity(0.8)),
+                  style: TextStyle(
+                      color: Colors.white.withOpacity(0.9), fontSize: 13.5),
                 ),
                 trailing: Wrap(
                   children: <Widget>[
@@ -665,7 +669,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                       },
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 8.0),
+                      padding: EdgeInsets.only(left: 8),
                       child: InkWell(
                         child: unis[index]['in_college_list']
                             ? Icon(
@@ -715,7 +719,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
         child: Material(
           color: Colors.transparent,
           child: CachedNetworkImage(
-            key: Key(uni['university_name'].toString()),
+            key: Key(uni['university_id'].toString()),
             imageUrl: uni['image_url'] ??
                 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
             placeholder: (context, url) => CardPlaceHolder(),
@@ -732,7 +736,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                 image: DecorationImage(
                   alignment: Alignment.center,
                   colorFilter: ColorFilter.mode(
-                      Colors.black.withAlpha(160), BlendMode.darken),
+                      Colors.black.withAlpha(150), BlendMode.darken),
                   image: imageProvider,
                   fit: BoxFit.cover,
                 ),
@@ -743,11 +747,15 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                   key: Key(uni['university_id'].toString()),
                   title: Text(
                     uni['university_name'],
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500),
                   ),
                   subtitle: Text(
                     uni['university_location'],
-                    style: TextStyle(color: Colors.white.withOpacity(0.8)),
+                    style: TextStyle(
+                        color: Colors.white.withOpacity(0.9), fontSize: 13.5),
                   ),
                   trailing: Wrap(
                     children: <Widget>[
@@ -762,7 +770,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                         },
                       ),
                       Padding(
-                        padding: EdgeInsets.only(left: 9, right: 2),
+                        padding: EdgeInsets.only(left: 8),
                         child: InkWell(
                           child: uni['in_college_list']
                               ? Icon(
