@@ -343,41 +343,33 @@ class _DashBoardState extends State<DashBoard> {
                     viewportFraction: 0.87,
                     scale: 0.9,
                     itemBuilder: (BuildContext context, int index) {
-                      return Card(
-                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                        margin: EdgeInsets.only(top: 20, bottom: 30),
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
-                        elevation: 6,
-                        child: CachedNetworkImage(
-                          key: Key(snapshot.data[index]['university_name']
-                              .toString()),
-                          imageUrl: snapshot.data[index]['image_url'] ??
-                              'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
-                          placeholder: (context, url) => SpinKitWave(
-                            type: SpinKitWaveType.start,
-                            color: Colors.grey.withOpacity(0.20),
-                            size: 40,
-                          ),
-                          errorWidget: (context, url, error) => Padding(
-                            padding: EdgeInsets.all(21),
-                            child: Icon(
-                              Icons.error,
-                              size: 30,
-                              color: Colors.red.withOpacity(0.8),
-                            ),
-                          ),
-                          imageBuilder: (context, imageProvider) => Container(
+                      Widget cardData(
+                              ImageProvider imageProvider, bool isError) =>
+                          Container(
                             decoration: BoxDecoration(
-                              image: DecorationImage(
-                                alignment: Alignment.center,
-                                colorFilter: ColorFilter.mode(
-                                    Colors.black.withAlpha(140),
-                                    BlendMode.darken),
-                                image: imageProvider,
-                                fit: BoxFit.cover,
-                              ),
+                              gradient: isError
+                                  ? LinearGradient(
+                                      end: Alignment.topRight,
+                                      begin: Alignment.bottomLeft,
+                                      colors: [
+                                          Color(0xff00AEEF),
+                                          Color(0xff0072BC)
+                                        ])
+                                  : null,
+                              image: imageProvider != null
+                                  ? DecorationImage(
+                                      alignment: Alignment.center,
+                                      colorFilter: ColorFilter.mode(
+                                          Colors.black.withAlpha(140),
+                                          BlendMode.darken),
+                                      image: imageProvider,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : DecorationImage(
+                                      image: NetworkImage(
+                                          'https://www.shareicon.net/data/512x512/2016/08/18/814358_school_512x512.png',
+                                          scale: 6.5),
+                                    ),
                             ),
                             child: Material(
                               color: Colors.transparent,
@@ -455,8 +447,28 @@ class _DashBoardState extends State<DashBoard> {
                                 ),
                               ),
                             ),
-                          ),
-                        ),
+                          );
+                      return Card(
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        margin: EdgeInsets.only(top: 20, bottom: 30),
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        elevation: 6,
+                        child: CachedNetworkImage(
+                            key: Key(snapshot.data[index]['university_name']
+                                .toString()),
+                            imageUrl: snapshot.data[index]['image_url'] ??
+                                'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
+                            placeholder: (context, url) => SpinKitWave(
+                                  type: SpinKitWaveType.start,
+                                  color: Colors.grey.withOpacity(0.20),
+                                  size: 40,
+                                ),
+                            errorWidget: (context, url, error) =>
+                                cardData(null, true),
+                            imageBuilder: (context, imageProvider) =>
+                                cardData(imageProvider, false)),
                       );
                     },
                   ),

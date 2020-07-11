@@ -613,103 +613,194 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   Widget buildCard(snapshot, int index) {
     unis = snapshot;
     unis[index]['favorited_status'] = true;
+    Widget cardData(ImageProvider imageProvider, bool isError) => Container(
+          decoration: BoxDecoration(
+            gradient: isError
+                ? LinearGradient(
+                    end: Alignment.topRight,
+                    begin: Alignment.bottomLeft,
+                    colors: [Color(0xff00AEEF), Color(0xff0072BC)])
+                : null,
+            image: imageProvider != null
+                ? DecorationImage(
+                    alignment: Alignment.center,
+                    colorFilter: ColorFilter.mode(
+                        Colors.black.withAlpha(140), BlendMode.darken),
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  )
+                : DecorationImage(
+                    colorFilter: ColorFilter.mode(
+                        Colors.black.withOpacity(0.35), BlendMode.dstIn),
+                    image: NetworkImage(
+                        'https://www.shareicon.net/data/512x512/2016/08/18/814358_school_512x512.png',
+                        scale: 12),
+                  ),
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: ListTile(
+              key: Key(unis[index]['university_id'].toString()),
+              title: Text(
+                unis[index]['university_name'],
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500),
+              ),
+              subtitle: Text(
+                unis[index]['university_location'],
+                style: TextStyle(
+                    color: Colors.white.withOpacity(0.9), fontSize: 13.5),
+              ),
+              trailing: Wrap(
+                children: <Widget>[
+                  InkWell(
+                    child:
+                        Icon(Icons.star, size: 25.5, color: Colors.yellow[700]),
+                    onTap: () {
+                      editFavorited(unis[index]);
+                    },
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 8),
+                    child: InkWell(
+                      child: unis[index]['in_college_list']
+                          ? Icon(
+                              Icons.check,
+                              size: 26,
+                              color: Colors.green,
+                            )
+                          : Icon(
+                              Icons.add,
+                              size: 26,
+                              color: Colors.blue,
+                            ),
+                      onTap: () {
+                        unis[index]['in_college_list']
+                            ? removeFromList(unis[index]['university_id'],
+                                unis[index]['category'])
+                            : addToListFF(unis[index]['university_id'],
+                                unis[index]['university_name']);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  PageTransition(
+                      type: PageTransitionType.fade, child: UniversityPage()),
+                );
+              },
+            ),
+          ),
+        );
     return Padding(
-      padding: EdgeInsets.only(top: 5, left: 10, right: 10),
+      padding: EdgeInsets.only(top: 4, left: 10, right: 10),
       child: Card(
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10))),
         elevation: 6,
         child: CachedNetworkImage(
-          key: Key(unis[index]['university_id'].toString()),
-          imageUrl: unis[index]['image_url'] ??
-              'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
-          placeholder: (context, url) => CardPlaceHolder(),
-          errorWidget: (context, url, error) => Padding(
-            padding: EdgeInsets.all(21),
-            child: Icon(
-              Icons.error,
-              size: 30,
-              color: Colors.red.withOpacity(0.8),
-            ),
-          ),
-          imageBuilder: (context, imageProvider) => Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                alignment: Alignment.center,
-                colorFilter: ColorFilter.mode(
-                    Colors.black.withAlpha(150), BlendMode.darken),
-                image: imageProvider,
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: Material(
-              color: Colors.transparent,
-              child: ListTile(
-                key: Key(unis[index]['university_id'].toString()),
-                title: Text(
-                  unis[index]['university_name'],
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500),
-                ),
-                subtitle: Text(
-                  unis[index]['university_location'],
-                  style: TextStyle(
-                      color: Colors.white.withOpacity(0.9), fontSize: 13.5),
-                ),
-                trailing: Wrap(
-                  children: <Widget>[
-                    InkWell(
-                      child: Icon(Icons.star,
-                          size: 25.5, color: Colors.yellow[700]),
-                      onTap: () {
-                        editFavorited(unis[index]);
-                      },
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 8),
-                      child: InkWell(
-                        child: unis[index]['in_college_list']
-                            ? Icon(
-                                Icons.check,
-                                size: 26,
-                                color: Colors.green,
-                              )
-                            : Icon(
-                                Icons.add,
-                                size: 26,
-                                color: Colors.blue,
-                              ),
-                        onTap: () {
-                          unis[index]['in_college_list']
-                              ? removeFromList(unis[index]['university_id'],
-                                  unis[index]['category'])
-                              : addToListFF(unis[index]['university_id'],
-                                  unis[index]['university_name']);
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    PageTransition(
-                        type: PageTransitionType.fade, child: UniversityPage()),
-                  );
-                },
-              ),
-            ),
-          ),
-        ),
+            key: Key(unis[index]['university_id'].toString()),
+            imageUrl: unis[index]['image_url'] ??
+                'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
+            placeholder: (context, url) => CardPlaceHolder(),
+            errorWidget: (context, url, error) => cardData(null, true),
+            imageBuilder: (context, imageProvider) =>
+                cardData(imageProvider, false)),
       ),
     );
   }
 
   Widget buildCollegeListCard(uni) {
-    Widget uniCard = Padding(
+    Widget cardData(ImageProvider imageProvider, bool isError) => Container(
+          decoration: BoxDecoration(
+            gradient: isError
+                ? LinearGradient(
+                    end: Alignment.topRight,
+                    begin: Alignment.bottomLeft,
+                    colors: [Color(0xff00AEEF), Color(0xff0072BC)])
+                : null,
+            image: imageProvider != null
+                ? DecorationImage(
+                    alignment: Alignment.center,
+                    colorFilter: ColorFilter.mode(
+                        Colors.black.withAlpha(140), BlendMode.darken),
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  )
+                : DecorationImage(
+                    colorFilter: ColorFilter.mode(
+                        Colors.black.withOpacity(0.35), BlendMode.dstIn),
+                    image: NetworkImage(
+                        'https://www.shareicon.net/data/512x512/2016/08/18/814358_school_512x512.png',
+                        scale: 12),
+                  ),
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: ListTile(
+              key: Key(uni['university_id'].toString()),
+              title: Text(
+                uni['university_name'],
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500),
+              ),
+              subtitle: Text(
+                uni['university_location'],
+                style: TextStyle(
+                    color: Colors.white.withOpacity(0.9), fontSize: 13.5),
+              ),
+              trailing: Wrap(
+                children: <Widget>[
+                  InkWell(
+                    child: uni['favorited_status']
+                        ? Icon(Icons.star,
+                            size: 25.5, color: Colors.yellow[700])
+                        : Icon(Icons.star_border,
+                            size: 25.5, color: Colors.yellow[700]),
+                    onTap: () {
+                      editFavorited(uni);
+                    },
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 8),
+                    child: InkWell(
+                      child: uni['in_college_list']
+                          ? Icon(
+                              Icons.check,
+                              size: 26,
+                              color: Colors.green,
+                            )
+                          : Icon(
+                              Icons.add,
+                              size: 26,
+                              color: Colors.blue,
+                            ),
+                      onTap: () {
+                        removeFromList(uni['university_id'], uni['category']);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  PageTransition(
+                      type: PageTransitionType.fade, child: UniversityPage()),
+                );
+              },
+            ),
+          ),
+        );
+    return Padding(
       padding: EdgeInsets.only(top: 4, left: 10, right: 10),
       child: Card(
         clipBehavior: Clip.antiAlias,
@@ -719,94 +810,16 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
         child: Material(
           color: Colors.transparent,
           child: CachedNetworkImage(
-            key: Key(uni['university_id'].toString()),
-            imageUrl: uni['image_url'] ??
-                'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
-            placeholder: (context, url) => CardPlaceHolder(),
-            errorWidget: (context, url, error) => Padding(
-              padding: EdgeInsets.all(21),
-              child: Icon(
-                Icons.error,
-                size: 30,
-                color: Colors.red.withOpacity(0.8),
-              ),
-            ),
-            imageBuilder: (context, imageProvider) => Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  alignment: Alignment.center,
-                  colorFilter: ColorFilter.mode(
-                      Colors.black.withAlpha(150), BlendMode.darken),
-                  image: imageProvider,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              child: Material(
-                color: Colors.transparent,
-                child: ListTile(
-                  key: Key(uni['university_id'].toString()),
-                  title: Text(
-                    uni['university_name'],
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500),
-                  ),
-                  subtitle: Text(
-                    uni['university_location'],
-                    style: TextStyle(
-                        color: Colors.white.withOpacity(0.9), fontSize: 13.5),
-                  ),
-                  trailing: Wrap(
-                    children: <Widget>[
-                      InkWell(
-                        child: uni['favorited_status']
-                            ? Icon(Icons.star,
-                                size: 25.5, color: Colors.yellow[700])
-                            : Icon(Icons.star_border,
-                                size: 25.5, color: Colors.yellow[700]),
-                        onTap: () {
-                          editFavorited(uni);
-                        },
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 8),
-                        child: InkWell(
-                          child: uni['in_college_list']
-                              ? Icon(
-                                  Icons.check,
-                                  size: 26,
-                                  color: Colors.green,
-                                )
-                              : Icon(
-                                  Icons.add,
-                                  size: 26,
-                                  color: Colors.blue,
-                                ),
-                          onTap: () {
-                            removeFromList(
-                                uni['university_id'], uni['category']);
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      PageTransition(
-                          type: PageTransitionType.fade,
-                          child: UniversityPage()),
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
+              key: Key(uni['university_id'].toString()),
+              imageUrl: uni['image_url'] ??
+                  'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
+              placeholder: (context, url) => CardPlaceHolder(),
+              errorWidget: (context, url, error) => cardData(null, true),
+              imageBuilder: (context, imageProvider) =>
+                  cardData(imageProvider, false)),
         ),
       ),
     );
-    return uniCard;
   }
 
   @override
