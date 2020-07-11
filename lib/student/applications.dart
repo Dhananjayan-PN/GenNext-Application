@@ -130,7 +130,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
     );
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      if (data['Response'] == 'Essay successfully deleted.') {
+      if (data['Response'] == 'Application successfully deleted.') {
         Navigator.pop(context);
         _success('delete');
         refresh();
@@ -405,6 +405,113 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
     if (timeleft is int) {
       timeleft = timeleft.toString() + ' days';
     }
+    Widget cardData(ImageProvider imageProvider, bool isError) => Container(
+          decoration: BoxDecoration(
+            gradient: isError
+                ? LinearGradient(
+                    end: Alignment.topRight,
+                    begin: Alignment.bottomLeft,
+                    colors: [Color(0xff00AEEF), Color(0xff0072BC)])
+                : null,
+            image: imageProvider != null
+                ? DecorationImage(
+                    alignment: Alignment.center,
+                    colorFilter: ColorFilter.mode(
+                        Colors.black.withAlpha(150), BlendMode.darken),
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  )
+                : DecorationImage(
+                    colorFilter: ColorFilter.mode(
+                        Colors.black.withOpacity(0.35), BlendMode.dstIn),
+                    image: NetworkImage(
+                        'https://www.shareicon.net/data/512x512/2016/08/18/814358_school_512x512.png',
+                        scale: 12),
+                  ),
+          ),
+          child: ListTile(
+            key: Key(application['application_id'].toString()),
+            title: Padding(
+              padding: EdgeInsets.only(top: 8),
+              child: Text(
+                application['university'],
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 15.5,
+                    fontWeight: FontWeight.w500),
+              ),
+            ),
+            subtitle: Padding(
+              padding: EdgeInsets.only(top: 2, bottom: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    'Due: ' +
+                        DateFormat.yMMMMd('en_US').format(deadline.toLocal()) +
+                        ' ($timeleft)',
+                    style: TextStyle(fontSize: 13.5, color: timecolor),
+                  ),
+                  application["completion_status"]
+                      ? Text('Completed',
+                          style: TextStyle(
+                            color: Colors.green,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 13.5,
+                          ))
+                      : Text(
+                          'Pending',
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 13.5,
+                          ),
+                        )
+                ],
+              ),
+            ),
+            trailing: Padding(
+              padding: EdgeInsets.only(top: 9.5, right: 3),
+              child: PopupMenuButton(
+                child: Icon(
+                  Icons.more_vert,
+                  color: Colors.white,
+                ),
+                itemBuilder: (BuildContext context) {
+                  return {'Edit', 'Delete'}.map((String choice) {
+                    return PopupMenuItem<String>(
+                      height: 35,
+                      value: choice,
+                      child: Text(choice,
+                          style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.black87,
+                              fontWeight: FontWeight.w400)),
+                    );
+                  }).toList();
+                },
+                onSelected: (value) async {
+                  switch (value) {
+                    case 'Edit':
+                      // final List details = await Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //         builder: (context) => NewEssayScreen(
+                      //             op: 'Edit',
+                      //             title: essay['essay_title'],
+                      //             prompt: essay['essay_prompt'])));
+                      // editEssayDetails(essay, details[0], details[1]);
+                      // _loading();
+                      break;
+                    case 'Delete':
+                      _deleteApplication(application['application_id']);
+                      break;
+                  }
+                },
+              ),
+            ),
+          ),
+        );
     return Padding(
       padding: EdgeInsets.only(top: 5, left: 10, right: 10),
       child: Material(
@@ -417,119 +524,15 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
               borderRadius: BorderRadius.all(Radius.circular(10))),
           elevation: 0,
           child: CachedNetworkImage(
-            imageUrl:
-                "https://www.wpr.org/sites/default/files/bascom_hall_summer.jpg",
+            imageUrl: application['image_url'] ??
+                'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
             placeholder: (context, url) => CardSkeleton(
               padding: 0,
               isBottomLinesActive: false,
             ),
-            errorWidget: (context, url, error) {
-              _scafKey.currentState.showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'Failed to fetch data. Check your internet connection and try again',
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              );
-              return Icon(Icons.error);
-            },
-            imageBuilder: (context, imageProvider) => Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  alignment: Alignment.center,
-                  colorFilter: ColorFilter.mode(
-                      Colors.black.withAlpha(160), BlendMode.darken),
-                  image: imageProvider,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              child: ListTile(
-                isThreeLine: true,
-                key: Key(application['application_id'].toString()),
-                title: Padding(
-                  padding: EdgeInsets.only(top: 1),
-                  child: Text(
-                    application['university'],
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                subtitle: Padding(
-                  padding: EdgeInsets.only(bottom: 8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        'Due: ' +
-                            DateFormat.yMMMMd('en_US')
-                                .format(deadline.toLocal()) +
-                            ' ($timeleft)',
-                        style: TextStyle(fontSize: 14, color: timecolor),
-                      ),
-                      application["completion_status"]
-                          ? Text('Completed',
-                              style: TextStyle(
-                                color: Colors.green,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14,
-                              ))
-                          : Text(
-                              'Pending',
-                              style: TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14,
-                              ),
-                            )
-                    ],
-                  ),
-                ),
-                trailing: Wrap(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(left: 8.0, top: 15, right: 4),
-                      child: PopupMenuButton(
-                        child: Icon(
-                          Icons.more_vert,
-                          color: Colors.white,
-                        ),
-                        itemBuilder: (BuildContext context) {
-                          return {'Edit', 'Delete'}.map((String choice) {
-                            return PopupMenuItem<String>(
-                              height: 35,
-                              value: choice,
-                              child: Text(choice,
-                                  style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.black87,
-                                      fontWeight: FontWeight.w400)),
-                            );
-                          }).toList();
-                        },
-                        onSelected: (value) async {
-                          switch (value) {
-                            case 'Edit':
-                              // final List details = await Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //         builder: (context) => NewEssayScreen(
-                              //             op: 'Edit',
-                              //             title: essay['essay_title'],
-                              //             prompt: essay['essay_prompt'])));
-                              // editEssayDetails(essay, details[0], details[1]);
-                              // _loading();
-                              break;
-                            case 'Delete':
-                              _deleteApplication(application['application_id']);
-                              break;
-                          }
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            errorWidget: (context, url, error) => cardData(null, true),
+            imageBuilder: (context, imageProvider) =>
+                cardData(imageProvider, false),
           ),
         ),
       ),
@@ -891,8 +894,10 @@ class _NewApplicationScreenState extends State<NewApplicationScreen> {
                     TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
               ),
               onPressed: () {
-                List data = [uniName, _deadline, _notes.text];
-                Navigator.pop(context, data);
+                if (uniName != null && _deadline != null) {
+                  List data = [uniName, _deadline, _notes.text];
+                  Navigator.pop(context, data);
+                }
               },
             )
           ],

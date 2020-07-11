@@ -705,13 +705,14 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
             borderRadius: BorderRadius.all(Radius.circular(10))),
         elevation: 6,
         child: CachedNetworkImage(
-            key: Key(unis[index]['university_id'].toString()),
-            imageUrl: unis[index]['image_url'] ??
-                'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
-            placeholder: (context, url) => CardPlaceHolder(),
-            errorWidget: (context, url, error) => cardData(null, true),
-            imageBuilder: (context, imageProvider) =>
-                cardData(imageProvider, false)),
+          key: Key(unis[index]['university_id'].toString()),
+          imageUrl: unis[index]['image_url'] ??
+              'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
+          placeholder: (context, url) => CardPlaceHolder(),
+          errorWidget: (context, url, error) => cardData(null, true),
+          imageBuilder: (context, imageProvider) =>
+              cardData(imageProvider, false),
+        ),
       ),
     );
   }
