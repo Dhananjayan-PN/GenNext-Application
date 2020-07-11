@@ -28,6 +28,8 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
   TextEditingController controller2 = TextEditingController();
   String filter1;
   String filter2;
+  Map<String, int> uniIds = {};
+  List<DropdownMenuItem<String>> uniList = [];
   Future completedApps;
   Future pendingApps;
 
@@ -46,6 +48,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
     });
     completedApps = getCompletedApplications();
     pendingApps = getPendingApplications();
+    getAvailableUniversities();
     BackButtonInterceptor.add(myInterceptor);
   }
 
@@ -63,6 +66,35 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
             type: PageTransitionType.fade,
             child: StudentHomeScreen(user: newUser)));
     return true;
+  }
+
+  Future<void> getAvailableUniversities() async {
+    uniIds = {};
+    uniList = [];
+    final response = await http.get(
+      dom + 'api/student/get-all-universities',
+      headers: {HttpHeaders.authorizationHeader: "Token $tok"},
+    );
+    if (response.statusCode == 200) {
+      List universities = json.decode(response.body)['university_data'];
+      for (var i = 0; i < universities.length; i++) {
+        var name = universities[i]['university_name'];
+        var id = universities[i]['university_id'];
+        uniIds[name] = id;
+        uniList.add(
+          DropdownMenuItem<String>(
+            value: name,
+            child: Text(
+              name,
+              style: TextStyle(fontSize: 15),
+            ),
+          ),
+        );
+      }
+    } else {
+      Navigator.pop(context);
+      _error();
+    }
   }
 
   Future<void> getCompletedApplications() async {
@@ -101,6 +133,41 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
       if (data['Response'] == 'Essay successfully deleted.') {
         Navigator.pop(context);
         _success('delete');
+        refresh();
+      } else {
+        Navigator.pop(context);
+        _error();
+      }
+    } else {
+      Navigator.pop(context);
+      _error();
+    }
+  }
+
+  Future<void> createApplication(
+      String uniName, DateTime deadline, String notes) async {
+    final response = await http.post(
+      dom + 'api/student/create-application',
+      headers: <String, String>{
+        HttpHeaders.authorizationHeader: "Token $tok",
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: json.encode(
+        <String, dynamic>{
+          "student_id": newUser.id,
+          "university_id": uniIds[uniName],
+          "application_deadline":
+              deadline.toUtc().toIso8601String().substring(0, 10),
+          "application_notes": notes,
+        },
+      ),
+    );
+    // print(json.decode(response.body));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (data['response'] == 'Application successfully created.') {
+        Navigator.pop(context);
+        _success('created');
         refresh();
       } else {
         Navigator.pop(context);
@@ -234,7 +301,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                     child: Text(
                       op == 'delete'
                           ? 'Application successfully deleted\nTap + to make a new one'
-                          : op == 'create'
+                          : op == 'created'
                               ? 'Application successfully created\nGet working!'
                               : 'Application successfully edited!\nCome back anytime to make more changes',
                       style: TextStyle(color: Colors.black, fontSize: 14),
@@ -322,6 +389,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
     setState(() {
       completedApps = getCompletedApplications();
       pendingApps = getPendingApplications();
+      getAvailableUniversities();
     });
   }
 
@@ -524,13 +592,21 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                   color: Colors.white,
                   size: 26,
                 ),
-                onPressed: () {
-                  Navigator.push(
+                onPressed: () async {
+                  List data = await Navigator.push(
                     context,
                     PageTransition(
-                        type: PageTransitionType.fade,
-                        child: NewApplicationScreen(op: 'Create')),
+                      type: PageTransitionType.fade,
+                      child: NewApplicationScreen(
+                        op: 'Create',
+                        uniList: uniList,
+                      ),
+                    ),
                   );
+                  if (data != null) {
+                    createApplication(data[0], data[1], data[2]);
+                    _loading();
+                  }
                 },
               ),
             )
@@ -783,7 +859,9 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
 
 class NewApplicationScreen extends StatefulWidget {
   final String op;
-  NewApplicationScreen({@required this.op});
+  final List<DropdownMenuItem<String>> uniList;
+  NewApplicationScreen({@required this.op, this.uniList});
+
   @override
   _NewApplicationScreenState createState() => _NewApplicationScreenState();
 }
@@ -791,133 +869,17 @@ class NewApplicationScreen extends StatefulWidget {
 class _NewApplicationScreenState extends State<NewApplicationScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _notes = TextEditingController();
+  String uniName;
   TextEditingController _datetimecontroller = TextEditingController();
   DateTime _deadline;
-  Map<String, int> uniIds = {};
-  List<DropdownMenuItem<String>> uniList = [];
 
   @override
   void initState() {
     super.initState();
-    getAvailableUniversities();
-  }
-
-  Future<void> getAvailableUniversities() async {
-    uniIds = {};
-    uniList = [];
-    final response = await http.get(
-      dom + 'api/student/get-all-universities',
-      headers: {HttpHeaders.authorizationHeader: "Token $tok"},
-    );
-    if (response.statusCode == 200) {
-      List universities = json.decode(response.body)['university_data'];
-      for (var i = 0; i < universities.length; i++) {
-        var name = universities[i]['university_name'];
-        var id = universities[i]['university_id'];
-        uniIds[name] = id;
-        uniList.add(
-          DropdownMenuItem<String>(
-            value: name,
-            child: Text(
-              name,
-              style: TextStyle(fontSize: 15),
-            ),
-          ),
-        );
-      }
-    } else {
-      Navigator.pop(context);
-      _error();
-    }
-  }
-
-  _loading() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          contentPadding: EdgeInsets.all(0),
-          elevation: 20,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          content: Container(
-            height: 150,
-            width: 80,
-            decoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            ),
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(
-                    height: 50,
-                    width: 50,
-                    child: SpinKitWave(
-                      color: Colors.grey.withOpacity(0.8),
-                      size: 25,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  _error([String message]) {
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          contentPadding: EdgeInsets.all(0),
-          elevation: 20,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          content: Container(
-            height: 150,
-            width: 80,
-            decoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            ),
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Icon(
-                    Icons.error_outline,
-                    size: 40,
-                    color: Colors.red.withOpacity(0.9),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Text(
-                      message ??
-                          'Something went wrong.\nCheck your connection and try again later.',
-                      style: TextStyle(color: Colors.black, fontSize: 12),
-                      textAlign: TextAlign.center,
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
   }
 
   @override
   Widget build(BuildContext context) {
-    String uniName;
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: GradientAppBar(
@@ -929,7 +891,8 @@ class _NewApplicationScreenState extends State<NewApplicationScreen> {
                     TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
               ),
               onPressed: () {
-                Navigator.pop(context);
+                List data = [uniName, _deadline, _notes.text];
+                Navigator.pop(context, data);
               },
             )
           ],
@@ -970,7 +933,7 @@ class _NewApplicationScreenState extends State<NewApplicationScreen> {
                       size: 25,
                       color: Colors.black,
                     ),
-                    items: uniList,
+                    items: widget.uniList,
                     value: uniName,
                     style: TextStyle(color: Colors.black),
                     hint: Padding(
@@ -1005,7 +968,7 @@ class _NewApplicationScreenState extends State<NewApplicationScreen> {
                         borderSide: BorderSide(color: Colors.blue, width: 0.0),
                       ),
                     ),
-                    format: DateFormat.yMd().add_jm(),
+                    format: DateFormat.yMMMMd(),
                     onChanged: (value) {
                       setState(() {
                         _deadline = value;
@@ -1018,12 +981,7 @@ class _NewApplicationScreenState extends State<NewApplicationScreen> {
                           initialDate: currentValue ?? DateTime.now(),
                           lastDate: DateTime(2150));
                       if (_date != null) {
-                        final _time = await showTimePicker(
-                          context: context,
-                          initialTime: TimeOfDay.fromDateTime(
-                              currentValue ?? DateTime.now()),
-                        );
-                        return DateTimeField.combine(_date, _time);
+                        return _date;
                       } else {
                         return currentValue;
                       }
@@ -1048,9 +1006,6 @@ class _NewApplicationScreenState extends State<NewApplicationScreen> {
                       ),
                     ),
                     validator: (value) {
-                      if (value.isEmpty) {
-                        return 'An essay without a prompt? Really?';
-                      }
                       return null;
                     },
                   ),
