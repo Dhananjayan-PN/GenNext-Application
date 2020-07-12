@@ -1112,6 +1112,93 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
     super.initState();
   }
 
+  Future<void> editAppNotes(String notes) async {
+    final response = await http.put(
+      dom + 'api/student/edit-application',
+      headers: {
+        HttpHeaders.authorizationHeader: "Token $tok",
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{
+          'application_id': widget.application['application_id'],
+          'university_id': widget.application['university_id'],
+          'application_deadline': widget.application["application_deadline"],
+          'application_notes': notes,
+          'application_status': widget.application['completion_status'],
+          'essay_ids': widget.application['essay_data'].toString(),
+          'transcript_ids': widget.application['transcript_data'].toString(),
+          'misc_doc_ids': widget.application['misc_doc_data'].toString(),
+        },
+      ),
+    );
+    if (response.statusCode == 200) {
+      if (json.decode(response.body)['response'] ==
+          'Application successfully edited.') {
+        setState(() {
+          saving = false;
+          saved = true;
+        });
+      } else {
+        setState(() {
+          saving = false;
+          savingfailed = true;
+        });
+        _error();
+      }
+    } else {
+      setState(() {
+        saving = false;
+        savingfailed = true;
+      });
+      _error();
+    }
+  }
+
+  _error() {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(0),
+          elevation: 20,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          content: Container(
+            height: 150,
+            width: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            ),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(
+                    Icons.error_outline,
+                    size: 40,
+                    color: Colors.red.withOpacity(0.9),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Text(
+                      'Something went wrong.\nCheck your connection and try again later.',
+                      style: TextStyle(color: Colors.black, fontSize: 12),
+                      textAlign: TextAlign.center,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     DateTime deadline =
@@ -1127,18 +1214,6 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: GradientAppBar(
-        actions: <Widget>[
-          FlatButton(
-            child: Text(
-              'SAVE',
-              style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          )
-        ],
         title: Text(
           'Manage Application',
           maxLines: 1,
@@ -1155,7 +1230,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
       body: ListView(
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.only(left: 12, right: 12, top: 25),
+            padding: EdgeInsets.only(left: 12, right: 12, top: 18),
             child: Card(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(
@@ -1216,7 +1291,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(left: 12, right: 12, top: 20),
+            padding: EdgeInsets.only(left: 12, right: 12, top: 10),
             child: Card(
               elevation: 6,
               shape: RoundedRectangleBorder(
@@ -1230,7 +1305,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(left: 12, right: 12, top: 20),
+            padding: EdgeInsets.only(left: 12, right: 12, top: 10),
             child: Card(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(
@@ -1244,7 +1319,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(left: 12, right: 12, top: 20),
+            padding: EdgeInsets.only(left: 12, right: 12, top: 10),
             child: Card(
               elevation: 6,
               shape: RoundedRectangleBorder(
@@ -1258,7 +1333,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(bottom: 20, top: 15, left: 12, right: 12),
+            padding: EdgeInsets.only(bottom: 20, top: 10, left: 12, right: 12),
             child: Card(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(
