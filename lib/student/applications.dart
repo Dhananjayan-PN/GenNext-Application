@@ -121,7 +121,42 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
     }
   }
 
-  Future<void> editApplication() async {}
+  Future<void> editApplication(
+      Map application, DateTime deadline, String notes) async {
+    final response = await http.put(
+      dom + 'api/student/edit-application',
+      headers: {
+        HttpHeaders.authorizationHeader: "Token $tok",
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, dynamic>{
+          'application_id': application['application_id'],
+          'university_id': uniIds[application['university']],
+          'application_deadline': deadline.toIso8601String().substring(0, 10),
+          'application_notes': notes,
+          'application_status': application['completion_status'],
+          'essay_ids': application['essay_data'].toString(),
+          'transcript_ids': application['transcript_data'].toString(),
+          'misc_doc_ids': application['misc_doc_data'].toString(),
+        },
+      ),
+    );
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (data['response'] == 'Application successfully edited.') {
+        Navigator.pop(context);
+        _success('edit');
+        refresh();
+      } else {
+        Navigator.pop(context);
+        _error();
+      }
+    } else {
+      Navigator.pop(context);
+      _error();
+    }
+  }
 
   Future<void> deleteApplication(int id) async {
     final response = await http.delete(
@@ -156,8 +191,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
         <String, dynamic>{
           "student_id": newUser.id,
           "university_id": uniIds[uniName],
-          "application_deadline":
-              deadline.toUtc().toIso8601String().substring(0, 10),
+          "application_deadline": deadline.toIso8601String().substring(0, 10),
           "application_notes": notes,
         },
       ),
@@ -303,7 +337,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                           ? 'Application successfully deleted\nTap + to make a new one'
                           : op == 'created'
                               ? 'Application successfully created\nGet working!'
-                              : 'Application successfully edited!\nCome back anytime to make more changes',
+                              : 'Application successfully edited\nGet working!',
                       style: TextStyle(color: Colors.black, fontSize: 14),
                       textAlign: TextAlign.center,
                     ),
@@ -316,8 +350,6 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
       },
     );
   }
-
-  _editApplication() {}
 
   _deleteApplication(int id) {
     showDialog(
@@ -394,8 +426,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
   }
 
   Widget buildCard(application) {
-    DateTime deadline =
-        DateTime.parse(application["application_deadline"]).toLocal();
+    DateTime deadline = DateTime.parse(application["application_deadline"]);
     var timeleft = DateTime.now().isBefore(deadline)
         ? deadline.difference(DateTime.now()).inDays
         : 'Passed';
@@ -429,87 +460,103 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                         scale: 12),
                   ),
           ),
-          child: ListTile(
-            key: Key(application['application_id'].toString()),
-            title: Padding(
-              padding: EdgeInsets.only(top: 8),
-              child: Text(
-                application['university'],
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 15.5,
-                    fontWeight: FontWeight.w500),
-              ),
-            ),
-            subtitle: Padding(
-              padding: EdgeInsets.only(top: 2, bottom: 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    'Due: ' +
-                        DateFormat.yMMMMd('en_US').format(deadline.toLocal()) +
-                        ' ($timeleft)',
-                    style: TextStyle(fontSize: 13.5, color: timecolor),
+          child: Material(
+            color: Colors.transparent,
+            child: ListTile(
+                key: Key(application['application_id'].toString()),
+                title: Padding(
+                  padding: EdgeInsets.only(top: 8),
+                  child: Text(
+                    application['university'],
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 15.5,
+                        fontWeight: FontWeight.w500),
                   ),
-                  application["completion_status"]
-                      ? Text('Completed',
-                          style: TextStyle(
-                            color: Colors.green,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 13.5,
-                          ))
-                      : Text(
-                          'Pending',
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 13.5,
-                          ),
-                        )
-                ],
-              ),
-            ),
-            trailing: Padding(
-              padding: EdgeInsets.only(top: 9.5, right: 3),
-              child: PopupMenuButton(
-                child: Icon(
-                  Icons.more_vert,
-                  color: Colors.white,
                 ),
-                itemBuilder: (BuildContext context) {
-                  return {'Edit', 'Delete'}.map((String choice) {
-                    return PopupMenuItem<String>(
-                      height: 35,
-                      value: choice,
-                      child: Text(choice,
-                          style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.black87,
-                              fontWeight: FontWeight.w400)),
-                    );
-                  }).toList();
-                },
-                onSelected: (value) async {
-                  switch (value) {
-                    case 'Edit':
-                      // final List details = await Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //         builder: (context) => NewEssayScreen(
-                      //             op: 'Edit',
-                      //             title: essay['essay_title'],
-                      //             prompt: essay['essay_prompt'])));
-                      // editEssayDetails(essay, details[0], details[1]);
-                      // _loading();
-                      break;
-                    case 'Delete':
-                      _deleteApplication(application['application_id']);
-                      break;
-                  }
-                },
-              ),
-            ),
+                subtitle: Padding(
+                  padding: EdgeInsets.only(top: 2, bottom: 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        'Due: ' +
+                            DateFormat.yMMMMd('en_US').format(deadline) +
+                            ' ($timeleft)',
+                        style: TextStyle(fontSize: 13.5, color: timecolor),
+                      ),
+                      application["completion_status"]
+                          ? Text('Completed',
+                              style: TextStyle(
+                                color: Colors.green,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 13.5,
+                              ))
+                          : Text(
+                              'Pending',
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 13.5,
+                              ),
+                            )
+                    ],
+                  ),
+                ),
+                trailing: Padding(
+                  padding: EdgeInsets.only(top: 9.5, right: 3),
+                  child: PopupMenuButton(
+                    child: Icon(
+                      Icons.more_vert,
+                      color: Colors.white,
+                    ),
+                    itemBuilder: (BuildContext context) {
+                      return {'Edit', 'Delete'}.map((String choice) {
+                        return PopupMenuItem<String>(
+                          height: 35,
+                          value: choice,
+                          child: Text(choice,
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.w400)),
+                        );
+                      }).toList();
+                    },
+                    onSelected: (value) async {
+                      switch (value) {
+                        case 'Edit':
+                          final List details = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => NewApplicationScreen(
+                                op: 'Edit',
+                                deadline: deadline,
+                                notes: application['application_notes'],
+                                university: application['university'],
+                              ),
+                            ),
+                          );
+                          editApplication(application, details[1], details[2]);
+                          _loading();
+                          break;
+                        case 'Delete':
+                          _deleteApplication(application['application_id']);
+                          break;
+                      }
+                    },
+                  ),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    PageTransition(
+                        type: PageTransitionType.fade,
+                        child: SingleAppScreen(
+                          application: application,
+                        )),
+                  );
+                }),
           ),
         );
     return Padding(
@@ -598,9 +645,8 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                 onPressed: () async {
                   List data = await Navigator.push(
                     context,
-                    PageTransition(
-                      type: PageTransitionType.fade,
-                      child: NewApplicationScreen(
+                    MaterialPageRoute(
+                      builder: (context) => NewApplicationScreen(
                         op: 'Create',
                         uniList: uniList,
                       ),
@@ -863,7 +909,15 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
 class NewApplicationScreen extends StatefulWidget {
   final String op;
   final List<DropdownMenuItem<String>> uniList;
-  NewApplicationScreen({@required this.op, this.uniList});
+  final String university;
+  final String notes;
+  final DateTime deadline;
+  NewApplicationScreen(
+      {@required this.op,
+      this.uniList,
+      this.notes,
+      this.deadline,
+      this.university});
 
   @override
   _NewApplicationScreenState createState() => _NewApplicationScreenState();
@@ -879,6 +933,14 @@ class _NewApplicationScreenState extends State<NewApplicationScreen> {
   @override
   void initState() {
     super.initState();
+    if (widget.deadline != null) {
+      _datetimecontroller.text = DateFormat.yMMMMd().format(widget.deadline);
+      _deadline = widget.deadline;
+    } else {
+      _datetimecontroller.text = null;
+    }
+    _notes.text = widget.notes ?? '';
+    uniName = widget.university ?? null;
   }
 
   @override
@@ -914,19 +976,18 @@ class _NewApplicationScreenState extends State<NewApplicationScreen> {
             colors: [Color(0xff00AEEF), Color(0xff0072BC)],
           ),
         ),
-        body: Padding(
-          padding: EdgeInsets.only(top: 30),
-          child: Form(
-            key: _formKey,
-            child: ListView(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(left: 25),
-                  child: Text(
-                    'University',
-                    style: TextStyle(fontSize: 25, color: Colors.black87),
-                  ),
+        body: Form(
+          key: _formKey,
+          child: ListView(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(top: 30, left: 25),
+                child: Text(
+                  'University',
+                  style: TextStyle(fontSize: 25, color: Colors.black87),
                 ),
+              ),
+              if (widget.op == 'Create') ...[
                 Padding(
                   padding: EdgeInsets.only(left: 25, right: 40),
                   child: SearchableDropdown.single(
@@ -957,67 +1018,345 @@ class _NewApplicationScreenState extends State<NewApplicationScreen> {
                     isExpanded: true,
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(left: 25, top: 25),
-                  child: Text(
-                    'Deadline',
-                    style: TextStyle(fontSize: 25, color: Colors.black87),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 25, right: 40),
-                  child: DateTimeField(
-                    controller: _datetimecontroller,
-                    decoration: InputDecoration(
-                      border: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue, width: 0.0),
-                      ),
-                    ),
-                    format: DateFormat.yMMMMd(),
-                    onChanged: (value) {
-                      setState(() {
-                        _deadline = value;
-                      });
-                    },
-                    onShowPicker: (context, currentValue) async {
-                      final _date = await showDatePicker(
-                          context: context,
-                          firstDate: DateTime(1900),
-                          initialDate: currentValue ?? DateTime.now(),
-                          lastDate: DateTime(2150));
-                      if (_date != null) {
-                        return _date;
-                      } else {
-                        return currentValue;
-                      }
-                    },
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 25, top: 30),
-                  child: Text(
-                    'Notes',
-                    style: TextStyle(fontSize: 25, color: Colors.black87),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 25, top: 20, right: 35),
-                  child: TextFormField(
-                    controller: _notes,
-                    maxLines: null,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue, width: 0.0),
-                      ),
-                    ),
-                    validator: (value) {
-                      return null;
-                    },
-                  ),
-                )
               ],
-            ),
+              if (widget.op == 'Edit') ...[
+                Padding(
+                  padding: EdgeInsets.only(top: 10, left: 26),
+                  child: Text(
+                    widget.university,
+                    style: TextStyle(color: Colors.black54, fontSize: 18),
+                  ),
+                ),
+              ],
+              Padding(
+                padding: EdgeInsets.only(left: 25, top: 30),
+                child: Text(
+                  'Deadline',
+                  style: TextStyle(fontSize: 25, color: Colors.black87),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 25, right: 40),
+                child: DateTimeField(
+                  initialValue: widget.deadline ?? null,
+                  controller: _datetimecontroller,
+                  decoration: InputDecoration(
+                    border: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue, width: 0.0),
+                    ),
+                  ),
+                  format: DateFormat.yMMMMd(),
+                  onChanged: (value) {
+                    setState(() {
+                      _deadline = value;
+                    });
+                  },
+                  onShowPicker: (context, currentValue) async {
+                    final _date = await showDatePicker(
+                        context: context,
+                        firstDate: DateTime(1900),
+                        initialDate: currentValue ?? DateTime.now(),
+                        lastDate: DateTime(2150));
+                    if (_date != null) {
+                      return _date;
+                    } else {
+                      return currentValue;
+                    }
+                  },
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 25, top: 30),
+                child: Text(
+                  'Notes',
+                  style: TextStyle(fontSize: 25, color: Colors.black87),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 25, top: 20, right: 35),
+                child: TextFormField(
+                  controller: _notes,
+                  maxLines: null,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue, width: 0.0),
+                    ),
+                  ),
+                  validator: (value) {
+                    return null;
+                  },
+                ),
+              )
+            ],
           ),
         ));
+  }
+}
+
+class SingleAppScreen extends StatefulWidget {
+  final Map application;
+  SingleAppScreen({@required this.application});
+  @override
+  _SingleAppScreenState createState() => _SingleAppScreenState();
+}
+
+class _SingleAppScreenState extends State<SingleAppScreen> {
+  TextEditingController _appNotes = TextEditingController();
+  bool saved = false;
+  bool saving = true;
+  bool savingfailed = false;
+  Future applicationNotes;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    DateTime deadline =
+        DateTime.parse(widget.application["application_deadline"]);
+    var timeleft = DateTime.now().isBefore(deadline)
+        ? deadline.difference(DateTime.now()).inDays
+        : 'Passed';
+    Color timecolor =
+        timeleft is int && timeleft < 10 ? Colors.red : Colors.black87;
+    if (timeleft is int) {
+      timeleft = timeleft.toString() + ' days';
+    }
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: GradientAppBar(
+        actions: <Widget>[
+          FlatButton(
+            child: Text(
+              'SAVE',
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          )
+        ],
+        title: Text(
+          'Manage Application',
+          maxLines: 1,
+          style: TextStyle(
+              color: Colors.white,
+              fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
+        ),
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color(0xff00AEEF), Color(0xff0072BC)],
+        ),
+      ),
+      body: ListView(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(left: 12, right: 12, top: 25),
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
+              ),
+              elevation: 6,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: 16, left: 15),
+                    child: Text(
+                      widget.application["university"],
+                      style: TextStyle(fontSize: 19, color: Colors.black87),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 12, left: 15),
+                    child: Text(
+                      'Deadline',
+                      style: TextStyle(fontSize: 14, color: Colors.black54),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 1, left: 15),
+                    child: Text(
+                      DateFormat.yMMMMd().format(
+                            DateTime.parse(
+                              widget.application["application_deadline"],
+                            ),
+                          ) +
+                          ' ($timeleft)',
+                      style: TextStyle(
+                          color: timecolor.withOpacity(0.8), fontSize: 15),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 12, left: 15),
+                    child: Text(
+                      'Created',
+                      style: TextStyle(fontSize: 14, color: Colors.black54),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 1, left: 15, bottom: 16),
+                    child: Text(
+                      DateFormat.yMMMMd().format(
+                        DateTime.parse(
+                          widget.application["created_at"],
+                        ),
+                      ),
+                      style: TextStyle(color: Colors.black87, fontSize: 15),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 12, right: 12, top: 20),
+            child: Card(
+              elevation: 6,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
+              ),
+              child: ExpansionTile(
+                title: Text('Essays'),
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 12, right: 12, top: 20),
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
+              ),
+              elevation: 6,
+              child: ExpansionTile(
+                title: Text('Transcripts'),
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 12, right: 12, top: 20),
+            child: Card(
+              elevation: 6,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
+              ),
+              child: ExpansionTile(
+                title: Text('Misc Documents'),
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(bottom: 20, top: 15, left: 12, right: 12),
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
+              ),
+              elevation: 6,
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: 10, bottom: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Spacer(),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(left: 15, right: 5),
+                              child: Icon(
+                                Icons.edit,
+                                size: 20,
+                                color: Colors.black.withOpacity(0.8),
+                              ),
+                            ),
+                            Text(
+                              'Application Notes',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.black.withOpacity(0.8)),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                        Spacer(),
+                        saved
+                            ? Padding(
+                                padding: EdgeInsets.only(right: 13),
+                                child: Icon(
+                                  Icons.check,
+                                  color: Colors.green,
+                                ),
+                              )
+                            : saving
+                                ? Padding(
+                                    padding: EdgeInsets.only(right: 17),
+                                    child: SizedBox(
+                                        height: 20,
+                                        width: 20,
+                                        child: SpinKitThreeBounce(
+                                            color: Colors.black87, size: 10)),
+                                  )
+                                : savingfailed
+                                    ? Padding(
+                                        padding: EdgeInsets.only(right: 10),
+                                        child: Icon(
+                                          Icons.priority_high,
+                                          color: Colors.red,
+                                        ),
+                                      )
+                                    : Container(),
+                      ],
+                    ),
+                  ),
+                  Divider(thickness: 0, indent: 25, endIndent: 25),
+                  Builder(builder: (context) {
+                    saving = false;
+                    saved = true;
+                    return Padding(
+                      padding: EdgeInsets.only(
+                          top: 5, left: 20, right: 20, bottom: 12),
+                      child: TextField(
+                        controller: _appNotes,
+                        autocorrect: true,
+                        maxLines: null,
+                        decoration: InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.black87),
+                              borderRadius: BorderRadius.circular(10)),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10)),
+                          hintText: 'Take note of your tasks for this app...',
+                          hintStyle:
+                              TextStyle(color: Colors.black54, fontSize: 14),
+                        ),
+                        onChanged: (value) {},
+                      ),
+                    );
+                  })
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
+    );
   }
 }
