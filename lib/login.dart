@@ -214,7 +214,7 @@ class _LoginPageState extends State<LoginPage> {
                   Padding(
                     padding: EdgeInsets.only(top: 10),
                     child: Text(
-                      'Unable to establish a connection with our servers.\nCheck your connection and try again later.',
+                      'Something went wrong.\nCheck your connection and try again later.',
                       style: TextStyle(color: Colors.white, fontSize: 12),
                       textAlign: TextAlign.center,
                     ),

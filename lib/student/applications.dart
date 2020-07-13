@@ -123,6 +123,18 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
 
   Future<void> editApplication(
       Map application, DateTime deadline, String notes) async {
+    List essayList = [];
+    List transcriptList = [];
+    List miscList = [];
+    for (int i = 0; i < application['essay_data'].length; i++) {
+      essayList.add(application['essay_data'][i]['essay_id']);
+    }
+    for (int i = 0; i < application['transcript_data'].length; i++) {
+      transcriptList.add(application['transcript_data'][i]['transcript_id']);
+    }
+    for (int i = 0; i < application['misc_doc_data'].length; i++) {
+      miscList.add(application['misc_doc_data'][i]['misc_doc_id']);
+    }
     final response = await http.put(
       dom + 'api/student/edit-application',
       headers: {
@@ -136,9 +148,9 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
           'application_deadline': deadline.toIso8601String().substring(0, 10),
           'application_notes': notes,
           'application_status': application['completion_status'],
-          'essay_ids': application['essay_data'].toString(),
-          'transcript_ids': application['transcript_data'].toString(),
-          'misc_doc_ids': application['misc_doc_data'].toString(),
+          'essay_ids': essayList.toString(),
+          'transcript_ids': transcriptList.toString(),
+          'misc_doc_ids': miscList.toString(),
         },
       ),
     );
@@ -547,8 +559,8 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                     },
                   ),
                 ),
-                onTap: () {
-                  Navigator.push(
+                onTap: () async {
+                  final bool data = await Navigator.push(
                     context,
                     PageTransition(
                         type: PageTransitionType.fade,
@@ -556,6 +568,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                           application: application,
                         )),
                   );
+                  refresh();
                 }),
           ),
         );
@@ -1102,17 +1115,35 @@ class SingleAppScreen extends StatefulWidget {
 
 class _SingleAppScreenState extends State<SingleAppScreen> {
   TextEditingController _appNotes = TextEditingController();
-  bool saved = false;
-  bool saving = true;
+  bool saved = true;
+  bool saving = false;
   bool savingfailed = false;
   Future applicationNotes;
 
   @override
   void initState() {
     super.initState();
+    _appNotes.text = widget.application['application_notes'] ?? '';
   }
 
   Future<void> editAppNotes(String notes) async {
+    List essayList = [];
+    List transcriptList = [];
+    List miscList = [];
+    for (int i = 0; i < widget.application['essay_data'].length; i++) {
+      essayList.add(widget.application['essay_data'][i]['essay_id']);
+    }
+    for (int i = 0; i < widget.application['transcript_data'].length; i++) {
+      transcriptList
+          .add(widget.application['transcript_data'][i]['transcript_id']);
+    }
+    for (int i = 0; i < widget.application['misc_doc_data'].length; i++) {
+      miscList.add(widget.application['misc_doc_data'][i]['misc_doc_id']);
+    }
+    setState(() {
+      saved = false;
+      saving = true;
+    });
     final response = await http.put(
       dom + 'api/student/edit-application',
       headers: {
@@ -1126,9 +1157,9 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
           'application_deadline': widget.application["application_deadline"],
           'application_notes': notes,
           'application_status': widget.application['completion_status'],
-          'essay_ids': widget.application['essay_data'].toString(),
-          'transcript_ids': widget.application['transcript_data'].toString(),
-          'misc_doc_ids': widget.application['misc_doc_data'].toString(),
+          'essay_ids': essayList.toString(),
+          'transcript_ids': transcriptList.toString(),
+          'misc_doc_ids': miscList.toString(),
         },
       ),
     );
@@ -1199,18 +1230,171 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
     );
   }
 
+  Widget buildEssayCard(essay) {
+    return Padding(
+      padding: EdgeInsets.only(top: 5, left: 10, right: 10),
+      child: Card(
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(5))),
+        elevation: 2,
+        child: Material(
+          color: Colors.transparent,
+          child: ListTile(
+            dense: true,
+            key: Key(essay['essay_id'].toString()),
+            title: Padding(
+              padding: EdgeInsets.only(top: 5),
+              child: Text(
+                essay['essay_title'],
+                style: TextStyle(color: Colors.black, fontSize: 15),
+              ),
+            ),
+            subtitle: essay['essay_approval_status'] == 'Y'
+                ? Text(
+                    'Complete',
+                    style: TextStyle(
+                        color: Colors.green, fontWeight: FontWeight.w400),
+                  )
+                : essay['essay_approval_status'] == 'N' &&
+                        essay['student_essay_content'] != ''
+                    ? Text(
+                        'In Progress',
+                        style: TextStyle(
+                            color: Colors.orange, fontWeight: FontWeight.w400),
+                      )
+                    : Text(
+                        'Pending',
+                        style: TextStyle(
+                            color: Colors.red, fontWeight: FontWeight.w400),
+                      ),
+            trailing: IconButton(
+              icon: Icon(Icons.close),
+              onPressed: () {},
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    List<Widget> essayCards = [];
+    List<Widget> transcriptCards = [];
+    List<Widget> miscCards = [];
     DateTime deadline =
         DateTime.parse(widget.application["application_deadline"]);
     var timeleft = DateTime.now().isBefore(deadline)
         ? deadline.difference(DateTime.now()).inDays
         : 'Passed';
     Color timecolor =
-        timeleft is int && timeleft < 10 ? Colors.red : Colors.black87;
+        timeleft is int && timeleft < 10 ? Colors.red : Colors.white;
     if (timeleft is int) {
       timeleft = timeleft.toString() + ' days';
     }
+    for (int i = 0; i < widget.application['essay_data'].length; i++) {
+      essayCards.add(buildEssayCard(widget.application['essay_data'][i]));
+    }
+    for (int i = 0; i < widget.application['transcript_data'].length; i++) {
+      // transcriptCards
+      //     .add(widget.application['transcript_data'][i]);
+    }
+    for (int i = 0; i < widget.application['misc_doc_data'].length; i++) {
+      // miscCards.add(widget.application['misc_doc_data'][i]);
+    }
+    Widget cardData(ImageProvider imageProvider, bool isError) => Container(
+          decoration: BoxDecoration(
+            gradient: isError
+                ? LinearGradient(
+                    end: Alignment.topRight,
+                    begin: Alignment.bottomLeft,
+                    colors: [Color(0xff00AEEF), Color(0xff0072BC)])
+                : null,
+            image: imageProvider != null
+                ? DecorationImage(
+                    alignment: Alignment.center,
+                    colorFilter: ColorFilter.mode(
+                        Colors.black.withAlpha(120), BlendMode.darken),
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  )
+                : DecorationImage(
+                    colorFilter: ColorFilter.mode(
+                        Colors.black.withOpacity(0.35), BlendMode.dstIn),
+                    image: NetworkImage(
+                        'https://www.shareicon.net/data/512x512/2016/08/18/814358_school_512x512.png',
+                        scale: 12),
+                  ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(left: 5, top: 5),
+                child: Container(
+                  width: 10,
+                  height: 10,
+                  decoration: BoxDecoration(
+                    color: widget.application['completion_status']
+                        ? Colors.green
+                        : Colors.red,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 5, left: 15),
+                child: Text(
+                  widget.application["university"],
+                  style: TextStyle(
+                      fontSize: 19,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 12, left: 15),
+                child: Text(
+                  'Deadline',
+                  style: TextStyle(
+                      fontSize: 14, color: Colors.white.withOpacity(0.9)),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 1, left: 15),
+                child: Text(
+                  DateFormat.yMMMMd().format(
+                        DateTime.parse(
+                          widget.application["application_deadline"],
+                        ),
+                      ) +
+                      ' ($timeleft)',
+                  style: TextStyle(color: timecolor, fontSize: 15),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 12, left: 15),
+                child: Text(
+                  'Created',
+                  style: TextStyle(
+                      fontSize: 14, color: Colors.white.withOpacity(0.9)),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 1, left: 15, bottom: 16),
+                child: Text(
+                  DateFormat.yMMMMd().format(
+                    DateTime.parse(
+                      widget.application["created_at"],
+                    ),
+                  ),
+                  style: TextStyle(color: Colors.white, fontSize: 15),
+                ),
+              ),
+            ],
+          ),
+        );
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: GradientAppBar(
@@ -1232,62 +1416,21 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
           Padding(
             padding: EdgeInsets.only(left: 12, right: 12, top: 18),
             child: Card(
+              clipBehavior: Clip.antiAlias,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(
                   Radius.circular(10),
                 ),
               ),
               elevation: 6,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(top: 16, left: 15),
-                    child: Text(
-                      widget.application["university"],
-                      style: TextStyle(fontSize: 19, color: Colors.black87),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 12, left: 15),
-                    child: Text(
-                      'Deadline',
-                      style: TextStyle(fontSize: 14, color: Colors.black54),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 1, left: 15),
-                    child: Text(
-                      DateFormat.yMMMMd().format(
-                            DateTime.parse(
-                              widget.application["application_deadline"],
-                            ),
-                          ) +
-                          ' ($timeleft)',
-                      style: TextStyle(
-                          color: timecolor.withOpacity(0.8), fontSize: 15),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 12, left: 15),
-                    child: Text(
-                      'Created',
-                      style: TextStyle(fontSize: 14, color: Colors.black54),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 1, left: 15, bottom: 16),
-                    child: Text(
-                      DateFormat.yMMMMd().format(
-                        DateTime.parse(
-                          widget.application["created_at"],
-                        ),
-                      ),
-                      style: TextStyle(color: Colors.black87, fontSize: 15),
-                    ),
-                  ),
-                ],
-              ),
+              child: CachedNetworkImage(
+                  key: Key(widget.application['application_id'].toString()),
+                  imageUrl: widget.application['image_url'] ??
+                      'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
+                  placeholder: (context, url) => CardPlaceHolder(),
+                  errorWidget: (context, url, error) => cardData(null, true),
+                  imageBuilder: (context, imageProvider) =>
+                      cardData(imageProvider, false)),
             ),
           ),
           Padding(
@@ -1301,6 +1444,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
               ),
               child: ExpansionTile(
                 title: Text('Essays'),
+                children: [...essayCards],
               ),
             ),
           ),
@@ -1382,12 +1526,13 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                               )
                             : saving
                                 ? Padding(
-                                    padding: EdgeInsets.only(right: 17),
+                                    padding:
+                                        EdgeInsets.only(right: 17, top: 4.0),
                                     child: SizedBox(
                                         height: 20,
                                         width: 20,
                                         child: SpinKitThreeBounce(
-                                            color: Colors.black87, size: 10)),
+                                            color: Colors.black87, size: 11)),
                                   )
                                 : savingfailed
                                     ? Padding(
@@ -1403,8 +1548,6 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                   ),
                   Divider(thickness: 0, indent: 25, endIndent: 25),
                   Builder(builder: (context) {
-                    saving = false;
-                    saved = true;
                     return Padding(
                       padding: EdgeInsets.only(
                           top: 5, left: 20, right: 20, bottom: 12),
@@ -1422,7 +1565,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                           hintStyle:
                               TextStyle(color: Colors.black54, fontSize: 14),
                         ),
-                        onChanged: (value) {},
+                        onChanged: (value) => editAppNotes(_appNotes.text),
                       ),
                     );
                   })

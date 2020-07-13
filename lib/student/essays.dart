@@ -127,22 +127,24 @@ class _EssaysScreenState extends State<EssaysScreen> {
   }
 
   Future<void> editEssayDetails(essay, String title, String prompt) async {
-    final response = await http
-        .put(dom + 'api/student/edit-essay',
-            headers: {
-              HttpHeaders.authorizationHeader: "Token $tok",
-              'Content-Type': 'application/json; charset=UTF-8',
-            },
-            body: jsonEncode(<String, dynamic>{
-              'essay_id': essay['essay_id'],
-              'essay_title': title,
-              'essay_prompt': prompt,
-              'student_essay_content': essay['student_essay_content'],
-              'counselor_essay_content': essay['counselor_essay_content'],
-              'counselor_comments': essay['counselor_comments'],
-              'approval': essay['essay_approval_status']
-            }))
-        .timeout(Duration(seconds: 10));
+    final response = await http.put(
+      dom + 'api/student/edit-essay',
+      headers: {
+        HttpHeaders.authorizationHeader: "Token $tok",
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, dynamic>{
+          'essay_id': essay['essay_id'],
+          'essay_title': title,
+          'essay_prompt': prompt,
+          'student_essay_content': essay['student_essay_content'],
+          'counselor_essay_content': essay['counselor_essay_content'],
+          'counselor_comments': essay['counselor_comments'],
+          'approval': essay['essay_approval_status']
+        },
+      ),
+    );
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       if (data['Response'] == 'Essay successfully edited.') {

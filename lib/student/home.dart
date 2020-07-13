@@ -265,10 +265,7 @@ class HomeAppBarState extends State<HomeAppBar> {
   @override
   Widget build(BuildContext context) {
     return GradientAppBar(
-      title: Container(
-        margin: EdgeInsets.only(left: 0, top: 3, bottom: 3),
-        child: Image.asset('images/gennextlonglogo-4.png'),
-      ),
+      title: Text('Home'),
       gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
