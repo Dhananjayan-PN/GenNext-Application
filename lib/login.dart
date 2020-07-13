@@ -312,7 +312,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 1.3),
                           child: Text(
-                            'Are you future-ready ?  ',
+                            'Are you future-ready ?',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 19,
