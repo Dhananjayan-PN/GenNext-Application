@@ -390,13 +390,14 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                         final _date = await showDatePicker(
                             context: context,
                             firstDate: DateTime(1900),
-                            initialDate: currentValue ?? _selectedDay,
+                            initialDate:
+                                currentValue ?? _selectedDay ?? DateTime.now(),
                             lastDate: DateTime(2150));
                         if (_date != null) {
                           final _time = await showTimePicker(
                             context: context,
                             initialTime: TimeOfDay.fromDateTime(
-                                currentValue ?? _selectedDay),
+                                currentValue ?? _selectedDay ?? DateTime.now()),
                           );
                           return DateTimeField.combine(_date, _time);
                         } else {
@@ -849,7 +850,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
       drawer: NavDrawer(
           name: newUser.firstname + ' ' + newUser.lastname,
           email: newUser.email),
-      appBar: CustomAppBar('Calendar'),
+      appBar: CustomAppBar('Schedule'),
       body: FutureBuilder(
         future: sessions.timeout(Duration(seconds: 10)),
         builder: (context, snapshot) {

@@ -439,12 +439,14 @@ class _EssaysScreenState extends State<EssaysScreen> {
                       ),
                       onTap: () async {
                         String studentString = essay['student_essay_content'] ==
-                                ''
+                                    '' ||
+                                essay['student_essay_content'] == null
                             ? '[{\"attributes\":{\"align\":\"justify\"},\"insert\":\"\\n\"},{\"insert\":\"\\n\"}]'
                             : essay['student_essay_content'];
                         String counselorString = essay[
-                                    'counselor_essay_content'] ==
-                                ''
+                                        'counselor_essay_content'] ==
+                                    '' ||
+                                essay['counselor_essay_content'] == null
                             ? '[{\"attributes\":{\"align\":\"justify\"},\"insert\":\"\\n\"},{\"insert\":\"\\n\"}]'
                             : essay['counselor_essay_content'];
                         final editedEssayContent = await Navigator.push(
