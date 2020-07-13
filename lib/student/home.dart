@@ -32,9 +32,9 @@ final navlistelements = [
   ['Explore Universities', AllUniversitiesScreen(), Icons.explore],
   ['My Profile', ProfileScreen(), Icons.account_box],
   ['My Universities', MyUniversitiesScreen(), Icons.account_balance],
-  ['My Documents', DocumentsScreen(), Icons.description],
   ['My Applications', ApplicationsScreen(), Icons.assignment],
   ['My Essays', EssaysScreen(), Icons.edit],
+  ['My Documents', DocumentsScreen(), Icons.description],
 ];
 
 class NavDrawer extends StatelessWidget {
