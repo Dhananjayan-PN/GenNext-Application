@@ -288,41 +288,24 @@ class _LoginPageState extends State<LoginPage> {
         child: Scaffold(
           key: _scafKey,
           body: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                  colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
-            ),
+            color: Colors.white,
             child: ListView(
               children: <Widget>[
                 Padding(
                   padding:
-                      EdgeInsets.only(top: 70, right: 90, left: 0, bottom: 0),
+                      EdgeInsets.only(top: 60, right: 100, left: 0, bottom: 0),
                   child: Transform.scale(
-                    scale: 1.2,
+                    scale: 1,
                     child: Container(
                       alignment: Alignment.centerLeft,
                       height: 45,
                       width: MediaQuery.of(context).size.width,
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [Color(0xff2fbdf5), Color(0xff0062be)]),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.cyan[900],
-                            blurRadius: 8.0,
-                            spreadRadius: 0.1,
-                            offset: Offset(
-                              5.0,
-                              5.0,
-                            ),
-                          ),
-                        ],
-                        color: Color(0xff36d1dc),
-                        borderRadius: BorderRadius.circular(25),
+                        boxShadow: [...kElevationToShadow[8]],
+                        color: Color(0xff0072BC),
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(20),
+                            bottomRight: Radius.circular(20)),
                       ),
                       child: Align(
                         alignment: Alignment.center,
@@ -343,33 +326,13 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 28.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(top: 00, left: 5),
-                        child: RotatedBox(
-                            quarterTurns: -1,
-                            child: Text(
-                              'Sign In',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 45,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            )),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 0, left: 0),
-                        child: Image.asset(
-                          'images/CollegeGenieLogo-2.png',
-                          height: 150,
-                          width: 280,
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                    ],
+                  padding: EdgeInsets.only(top: 40, right: 20, left: 8),
+                  child: Image.asset(
+                    'images/CollegeGenieLogo-2.png',
+                    height: 175,
+                    width: 200,
+                    fit: BoxFit.contain,
+                    colorBlendMode: BlendMode.darken,
                   ),
                 ),
                 Form(
@@ -377,10 +340,10 @@ class _LoginPageState extends State<LoginPage> {
                   child: Column(
                     children: <Widget>[
                       Padding(
-                        padding: EdgeInsets.only(top: 35, left: 30, right: 50),
+                        padding: EdgeInsets.only(top: 35, left: 35, right: 50),
                         child: Theme(
                           data: Theme.of(context).copyWith(
-                            primaryColor: Colors.blue[900],
+                            primaryColor: Color(0xff0072BC),
                           ),
                           child: TextFormField(
                             key: ValueKey('Username'),
@@ -392,23 +355,23 @@ class _LoginPageState extends State<LoginPage> {
                             },
                             onSaved: (value) => _username = value,
                             style: TextStyle(
-                              color: Colors.white,
+                              color: Colors.black,
                             ),
                             decoration: InputDecoration(
                               icon: Icon(Icons.person),
                               labelText: 'Username',
                               labelStyle: TextStyle(
-                                color: Colors.white,
+                                color: Colors.black54,
                               ),
                             ),
                           ),
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 20, left: 30, right: 50),
+                        padding: EdgeInsets.only(top: 20, left: 35, right: 50),
                         child: Theme(
                           data: Theme.of(context).copyWith(
-                            primaryColor: Colors.blue[900],
+                            primaryColor: Color(0xff0072BC),
                           ),
                           child: TextFormField(
                             key: ValueKey('Password'),
@@ -420,14 +383,14 @@ class _LoginPageState extends State<LoginPage> {
                             },
                             onSaved: (value) => _password = value,
                             style: TextStyle(
-                              color: Colors.white,
+                              color: Colors.black,
                             ),
                             obscureText: true,
                             decoration: InputDecoration(
                               icon: Icon(Icons.vpn_key),
                               labelText: 'Password',
                               labelStyle: TextStyle(
-                                color: Colors.white,
+                                color: Colors.black54,
                               ),
                             ),
                           ),
@@ -444,18 +407,8 @@ class _LoginPageState extends State<LoginPage> {
                       height: 40,
                       width: 100,
                       decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.cyan[900],
-                            blurRadius: 10.0,
-                            spreadRadius: 1.0,
-                            offset: Offset(
-                              5.0,
-                              5.0,
-                            ),
-                          ),
-                        ],
-                        color: Colors.white,
+                        boxShadow: [...kElevationToShadow[8]],
+                        color: Color(0xff0072BC),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: FlatButton(
@@ -470,7 +423,7 @@ class _LoginPageState extends State<LoginPage> {
                               'Sign In',
                               key: ValueKey('button'),
                               style: TextStyle(
-                                color: Color(0xff00AEEF),
+                                color: Colors.white,
                                 fontSize: 19,
                                 fontWeight: FontWeight.w400,
                               ),
@@ -483,17 +436,18 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 30, left: 55, right: 55),
+                  padding: EdgeInsets.only(top: 35, left: 55, right: 55),
                   child: Container(
                     alignment: Alignment.topRight,
                     height: 25,
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
                           'Your first time here? ',
                           style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white70,
+                            fontSize: 17,
+                            color: Colors.black54,
                           ),
                         ),
                         Material(
@@ -511,8 +465,8 @@ class _LoginPageState extends State<LoginPage> {
                             child: Text(
                               'Register',
                               style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.white,
+                                fontSize: 17,
+                                color: Color(0xff0072BC),
                               ),
                               textAlign: TextAlign.left,
                             ),
