@@ -442,9 +442,8 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
     var timeleft = DateTime.now().isBefore(deadline)
         ? deadline.difference(DateTime.now()).inDays
         : 'Passed';
-    Color timecolor = timeleft is int && timeleft < 10
-        ? Colors.red
-        : Colors.white.withOpacity(0.9);
+    Color timecolor =
+        timeleft is int && timeleft < 10 ? Colors.red : Colors.white;
     if (timeleft is int) {
       timeleft = timeleft.toString() + ' days';
     }
@@ -460,7 +459,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                 ? DecorationImage(
                     alignment: Alignment.center,
                     colorFilter: ColorFilter.mode(
-                        Colors.black.withAlpha(150), BlendMode.darken),
+                        Colors.black.withAlpha(130), BlendMode.darken),
                     image: imageProvider,
                     fit: BoxFit.cover,
                   )
@@ -508,7 +507,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                               'Pending',
                               style: TextStyle(
                                 color: Colors.red,
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w600,
                                 fontSize: 13.5,
                               ),
                             )
@@ -1355,15 +1354,15 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
               ),
             ),
             subtitle: Padding(
-              padding: EdgeInsets.only(top: 1, bottom: 5),
+              padding: EdgeInsets.only(bottom: 5),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(document['misc_doc_type'],
-                      style: TextStyle(color: Colors.black)),
+                      style: TextStyle(color: Colors.black54)),
                   document['in_progress']
                       ? Padding(
-                          padding: EdgeInsets.only(top: 3),
+                          padding: EdgeInsets.only(top: 2),
                           child: Text(
                             'Complete',
                             style: TextStyle(
@@ -1372,7 +1371,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                           ),
                         )
                       : Padding(
-                          padding: EdgeInsets.only(top: 3),
+                          padding: EdgeInsets.only(top: 2),
                           child: Text(
                             'Pending',
                             style: TextStyle(
@@ -1489,7 +1488,11 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                         ),
                       ) +
                       ' ($timeleft)',
-                  style: TextStyle(color: timecolor, fontSize: 15),
+                  style: TextStyle(
+                      color: timecolor,
+                      fontSize: 15,
+                      fontWeight:
+                          timecolor == Colors.red ? FontWeight.w600 : null),
                 ),
               ),
               Padding(
@@ -1562,7 +1565,22 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                 ),
               ),
               child: ExpansionTile(
-                title: Text('Essays'),
+                title: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text('Essays'),
+                    Padding(
+                      padding: EdgeInsets.only(left: 3),
+                      child: InkWell(
+                          child: Icon(
+                            Icons.add,
+                            size: 20,
+                            color: Colors.blue,
+                          ),
+                          onTap: () {}),
+                    )
+                  ],
+                ),
                 children: essayCards.isNotEmpty
                     ? essayCards
                     : [
@@ -1589,7 +1607,22 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
               ),
               elevation: 6,
               child: ExpansionTile(
-                title: Text('Transcripts'),
+                title: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text('Transcripts'),
+                    Padding(
+                      padding: EdgeInsets.only(left: 3),
+                      child: InkWell(
+                          child: Icon(
+                            Icons.add,
+                            size: 20,
+                            color: Colors.blue,
+                          ),
+                          onTap: () {}),
+                    )
+                  ],
+                ),
                 children: transcriptCards.isNotEmpty
                     ? transcriptCards
                     : [
@@ -1616,7 +1649,22 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                 ),
               ),
               child: ExpansionTile(
-                title: Text('Misc Documents'),
+                title: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text('Misc Documents'),
+                    Padding(
+                      padding: EdgeInsets.only(left: 3),
+                      child: InkWell(
+                          child: Icon(
+                            Icons.add,
+                            size: 20,
+                            color: Colors.blue,
+                          ),
+                          onTap: () {}),
+                    )
+                  ],
+                ),
                 children: miscCards.isNotEmpty
                     ? miscCards
                     : [
