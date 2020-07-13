@@ -363,9 +363,9 @@ class _LoginPageState extends State<LoginPage> {
                       Padding(
                         padding: EdgeInsets.only(top: 0, left: 0),
                         child: Image.asset(
-                          'images/gennextlonglogo-4.png',
-                          height: 110,
-                          width: 290,
+                          'images/CollegeGenieLogo-2.png',
+                          height: 150,
+                          width: 280,
                           fit: BoxFit.fill,
                         ),
                       ),
