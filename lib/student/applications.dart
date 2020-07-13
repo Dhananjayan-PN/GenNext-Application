@@ -1232,10 +1232,18 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
 
   Widget buildEssayCard(essay) {
     return Padding(
-      padding: EdgeInsets.only(top: 5, left: 10, right: 10),
+      padding: EdgeInsets.only(top: 5, left: 15, right: 15, bottom: 8),
       child: Card(
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
+            side: BorderSide(
+                color: essay['essay_approval_status'] == 'Y'
+                    ? Colors.green
+                    : essay['essay_approval_status'] == 'N' &&
+                            essay['student_essay_content'] != ''
+                        ? Colors.orange
+                        : Colors.red,
+                width: 0.8),
             borderRadius: BorderRadius.all(Radius.circular(5))),
         elevation: 2,
         child: Material(
@@ -1278,6 +1286,112 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
     );
   }
 
+  Widget buildTranscriptCard(transcript) {
+    return Padding(
+      padding: EdgeInsets.only(top: 5, left: 15, right: 15, bottom: 8),
+      child: Card(
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+            side: BorderSide(
+                color: transcript['in_progress'] ? Colors.green : Colors.red,
+                width: 0.8),
+            borderRadius: BorderRadius.all(Radius.circular(5))),
+        elevation: 2,
+        child: Material(
+          color: Colors.transparent,
+          child: ListTile(
+            dense: true,
+            key: Key(transcript['transcript_id'].toString()),
+            title: Padding(
+              padding: EdgeInsets.only(top: 5),
+              child: Text(
+                transcript['title'],
+                style: TextStyle(color: Colors.black, fontSize: 15),
+              ),
+            ),
+            subtitle: transcript['in_progress']
+                ? Text(
+                    'Complete',
+                    style: TextStyle(
+                        color: Colors.green, fontWeight: FontWeight.w400),
+                  )
+                : Text(
+                    'Pending',
+                    style: TextStyle(
+                        color: Colors.red, fontWeight: FontWeight.w400),
+                  ),
+            trailing: IconButton(
+              icon: Icon(Icons.close),
+              onPressed: () {},
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildMiscCard(document) {
+    return Padding(
+      padding: EdgeInsets.only(top: 5, left: 15, right: 15, bottom: 8),
+      child: Card(
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+            side: BorderSide(
+                color: document['in_progress'] ? Colors.green : Colors.red,
+                width: 0.8),
+            borderRadius: BorderRadius.all(Radius.circular(5))),
+        elevation: 2,
+        child: Material(
+          color: Colors.transparent,
+          child: ListTile(
+            isThreeLine: true,
+            dense: true,
+            key: Key(document['misc_doc_id'].toString()),
+            title: Padding(
+              padding: EdgeInsets.only(top: 5),
+              child: Text(
+                document['title'],
+                style: TextStyle(color: Colors.black, fontSize: 15),
+              ),
+            ),
+            subtitle: Padding(
+              padding: EdgeInsets.only(top: 1, bottom: 5),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(document['misc_doc_type'],
+                      style: TextStyle(color: Colors.black)),
+                  document['in_progress']
+                      ? Padding(
+                          padding: EdgeInsets.only(top: 3),
+                          child: Text(
+                            'Complete',
+                            style: TextStyle(
+                                color: Colors.green,
+                                fontWeight: FontWeight.w400),
+                          ),
+                        )
+                      : Padding(
+                          padding: EdgeInsets.only(top: 3),
+                          child: Text(
+                            'Pending',
+                            style: TextStyle(
+                                color: Colors.red, fontWeight: FontWeight.w400),
+                          ),
+                        ),
+                ],
+              ),
+            ),
+            trailing: IconButton(
+              icon: Icon(Icons.close),
+              onPressed: () {},
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Widget> essayCards = [];
@@ -1297,11 +1411,11 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
       essayCards.add(buildEssayCard(widget.application['essay_data'][i]));
     }
     for (int i = 0; i < widget.application['transcript_data'].length; i++) {
-      // transcriptCards
-      //     .add(widget.application['transcript_data'][i]);
+      transcriptCards
+          .add(buildTranscriptCard(widget.application['transcript_data'][i]));
     }
     for (int i = 0; i < widget.application['misc_doc_data'].length; i++) {
-      // miscCards.add(widget.application['misc_doc_data'][i]);
+      miscCards.add(buildMiscCard(widget.application['misc_doc_data'][i]));
     }
     Widget cardData(ImageProvider imageProvider, bool isError) => Container(
           decoration: BoxDecoration(
@@ -1330,21 +1444,26 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(left: 5, top: 5),
-                child: Container(
-                  width: 10,
-                  height: 10,
-                  decoration: BoxDecoration(
-                    color: widget.application['completion_status']
-                        ? Colors.green
-                        : Colors.red,
-                    shape: BoxShape.circle,
+              Row(
+                children: <Widget>[
+                  Spacer(),
+                  Padding(
+                    padding: EdgeInsets.only(right: 5, top: 5),
+                    child: Container(
+                      width: 10,
+                      height: 10,
+                      decoration: BoxDecoration(
+                        color: widget.application['completion_status']
+                            ? Colors.green
+                            : Colors.red,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
               Padding(
-                padding: EdgeInsets.only(top: 5, left: 15),
+                padding: EdgeInsets.only(left: 15),
                 child: Text(
                   widget.application["university"],
                   style: TextStyle(
@@ -1444,7 +1563,19 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
               ),
               child: ExpansionTile(
                 title: Text('Essays'),
-                children: [...essayCards],
+                children: essayCards.isNotEmpty
+                    ? essayCards
+                    : [
+                        Padding(
+                          padding: EdgeInsets.only(
+                              left: 20, right: 20, top: 5, bottom: 15),
+                          child: Text(
+                            'No essays attached to this application.',
+                            style: TextStyle(fontSize: 11),
+                            textAlign: TextAlign.center,
+                          ),
+                        )
+                      ],
               ),
             ),
           ),
@@ -1459,6 +1590,19 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
               elevation: 6,
               child: ExpansionTile(
                 title: Text('Transcripts'),
+                children: transcriptCards.isNotEmpty
+                    ? transcriptCards
+                    : [
+                        Padding(
+                          padding: EdgeInsets.only(
+                              left: 20, right: 20, top: 5, bottom: 15),
+                          child: Text(
+                            'No transcripts attached to this application.',
+                            style: TextStyle(fontSize: 11),
+                            textAlign: TextAlign.center,
+                          ),
+                        )
+                      ],
               ),
             ),
           ),
@@ -1473,6 +1617,19 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
               ),
               child: ExpansionTile(
                 title: Text('Misc Documents'),
+                children: miscCards.isNotEmpty
+                    ? miscCards
+                    : [
+                        Padding(
+                          padding: EdgeInsets.only(
+                              left: 20, right: 20, top: 5, bottom: 15),
+                          child: Text(
+                            'No misc documents attached to this application.',
+                            style: TextStyle(fontSize: 11),
+                            textAlign: TextAlign.center,
+                          ),
+                        )
+                      ],
               ),
             ),
           ),
