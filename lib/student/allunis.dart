@@ -499,8 +499,8 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
                   ),
                 ],
               ),
-              onTap: () {
-                Navigator.push(
+              onTap: () async {
+                final data = await Navigator.push(
                   context,
                   PageTransition(
                       type: PageTransitionType.fade,
@@ -508,6 +508,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
                         university: unis[index],
                       )),
                 );
+                refresh();
               },
             ),
           ),

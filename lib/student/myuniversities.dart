@@ -687,8 +687,8 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                   ),
                 ],
               ),
-              onTap: () {
-                Navigator.push(
+              onTap: () async {
+                final data = await Navigator.push(
                   context,
                   PageTransition(
                       type: PageTransitionType.fade,
@@ -696,6 +696,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                         university: unis[index],
                       )),
                 );
+                refresh();
               },
             ),
           ),
@@ -794,13 +795,14 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                   ),
                 ],
               ),
-              onTap: () {
-                Navigator.push(
+              onTap: () async {
+                final data = await Navigator.push(
                   context,
                   PageTransition(
                       type: PageTransitionType.fade,
                       child: UniversityPage(university: uni)),
                 );
+                refresh();
               },
             ),
           ),
