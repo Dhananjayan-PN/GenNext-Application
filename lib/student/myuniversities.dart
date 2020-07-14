@@ -681,7 +681,13 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                               color: Colors.blue,
                             ),
                       onTap: () {
-                        removeFromList(uni['university_id'], uni['category']);
+                        uni['in_college_list']
+                            ? removeFromList(
+                                uni['university_id'], uni['category'])
+                            : starred != null
+                                ? addToListFF(uni['university_id'],
+                                    uni['university_name'])
+                                : null;
                       },
                     ),
                   ),
