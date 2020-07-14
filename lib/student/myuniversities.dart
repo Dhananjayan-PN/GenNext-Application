@@ -10,7 +10,7 @@ import 'package:checklist/checklist.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import '../universitypage.dart';
+import 'universitypage.dart';
 import '../shimmer_skeleton.dart';
 import 'home.dart';
 
@@ -691,7 +691,10 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                 Navigator.push(
                   context,
                   PageTransition(
-                      type: PageTransitionType.fade, child: UniversityPage()),
+                      type: PageTransitionType.fade,
+                      child: UniversityPage(
+                        university: unis[index],
+                      )),
                 );
               },
             ),
@@ -795,7 +798,8 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                 Navigator.push(
                   context,
                   PageTransition(
-                      type: PageTransitionType.fade, child: UniversityPage()),
+                      type: PageTransitionType.fade,
+                      child: UniversityPage(university: uni)),
                 );
               },
             ),

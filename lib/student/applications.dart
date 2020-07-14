@@ -459,7 +459,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                 ? DecorationImage(
                     alignment: Alignment.center,
                     colorFilter: ColorFilter.mode(
-                        Colors.black.withAlpha(130), BlendMode.darken),
+                        Colors.black.withAlpha(120), BlendMode.darken),
                     image: imageProvider,
                     fit: BoxFit.cover,
                   )
@@ -494,7 +494,12 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                         'Due: ' +
                             DateFormat.yMMMMd('en_US').format(deadline) +
                             ' ($timeleft)',
-                        style: TextStyle(fontSize: 13.5, color: timecolor),
+                        style: TextStyle(
+                            fontSize: 13.5,
+                            color: timecolor,
+                            fontWeight: timecolor == Colors.red
+                                ? FontWeight.w600
+                                : null),
                       ),
                       application["completion_status"]
                           ? Text('Completed',
@@ -562,7 +567,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                   final bool data = await Navigator.push(
                     context,
                     PageTransition(
-                        type: PageTransitionType.fade,
+                        type: PageTransitionType.rightToLeftWithFade,
                         child: SingleAppScreen(
                           application: application,
                         )),
@@ -571,27 +576,30 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                 }),
           ),
         );
-    return Padding(
-      padding: EdgeInsets.only(top: 5, left: 10, right: 10),
-      child: Material(
-        shadowColor: Colors.grey.withOpacity(0.5),
-        color: Colors.transparent,
-        elevation: 8,
-        child: Card(
-          clipBehavior: Clip.antiAlias,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10))),
-          elevation: 0,
-          child: CachedNetworkImage(
-            imageUrl: application['image_url'] ??
-                'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
-            placeholder: (context, url) => CardSkeleton(
-              padding: 0,
-              isBottomLinesActive: false,
+    return Hero(
+      tag: application['application_id'].toString(),
+      child: Padding(
+        padding: EdgeInsets.only(top: 5, left: 10, right: 10),
+        child: Material(
+          shadowColor: Colors.grey.withOpacity(0.5),
+          color: Colors.transparent,
+          elevation: 8,
+          child: Card(
+            clipBehavior: Clip.antiAlias,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10))),
+            elevation: 0,
+            child: CachedNetworkImage(
+              imageUrl: application['image_url'] ??
+                  'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
+              placeholder: (context, url) => CardSkeleton(
+                padding: 0,
+                isBottomLinesActive: false,
+              ),
+              errorWidget: (context, url, error) => cardData(null, true),
+              imageBuilder: (context, imageProvider) =>
+                  cardData(imageProvider, false),
             ),
-            errorWidget: (context, url, error) => cardData(null, true),
-            imageBuilder: (context, imageProvider) =>
-                cardData(imageProvider, false),
           ),
         ),
       ),
@@ -1440,81 +1448,83 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                         scale: 12),
                   ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Spacer(),
-                  Padding(
-                    padding: EdgeInsets.only(right: 5, top: 5),
-                    child: Container(
-                      width: 10,
-                      height: 10,
-                      decoration: BoxDecoration(
-                        color: widget.application['completion_status']
-                            ? Colors.green
-                            : Colors.red,
-                        shape: BoxShape.circle,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Spacer(),
+                    Padding(
+                      padding: EdgeInsets.only(right: 5, top: 5),
+                      child: Container(
+                        width: 10,
+                        height: 10,
+                        decoration: BoxDecoration(
+                          color: widget.application['completion_status']
+                              ? Colors.green
+                              : Colors.red,
+                          shape: BoxShape.circle,
+                        ),
                       ),
                     ),
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 15),
+                  child: Text(
+                    widget.application["university"],
+                    style: TextStyle(
+                        fontSize: 19,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500),
                   ),
-                ],
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 15),
-                child: Text(
-                  widget.application["university"],
-                  style: TextStyle(
-                      fontSize: 19,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 12, left: 15),
-                child: Text(
-                  'Deadline',
-                  style: TextStyle(
-                      fontSize: 14, color: Colors.white.withOpacity(0.9)),
+                Padding(
+                  padding: EdgeInsets.only(top: 12, left: 15),
+                  child: Text(
+                    'Deadline',
+                    style: TextStyle(
+                        fontSize: 14, color: Colors.white.withOpacity(0.9)),
+                  ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 1, left: 15),
-                child: Text(
-                  DateFormat.yMMMMd().format(
-                        DateTime.parse(
-                          widget.application["application_deadline"],
-                        ),
-                      ) +
-                      ' ($timeleft)',
-                  style: TextStyle(
-                      color: timecolor,
-                      fontSize: 15,
-                      fontWeight:
-                          timecolor == Colors.red ? FontWeight.w600 : null),
+                Padding(
+                  padding: EdgeInsets.only(top: 1, left: 15),
+                  child: Text(
+                    DateFormat.yMMMMd().format(
+                          DateTime.parse(
+                            widget.application["application_deadline"],
+                          ),
+                        ) +
+                        ' ($timeleft)',
+                    style: TextStyle(
+                        color: timecolor,
+                        fontSize: 15,
+                        fontWeight:
+                            timecolor == Colors.red ? FontWeight.w600 : null),
+                  ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 12, left: 15),
-                child: Text(
-                  'Created',
-                  style: TextStyle(
-                      fontSize: 14, color: Colors.white.withOpacity(0.9)),
+                Padding(
+                  padding: EdgeInsets.only(top: 12, left: 15),
+                  child: Text(
+                    'Created',
+                    style: TextStyle(
+                        fontSize: 14, color: Colors.white.withOpacity(0.9)),
+                  ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 1, left: 15, bottom: 16),
-                child: Text(
-                  DateFormat.yMMMMd().format(
-                    DateTime.parse(
-                      widget.application["created_at"],
+                Padding(
+                  padding: EdgeInsets.only(top: 1, left: 15, bottom: 16),
+                  child: Text(
+                    DateFormat.yMMMMd().format(
+                      DateTime.parse(
+                        widget.application["created_at"],
+                      ),
                     ),
+                    style: TextStyle(color: Colors.white, fontSize: 15),
                   ),
-                  style: TextStyle(color: Colors.white, fontSize: 15),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
     return Scaffold(
@@ -1535,24 +1545,33 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
       ),
       body: ListView(
         children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(left: 12, right: 12, top: 18),
-            child: Card(
-              clipBehavior: Clip.antiAlias,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(10),
+          Hero(
+            tag: widget.application['application_id'].toString(),
+            child: Padding(
+              padding: EdgeInsets.only(left: 12, right: 12, top: 18),
+              child: Material(
+                type: MaterialType.transparency,
+                shadowColor: Colors.grey.withOpacity(0.5),
+                color: Colors.transparent,
+                child: Card(
+                  clipBehavior: Clip.antiAlias,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                  ),
+                  elevation: 6,
+                  child: CachedNetworkImage(
+                      key: Key(widget.application['application_id'].toString()),
+                      imageUrl: widget.application['image_url'] ??
+                          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
+                      placeholder: (context, url) => CardPlaceHolder(),
+                      errorWidget: (context, url, error) =>
+                          cardData(null, true),
+                      imageBuilder: (context, imageProvider) =>
+                          cardData(imageProvider, false)),
                 ),
               ),
-              elevation: 6,
-              child: CachedNetworkImage(
-                  key: Key(widget.application['application_id'].toString()),
-                  imageUrl: widget.application['image_url'] ??
-                      'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
-                  placeholder: (context, url) => CardPlaceHolder(),
-                  errorWidget: (context, url, error) => cardData(null, true),
-                  imageBuilder: (context, imageProvider) =>
-                      cardData(imageProvider, false)),
             ),
           ),
           Padding(

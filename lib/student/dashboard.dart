@@ -13,7 +13,7 @@ import 'dart:async';
 import 'dart:convert';
 import '../usermodel.dart';
 import '../shimmer_skeleton.dart';
-import '../universitypage.dart';
+import 'universitypage.dart';
 import 'dart:io';
 import 'home.dart';
 
@@ -105,11 +105,12 @@ class _DashBoardState extends State<DashBoard> {
         });
         throw ('error');
       } else {
+        String notes = json.decode(response.body)['notes'];
         setState(() {
           saving = false;
           saved = true;
+          studentnotes.text = notes;
         });
-        String notes = json.decode(response.body)['notes'];
         return notes;
       }
     } else {
@@ -360,7 +361,7 @@ class _DashBoardState extends State<DashBoard> {
                                   ? DecorationImage(
                                       alignment: Alignment.center,
                                       colorFilter: ColorFilter.mode(
-                                          Colors.black.withAlpha(140),
+                                          Colors.black.withAlpha(100),
                                           BlendMode.darken),
                                       image: imageProvider,
                                       fit: BoxFit.cover,
@@ -380,7 +381,8 @@ class _DashBoardState extends State<DashBoard> {
                                     context,
                                     PageTransition(
                                         type: PageTransitionType.fade,
-                                        child: UniversityPage()),
+                                        child: UniversityPage(
+                                            university: snapshot.data[index])),
                                   );
                                 },
                                 child: Column(
@@ -428,7 +430,9 @@ class _DashBoardState extends State<DashBoard> {
                                       child: Text(
                                         snapshot.data[index]['university_name'],
                                         style: TextStyle(
-                                            color: Colors.white, fontSize: 18),
+                                            color: Colors.white,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w500),
                                       ),
                                     ),
                                     Padding(
@@ -439,7 +443,8 @@ class _DashBoardState extends State<DashBoard> {
                                             ['university_location'],
                                         style: TextStyle(
                                             fontWeight: FontWeight.w400,
-                                            color: Colors.white70,
+                                            color:
+                                                Colors.white.withOpacity(0.9),
                                             fontSize: 16),
                                       ),
                                     ),
