@@ -45,6 +45,9 @@ flutter:
   assets:
     - images/
   fonts:
+    - family: maticons
+      fonts:
+        - asset: fonts/maticon.ttf
     - family: Roboto
       fonts:
         - asset: fonts/Roboto-Regular.ttf

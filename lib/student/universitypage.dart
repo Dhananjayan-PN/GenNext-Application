@@ -20,6 +20,9 @@ class UniversityPage extends StatefulWidget {
 
 class _UniversityPageState extends State<UniversityPage> {
   GlobalKey<ScaffoldState> _scafKey = GlobalKey<ScaffoldState>();
+  List<Widget> standOutFactors = [];
+  String educationString = '';
+  bool descShowFull = false;
   bool isStarred;
   bool inList;
 
@@ -331,15 +334,35 @@ class _UniversityPageState extends State<UniversityPage> {
 
   @override
   Widget build(BuildContext context) {
+    standOutFactors = [];
+    educationString = '';
+    for (int i = 0; i < widget.university['stand_out_factors'].length; i++) {
+      standOutFactors.add(
+        Chip(
+          backgroundColor: Colors.white12,
+          shape:
+              StadiumBorder(side: BorderSide(color: Colors.blue, width: 0.0)),
+          label: Text(widget.university['stand_out_factors'][i]),
+          elevation: 1,
+        ),
+      );
+    }
+    for (int i = 0; i < widget.university['degree_levels'].length; i++) {
+      if (i == 0) {
+        educationString += '${widget.university['degree_levels'][i]}';
+      } else {
+        educationString += ', ${widget.university['degree_levels'][i]}';
+      }
+    }
     return Scaffold(
       key: _scafKey,
       backgroundColor: Colors.white,
       body: CustomScrollView(
+        shrinkWrap: false,
         slivers: <Widget>[
           SliverAppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
-            floating: true,
             expandedHeight: 300,
             flexibleSpace: Hero(
               tag: widget.starred != null
@@ -435,6 +458,7 @@ class _UniversityPageState extends State<UniversityPage> {
             ),
           ),
           SliverFillRemaining(
+            hasScrollBody: false,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -500,7 +524,7 @@ class _UniversityPageState extends State<UniversityPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.only(left: 15, top: 3),
+                      padding: EdgeInsets.only(left: 18, top: 5),
                       child: Icon(
                         Icons.location_on,
                         color: Colors.black54,
@@ -508,7 +532,7 @@ class _UniversityPageState extends State<UniversityPage> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 6, top: 3),
+                      padding: EdgeInsets.only(left: 6, top: 4),
                       child: Text(
                         widget.university['university_location'],
                         style: TextStyle(color: Colors.black54, fontSize: 15),
@@ -521,7 +545,7 @@ class _UniversityPageState extends State<UniversityPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.only(left: 15, top: 3),
+                      padding: EdgeInsets.only(left: 18, top: 4),
                       child: Icon(
                         Icons.show_chart,
                         color: Colors.black54,
@@ -529,10 +553,7 @@ class _UniversityPageState extends State<UniversityPage> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(
-                        left: 6,
-                        top: 3,
-                      ),
+                      padding: EdgeInsets.only(left: 6, top: 4),
                       child: Text(
                         widget.university['usnews_ranking'].toString(),
                         style: TextStyle(color: Colors.black54, fontSize: 15),
@@ -555,6 +576,130 @@ class _UniversityPageState extends State<UniversityPage> {
                       style: TextStyle(color: Colors.black54, fontSize: 13),
                     )
                   ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(left: 18, top: 5),
+                      child: Icon(
+                        widget.university['research_or_not']
+                            ? IconData(0xF0093, fontFamily: 'maticons')
+                            : IconData(0xF13F4, fontFamily: 'maticons'),
+                        color: Colors.black54,
+                        size: 22,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 6, top: 5),
+                      child: widget.university['research_or_not']
+                          ? Text(
+                              'Research Intensive',
+                              style: TextStyle(
+                                  color: Colors.black54, fontSize: 15),
+                            )
+                          : Text(
+                              'No Research',
+                              style: TextStyle(
+                                  color: Colors.black54, fontSize: 15),
+                            ),
+                    ),
+                  ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(left: 18, top: 6),
+                      child: Icon(
+                        Icons.school,
+                        color: Colors.black54,
+                        size: 22,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 6, top: 7),
+                      child: Text(
+                        educationString,
+                        style: TextStyle(color: Colors.black54, fontSize: 15),
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 16, top: 15, right: 16),
+                  child: Wrap(
+                    spacing: 8,
+                    direction: Axis.horizontal,
+                    children: standOutFactors,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 15, left: 18),
+                  child: Text(
+                    'About',
+                    style: TextStyle(color: Colors.black87, fontSize: 20),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 2, left: 18, right: 18),
+                  child: Text(
+                    widget.university['university_description'] ?? '',
+                    maxLines: descShowFull ? 1000 : 10,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        color: Colors.black.withOpacity(0.7), fontSize: 15),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 18, right: 25),
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        descShowFull = !descShowFull;
+                      });
+                    },
+                    child: Row(
+                      children: <Widget>[
+                        descShowFull
+                            ? Text(
+                                "Less",
+                                style: TextStyle(color: Colors.blue),
+                              )
+                            : Text("More", style: TextStyle(color: Colors.blue))
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 15, left: 18),
+                  child: Text(
+                    'Top Majors',
+                    style: TextStyle(color: Colors.black87, fontSize: 20),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 15, left: 18),
+                  child: Text(
+                    'Cost',
+                    style: TextStyle(color: Colors.black87, fontSize: 20),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 15, left: 18),
+                  child: Text(
+                    'Testing',
+                    style: TextStyle(color: Colors.black87, fontSize: 20),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 15, left: 18),
+                  child: Text(
+                    'Documents',
+                    style: TextStyle(color: Colors.black87, fontSize: 20),
+                  ),
                 ),
               ],
             ),
