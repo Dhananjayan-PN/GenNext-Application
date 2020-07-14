@@ -203,13 +203,13 @@ class _UniversityPageState extends State<UniversityPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     Container(
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      padding: EdgeInsets.only(left: 14),
+                      width: MediaQuery.of(context).size.width * 0.75,
+                      padding: EdgeInsets.only(left: 15),
                       child: Text(
                         widget.university['university_name'],
                         style: TextStyle(
                             color: Colors.black87,
-                            fontSize: 17,
+                            fontSize: 19,
                             fontWeight: FontWeight.w500),
                       ),
                     ),
@@ -254,7 +254,7 @@ class _UniversityPageState extends State<UniversityPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.only(left: 10, top: 3),
+                      padding: EdgeInsets.only(left: 12, top: 3),
                       child: Icon(
                         Icons.location_on,
                         color: Colors.black54,
