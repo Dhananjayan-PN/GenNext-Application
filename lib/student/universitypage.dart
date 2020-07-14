@@ -9,7 +9,8 @@ import 'home.dart';
 
 class UniversityPage extends StatefulWidget {
   final Map university;
-  UniversityPage({@required this.university});
+  final bool starred;
+  UniversityPage({@required this.university, this.starred});
   @override
   _UniversityPageState createState() => _UniversityPageState();
 }
@@ -104,95 +105,102 @@ class _UniversityPageState extends State<UniversityPage> {
       body: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
+            backgroundColor: Colors.transparent,
             actions: <Widget>[],
             elevation: 0,
             floating: true,
             expandedHeight: 300,
-            flexibleSpace: Stack(
-              children: <Widget>[
-                Positioned(
-                  child: CachedNetworkImage(
-                    fit: BoxFit.cover,
-                    key: Key(widget.university['university_id'].toString()),
-                    imageUrl: widget.university['image_url'] ??
-                        'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
-                    imageBuilder: (context, imageProvider) => Container(
-                      decoration: BoxDecoration(
-                        image: imageProvider != null
-                            ? DecorationImage(
-                                alignment: Alignment.center,
-                                colorFilter: ColorFilter.mode(
-                                    Colors.black.withAlpha(50),
-                                    BlendMode.darken),
-                                image: imageProvider,
-                                fit: BoxFit.cover,
-                              )
-                            : DecorationImage(
-                                image: NetworkImage(
-                                    'https://www.shareicon.net/data/512x512/2016/08/18/814358_school_512x512.png',
-                                    scale: 6.5),
-                              ),
-                      ),
-                    ),
-                  ),
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                ),
-                Positioned(
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Spacer(),
-                          Padding(
-                            padding: EdgeInsets.only(right: 20, bottom: 20),
-                            child: CircularPercentIndicator(
-                              footer: Text(
-                                'Match',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.white,
-                                  fontSize: 11,
-                                ),
-                              ),
-                              radius: 55,
-                              lineWidth: 2.5,
-                              animation: true,
-                              percent: widget.university["match_rating"] / 100,
-                              center: Text(
-                                " ${widget.university["match_rating"].toString().substring(0, 4)}%",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w400,
-                                    color: Colors.white,
-                                    fontSize: 14),
-                              ),
-                              circularStrokeCap: CircularStrokeCap.round,
-                              backgroundColor: Colors.white30,
-                              progressColor: colorPicker(
-                                  widget.university["match_rating"]),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Container(
-                        height: 30,
+            flexibleSpace: Hero(
+              tag: widget.starred != null
+                  ? widget.university['university_id'].toString() + 'starred'
+                  : widget.university['university_id'],
+              child: Stack(
+                children: <Widget>[
+                  Positioned(
+                    child: CachedNetworkImage(
+                      fit: BoxFit.cover,
+                      key: Key(widget.university['university_id'].toString()),
+                      imageUrl: widget.university['image_url'] ??
+                          'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
+                      imageBuilder: (context, imageProvider) => Container(
                         decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(50),
-                            topRight: Radius.circular(50),
-                          ),
+                          image: imageProvider != null
+                              ? DecorationImage(
+                                  alignment: Alignment.center,
+                                  colorFilter: ColorFilter.mode(
+                                      Colors.black.withAlpha(50),
+                                      BlendMode.darken),
+                                  image: imageProvider,
+                                  fit: BoxFit.cover,
+                                )
+                              : DecorationImage(
+                                  image: NetworkImage(
+                                      'https://www.shareicon.net/data/512x512/2016/08/18/814358_school_512x512.png',
+                                      scale: 6.5),
+                                ),
                         ),
                       ),
-                    ],
+                    ),
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
                   ),
-                  bottom: -1,
-                  left: 0,
-                  right: 0,
-                ),
-              ],
+                  Positioned(
+                    child: Column(
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Spacer(),
+                            Padding(
+                              padding: EdgeInsets.only(right: 20, bottom: 20),
+                              child: CircularPercentIndicator(
+                                footer: Text(
+                                  'Match',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.white,
+                                    fontSize: 11,
+                                  ),
+                                ),
+                                radius: 55,
+                                lineWidth: 2.5,
+                                animation: true,
+                                percent:
+                                    widget.university["match_rating"] / 100,
+                                center: Text(
+                                  " ${widget.university["match_rating"].toString().substring(0, 4)}%",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.white,
+                                      fontSize: 14),
+                                ),
+                                circularStrokeCap: CircularStrokeCap.round,
+                                backgroundColor: Colors.white30,
+                                progressColor: colorPicker(
+                                    widget.university["match_rating"]),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          height: 30,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(50),
+                              topRight: Radius.circular(50),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    bottom: -1,
+                    left: 0,
+                    right: 0,
+                  ),
+                ],
+              ),
             ),
           ),
           SliverFillRemaining(

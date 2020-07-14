@@ -435,7 +435,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
                 ? DecorationImage(
                     alignment: Alignment.center,
                     colorFilter: ColorFilter.mode(
-                        Colors.black.withAlpha(140), BlendMode.darken),
+                        Colors.black.withAlpha(100), BlendMode.darken),
                     image: imageProvider,
                     fit: BoxFit.cover,
                   )
@@ -515,19 +515,22 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
         );
     return Padding(
       padding: EdgeInsets.only(top: 5, left: 10, right: 10),
-      child: Card(
-        clipBehavior: Clip.antiAlias,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10))),
-        elevation: 6,
-        child: CachedNetworkImage(
-          key: Key(unis[index]['university_name'].toString()),
-          imageUrl: unis[index]['image_url'] ??
-              'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
-          placeholder: (context, url) => CardPlaceHolder(),
-          errorWidget: (context, url, error) => cardData(null, true),
-          imageBuilder: (context, imageProvider) =>
-              cardData(imageProvider, false),
+      child: Hero(
+        tag: unis[index]['university_id'],
+        child: Card(
+          clipBehavior: Clip.antiAlias,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10))),
+          elevation: 6,
+          child: CachedNetworkImage(
+            key: Key(unis[index]['university_id'].toString()),
+            imageUrl: unis[index]['image_url'] ??
+                'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
+            placeholder: (context, url) => CardPlaceHolder(),
+            errorWidget: (context, url, error) => cardData(null, true),
+            imageBuilder: (context, imageProvider) =>
+                cardData(imageProvider, false),
+          ),
         ),
       ),
     );

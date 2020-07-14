@@ -453,27 +453,30 @@ class _DashBoardState extends State<DashBoard> {
                               ),
                             ),
                           );
-                      return Card(
-                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                        margin: EdgeInsets.only(top: 20, bottom: 30),
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
-                        elevation: 6,
-                        child: CachedNetworkImage(
-                            key: Key(snapshot.data[index]['university_name']
-                                .toString()),
-                            imageUrl: snapshot.data[index]['image_url'] ??
-                                'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
-                            placeholder: (context, url) => SpinKitWave(
-                                  type: SpinKitWaveType.start,
-                                  color: Colors.grey.withOpacity(0.20),
-                                  size: 40,
-                                ),
-                            errorWidget: (context, url, error) =>
-                                cardData(null, true),
-                            imageBuilder: (context, imageProvider) =>
-                                cardData(imageProvider, false)),
+                      return Hero(
+                        tag: snapshot.data[index]['university_id'],
+                        child: Card(
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          margin: EdgeInsets.only(top: 20, bottom: 30),
+                          shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          elevation: 6,
+                          child: CachedNetworkImage(
+                              key: Key(snapshot.data[index]['university_id']
+                                  .toString()),
+                              imageUrl: snapshot.data[index]['image_url'] ??
+                                  'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
+                              placeholder: (context, url) => SpinKitWave(
+                                    type: SpinKitWaveType.start,
+                                    color: Colors.grey.withOpacity(0.20),
+                                    size: 40,
+                                  ),
+                              errorWidget: (context, url, error) =>
+                                  cardData(null, true),
+                              imageBuilder: (context, imageProvider) =>
+                                  cardData(imageProvider, false)),
+                        ),
                       );
                     },
                   ),

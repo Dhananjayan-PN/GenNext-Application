@@ -610,9 +610,10 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
     });
   }
 
-  Widget buildCard(snapshot, int index) {
-    unis = snapshot;
-    unis[index]['favorited_status'] = true;
+  Widget buildCard(uni, bool starred) {
+    if (starred != null) {
+      uni['favorited_status'] = starred;
+    }
     Widget cardData(ImageProvider imageProvider, bool isError) => Container(
           decoration: BoxDecoration(
             gradient: isError
@@ -625,116 +626,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                 ? DecorationImage(
                     alignment: Alignment.center,
                     colorFilter: ColorFilter.mode(
-                        Colors.black.withAlpha(140), BlendMode.darken),
-                    image: imageProvider,
-                    fit: BoxFit.cover,
-                  )
-                : DecorationImage(
-                    colorFilter: ColorFilter.mode(
-                        Colors.black.withOpacity(0.35), BlendMode.dstIn),
-                    image: NetworkImage(
-                        'https://www.shareicon.net/data/512x512/2016/08/18/814358_school_512x512.png',
-                        scale: 12),
-                  ),
-          ),
-          child: Material(
-            color: Colors.transparent,
-            child: ListTile(
-              key: Key(unis[index]['university_id'].toString()),
-              title: Text(
-                unis[index]['university_name'],
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500),
-              ),
-              subtitle: Text(
-                unis[index]['university_location'],
-                style: TextStyle(
-                    color: Colors.white.withOpacity(0.9), fontSize: 13.5),
-              ),
-              trailing: Wrap(
-                children: <Widget>[
-                  InkWell(
-                    child:
-                        Icon(Icons.star, size: 25.5, color: Colors.yellow[700]),
-                    onTap: () {
-                      editFavorited(unis[index]);
-                    },
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 8),
-                    child: InkWell(
-                      child: unis[index]['in_college_list']
-                          ? Icon(
-                              Icons.check,
-                              size: 26,
-                              color: Colors.green,
-                            )
-                          : Icon(
-                              Icons.add,
-                              size: 26,
-                              color: Colors.blue,
-                            ),
-                      onTap: () {
-                        unis[index]['in_college_list']
-                            ? removeFromList(unis[index]['university_id'],
-                                unis[index]['category'])
-                            : addToListFF(unis[index]['university_id'],
-                                unis[index]['university_name']);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              onTap: () async {
-                final data = await Navigator.push(
-                  context,
-                  PageTransition(
-                      type: PageTransitionType.fade,
-                      child: UniversityPage(
-                        university: unis[index],
-                      )),
-                );
-                refresh();
-              },
-            ),
-          ),
-        );
-    return Padding(
-      padding: EdgeInsets.only(top: 4, left: 10, right: 10),
-      child: Card(
-        clipBehavior: Clip.antiAlias,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10))),
-        elevation: 6,
-        child: CachedNetworkImage(
-          key: Key(unis[index]['university_id'].toString()),
-          imageUrl: unis[index]['image_url'] ??
-              'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
-          placeholder: (context, url) => CardPlaceHolder(),
-          errorWidget: (context, url, error) => cardData(null, true),
-          imageBuilder: (context, imageProvider) =>
-              cardData(imageProvider, false),
-        ),
-      ),
-    );
-  }
-
-  Widget buildCollegeListCard(uni) {
-    Widget cardData(ImageProvider imageProvider, bool isError) => Container(
-          decoration: BoxDecoration(
-            gradient: isError
-                ? LinearGradient(
-                    end: Alignment.topRight,
-                    begin: Alignment.bottomLeft,
-                    colors: [Color(0xff00AEEF), Color(0xff0072BC)])
-                : null,
-            image: imageProvider != null
-                ? DecorationImage(
-                    alignment: Alignment.center,
-                    colorFilter: ColorFilter.mode(
-                        Colors.black.withAlpha(140), BlendMode.darken),
+                        Colors.black.withAlpha(100), BlendMode.darken),
                     image: imageProvider,
                     fit: BoxFit.cover,
                   )
@@ -800,7 +692,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                   context,
                   PageTransition(
                       type: PageTransitionType.fade,
-                      child: UniversityPage(university: uni)),
+                      child: UniversityPage(university: uni, starred: starred)),
                 );
                 refresh();
               },
@@ -809,21 +701,26 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
         );
     return Padding(
       padding: EdgeInsets.only(top: 4, left: 10, right: 10),
-      child: Card(
-        clipBehavior: Clip.antiAlias,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10))),
-        elevation: 5,
-        child: Material(
-          color: Colors.transparent,
-          child: CachedNetworkImage(
-              key: Key(uni['university_id'].toString()),
-              imageUrl: uni['image_url'] ??
-                  'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
-              placeholder: (context, url) => CardPlaceHolder(),
-              errorWidget: (context, url, error) => cardData(null, true),
-              imageBuilder: (context, imageProvider) =>
-                  cardData(imageProvider, false)),
+      child: Hero(
+        tag: starred != null
+            ? uni['university_id'].toString() + 'starred'
+            : uni['university_id'],
+        child: Card(
+          clipBehavior: Clip.antiAlias,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10))),
+          elevation: 5,
+          child: Material(
+            color: Colors.transparent,
+            child: CachedNetworkImage(
+                key: Key(uni['university_id'].toString()),
+                imageUrl: uni['image_url'] ??
+                    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
+                placeholder: (context, url) => CardPlaceHolder(),
+                errorWidget: (context, url, error) => cardData(null, true),
+                imageBuilder: (context, imageProvider) =>
+                    cardData(imageProvider, false)),
+          ),
         ),
       ),
     );
@@ -937,7 +834,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                       List<ChecklistItemView> subItems = [];
                       for (var j = 0; j < snapshot.data[i].length; j++) {
                         subItems.add(ChecklistItemView(
-                          title: buildCollegeListCard(snapshot.data[i][j]),
+                          title: buildCard(snapshot.data[i][j], null),
                           onStartDragItem: (listIndex, itemIndex, state) {},
                           canDrag: true,
                           onDropItem: (oldListIndex, oldItemIndex, listIndex,
@@ -1110,12 +1007,14 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                                     itemBuilder:
                                         (BuildContext context, int index) {
                                       return filter2 == null || filter2 == ""
-                                          ? buildCard(snapshot.data, index)
+                                          ? buildCard(
+                                              snapshot.data[index], true)
                                           : snapshot.data[index]
                                                       ['university_name']
                                                   .toLowerCase()
                                                   .contains(filter2)
-                                              ? buildCard(snapshot.data, index)
+                                              ? buildCard(
+                                                  snapshot.data[index], true)
                                               : Container();
                                     }),
                               ),
