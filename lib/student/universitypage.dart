@@ -16,6 +16,13 @@ class UniversityPage extends StatefulWidget {
 
 class _UniversityPageState extends State<UniversityPage> {
   GlobalKey<ScaffoldState> _scafKey = GlobalKey<ScaffoldState>();
+  bool isStarred;
+
+  @override
+  void initState() {
+    super.initState();
+    isStarred = widget.university['favorited_status'];
+  }
 
   Color colorPicker(double rating) {
     if (0 <= rating && rating < 30) {
@@ -49,7 +56,9 @@ class _UniversityPageState extends State<UniversityPage> {
             ),
           ),
         );
-        // refresh();
+        setState(() {
+          isStarred = true;
+        });
       } else if (result['Response'] == 'University successfully unfavorited.') {
         _scafKey.currentState.showSnackBar(
           SnackBar(
@@ -60,7 +69,9 @@ class _UniversityPageState extends State<UniversityPage> {
             ),
           ),
         );
-        // refresh();
+        setState(() {
+          isStarred = false;
+        });
       } else {
         _scafKey.currentState.showSnackBar(
           SnackBar(
@@ -204,13 +215,14 @@ class _UniversityPageState extends State<UniversityPage> {
                     ),
                     Spacer(),
                     InkWell(
-                      child: widget.university['favorited_status']
+                      child: isStarred
                           ? Icon(Icons.star,
                               size: 24.5, color: Colors.yellow[700])
                           : Icon(Icons.star_border,
                               size: 24.5, color: Colors.yellow[700]),
                       onTap: () {
-                        // editFavorited(widget.university);
+                        editFavoritedStatus(widget.university,
+                            widget.university['university_id'], isStarred);
                       },
                     ),
                     Padding(
