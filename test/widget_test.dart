@@ -6,9 +6,6 @@ void main() {
   testWidgets('Signin Page Test', (WidgetTester tester) async {
     await tester.pumpWidget(MyApp());
 
-    expect(find.text('Sign In'), findsOneWidget);
-    expect(find.text('Sign Up'), findsNothing);
-
     await tester.enterText(find.byKey(ValueKey("Username")), 'username');
     await tester.enterText(find.byKey(ValueKey("Password")), 'password');
     await tester.pump(Duration(milliseconds: 300));

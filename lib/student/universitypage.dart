@@ -708,7 +708,7 @@ class _UniversityPageState extends State<UniversityPage> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 2, left: 23, right: 18),
+                  padding: EdgeInsets.only(top: 2, left: 19, right: 18),
                   child: Text(
                     widget.university['university_description'] ?? '',
                     maxLines: descShowFull ? 1000 : 10,
@@ -718,7 +718,7 @@ class _UniversityPageState extends State<UniversityPage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 23, right: 25),
+                  padding: const EdgeInsets.only(left: 19, right: 25),
                   child: InkWell(
                     onTap: () {
                       setState(() {
