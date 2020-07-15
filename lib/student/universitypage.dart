@@ -20,7 +20,10 @@ class UniversityPage extends StatefulWidget {
 
 class _UniversityPageState extends State<UniversityPage> {
   GlobalKey<ScaffoldState> _scafKey = GlobalKey<ScaffoldState>();
-  List<Widget> standOutFactors = [];
+  List<Widget> standOutFactors;
+  List<Widget> topMajors;
+  List<Widget> testingReqs;
+  List<Widget> documentChips;
   String educationString = '';
   bool descShowFull = false;
   bool isStarred;
@@ -334,7 +337,10 @@ class _UniversityPageState extends State<UniversityPage> {
 
   @override
   Widget build(BuildContext context) {
+    topMajors = [];
     standOutFactors = [];
+    testingReqs = [];
+    documentChips = [];
     educationString = '';
     for (int i = 0; i < widget.university['stand_out_factors'].length; i++) {
       standOutFactors.add(
@@ -353,6 +359,61 @@ class _UniversityPageState extends State<UniversityPage> {
       } else {
         educationString += ', ${widget.university['degree_levels'][i]}';
       }
+    }
+    for (int i = 0; i < 10; i++) {
+      topMajors.add(
+        Chip(
+          visualDensity: VisualDensity.compact,
+          backgroundColor: Colors.white12,
+          shape:
+              StadiumBorder(side: BorderSide(color: Colors.blue, width: 0.0)),
+          label: Text(
+            widget.university['top_majors'][i],
+            style:
+                TextStyle(fontSize: 11, color: Colors.black.withOpacity(0.8)),
+          ),
+          elevation: 1,
+        ),
+      );
+    }
+    for (int i = 0; i < widget.university['testing_requirements'].length; i++) {
+      testingReqs.add(
+        Chip(
+          visualDensity: VisualDensity.compact,
+          backgroundColor: Colors.white12,
+          shape:
+              StadiumBorder(side: BorderSide(color: Colors.blue, width: 0.0)),
+          label: Text(
+            widget.university['testing_requirements'][i],
+            style:
+                TextStyle(fontSize: 11, color: Colors.black.withOpacity(0.8)),
+          ),
+          elevation: 1,
+        ),
+      );
+    }
+    for (int i = 0; i < widget.university['document_data'].length; i++) {
+      documentChips.add(
+        ActionChip(
+          avatar: Icon(
+            Icons.insert_drive_file,
+            size: 22,
+            color: Colors.blue[600],
+          ),
+          labelPadding: EdgeInsets.only(right: 5),
+          visualDensity: VisualDensity.compact,
+          backgroundColor: Colors.white12,
+          shape:
+              StadiumBorder(side: BorderSide(color: Colors.blue, width: 0.0)),
+          label: Text(
+            widget.university['document_data'][i]['document_name'],
+            style:
+                TextStyle(fontSize: 12.5, color: Colors.black.withOpacity(0.8)),
+          ),
+          elevation: 1,
+          onPressed: () {},
+        ),
+      );
     }
     return Scaffold(
       key: _scafKey,
@@ -637,14 +698,14 @@ class _UniversityPageState extends State<UniversityPage> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 15, left: 18),
+                  padding: EdgeInsets.only(top: 12, left: 18),
                   child: Text(
                     'About',
                     style: TextStyle(color: Colors.black87, fontSize: 20),
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 2, left: 18, right: 18),
+                  padding: EdgeInsets.only(top: 2, left: 23, right: 18),
                   child: Text(
                     widget.university['university_description'] ?? '',
                     maxLines: descShowFull ? 1000 : 10,
@@ -654,7 +715,7 @@ class _UniversityPageState extends State<UniversityPage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 18, right: 25),
+                  padding: const EdgeInsets.only(left: 23, right: 25),
                   child: InkWell(
                     onTap: () {
                       setState(() {
@@ -681,10 +742,87 @@ class _UniversityPageState extends State<UniversityPage> {
                   ),
                 ),
                 Padding(
+                  padding: EdgeInsets.only(left: 22, top: 2, right: 16),
+                  child: Wrap(
+                    spacing: 3,
+                    direction: Axis.horizontal,
+                    children: topMajors,
+                  ),
+                ),
+                Padding(
                   padding: EdgeInsets.only(top: 15, left: 18),
                   child: Text(
                     'Cost',
                     style: TextStyle(color: Colors.black87, fontSize: 20),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 5, left: 25),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      Text(
+                        'IN STATE',
+                        style: TextStyle(
+                            color: Colors.black.withOpacity(0.65),
+                            fontSize: 13),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 5),
+                        child: Text(
+                          r'$' + '${widget.university['in_state_cost']}',
+                          style: TextStyle(
+                              color: Colors.black.withOpacity(0.8),
+                              fontSize: 18.5),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 5, left: 25),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      Text(
+                        'OUT OF STATE',
+                        style: TextStyle(
+                            color: Colors.black.withOpacity(0.65),
+                            fontSize: 13),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 5),
+                        child: Text(
+                          r'$' + '${widget.university['out_of_state_cost']}',
+                          style: TextStyle(
+                              color: Colors.black.withOpacity(0.8),
+                              fontSize: 18.5),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 5, left: 25),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      Text(
+                        'INTERNATIONAL',
+                        style: TextStyle(
+                            color: Colors.black.withOpacity(0.65),
+                            fontSize: 13),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 5),
+                        child: Text(
+                          r'$' + '${widget.university['international_cost']}',
+                          style: TextStyle(
+                              color: Colors.black.withOpacity(0.8),
+                              fontSize: 18.5),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Padding(
@@ -695,10 +833,27 @@ class _UniversityPageState extends State<UniversityPage> {
                   ),
                 ),
                 Padding(
+                  padding: EdgeInsets.only(left: 22, top: 2, right: 16),
+                  child: Wrap(
+                    spacing: 3,
+                    direction: Axis.horizontal,
+                    children: testingReqs,
+                  ),
+                ),
+                Padding(
                   padding: EdgeInsets.only(top: 15, left: 18),
                   child: Text(
                     'Documents',
                     style: TextStyle(color: Colors.black87, fontSize: 20),
+                  ),
+                ),
+                Padding(
+                  padding:
+                      EdgeInsets.only(left: 22, top: 2, right: 16, bottom: 25),
+                  child: Wrap(
+                    spacing: 3,
+                    direction: Axis.horizontal,
+                    children: documentChips,
                   ),
                 ),
               ],
