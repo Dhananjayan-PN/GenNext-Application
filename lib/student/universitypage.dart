@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
@@ -397,7 +398,7 @@ class _UniversityPageState extends State<UniversityPage> {
         ActionChip(
           avatar: Icon(
             Icons.insert_drive_file,
-            size: 22,
+            size: 18,
             color: Colors.blue[600],
           ),
           labelPadding: EdgeInsets.only(right: 5),
@@ -411,7 +412,9 @@ class _UniversityPageState extends State<UniversityPage> {
                 TextStyle(fontSize: 12.5, color: Colors.black.withOpacity(0.8)),
           ),
           elevation: 1,
-          onPressed: () {},
+          onPressed: () {
+            launch(widget.university['document_data'][i]['document_url']);
+          },
         ),
       );
     }
@@ -744,7 +747,7 @@ class _UniversityPageState extends State<UniversityPage> {
                 Padding(
                   padding: EdgeInsets.only(left: 22, top: 2, right: 16),
                   child: Wrap(
-                    spacing: 3,
+                    spacing: 4,
                     direction: Axis.horizontal,
                     children: topMajors,
                   ),
@@ -835,7 +838,7 @@ class _UniversityPageState extends State<UniversityPage> {
                 Padding(
                   padding: EdgeInsets.only(left: 22, top: 2, right: 16),
                   child: Wrap(
-                    spacing: 3,
+                    spacing: 4,
                     direction: Axis.horizontal,
                     children: testingReqs,
                   ),
@@ -851,7 +854,7 @@ class _UniversityPageState extends State<UniversityPage> {
                   padding:
                       EdgeInsets.only(left: 22, top: 2, right: 16, bottom: 25),
                   child: Wrap(
-                    spacing: 3,
+                    spacing: 4,
                     direction: Axis.horizontal,
                     children: documentChips,
                   ),
