@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http_parser/http_parser.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -11,6 +11,7 @@ import 'package:dio/dio.dart' as dio;
 import 'package:file_picker/file_picker.dart';
 // import '../shimmer_skeleton.dart';
 import 'dart:async';
+import 'dart:math';
 import 'dart:convert';
 import 'dart:io';
 import 'home.dart';
@@ -83,7 +84,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
   }
 
   Future<void> uploadTranscript(
-      String title, int grade, String spec, File transcript) async {
+      String op, String title, int grade, String spec, File transcript) async {
     var dioRequest = dio.Dio();
     dioRequest.options.headers = {
       HttpHeaders.authorizationHeader: "Token $tok",
@@ -100,18 +101,36 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
       transcript.path,
     );
     formData.files.add(MapEntry('transcript', file));
-    var response = await dioRequest.post(
-      dom + 'api/student/upload-document/',
-      data: formData,
-    );
+    var response = op == 'create'
+        ? await dioRequest.post(
+            dom + 'api/student/upload-document/',
+            data: formData,
+          )
+        : await dioRequest.put(
+            dom + 'api/student/edit-document',
+            data: formData,
+          );
     if (response.statusCode == 200) {
       Navigator.pop(context);
-      _success('added');
+      _success('edited');
       refresh();
     } else {
       Navigator.pop(context);
       _error();
     }
+  }
+
+  Future<File> urlToFile(String fileUrl) async {
+    var rng = new Random();
+    Directory tempDir = await getTemporaryDirectory();
+    String tempPath = tempDir.path;
+    File file = File('$tempPath' +
+        (rng.nextInt(100)).toString() +
+        '.' +
+        fileUrl.split('.').last);
+    http.Response response = await http.get(fileUrl);
+    await file.writeAsBytes(response.bodyBytes);
+    return file;
   }
 
   _loading() {
@@ -371,17 +390,24 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
               onSelected: (value) async {
                 switch (value) {
                   case 'Edit':
+                    File file =
+                        await urlToFile(transcript['transcript_file_path']);
                     List data = await Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => TranscriptScreen(
                           op: 'Edit',
+                          title: transcript['title'],
+                          grade: transcript['grade'],
+                          spec: transcript['special_circumstances'],
+                          file: file,
                         ),
                       ),
                     );
                     if (data != null) {
-                      // createApplication(data[0], data[1], data[2]);
-                      // _loading();
+                      uploadTranscript(
+                          'edit', data[0], data[1], data[2], data[3]);
+                      _loading();
                     }
                     break;
                   case 'Delete':
@@ -607,7 +633,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                           );
                           if (data != null) {
                             uploadTranscript(
-                                data[0], data[1], data[2], data[3]);
+                                'create', data[0], data[1], data[2], data[3]);
                             _loading();
                           }
                         },
@@ -651,10 +677,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                               ),
                             ),
                           );
-                          if (data != null) {
-                            // createApplication(data[0], data[1], data[2]);
-                            // _loading();
-                          }
+                          if (data != null) {}
                         },
                       ),
                     ),
@@ -697,7 +720,8 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                             ),
                           );
                           if (data != null) {
-                            // createApplication(data[0], data[1], data[2]);
+                            // uploadTranscript(
+                            //     data[0], data[1], data[2], data[3]);
                             // _loading();
                           }
                         },
@@ -832,8 +856,13 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
 }
 
 class TranscriptScreen extends StatefulWidget {
+  final String title;
+  final int grade;
+  final String spec;
+  final File file;
   final String op;
-  TranscriptScreen({@required this.op});
+  TranscriptScreen(
+      {@required this.op, this.title, this.grade, this.spec, this.file});
   @override
   _TranscriptScreenState createState() => _TranscriptScreenState();
 }
@@ -844,6 +873,15 @@ class _TranscriptScreenState extends State<TranscriptScreen> {
   TextEditingController _grade = TextEditingController();
   TextEditingController _spec = TextEditingController();
   File transcript;
+
+  @override
+  void initState() {
+    super.initState();
+    _title.text = widget.title ?? '';
+    _grade.text = widget.op == 'Edit' ? widget.grade.toString() : '';
+    _spec.text = widget.spec ?? '';
+    transcript = widget.file;
+  }
 
   @override
   Widget build(BuildContext context) {
