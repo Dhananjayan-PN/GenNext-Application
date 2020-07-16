@@ -1004,7 +1004,7 @@ class _NewApplicationScreenState extends State<NewApplicationScreen> {
               padding: EdgeInsets.only(top: 30, left: 25),
               child: Text(
                 'University',
-                style: TextStyle(fontSize: 25, color: Colors.black87),
+                style: TextStyle(fontSize: 20, color: Colors.black87),
               ),
             ),
             if (widget.op == 'Create') ...[
@@ -1044,7 +1044,7 @@ class _NewApplicationScreenState extends State<NewApplicationScreen> {
                 padding: EdgeInsets.only(top: 10, left: 26),
                 child: Text(
                   widget.university,
-                  style: TextStyle(color: Colors.black54, fontSize: 18),
+                  style: TextStyle(color: Colors.black54, fontSize: 17),
                 ),
               ),
             ],
@@ -1052,7 +1052,7 @@ class _NewApplicationScreenState extends State<NewApplicationScreen> {
               padding: EdgeInsets.only(left: 25, top: 30),
               child: Text(
                 'Deadline',
-                style: TextStyle(fontSize: 25, color: Colors.black87),
+                style: TextStyle(fontSize: 20, color: Colors.black87),
               ),
             ),
             Padding(
@@ -1089,7 +1089,7 @@ class _NewApplicationScreenState extends State<NewApplicationScreen> {
               padding: EdgeInsets.only(left: 25, top: 30),
               child: Text(
                 'Notes',
-                style: TextStyle(fontSize: 25, color: Colors.black87),
+                style: TextStyle(fontSize: 20, color: Colors.black87),
               ),
             ),
             Padding(

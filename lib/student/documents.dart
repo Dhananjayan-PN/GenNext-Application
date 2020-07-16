@@ -807,6 +807,7 @@ class _TranscriptScreenState extends State<TranscriptScreen> {
   TextEditingController _title = TextEditingController();
   TextEditingController _grade = TextEditingController();
   TextEditingController _spec = TextEditingController();
+  File transcript;
 
   @override
   Widget build(BuildContext context) {
@@ -878,6 +879,36 @@ class _TranscriptScreenState extends State<TranscriptScreen> {
               child: Text(
                 'Transcript',
                 style: TextStyle(fontSize: 20, color: Colors.black87),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 25, right: 25, top: 10),
+              child: Row(
+                children: <Widget>[
+                  RaisedButton(
+                    elevation: 2,
+                    color: Colors.grey[50],
+                    textColor: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    child: Text('Choose File'),
+                    onPressed: () async {
+                      File file = await FilePicker.getFile(
+                        type: FileType.any,
+                      );
+                      if (file != null) {
+                        setState(() {
+                          transcript = file;
+                        });
+                      }
+                    },
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Text(
+                        transcript?.path?.split('/')?.last ?? 'No file chosen'),
+                  )
+                ],
               ),
             ),
             Padding(
