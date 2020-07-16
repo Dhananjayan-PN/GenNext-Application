@@ -293,7 +293,7 @@ class _LoginPageState extends State<LoginPage> {
               children: <Widget>[
                 Padding(
                   padding:
-                      EdgeInsets.only(top: 60, right: 100, left: 0, bottom: 0),
+                      EdgeInsets.only(top: 80, right: 100, left: 0, bottom: 0),
                   child: Transform.scale(
                     scale: 1,
                     child: Container(

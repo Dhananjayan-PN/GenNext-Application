@@ -966,150 +966,151 @@ class _NewApplicationScreenState extends State<NewApplicationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: GradientAppBar(
-          actions: <Widget>[
-            FlatButton(
-              child: Text(
-                widget.op == 'Create' ? 'CREATE' : 'SAVE',
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
-              ),
-              onPressed: () {
-                if (uniName != null && _deadline != null) {
-                  List data = [uniName, _deadline, _notes.text];
-                  Navigator.pop(context, data);
-                }
-              },
-            )
-          ],
-          title: Text(
-            widget.op == 'Create' ? 'New Application' : 'Edit Application',
-            maxLines: 1,
-            style: TextStyle(
-                color: Colors.white,
-                fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
-          ),
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xff00AEEF), Color(0xff0072BC)],
-          ),
+      backgroundColor: Colors.white,
+      appBar: GradientAppBar(
+        actions: <Widget>[
+          FlatButton(
+            child: Text(
+              widget.op == 'Create' ? 'CREATE' : 'SAVE',
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+            ),
+            onPressed: () {
+              if (uniName != null && _deadline != null) {
+                List data = [uniName, _deadline, _notes.text];
+                Navigator.pop(context, data);
+              }
+            },
+          )
+        ],
+        title: Text(
+          widget.op == 'Create' ? 'New Application' : 'Edit Application',
+          maxLines: 1,
+          style: TextStyle(
+              color: Colors.white,
+              fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
         ),
-        body: Form(
-          key: _formKey,
-          child: ListView(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(top: 30, left: 25),
-                child: Text(
-                  'University',
-                  style: TextStyle(fontSize: 25, color: Colors.black87),
-                ),
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [Color(0xff00AEEF), Color(0xff0072BC)],
+        ),
+      ),
+      body: Form(
+        key: _formKey,
+        child: ListView(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(top: 30, left: 25),
+              child: Text(
+                'University',
+                style: TextStyle(fontSize: 25, color: Colors.black87),
               ),
-              if (widget.op == 'Create') ...[
-                Padding(
-                  padding: EdgeInsets.only(left: 25, right: 40),
-                  child: SearchableDropdown.single(
-                    isCaseSensitiveSearch: false,
-                    dialogBox: true,
-                    menuBackgroundColor: Colors.white,
-                    icon: Icon(
-                      Icons.arrow_drop_down,
-                      size: 25,
-                      color: Colors.black,
-                    ),
-                    items: widget.uniList,
-                    value: uniName,
-                    style: TextStyle(color: Colors.black),
-                    hint: Padding(
-                      padding: EdgeInsets.only(top: 12, bottom: 10),
-                      child: Text(
-                        "University",
-                        style: TextStyle(color: Colors.black54, fontSize: 15),
-                      ),
-                    ),
-                    searchHint: "Pick a University",
-                    onChanged: (value) {
-                      setState(() {
-                        uniName = value;
-                      });
-                    },
-                    isExpanded: true,
-                  ),
-                ),
-              ],
-              if (widget.op == 'Edit') ...[
-                Padding(
-                  padding: EdgeInsets.only(top: 10, left: 26),
-                  child: Text(
-                    widget.university,
-                    style: TextStyle(color: Colors.black54, fontSize: 18),
-                  ),
-                ),
-              ],
-              Padding(
-                padding: EdgeInsets.only(left: 25, top: 30),
-                child: Text(
-                  'Deadline',
-                  style: TextStyle(fontSize: 25, color: Colors.black87),
-                ),
-              ),
+            ),
+            if (widget.op == 'Create') ...[
               Padding(
                 padding: EdgeInsets.only(left: 25, right: 40),
-                child: DateTimeField(
-                  initialValue: widget.deadline ?? null,
-                  controller: _datetimecontroller,
-                  decoration: InputDecoration(
-                    border: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blue, width: 0.0),
+                child: SearchableDropdown.single(
+                  isCaseSensitiveSearch: false,
+                  dialogBox: true,
+                  menuBackgroundColor: Colors.white,
+                  icon: Icon(
+                    Icons.arrow_drop_down,
+                    size: 25,
+                    color: Colors.black,
+                  ),
+                  items: widget.uniList,
+                  value: uniName,
+                  style: TextStyle(color: Colors.black),
+                  hint: Padding(
+                    padding: EdgeInsets.only(top: 12, bottom: 10),
+                    child: Text(
+                      "University",
+                      style: TextStyle(color: Colors.black54, fontSize: 15),
                     ),
                   ),
-                  format: DateFormat.yMMMMd(),
+                  searchHint: "Pick a University",
                   onChanged: (value) {
                     setState(() {
-                      _deadline = value;
+                      uniName = value;
                     });
                   },
-                  onShowPicker: (context, currentValue) async {
-                    final _date = await showDatePicker(
-                        context: context,
-                        firstDate: DateTime(1900),
-                        initialDate: currentValue ?? DateTime.now(),
-                        lastDate: DateTime(2150));
-                    if (_date != null) {
-                      return _date;
-                    } else {
-                      return currentValue;
-                    }
-                  },
+                  isExpanded: true,
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(left: 25, top: 30),
-                child: Text(
-                  'Notes',
-                  style: TextStyle(fontSize: 25, color: Colors.black87),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 25, top: 20, right: 35),
-                child: TextFormField(
-                  controller: _notes,
-                  maxLines: null,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blue, width: 0.0),
-                    ),
-                  ),
-                  validator: (value) {
-                    return null;
-                  },
-                ),
-              )
             ],
-          ),
-        ));
+            if (widget.op == 'Edit') ...[
+              Padding(
+                padding: EdgeInsets.only(top: 10, left: 26),
+                child: Text(
+                  widget.university,
+                  style: TextStyle(color: Colors.black54, fontSize: 18),
+                ),
+              ),
+            ],
+            Padding(
+              padding: EdgeInsets.only(left: 25, top: 30),
+              child: Text(
+                'Deadline',
+                style: TextStyle(fontSize: 25, color: Colors.black87),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 25, right: 40),
+              child: DateTimeField(
+                initialValue: widget.deadline ?? null,
+                controller: _datetimecontroller,
+                decoration: InputDecoration(
+                  border: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue, width: 0.0),
+                  ),
+                ),
+                format: DateFormat.yMMMMd(),
+                onChanged: (value) {
+                  setState(() {
+                    _deadline = value;
+                  });
+                },
+                onShowPicker: (context, currentValue) async {
+                  final _date = await showDatePicker(
+                      context: context,
+                      firstDate: DateTime(1900),
+                      initialDate: currentValue ?? DateTime.now(),
+                      lastDate: DateTime(2150));
+                  if (_date != null) {
+                    return _date;
+                  } else {
+                    return currentValue;
+                  }
+                },
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 25, top: 30),
+              child: Text(
+                'Notes',
+                style: TextStyle(fontSize: 25, color: Colors.black87),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 25, top: 20, right: 35),
+              child: TextFormField(
+                controller: _notes,
+                maxLines: null,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue, width: 0.0),
+                  ),
+                ),
+                validator: (value) {
+                  return null;
+                },
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }
 

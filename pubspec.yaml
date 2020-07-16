@@ -32,6 +32,7 @@ dependencies:
   flutter_spinkit: "^4.1.2"
   checklist: ^0.1.4
   expand_widget: ^1.0.0+1
+  file_picker: ^1.12.0
 
 dev_dependencies:
   flutter_driver:
