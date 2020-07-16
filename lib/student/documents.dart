@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart' as dio;
 import 'package:file_picker/file_picker.dart';
 // import '../shimmer_skeleton.dart';
 import 'dart:async';
@@ -73,6 +76,38 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
         Navigator.pop(context);
         _error();
       }
+    } else {
+      Navigator.pop(context);
+      _error();
+    }
+  }
+
+  Future<void> uploadTranscript(
+      String title, int grade, String spec, File transcript) async {
+    var dioRequest = dio.Dio();
+    dioRequest.options.headers = {
+      HttpHeaders.authorizationHeader: "Token $tok",
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+    var formData = dio.FormData.fromMap({
+      "user_id": newUser.id,
+      "transcript_grade": grade,
+      "transcript_title": title,
+      "transcript_special_circumstances": spec,
+      "transcript_is_flagged": false,
+    });
+    var file = await dio.MultipartFile.fromFile(
+      transcript.path,
+    );
+    formData.files.add(MapEntry('transcript', file));
+    var response = await dioRequest.post(
+      dom + 'api/student/upload-document/',
+      data: formData,
+    );
+    if (response.statusCode == 200) {
+      Navigator.pop(context);
+      _success('added');
+      refresh();
     } else {
       Navigator.pop(context);
       _error();
@@ -571,8 +606,9 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                             ),
                           );
                           if (data != null) {
-                            // createApplication(data[0], data[1], data[2]);
-                            // _loading();
+                            uploadTranscript(
+                                data[0], data[1], data[2], data[3]);
+                            _loading();
                           }
                         },
                       ),
@@ -821,7 +857,20 @@ class _TranscriptScreenState extends State<TranscriptScreen> {
               style:
                   TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
             ),
-            onPressed: () {},
+            onPressed: () {
+              if (_title.text != null &&
+                  _grade != null &&
+                  _spec != null &&
+                  transcript != null) {
+                final data = [
+                  _title.text,
+                  int.parse(_grade.text),
+                  _spec.text,
+                  transcript
+                ];
+                Navigator.pop(context, data);
+              }
+            },
           )
         ],
         title: Text(
@@ -870,6 +919,9 @@ class _TranscriptScreenState extends State<TranscriptScreen> {
                 controller: _grade,
                 keyboardType: TextInputType.number,
                 validator: (value) {
+                  if (int.parse(value) < 5 || int.parse(value) > 12) {
+                    return 'Enter a value between 5 and 12';
+                  }
                   return null;
                 },
               ),

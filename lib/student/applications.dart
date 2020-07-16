@@ -208,7 +208,6 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
         },
       ),
     );
-    // print(json.decode(response.body));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       if (data['response'] == 'Application successfully created.') {
