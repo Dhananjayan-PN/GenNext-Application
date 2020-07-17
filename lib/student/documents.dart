@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
@@ -7,11 +8,10 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:file_picker/file_picker.dart';
-// import '../shimmer_skeleton.dart';
 import 'dart:async';
-import 'dart:math';
 import 'dart:convert';
 import 'dart:io';
 import 'home.dart';
@@ -76,15 +76,17 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
       } else {
         Navigator.pop(context);
         _error();
+        refresh();
       }
     } else {
       Navigator.pop(context);
       _error();
+      refresh();
     }
   }
 
-  Future<void> uploadTranscript(
-      String op, String title, int grade, String spec, File transcript) async {
+  Future<void> uploadTranscript(String op, int id, String title, int grade,
+      String spec, File transcript) async {
     var dioRequest = dio.Dio();
     dioRequest.options.headers = {
       HttpHeaders.authorizationHeader: "Token $tok",
@@ -97,6 +99,9 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
       "transcript_special_circumstances": spec,
       "transcript_is_flagged": false,
     });
+    if (op == 'edit') {
+      formData.fields.add(MapEntry('transcript_id', id.toString()));
+    }
     var file = await dio.MultipartFile.fromFile(
       transcript.path,
     );
@@ -111,23 +116,145 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
             data: formData,
           );
     if (response.statusCode == 200) {
+      if (op == 'edit' &&
+          response.data['Response'] == 'Document successfully edited.') {
+        Navigator.pop(context);
+        _success('edited');
+        refresh();
+      } else if (op == 'create' &&
+          response.data['Response'] == 'Document successfully uploaded.') {
+        Navigator.pop(context);
+        _success('added');
+        refresh();
+      } else {
+        Navigator.pop(context);
+        _error();
+        refresh();
+      }
+    } else {
       Navigator.pop(context);
-      _success('edited');
+      _error();
       refresh();
+    }
+  }
+
+  Future<void> addExtracurricular(String op, int id, String title,
+      DateTime startDate, DateTime endDate, String desc) async {
+    final response = op == 'create'
+        ? await http.post(
+            dom + 'api/student/upload-document/',
+            headers: <String, String>{
+              HttpHeaders.authorizationHeader: "Token $tok",
+              'Content-Type': 'application/json; charset=UTF-8'
+            },
+            body: json.encode(
+              <String, dynamic>{
+                "user_id": newUser.id,
+                "ec_title": title,
+                "ec_start_date": startDate.toIso8601String().substring(0, 10),
+                "ec_end_date": endDate.toIso8601String().substring(0, 10),
+                "ec_description": desc == '' ? 'No description' : desc,
+                "ec_is_flagged": false
+              },
+            ),
+          )
+        : await http.put(
+            dom + 'api/student/edit-document',
+            headers: <String, String>{
+              HttpHeaders.authorizationHeader: "Token $tok",
+              'Content-Type': 'application/json; charset=UTF-8'
+            },
+            body: json.encode(
+              <String, dynamic>{
+                "user_id": newUser.id,
+                "ec_id": id,
+                "ec_title": title,
+                "ec_start_date": startDate.toIso8601String().substring(0, 10),
+                "ec_end_date": endDate.toIso8601String().substring(0, 10),
+                "ec_description": desc == '' ? 'No description' : desc,
+                "ec_is_flagged": false
+              },
+            ),
+          );
+    print(response.body);
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (op == 'edit' && data['Response'] == 'Document successfully edited.') {
+        Navigator.pop(context);
+        _success('edited');
+        refresh();
+      } else if (op == 'create' &&
+          data['Response'] == 'Document successfully uploaded.') {
+        Navigator.pop(context);
+        _success('added');
+        refresh();
+      } else {
+        Navigator.pop(context);
+        _error();
+        refresh();
+      }
     } else {
       Navigator.pop(context);
       _error();
     }
   }
 
+  Future<void> uploadMiscDoc(
+      String op, int id, String title, String type, File transcript) async {
+    var dioRequest = dio.Dio();
+    dioRequest.options.headers = {
+      HttpHeaders.authorizationHeader: "Token $tok",
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+    var formData = dio.FormData.fromMap({
+      "user_id": newUser.id,
+      "misc_title": title,
+      "misc_doc_type": type,
+      "misc_is_flagged": false,
+    });
+    if (op == 'edit') {
+      formData.fields.add(MapEntry('misc_id', id.toString()));
+    }
+    var file = await dio.MultipartFile.fromFile(
+      transcript.path,
+    );
+    formData.files.add(MapEntry('misc_document', file));
+    var response = op == 'create'
+        ? await dioRequest.post(
+            dom + 'api/student/upload-document/',
+            data: formData,
+          )
+        : await dioRequest.put(
+            dom + 'api/student/edit-document',
+            data: formData,
+          );
+    if (response.statusCode == 200) {
+      if (op == 'edit' &&
+          response.data['Response'] == 'Document successfully edited.') {
+        Navigator.pop(context);
+        _success('edited');
+        refresh();
+      } else if (op == 'create' &&
+          response.data['Response'] == 'Document successfully uploaded.') {
+        Navigator.pop(context);
+        _success('added');
+        refresh();
+      } else {
+        Navigator.pop(context);
+        _error();
+        refresh();
+      }
+    } else {
+      Navigator.pop(context);
+      _error();
+      refresh();
+    }
+  }
+
   Future<File> urlToFile(String fileUrl) async {
-    var rng = new Random();
     Directory tempDir = await getTemporaryDirectory();
     String tempPath = tempDir.path;
-    File file = File('$tempPath' +
-        (rng.nextInt(100)).toString() +
-        '.' +
-        fileUrl.split('.').last);
+    File file = File('$tempPath/' + fileUrl.split('/').last);
     http.Response response = await http.get(fileUrl);
     await file.writeAsBytes(response.bodyBytes);
     return file;
@@ -405,8 +532,8 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                       ),
                     );
                     if (data != null) {
-                      uploadTranscript(
-                          'edit', data[0], data[1], data[2], data[3]);
+                      uploadTranscript('edit', transcript['transcript_id'],
+                          data[0], data[1], data[2], data[3]);
                       _loading();
                     }
                     break;
@@ -445,7 +572,10 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
             padding: EdgeInsets.all(10),
             margin: EdgeInsets.all(5),
             key: key,
-            message: 'Description:\n' + ec['ec_description'],
+            message: 'Description: ' +
+                (ec['ec_description'] != ''
+                    ? ec['ec_description']
+                    : 'No description provided'),
             child: ListTile(
               dense: true,
               key: Key(ec['ec_id'].toString()),
@@ -487,12 +617,17 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                         MaterialPageRoute(
                           builder: (context) => ECScreen(
                             op: 'Edit',
+                            title: ec['ec_title'],
+                            startDate: DateTime.parse(ec['ec_start_date']),
+                            endDate: DateTime.parse(ec['ec_end_date']),
+                            desc: ec['ec_description'],
                           ),
                         ),
                       );
                       if (data != null) {
-                        // createApplication(data[0], data[1], data[2]);
-                        // _loading();
+                        addExtracurricular('edit', ec['ec_id'], data[0],
+                            data[1], data[2], data[3]);
+                        _loading();
                       }
                       break;
                     case 'Delete':
@@ -559,17 +694,22 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
               onSelected: (value) async {
                 switch (value) {
                   case 'Edit':
+                    File file = await urlToFile(document['misc_doc_path']);
                     List data = await Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => MiscDocsScreen(
                           op: 'Edit',
+                          title: document['title'],
+                          type: document['misc_doc_type'],
+                          file: file,
                         ),
                       ),
                     );
                     if (data != null) {
-                      // createApplication(data[0], data[1], data[2]);
-                      // _loading();
+                      uploadMiscDoc('edit', document['misc_doc_id'], data[0],
+                          data[1], data[2]);
+                      _loading();
                     }
                     break;
                   case 'Delete':
@@ -632,8 +772,8 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                             ),
                           );
                           if (data != null) {
-                            uploadTranscript(
-                                'create', data[0], data[1], data[2], data[3]);
+                            uploadTranscript('create', null, data[0], data[1],
+                                data[2], data[3]);
                             _loading();
                           }
                         },
@@ -677,7 +817,11 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                               ),
                             ),
                           );
-                          if (data != null) {}
+                          if (data != null) {
+                            addExtracurricular('create', null, data[0], data[1],
+                                data[2], data[3]);
+                            _loading();
+                          }
                         },
                       ),
                     ),
@@ -720,9 +864,9 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                             ),
                           );
                           if (data != null) {
-                            // uploadTranscript(
-                            //     data[0], data[1], data[2], data[3]);
-                            // _loading();
+                            uploadMiscDoc(
+                                'create', null, data[0], data[1], data[2]);
+                            _loading();
                           }
                         },
                       ),
@@ -1031,13 +1175,42 @@ class _TranscriptScreenState extends State<TranscriptScreen> {
 }
 
 class ECScreen extends StatefulWidget {
+  final String title;
+  final DateTime startDate;
+  final DateTime endDate;
+  final String desc;
   final String op;
-  ECScreen({@required this.op});
+  ECScreen(
+      {@required this.op, this.title, this.startDate, this.endDate, this.desc});
   @override
   _ECScreenState createState() => _ECScreenState();
 }
 
 class _ECScreenState extends State<ECScreen> {
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  TextEditingController _title = TextEditingController();
+  TextEditingController _desc = TextEditingController();
+  TextEditingController _startDateController = TextEditingController();
+  TextEditingController _endDateController = TextEditingController();
+
+  DateTime _startDate;
+  DateTime _endDate;
+
+  @override
+  void initState() {
+    super.initState();
+    _title.text = widget.title ?? '';
+    _desc.text = widget.desc ?? '';
+    if (widget.startDate != null) {
+      _startDate = widget.startDate;
+      _startDateController.text = DateFormat.yMMMMd().format(widget.startDate);
+    }
+    if (widget.endDate != null) {
+      _endDate = widget.endDate;
+      _endDateController.text = DateFormat.yMMMMd().format(widget.endDate);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1050,7 +1223,15 @@ class _ECScreenState extends State<ECScreen> {
               style:
                   TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
             ),
-            onPressed: () {},
+            onPressed: () {
+              if (_title.text != null &&
+                  _desc != null &&
+                  _startDate != null &&
+                  _endDate != null) {
+                final data = [_title.text, _startDate, _endDate, _desc.text];
+                Navigator.pop(context, data);
+              }
+            },
           )
         ],
         title: Text(
@@ -1068,19 +1249,155 @@ class _ECScreenState extends State<ECScreen> {
           colors: [Color(0xff00AEEF), Color(0xff0072BC)],
         ),
       ),
-      body: Container(),
+      body: Form(
+        key: _formKey,
+        child: ListView(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(left: 25, top: 35),
+              child: Text(
+                'Title',
+                style: TextStyle(fontSize: 20, color: Colors.black87),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 25, right: 45),
+              child: TextFormField(
+                controller: _title,
+                validator: (value) {
+                  return null;
+                },
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 25, top: 30),
+              child: Text(
+                'Start Date',
+                style: TextStyle(fontSize: 20, color: Colors.black87),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 25, right: 45),
+              child: DateTimeField(
+                initialValue: widget.startDate ?? null,
+                controller: _startDateController,
+                decoration: InputDecoration(
+                  border: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue, width: 0.0),
+                  ),
+                ),
+                format: DateFormat.yMMMMd(),
+                onChanged: (value) {
+                  setState(() {
+                    _startDate = value;
+                  });
+                },
+                onShowPicker: (context, currentValue) async {
+                  final _date = await showDatePicker(
+                      context: context,
+                      firstDate: DateTime(1900),
+                      initialDate:
+                          currentValue ?? widget.startDate ?? DateTime.now(),
+                      lastDate: DateTime(2150));
+                  if (_date != null) {
+                    return _date;
+                  } else {
+                    return currentValue;
+                  }
+                },
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 25, top: 30),
+              child: Text(
+                'End Date',
+                style: TextStyle(fontSize: 20, color: Colors.black87),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 25, right: 45),
+              child: DateTimeField(
+                initialValue: widget.endDate ?? null,
+                controller: _endDateController,
+                decoration: InputDecoration(
+                  border: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue, width: 0.0),
+                  ),
+                ),
+                format: DateFormat.yMMMMd(),
+                onChanged: (value) {
+                  setState(() {
+                    _endDate = value;
+                  });
+                },
+                onShowPicker: (context, currentValue) async {
+                  final _date = await showDatePicker(
+                      context: context,
+                      firstDate: DateTime(1900),
+                      initialDate:
+                          currentValue ?? widget.endDate ?? DateTime.now(),
+                      lastDate: DateTime(2150));
+                  if (_date != null) {
+                    return _date;
+                  } else {
+                    return currentValue;
+                  }
+                },
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 25, top: 30),
+              child: Text(
+                'Description',
+                style: TextStyle(fontSize: 20, color: Colors.black87),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 25, right: 45, top: 15),
+              child: TextFormField(
+                controller: _desc,
+                maxLines: null,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.blue, width: 0.0),
+                  ),
+                ),
+                validator: (value) {
+                  return null;
+                },
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }
 
 class MiscDocsScreen extends StatefulWidget {
+  final String title;
+  final String type;
+  final File file;
   final String op;
-  MiscDocsScreen({@required this.op});
+  MiscDocsScreen({@required this.op, this.title, this.type, this.file});
+
   @override
   _MiscDocsScreenState createState() => _MiscDocsScreenState();
 }
 
 class _MiscDocsScreenState extends State<MiscDocsScreen> {
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  TextEditingController _title = TextEditingController();
+  String _type;
+  File transcript;
+
+  @override
+  void initState() {
+    super.initState();
+    _title.text = widget.title ?? '';
+    transcript = widget.file;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1093,7 +1410,12 @@ class _MiscDocsScreenState extends State<MiscDocsScreen> {
               style:
                   TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
             ),
-            onPressed: () {},
+            onPressed: () {
+              if (_title.text != null && _type != null && transcript != null) {
+                final data = [_title.text, _type, transcript];
+                Navigator.pop(context, data);
+              }
+            },
           )
         ],
         title: Text(
@@ -1109,7 +1431,120 @@ class _MiscDocsScreenState extends State<MiscDocsScreen> {
           colors: [Color(0xff00AEEF), Color(0xff0072BC)],
         ),
       ),
-      body: Container(),
+      body: Form(
+        key: _formKey,
+        child: ListView(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(left: 25, top: 35),
+              child: Text(
+                'Title',
+                style: TextStyle(fontSize: 20, color: Colors.black87),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 25, right: 45),
+              child: TextFormField(
+                controller: _title,
+                validator: (value) {
+                  return null;
+                },
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 25, top: 30),
+              child: Text(
+                'Type',
+                style: TextStyle(fontSize: 20, color: Colors.black87),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 26, right: 45),
+              child: DropdownButtonFormField(
+                hint: Text(
+                  "Type of document",
+                  style: TextStyle(color: Colors.black54, fontSize: 16),
+                ),
+                itemHeight: kMinInteractiveDimension,
+                items: [
+                  DropdownMenuItem(
+                      child: Text(
+                        'Letter of Recommendation',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      value: 'Letter of Recommendation'),
+                  DropdownMenuItem(
+                      child: Text(
+                        'Certificate of Achievement',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      value: 'Certificate of Achievement'),
+                  DropdownMenuItem(
+                      child: Text(
+                        'Financial Document',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      value: 'Financial Document'),
+                  DropdownMenuItem(
+                      child: Text(
+                        'Other',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      value: 'Other'),
+                ],
+                value: _type,
+                validator: (value) => value == null
+                    ? 'Do tell us what type of document this is'
+                    : null,
+                isExpanded: true,
+                onChanged: (value) {
+                  setState(() {
+                    _type = value;
+                    print(_type);
+                  });
+                },
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 25, top: 30),
+              child: Text(
+                'Document',
+                style: TextStyle(fontSize: 20, color: Colors.black87),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 25, right: 25, top: 10),
+              child: Row(
+                children: <Widget>[
+                  RaisedButton(
+                    elevation: 2,
+                    color: Colors.grey[50],
+                    textColor: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    child: Text('Choose File'),
+                    onPressed: () async {
+                      File file = await FilePicker.getFile(
+                        type: FileType.any,
+                      );
+                      if (file != null) {
+                        setState(() {
+                          transcript = file;
+                        });
+                      }
+                    },
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Text(
+                        transcript?.path?.split('/')?.last ?? 'No file chosen'),
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
