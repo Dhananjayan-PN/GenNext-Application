@@ -1,19 +1,19 @@
-import 'package:flutter/material.dart';
-import 'package:back_button_interceptor/back_button_interceptor.dart';
-import '../shimmer_skeleton.dart';
-import 'package:gradient_app_bar/gradient_app_bar.dart';
-import 'package:searchable_dropdown/searchable_dropdown.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-// import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:searchable_dropdown/searchable_dropdown.dart';
+import 'package:gradient_app_bar/gradient_app_bar.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+// import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'dart:async';
 import 'dart:convert';
+import 'dart:async';
 import 'dart:io';
 import 'home.dart';
+import '../shimmer_skeleton.dart';
 
 class ApplicationsScreen extends StatefulWidget {
   @override
@@ -1122,6 +1122,7 @@ class SingleAppScreen extends StatefulWidget {
 
 class _SingleAppScreenState extends State<SingleAppScreen> {
   TextEditingController _appNotes = TextEditingController();
+  Map app;
   bool saved = true;
   bool saving = false;
   bool savingfailed = false;
@@ -1130,22 +1131,36 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
   @override
   void initState() {
     super.initState();
-    _appNotes.text = widget.application['application_notes'] ?? '';
+    app = widget.application;
+    _appNotes.text = app['application_notes'] ?? '';
+  }
+
+  Future<void> getApplication(int id) async {
+    final response = await http.get(
+      dom + 'api/student/get-application/$id',
+      headers: {HttpHeaders.authorizationHeader: "Token $tok"},
+    );
+    if (response.statusCode == 200) {
+      setState(() {
+        app = json.decode(response.body)['application_data'];
+      });
+    } else {
+      throw 'failed';
+    }
   }
 
   Future<void> editAppNotes(String notes) async {
     List essayList = [];
     List transcriptList = [];
     List miscList = [];
-    for (int i = 0; i < widget.application['essay_data'].length; i++) {
-      essayList.add(widget.application['essay_data'][i]['essay_id']);
+    for (int i = 0; i < app['essay_data'].length; i++) {
+      essayList.add(app['essay_data'][i]['essay_id']);
     }
-    for (int i = 0; i < widget.application['transcript_data'].length; i++) {
-      transcriptList
-          .add(widget.application['transcript_data'][i]['transcript_id']);
+    for (int i = 0; i < app['transcript_data'].length; i++) {
+      transcriptList.add(app['transcript_data'][i]['transcript_id']);
     }
-    for (int i = 0; i < widget.application['misc_doc_data'].length; i++) {
-      miscList.add(widget.application['misc_doc_data'][i]['misc_doc_id']);
+    for (int i = 0; i < app['misc_doc_data'].length; i++) {
+      miscList.add(app['misc_doc_data'][i]['misc_doc_id']);
     }
     setState(() {
       saved = false;
@@ -1159,11 +1174,11 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
       },
       body: jsonEncode(
         <String, dynamic>{
-          'application_id': widget.application['application_id'],
-          'university_id': widget.application['university_id'],
-          'application_deadline': widget.application["application_deadline"],
+          'application_id': app['application_id'],
+          'university_id': app['university_id'],
+          'application_deadline': app["application_deadline"],
           'application_notes': notes,
-          'application_status': widget.application['completion_status'],
+          'application_status': app['completion_status'],
           'essay_ids': essayList.toString(),
           'transcript_ids': transcriptList.toString(),
           'misc_doc_ids': miscList.toString(),
@@ -1189,6 +1204,67 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
         saving = false;
         savingfailed = true;
       });
+      _error();
+    }
+  }
+
+  Future<void> detachDocument(String category, int id) async {
+    List essayList = [];
+    List transcriptList = [];
+    List miscList = [];
+    for (int i = 0; i < app['essay_data'].length; i++) {
+      if (category == 'essay' && id == app['essay_data'][i]['essay_id']) {
+      } else {
+        essayList.add(app['essay_data'][i]['essay_id']);
+      }
+    }
+    for (int i = 0; i < app['transcript_data'].length; i++) {
+      if (category == 'transcript' &&
+          id == app['transcript_data'][i]['transcript_id']) {
+      } else {
+        transcriptList.add(app['transcript_data'][i]['transcript_id']);
+      }
+    }
+    for (int i = 0; i < app['misc_doc_data'].length; i++) {
+      if (category == 'miscdoc' &&
+          id == app['misc_doc_data'][i]['misc_doc_id']) {
+      } else {
+        miscList.add(app['misc_doc_data'][i]['misc_doc_id']);
+      }
+    }
+    setState(() {
+      saved = false;
+      saving = true;
+    });
+    final response = await http.put(
+      dom + 'api/student/edit-application',
+      headers: {
+        HttpHeaders.authorizationHeader: "Token $tok",
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{
+          'application_id': app['application_id'],
+          'university_id': app['university_id'],
+          'application_deadline': app["application_deadline"],
+          'application_notes': app["application_notes"],
+          'application_status': app['completion_status'],
+          'essay_ids': essayList.toString(),
+          'transcript_ids': transcriptList.toString(),
+          'misc_doc_ids': miscList.toString(),
+        },
+      ),
+    );
+    if (response.statusCode == 200) {
+      if (json.decode(response.body)['response'] ==
+          'Application successfully edited.') {
+        refresh();
+      } else {
+        refresh();
+        _error();
+      }
+    } else {
+      refresh();
       _error();
     }
   }
@@ -1235,6 +1311,77 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
         );
       },
     );
+  }
+
+  _detachDocument(String category, int id) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(0),
+          elevation: 20,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          content: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(top: 18),
+                  child: Icon(
+                    Icons.delete,
+                    size: 40,
+                    color: Colors.red.withOpacity(0.9),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 5),
+                  child: Text(
+                    'Are you sure you want to detach\nthis document?',
+                    style: TextStyle(color: Colors.black, fontSize: 14),
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: Colors.blue),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            FlatButton(
+              child: Text(
+                'Detach',
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+                detachDocument(category, id);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void refresh() async {
+    setState(() {
+      getApplication(widget.application['application_id']);
+    });
   }
 
   Widget buildEssayCard(essay) {
@@ -1285,7 +1432,9 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                       ),
             trailing: IconButton(
               icon: Icon(Icons.close),
-              onPressed: () {},
+              onPressed: () {
+                _detachDocument('essay', essay['essay_id']);
+              },
             ),
           ),
         ),
@@ -1329,7 +1478,9 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                   ),
             trailing: IconButton(
               icon: Icon(Icons.close),
-              onPressed: () {},
+              onPressed: () {
+                _detachDocument('transcript', transcript['transcript_id']);
+              },
             ),
           ),
         ),
@@ -1391,7 +1542,9 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
             ),
             trailing: IconButton(
               icon: Icon(Icons.close),
-              onPressed: () {},
+              onPressed: () {
+                _detachDocument('miscdoc', document['misc_doc_id']);
+              },
             ),
           ),
         ),
@@ -1404,8 +1557,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
     List<Widget> essayCards = [];
     List<Widget> transcriptCards = [];
     List<Widget> miscCards = [];
-    DateTime deadline =
-        DateTime.parse(widget.application["application_deadline"]);
+    DateTime deadline = DateTime.parse(app["application_deadline"]);
     var timeleft = DateTime.now().isBefore(deadline)
         ? deadline.difference(DateTime.now()).inDays
         : 'Passed';
@@ -1414,15 +1566,14 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
     if (timeleft is int) {
       timeleft = timeleft.toString() + ' days';
     }
-    for (int i = 0; i < widget.application['essay_data'].length; i++) {
-      essayCards.add(buildEssayCard(widget.application['essay_data'][i]));
+    for (int i = 0; i < app['essay_data'].length; i++) {
+      essayCards.add(buildEssayCard(app['essay_data'][i]));
     }
-    for (int i = 0; i < widget.application['transcript_data'].length; i++) {
-      transcriptCards
-          .add(buildTranscriptCard(widget.application['transcript_data'][i]));
+    for (int i = 0; i < app['transcript_data'].length; i++) {
+      transcriptCards.add(buildTranscriptCard(app['transcript_data'][i]));
     }
-    for (int i = 0; i < widget.application['misc_doc_data'].length; i++) {
-      miscCards.add(buildMiscCard(widget.application['misc_doc_data'][i]));
+    for (int i = 0; i < app['misc_doc_data'].length; i++) {
+      miscCards.add(buildMiscCard(app['misc_doc_data'][i]));
     }
     Widget cardData(ImageProvider imageProvider, bool isError) => Container(
           decoration: BoxDecoration(
@@ -1461,7 +1612,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                         width: 10,
                         height: 10,
                         decoration: BoxDecoration(
-                          color: widget.application['completion_status']
+                          color: app['completion_status']
                               ? Colors.green
                               : Colors.red,
                           shape: BoxShape.circle,
@@ -1473,7 +1624,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                 Padding(
                   padding: EdgeInsets.only(left: 15),
                   child: Text(
-                    widget.application["university"],
+                    app["university"],
                     style: TextStyle(
                         fontSize: 19,
                         color: Colors.white,
@@ -1493,7 +1644,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                   child: Text(
                     DateFormat.yMMMMd().format(
                           DateTime.parse(
-                            widget.application["application_deadline"],
+                            app["application_deadline"],
                           ),
                         ) +
                         ' ($timeleft)',
@@ -1517,7 +1668,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                   child: Text(
                     DateFormat.yMMMMd().format(
                       DateTime.parse(
-                        widget.application["created_at"],
+                        app["created_at"],
                       ),
                     ),
                     style: TextStyle(color: Colors.white, fontSize: 15),
@@ -1546,7 +1697,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
       body: ListView(
         children: <Widget>[
           Hero(
-            tag: widget.application['application_id'].toString(),
+            tag: app['application_id'].toString(),
             child: Padding(
               padding: EdgeInsets.only(left: 12, right: 12, top: 18),
               child: Material(
@@ -1562,8 +1713,8 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                   ),
                   elevation: 6,
                   child: CachedNetworkImage(
-                      key: Key(widget.application['application_id'].toString()),
-                      imageUrl: widget.application['image_url'] ??
+                      key: Key(app['application_id'].toString()),
+                      imageUrl: app['image_url'] ??
                           'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
                       placeholder: (context, url) => CardPlaceHolder(),
                       errorWidget: (context, url, error) =>
@@ -1577,26 +1728,49 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
           Padding(
             padding: EdgeInsets.only(left: 12, right: 12, top: 10),
             child: Card(
-              elevation: 6,
+              elevation: 4,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(
                   Radius.circular(10),
                 ),
               ),
               child: ExpansionTile(
+                initiallyExpanded: essayCards.isNotEmpty,
                 title: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text('Essays'),
                     Padding(
                       padding: EdgeInsets.only(left: 3),
-                      child: InkWell(
-                          child: Icon(
-                            Icons.add,
-                            size: 20,
-                            color: Colors.blue,
-                          ),
-                          onTap: () {}),
+                      child: PopupMenuButton(
+                        child: Icon(
+                          Icons.add,
+                          size: 20,
+                          color: Colors.blue,
+                        ),
+                        itemBuilder: (BuildContext context) {
+                          return {'Create New', 'Attach Existing'}
+                              .map((String choice) {
+                            return PopupMenuItem<String>(
+                              height: 35,
+                              value: choice,
+                              child: Text(choice,
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.black87,
+                                      fontWeight: FontWeight.w400)),
+                            );
+                          }).toList();
+                        },
+                        onSelected: (value) async {
+                          switch (value) {
+                            case 'Create New':
+                              break;
+                            case 'Attach Existing':
+                              break;
+                          }
+                        },
+                      ),
                     )
                   ],
                 ),
@@ -1608,7 +1782,8 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                               left: 20, right: 20, top: 5, bottom: 15),
                           child: Text(
                             'No essays attached to this application.',
-                            style: TextStyle(fontSize: 11),
+                            style:
+                                TextStyle(fontSize: 12, color: Colors.black54),
                             textAlign: TextAlign.center,
                           ),
                         )
@@ -1624,21 +1799,44 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                   Radius.circular(10),
                 ),
               ),
-              elevation: 6,
+              elevation: 4,
               child: ExpansionTile(
+                initiallyExpanded: transcriptCards.isNotEmpty,
                 title: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text('Transcripts'),
                     Padding(
                       padding: EdgeInsets.only(left: 3),
-                      child: InkWell(
-                          child: Icon(
-                            Icons.add,
-                            size: 20,
-                            color: Colors.blue,
-                          ),
-                          onTap: () {}),
+                      child: PopupMenuButton(
+                        child: Icon(
+                          Icons.add,
+                          size: 20,
+                          color: Colors.blue,
+                        ),
+                        itemBuilder: (BuildContext context) {
+                          return {'Create New', 'Attach Existing'}
+                              .map((String choice) {
+                            return PopupMenuItem<String>(
+                              height: 35,
+                              value: choice,
+                              child: Text(choice,
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.black87,
+                                      fontWeight: FontWeight.w400)),
+                            );
+                          }).toList();
+                        },
+                        onSelected: (value) async {
+                          switch (value) {
+                            case 'Create New':
+                              break;
+                            case 'Attach Existing':
+                              break;
+                          }
+                        },
+                      ),
                     )
                   ],
                 ),
@@ -1650,7 +1848,8 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                               left: 20, right: 20, top: 5, bottom: 15),
                           child: Text(
                             'No transcripts attached to this application.',
-                            style: TextStyle(fontSize: 11),
+                            style:
+                                TextStyle(fontSize: 12, color: Colors.black54),
                             textAlign: TextAlign.center,
                           ),
                         )
@@ -1661,26 +1860,49 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
           Padding(
             padding: EdgeInsets.only(left: 12, right: 12, top: 10),
             child: Card(
-              elevation: 6,
+              elevation: 4,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(
                   Radius.circular(10),
                 ),
               ),
               child: ExpansionTile(
+                initiallyExpanded: miscCards.isNotEmpty,
                 title: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text('Misc Documents'),
                     Padding(
                       padding: EdgeInsets.only(left: 3),
-                      child: InkWell(
-                          child: Icon(
-                            Icons.add,
-                            size: 20,
-                            color: Colors.blue,
-                          ),
-                          onTap: () {}),
+                      child: PopupMenuButton(
+                        child: Icon(
+                          Icons.add,
+                          size: 20,
+                          color: Colors.blue,
+                        ),
+                        itemBuilder: (BuildContext context) {
+                          return {'Create New', 'Attach Existing'}
+                              .map((String choice) {
+                            return PopupMenuItem<String>(
+                              height: 35,
+                              value: choice,
+                              child: Text(choice,
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.black87,
+                                      fontWeight: FontWeight.w400)),
+                            );
+                          }).toList();
+                        },
+                        onSelected: (value) async {
+                          switch (value) {
+                            case 'Create New':
+                              break;
+                            case 'Attach Existing':
+                              break;
+                          }
+                        },
+                      ),
                     )
                   ],
                 ),
@@ -1692,7 +1914,8 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                               left: 20, right: 20, top: 5, bottom: 15),
                           child: Text(
                             'No misc documents attached to this application.',
-                            style: TextStyle(fontSize: 11),
+                            style:
+                                TextStyle(fontSize: 12, color: Colors.black54),
                             textAlign: TextAlign.center,
                           ),
                         )
@@ -1708,7 +1931,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                   Radius.circular(10),
                 ),
               ),
-              elevation: 6,
+              elevation: 4,
               child: Column(
                 children: <Widget>[
                   Padding(

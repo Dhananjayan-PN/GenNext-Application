@@ -43,7 +43,7 @@ class ProfileScreenState extends State<ProfileScreen> {
         padding: EdgeInsets.only(top: 15, left: 10, right: 10),
         child: Card(
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(15))),
+              borderRadius: BorderRadius.all(Radius.circular(10))),
           elevation: 6,
           child: Column(
             mainAxisSize: MainAxisSize.min,
