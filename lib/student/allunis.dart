@@ -148,7 +148,8 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
       final data = jsonDecode(response.body);
       if (data['Response'] == 'University successfully deleted from list.') {
         Navigator.pop(context);
-        _success('remove');
+        success(context,
+            'University successfully removed.\nHead over to Explore to find more!');
         refresh();
       } else {
         Navigator.pop(context);
@@ -175,7 +176,8 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
       final data = jsonDecode(response.body);
       if (data['Response'] == 'University successfully added.') {
         Navigator.pop(context);
-        _success('added');
+        success(
+            context, 'University successfully added.\nTime to get working!');
         refresh();
       } else {
         error(context);
@@ -272,54 +274,6 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
       loading(context);
       add(id, catString);
     }
-  }
-
-  _success(String op) {
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          contentPadding: EdgeInsets.all(0),
-          elevation: 20,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          content: Container(
-            height: 150,
-            width: 80,
-            decoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            ),
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Icon(
-                    Icons.check_circle_outline,
-                    size: 40,
-                    color: Colors.green,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Text(
-                      op == 'remove'
-                          ? 'University successfully removed.\nHead over to Explore to find more!'
-                          : op == 'added'
-                              ? 'University successfully added.\nTime to get working!'
-                              : 'University successfully moved.\nGet writing!',
-                      style: TextStyle(color: Colors.black, fontSize: 14),
-                      textAlign: TextAlign.center,
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
   }
 
   void refresh() {

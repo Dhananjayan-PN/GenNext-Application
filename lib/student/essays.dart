@@ -92,7 +92,8 @@ class _EssaysScreenState extends State<EssaysScreen> {
       final data = jsonDecode(response.body);
       if (data['Response'] == 'Essay successfully edited.') {
         Navigator.pop(context);
-        _success('saved');
+        success(context,
+            'Your changes have been saved\nCome back anytime to continue editing!');
         refresh();
       } else {
         Navigator.pop(context);
@@ -113,7 +114,7 @@ class _EssaysScreenState extends State<EssaysScreen> {
       final data = jsonDecode(response.body);
       if (data['Response'] == 'Essay successfully deleted.') {
         Navigator.pop(context);
-        _success('delete');
+        success(context, 'Essay successfully deleted\nTap + to make a new one');
         refresh();
       } else {
         Navigator.pop(context);
@@ -148,7 +149,7 @@ class _EssaysScreenState extends State<EssaysScreen> {
       final data = jsonDecode(response.body);
       if (data['Response'] == 'Essay successfully edited.') {
         Navigator.pop(context);
-        _success('edit');
+        success(context, 'Essay successfully edited\nGet writing!');
         refresh();
       } else {
         Navigator.pop(context);
@@ -179,7 +180,7 @@ class _EssaysScreenState extends State<EssaysScreen> {
       final data = jsonDecode(response.body);
       if (data['Response'] == 'Essay successfully created.') {
         Navigator.pop(context);
-        _success('create');
+        success(context, 'Essay successfully created\nGet writing!');
         refresh();
       } else {
         Navigator.pop(context);
@@ -262,56 +263,6 @@ class _EssaysScreenState extends State<EssaysScreen> {
         MaterialPageRoute(builder: (context) => NewEssayScreen(op: 'Create')));
     createEssay(details[0], details[1]);
     loading(context);
-  }
-
-  _success(String op) {
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          contentPadding: EdgeInsets.all(0),
-          elevation: 20,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          content: Container(
-            height: 150,
-            width: 80,
-            decoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            ),
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Icon(
-                    Icons.check_circle_outline,
-                    size: 40,
-                    color: Colors.green,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Text(
-                      op == 'delete'
-                          ? 'Essay successfully deleted\nTap + to make a new one'
-                          : op == 'create'
-                              ? 'Essay successfully created\nGet writing!'
-                              : op == 'saved'
-                                  ? 'Your changes have been saved\nCome back anytime to continue editing!'
-                                  : 'Essay successfully edited\nGet writing!',
-                      style: TextStyle(color: Colors.black, fontSize: 14),
-                      textAlign: TextAlign.center,
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
   }
 
   Widget buildEssayCard(essay) {

@@ -79,6 +79,94 @@ loading(context) {
   );
 }
 
+success(context) {
+  showDialog(
+    context: context,
+    barrierDismissible: true,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        contentPadding: EdgeInsets.all(0),
+        elevation: 20,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        content: Container(
+          height: 150,
+          width: 80,
+          decoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          ),
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(
+                  Icons.check_circle_outline,
+                  size: 40,
+                  color: Colors.green,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 10),
+                  child: Text(
+                    'Message successfully delivered!\nRespective individuals will be notified',
+                    style: TextStyle(color: Colors.black, fontSize: 14),
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      );
+    },
+  );
+}
+
+error(context) {
+  showDialog(
+    context: context,
+    barrierDismissible: true,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        contentPadding: EdgeInsets.all(0),
+        elevation: 20,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20.0))),
+        content: Container(
+          height: 150,
+          width: 80,
+          decoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          ),
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(
+                  Icons.error_outline,
+                  size: 40,
+                  color: Colors.red.withOpacity(0.9),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 10),
+                  child: Text(
+                    'Unable to establish a connection with our servers.\nCheck your connection and try again later.',
+                    style: TextStyle(color: Colors.black, fontSize: 12),
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      );
+    },
+  );
+}
+
 class NavDrawer extends StatelessWidget {
   final String name;
   final String email;

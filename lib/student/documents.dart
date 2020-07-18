@@ -71,7 +71,8 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
       final data = jsonDecode(response.body);
       if (data['Response'] == 'Document successfully deleted.') {
         Navigator.pop(context);
-        _success('delete');
+        success(
+            context, 'Document successfully deleted\nTap + to add a new one');
         refresh();
       } else {
         Navigator.pop(context);
@@ -119,12 +120,12 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
       if (op == 'edit' &&
           response.data['Response'] == 'Document successfully edited.') {
         Navigator.pop(context);
-        _success('edited');
+        success(context, 'Document successfully edited\nGet working!');
         refresh();
       } else if (op == 'create' &&
           response.data['Response'] == 'Document successfully uploaded.') {
         Navigator.pop(context);
-        _success('added');
+        success(context, 'Document successfully added\nGreat work!');
         refresh();
       } else {
         Navigator.pop(context);
@@ -181,12 +182,12 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
       final data = jsonDecode(response.body);
       if (op == 'edit' && data['Response'] == 'Document successfully edited.') {
         Navigator.pop(context);
-        _success('edited');
+        success(context, 'Document successfully edited\nGet working!');
         refresh();
       } else if (op == 'create' &&
           data['Response'] == 'Document successfully uploaded.') {
         Navigator.pop(context);
-        _success('added');
+        success(context, 'Document successfully added\nGreat work!');
         refresh();
       } else {
         Navigator.pop(context);
@@ -232,12 +233,12 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
       if (op == 'edit' &&
           response.data['Response'] == 'Document successfully edited.') {
         Navigator.pop(context);
-        _success('edited');
+        success(context, 'Document successfully edited\nGet working!');
         refresh();
       } else if (op == 'create' &&
           response.data['Response'] == 'Document successfully uploaded.') {
         Navigator.pop(context);
-        _success('added');
+        success(context, 'Document successfully added\nGreat work!');
         refresh();
       } else {
         Navigator.pop(context);
@@ -258,54 +259,6 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
     http.Response response = await http.get(fileUrl);
     await file.writeAsBytes(response.bodyBytes);
     return file;
-  }
-
-  _success(String op) {
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          contentPadding: EdgeInsets.all(0),
-          elevation: 20,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          content: Container(
-            height: 150,
-            width: 80,
-            decoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            ),
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Icon(
-                    Icons.check_circle_outline,
-                    size: 40,
-                    color: Colors.green,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Text(
-                      op == 'delete'
-                          ? 'Document successfully deleted\nTap + to add a new one'
-                          : op == 'added'
-                              ? 'Document successfully added\nGreat work!'
-                              : 'Document successfully edited\nGet working!',
-                      style: TextStyle(color: Colors.black, fontSize: 14),
-                      textAlign: TextAlign.center,
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
   }
 
   _deleteDocument(String type, int id) {
