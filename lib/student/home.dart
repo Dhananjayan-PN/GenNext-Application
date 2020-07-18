@@ -38,7 +38,7 @@ final navlistelements = [
   ['My Documents', DocumentsScreen(), Icons.description],
 ];
 
-loading(context) {
+loading(BuildContext context) {
   showDialog(
     context: context,
     barrierDismissible: false,
