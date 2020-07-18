@@ -346,7 +346,7 @@ class _CounsellingScreenState extends State<CounsellingScreen> {
                     Material(
                       color: Colors.transparent,
                       child: InkWell(
-                        splashColor: Colors.cyan,
+                        splashColor: Colors.blue[700],
                         onTap: () {},
                         child: Text(
                           'Request for another',

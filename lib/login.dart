@@ -450,7 +450,7 @@ class _LoginPageState extends State<LoginPage> {
                         Material(
                           color: Colors.transparent,
                           child: InkWell(
-                            splashColor: Colors.cyan,
+                            splashColor: Color(0xff005fa8),
                             onTap: () {
                               formKey.currentState.reset();
                               Navigator.push(

@@ -48,7 +48,7 @@ class BodyBuilderState extends State<BodyBuilder> {
                   child: Card(
                     elevation: 8,
                     child: InkWell(
-                      splashColor: Colors.cyan[400],
+                      splashColor: Color(0xff005fa8),
                       onTap: () {
                         //Take to the page containing information regarding notification
                       },
