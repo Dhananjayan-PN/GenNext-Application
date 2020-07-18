@@ -182,6 +182,7 @@ class _AllChatsState extends State<AllChats> {
                   ),
                   Expanded(
                     child: TextField(
+                      cursorColor: Color(0xff005fa8),
                       decoration: InputDecoration(
                           labelText: "Search",
                           contentPadding: EdgeInsets.all(2)),
@@ -458,6 +459,7 @@ class _OpenChatState extends State<OpenChat> {
                   child: Padding(
                     padding: EdgeInsets.only(top: 5, bottom: 5),
                     child: TextField(
+                      cursorColor: Color(0xff005fa8),
                       maxLines: null,
                       keyboardType: TextInputType.multiline,
                       style: TextStyle(color: Colors.black, fontSize: 16.0),

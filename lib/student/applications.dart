@@ -312,12 +312,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
     }
     Widget cardData(ImageProvider imageProvider, bool isError) => Container(
           decoration: BoxDecoration(
-            gradient: isError
-                ? LinearGradient(
-                    end: Alignment.topRight,
-                    begin: Alignment.bottomLeft,
-                    colors: [Color(0xff00AEEF), Color(0xff0072BC)])
-                : null,
+            color: isError ? Color(0xff005fa8) : null,
             image: imageProvider != null
                 ? DecorationImage(
                     alignment: Alignment.center,
@@ -446,7 +441,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
         child: Material(
           shadowColor: Colors.grey.withOpacity(0.5),
           color: Colors.transparent,
-          elevation: 8,
+          elevation: 6,
           child: Card(
             clipBehavior: Clip.antiAlias,
             shape: RoundedRectangleBorder(
@@ -455,10 +450,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
             child: CachedNetworkImage(
               imageUrl: application['image_url'] ??
                   'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
-              placeholder: (context, url) => CardSkeleton(
-                padding: 0,
-                isBottomLinesActive: false,
-              ),
+              placeholder: (context, url) => CardPlaceHolder(),
               errorWidget: (context, url, error) => cardData(null, true),
               imageBuilder: (context, imageProvider) =>
                   cardData(imageProvider, false),
@@ -619,6 +611,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                                 ),
                                 Expanded(
                                   child: TextField(
+                                    cursorColor: Color(0xff005fa8),
                                     decoration: InputDecoration(
                                         labelText: "Search",
                                         contentPadding: EdgeInsets.all(2)),
@@ -738,6 +731,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                                 ),
                                 Expanded(
                                   child: TextField(
+                                    cursorColor: Color(0xff005fa8),
                                     decoration: InputDecoration(
                                         labelText: "Search",
                                         contentPadding: EdgeInsets.all(2)),
@@ -952,6 +946,7 @@ class _NewApplicationScreenState extends State<NewApplicationScreen> {
             Padding(
               padding: EdgeInsets.only(left: 25, top: 20, right: 35),
               child: TextFormField(
+                cursorColor: Color(0xff005fa8),
                 controller: _notes,
                 maxLines: null,
                 decoration: InputDecoration(
@@ -1392,12 +1387,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
     }
     Widget cardData(ImageProvider imageProvider, bool isError) => Container(
           decoration: BoxDecoration(
-            gradient: isError
-                ? LinearGradient(
-                    end: Alignment.topRight,
-                    begin: Alignment.bottomLeft,
-                    colors: [Color(0xff00AEEF), Color(0xff0072BC)])
-                : null,
+            color: isError ? Color(0xff005fa8) : null,
             image: imageProvider != null
                 ? DecorationImage(
                     alignment: Alignment.center,
@@ -1810,6 +1800,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                       padding: EdgeInsets.only(
                           top: 5, left: 20, right: 20, bottom: 12),
                       child: TextField(
+                        cursorColor: Color(0xff005fa8),
                         controller: _appNotes,
                         autocorrect: true,
                         maxLines: null,

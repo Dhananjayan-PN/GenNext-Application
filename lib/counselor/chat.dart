@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -140,7 +139,8 @@ class _AllChatsState extends State<AllChats> {
               newChat();
             }),
         backgroundColor: Colors.white,
-        appBar: GradientAppBar(
+        appBar: AppBar(
+          backgroundColor: Color(0xff005fa8),
           leading: IconButton(
               icon: Icon(
                 Icons.arrow_back,
@@ -162,10 +162,6 @@ class _AllChatsState extends State<AllChats> {
             'Chats',
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
-          gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
         ),
         body: Column(
           children: <Widget>[
@@ -183,6 +179,7 @@ class _AllChatsState extends State<AllChats> {
                   ),
                   Expanded(
                     child: TextField(
+                      cursorColor: Color(0xff005fa8),
                       decoration: InputDecoration(
                           labelText: "Search",
                           contentPadding: EdgeInsets.all(2)),
@@ -388,7 +385,8 @@ class _OpenChatState extends State<OpenChat> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GradientAppBar(
+      appBar: AppBar(
+        backgroundColor: Color(0xff005fa8),
         leading: IconButton(
             icon: Icon(
               Icons.arrow_back,
@@ -421,10 +419,6 @@ class _OpenChatState extends State<OpenChat> {
             ),
           ],
         ),
-        gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
       ),
       body: Column(
         children: <Widget>[
@@ -458,6 +452,7 @@ class _OpenChatState extends State<OpenChat> {
                   child: Padding(
                     padding: EdgeInsets.only(top: 5, bottom: 5),
                     child: TextField(
+                      cursorColor: Color(0xff005fa8),
                       maxLines: null,
                       keyboardType: TextInputType.multiline,
                       style: TextStyle(color: Colors.black, fontSize: 16.0),

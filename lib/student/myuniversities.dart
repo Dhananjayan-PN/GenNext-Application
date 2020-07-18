@@ -477,12 +477,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
     }
     Widget cardData(ImageProvider imageProvider, bool isError) => Container(
           decoration: BoxDecoration(
-            gradient: isError
-                ? LinearGradient(
-                    end: Alignment.topRight,
-                    begin: Alignment.bottomLeft,
-                    colors: [Color(0xff00AEEF), Color(0xff0072BC)])
-                : null,
+            color: isError ? Color(0xff005fa8) : null,
             image: imageProvider != null
                 ? DecorationImage(
                     alignment: Alignment.center,
@@ -493,7 +488,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                   )
                 : DecorationImage(
                     colorFilter: ColorFilter.mode(
-                        Colors.black.withOpacity(0.35), BlendMode.dstIn),
+                        Colors.black.withOpacity(0.4), BlendMode.dstIn),
                     image: NetworkImage(
                         'https://www.shareicon.net/data/512x512/2016/08/18/814358_school_512x512.png',
                         scale: 12),
@@ -851,6 +846,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                                 ),
                                 Expanded(
                                   child: TextField(
+                                    cursorColor: Color(0xff005fa8),
                                     decoration: InputDecoration(
                                         labelText: "Search",
                                         contentPadding: EdgeInsets.all(2)),

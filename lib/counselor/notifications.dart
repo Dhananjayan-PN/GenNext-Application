@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'home.dart';
 
@@ -120,7 +119,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
-        appBar: GradientAppBar(
+        appBar: AppBar(
+          backgroundColor: Color(0xff005fa8),
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back,
@@ -134,10 +134,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
             'Notifications',
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
-          gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
         ),
         body: BodyBuilder());
   }

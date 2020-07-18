@@ -286,12 +286,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
     unis = snapshot;
     Widget cardData(ImageProvider imageProvider, bool isError) => Container(
           decoration: BoxDecoration(
-            gradient: isError
-                ? LinearGradient(
-                    end: Alignment.topRight,
-                    begin: Alignment.bottomLeft,
-                    colors: [Color(0xff00AEEF), Color(0xff0072BC)])
-                : null,
+            color: isError ? Color(0xff005fa8) : null,
             image: imageProvider != null
                 ? DecorationImage(
                     alignment: Alignment.center,
@@ -521,6 +516,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
                                 ),
                                 Expanded(
                                   child: TextField(
+                                    cursorColor: Color(0xff005fa8),
                                     decoration: InputDecoration(
                                         labelText: "Search",
                                         contentPadding: EdgeInsets.all(2)),
@@ -655,6 +651,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
                                 ),
                                 Expanded(
                                   child: TextField(
+                                    cursorColor: Color(0xff005fa8),
                                     decoration: InputDecoration(
                                         labelText: "Search",
                                         contentPadding: EdgeInsets.all(2)),

@@ -184,39 +184,41 @@ class NavDrawer extends StatelessWidget {
     List<Widget> navlist = [];
     for (var i = 0; i < navlistelements.length; i++) {
       var element = navlistelements[i];
-      navlist.add(Padding(
-        padding: EdgeInsets.only(left: 6),
-        child: ListTile(
-          leading: Icon(
-            element[2],
-            size: 26,
-            color: Color(0xff005fa8),
-          ),
-          title: Align(
-            alignment: Alignment(-1, 0),
-            child: Text(
-              element[0],
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 16.5,
-                  fontWeight: FontWeight.w400),
+      navlist.add(
+        Padding(
+          padding: EdgeInsets.only(left: 6),
+          child: ListTile(
+            leading: Icon(
+              element[2],
+              size: 26,
+              color: Color(0xff005fa8),
             ),
+            title: Align(
+              alignment: Alignment(-1, 0),
+              child: Text(
+                element[0],
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16.5,
+                    fontWeight: FontWeight.w400),
+              ),
+            ),
+            onTap: () {
+              Navigator.pop(context);
+              if (curPage == element[1]) {
+              } else {
+                curPage = element[1];
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  PageTransition(
+                      type: PageTransitionType.fade, child: element[1]),
+                  (Route<dynamic> route) => false,
+                );
+              }
+            },
           ),
-          onTap: () {
-            Navigator.pop(context);
-            if (curPage == element[1]) {
-            } else {
-              curPage = element[1];
-              Navigator.pushAndRemoveUntil(
-                context,
-                PageTransition(
-                    type: PageTransitionType.fade, child: element[1]),
-                (Route<dynamic> route) => false,
-              );
-            }
-          },
         ),
-      ));
+      );
       navlist.add(
         Divider(),
       );

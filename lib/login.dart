@@ -341,6 +341,7 @@ class _LoginPageState extends State<LoginPage> {
                             primaryColor: Color(0xff0072BC),
                           ),
                           child: TextFormField(
+                            cursorColor: Color(0xff005fa8),
                             key: ValueKey('Username'),
                             controller: username,
                             validator: (value) {
@@ -369,6 +370,7 @@ class _LoginPageState extends State<LoginPage> {
                             primaryColor: Color(0xff0072BC),
                           ),
                           child: TextFormField(
+                            cursorColor: Color(0xff005fa8),
                             key: ValueKey('Password'),
                             controller: password,
                             validator: (String value) {

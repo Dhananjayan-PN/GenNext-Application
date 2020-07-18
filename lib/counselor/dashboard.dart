@@ -253,6 +253,7 @@ class _DashBoardState extends State<DashBoard> {
                   Padding(
                     padding: EdgeInsets.only(left: 25, right: 25),
                     child: TextFormField(
+                      cursorColor: Color(0xff005fa8),
                       controller: _reason,
                       decoration: InputDecoration(
                         border: UnderlineInputBorder(
@@ -710,6 +711,7 @@ class _DashBoardState extends State<DashBoard> {
                           padding: EdgeInsets.only(
                               top: 10, left: 20, right: 20, bottom: 10),
                           child: TextField(
+                            cursorColor: Color(0xff005fa8),
                             controller: counselornotes,
                             autocorrect: true,
                             maxLines: null,

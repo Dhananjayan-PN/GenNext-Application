@@ -319,6 +319,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                   Padding(
                     padding: EdgeInsets.only(top: 10, left: 25, right: 25),
                     child: TextFormField(
+                      cursorColor: Color(0xff005fa8),
                       controller: _subject,
                       decoration: InputDecoration(
                         border: UnderlineInputBorder(
@@ -339,6 +340,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                   Padding(
                     padding: EdgeInsets.only(top: 30, left: 25, right: 25),
                     child: TextFormField(
+                      cursorColor: Color(0xff005fa8),
                       maxLines: null,
                       keyboardType: TextInputType.multiline,
                       controller: _reason,
@@ -460,6 +462,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                   Padding(
                     padding: EdgeInsets.only(top: 10, left: 25, right: 25),
                     child: TextFormField(
+                      cursorColor: Color(0xff005fa8),
                       controller: _subject,
                       decoration: InputDecoration(
                         border: UnderlineInputBorder(
@@ -545,6 +548,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                   Padding(
                     padding: EdgeInsets.only(top: 10, left: 25, right: 25),
                     child: TextFormField(
+                      cursorColor: Color(0xff005fa8),
                       controller: _reason,
                       decoration: InputDecoration(
                         border: UnderlineInputBorder(

@@ -169,15 +169,9 @@ class _CounsellingScreenState extends State<CounsellingScreen> {
                             child: Container(
                               padding: EdgeInsets.all(10.0),
                               decoration: BoxDecoration(
+                                color: Color(0xff005fa8),
                                 shape: BoxShape.rectangle,
                                 borderRadius: BorderRadius.circular(12),
-                                gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      Color(0xff00AEEF),
-                                      Color(0xff0072BC)
-                                    ]),
                               ),
                               child: Text(
                                 'Request Counselling',

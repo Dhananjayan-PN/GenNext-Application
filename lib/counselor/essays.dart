@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:quill_delta/quill_delta.dart';
 import 'package:http/http.dart' as http;
@@ -104,7 +103,8 @@ class _EssayEditorState extends State<EssayEditor> {
       drawer: NavDrawer(
           name: newUser.firstname + ' ' + newUser.lastname,
           email: newUser.email),
-      appBar: GradientAppBar(
+      appBar: AppBar(
+        backgroundColor: Color(0xff005fa8),
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back,
@@ -118,10 +118,6 @@ class _EssayEditorState extends State<EssayEditor> {
           'Essay Editor',
           style: TextStyle(color: Colors.white, fontSize: 20),
         ),
-        gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
       ),
       body: FutureBuilder(
         future: loadDocument,

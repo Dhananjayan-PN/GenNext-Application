@@ -940,6 +940,7 @@ class _TranscriptScreenState extends State<TranscriptScreen> {
             Padding(
               padding: EdgeInsets.only(left: 25, right: 45),
               child: TextFormField(
+                cursorColor: Color(0xff005fa8),
                 controller: _title,
                 validator: (value) {
                   return null;
@@ -956,6 +957,7 @@ class _TranscriptScreenState extends State<TranscriptScreen> {
             Padding(
               padding: EdgeInsets.only(left: 26, right: 45),
               child: TextFormField(
+                cursorColor: Color(0xff005fa8),
                 controller: _grade,
                 keyboardType: TextInputType.number,
                 validator: (value) {

@@ -3,7 +3,6 @@ import 'package:page_transition/page_transition.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter/services.dart';
-import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../login.dart';
 import '../main.dart';
@@ -177,29 +176,41 @@ class NavDrawer extends StatelessWidget {
     List<Widget> navlist = [];
     for (var i = 0; i < navlistelements.length; i++) {
       var element = navlistelements[i];
-      navlist.add(ListTile(
-        leading: Icon(
-          element[2],
-          size: 26,
-          color: Color(0xff00AEEF),
+      navlist.add(
+        Padding(
+          padding: EdgeInsets.only(left: 6),
+          child: ListTile(
+            leading: Icon(
+              element[2],
+              size: 26,
+              color: Color(0xff005fa8),
+            ),
+            title: Align(
+              alignment: Alignment(-1, 0),
+              child: Text(
+                element[0],
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16.5,
+                    fontWeight: FontWeight.w400),
+              ),
+            ),
+            onTap: () {
+              Navigator.pop(context);
+              if (curPage == element[1]) {
+              } else {
+                curPage = element[1];
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  PageTransition(
+                      type: PageTransitionType.fade, child: element[1]),
+                  (Route<dynamic> route) => false,
+                );
+              }
+            },
+          ),
         ),
-        title: Text(
-          element[0],
-          style: TextStyle(color: Colors.black, fontSize: 16.5),
-        ),
-        onTap: () {
-          Navigator.pop(context);
-          if (curPage == element[1]) {
-          } else {
-            curPage = element[1];
-            Navigator.pushAndRemoveUntil(
-              context,
-              PageTransition(type: PageTransitionType.fade, child: element[1]),
-              (Route<dynamic> route) => false,
-            );
-          }
-        },
-      ));
+      );
       navlist.add(
         Divider(),
       );
@@ -210,12 +221,7 @@ class NavDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: <Widget>[
           UserAccountsDrawerHeader(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                  colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
-            ),
+            decoration: BoxDecoration(color: Color(0xff005fa8)),
             accountName:
                 Text(name, style: TextStyle(color: Colors.white, fontSize: 18)),
             accountEmail: Text(email,
@@ -320,16 +326,13 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
   Widget build(BuildContext context) {
-    return GradientAppBar(
+    return AppBar(
+      backgroundColor: Color(0xff005fa8),
       elevation: 20,
       title: Text(
         titletext,
         style: TextStyle(color: Colors.white, fontSize: 20),
       ),
-      gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
     );
   }
 }
@@ -361,15 +364,12 @@ class HomeAppBarState extends State<HomeAppBar> {
 
   @override
   Widget build(BuildContext context) {
-    return GradientAppBar(
+    return AppBar(
       title: Container(
         margin: EdgeInsets.only(left: 0, top: 3, bottom: 3),
         child: Image.asset('images/gennextlonglogo-4.png'),
       ),
-      gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
+      backgroundColor: Color(0xff005fa8),
       actions: <Widget>[
         Stack(
           children: <Widget>[

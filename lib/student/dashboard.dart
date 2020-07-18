@@ -766,6 +766,7 @@ class _DashBoardState extends State<DashBoard> {
                           padding: EdgeInsets.only(
                               top: 0, left: 20, right: 20, bottom: 10),
                           child: TextField(
+                            cursorColor: Color(0xff005fa8),
                             controller: studentnotes,
                             autocorrect: true,
                             maxLines: null,

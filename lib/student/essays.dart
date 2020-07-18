@@ -566,6 +566,7 @@ class _EssaysScreenState extends State<EssaysScreen> {
                           ),
                           Expanded(
                             child: TextField(
+                              cursorColor: Color(0xff005fa8),
                               decoration: InputDecoration(
                                   labelText: "Search",
                                   contentPadding: EdgeInsets.all(2)),
