@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../shimmer_skeleton.dart';
 import 'universitypage.dart';
@@ -237,7 +236,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
             FlatButton(
               child: Text(
                 'Cancel',
-                style: TextStyle(color: Colors.blue),
+                style: TextStyle(color: Color(0xff005fa8)),
               ),
               onPressed: () {
                 Navigator.pop(context);
@@ -408,7 +407,8 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
         drawer: NavDrawer(
             name: newUser.firstname + ' ' + newUser.lastname,
             email: newUser.email),
-        appBar: GradientAppBar(
+        appBar: AppBar(
+          backgroundColor: Color(0xff005fa8),
           elevation: 6,
           title: Text(
             'Explore',
@@ -417,10 +417,6 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
                 fontSize: 20,
                 fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
           ),
-          gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
           bottom: TabBar(
             tabs: [
               Tab(
@@ -795,7 +791,7 @@ class _AddToListDialogState extends State<AddToListDialog> {
         FlatButton(
           child: Text(
             'Add',
-            style: TextStyle(color: Colors.blue),
+            style: TextStyle(color: Color(0xff005fa8)),
           ),
           onPressed: () {
             Navigator.pop(context, _listGroup);

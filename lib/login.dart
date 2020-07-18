@@ -144,12 +144,13 @@ class _LoginPageState extends State<LoginPage> {
             height: 150,
             width: 80,
             decoration: BoxDecoration(
+              color: Color(0xff005fa8),
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.all(Radius.circular(10.0)),
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
+              // gradient: LinearGradient(
+              //     begin: Alignment.topCenter,
+              //     end: Alignment.bottomCenter,
+              //     colors: [Color(0xff005fa8), Color(0xff0072BC)]),
             ),
             child: Center(
               child: Column(
@@ -194,12 +195,9 @@ class _LoginPageState extends State<LoginPage> {
             height: 150,
             width: 80,
             decoration: BoxDecoration(
+              color: Color(0xff005fa8),
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.all(Radius.circular(10.0)),
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
             ),
             child: Center(
               child: Column(
@@ -209,7 +207,7 @@ class _LoginPageState extends State<LoginPage> {
                   Icon(
                     Icons.error_outline,
                     size: 40,
-                    color: Colors.red.withOpacity(0.9),
+                    color: Colors.red,
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 10),
@@ -242,12 +240,9 @@ class _LoginPageState extends State<LoginPage> {
             height: 150,
             width: 80,
             decoration: BoxDecoration(
+              color: Color(0xff005fa8),
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.all(Radius.circular(10.0)),
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
             ),
             child: Center(
               child: Column(
@@ -293,7 +288,7 @@ class _LoginPageState extends State<LoginPage> {
               children: <Widget>[
                 Padding(
                   padding:
-                      EdgeInsets.only(top: 80, right: 100, left: 0, bottom: 0),
+                      EdgeInsets.only(top: 75, right: 100, left: 0, bottom: 0),
                   child: Transform.scale(
                     scale: 1,
                     child: Container(
@@ -302,7 +297,7 @@ class _LoginPageState extends State<LoginPage> {
                       width: MediaQuery.of(context).size.width,
                       decoration: BoxDecoration(
                         boxShadow: [...kElevationToShadow[8]],
-                        color: Color(0xff0072BC),
+                        color: Color(0xff005fa8),
                         borderRadius: BorderRadius.only(
                             topRight: Radius.circular(20),
                             bottomRight: Radius.circular(20)),
@@ -408,7 +403,7 @@ class _LoginPageState extends State<LoginPage> {
                       width: 100,
                       decoration: BoxDecoration(
                         boxShadow: [...kElevationToShadow[8]],
-                        color: Color(0xff0072BC),
+                        color: Color(0xff005fa8),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: FlatButton(
@@ -466,7 +461,7 @@ class _LoginPageState extends State<LoginPage> {
                               'Register',
                               style: TextStyle(
                                 fontSize: 17,
-                                color: Color(0xff0072BC),
+                                color: Color(0xff005fa8),
                               ),
                               textAlign: TextAlign.left,
                             ),

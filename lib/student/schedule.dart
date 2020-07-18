@@ -285,7 +285,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       decoration: InputDecoration(
                         border: UnderlineInputBorder(
                           borderSide:
-                              BorderSide(color: Colors.blue, width: 0.0),
+                              BorderSide(color: Color(0xff005fa8), width: 0.0),
                         ),
                         labelText: 'Date and Time',
                         labelStyle: TextStyle(color: Colors.black54),
@@ -323,7 +323,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       decoration: InputDecoration(
                         border: UnderlineInputBorder(
                           borderSide:
-                              BorderSide(color: Colors.blue, width: 0.0),
+                              BorderSide(color: Color(0xff005fa8), width: 0.0),
                         ),
                         labelText: 'Subject',
                         labelStyle: TextStyle(color: Colors.black54),
@@ -345,7 +345,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderSide:
-                              BorderSide(color: Colors.blue, width: 0.0),
+                              BorderSide(color: Color(0xff005fa8), width: 0.0),
                         ),
                         labelText: 'Reason',
                         labelStyle: TextStyle(color: Colors.black54),
@@ -375,7 +375,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
             FlatButton(
               child: Text(
                 'Send',
-                style: TextStyle(color: Colors.blue),
+                style: TextStyle(color: Color(0xff005fa8)),
               ),
               onPressed: () {
                 Navigator.pop(context);
@@ -427,7 +427,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       decoration: InputDecoration(
                         border: UnderlineInputBorder(
                           borderSide:
-                              BorderSide(color: Colors.blue, width: 0.0),
+                              BorderSide(color: Color(0xff005fa8), width: 0.0),
                         ),
                         labelText: 'New Date and Time',
                         labelStyle: TextStyle(color: Colors.black54),
@@ -464,7 +464,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       decoration: InputDecoration(
                         border: UnderlineInputBorder(
                           borderSide:
-                              BorderSide(color: Colors.blue, width: 0.0),
+                              BorderSide(color: Color(0xff005fa8), width: 0.0),
                         ),
                         labelText: 'Reason',
                         labelStyle: TextStyle(color: Colors.black54),
@@ -494,7 +494,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
             FlatButton(
               child: Text(
                 'Send',
-                style: TextStyle(color: Colors.blue),
+                style: TextStyle(color: Color(0xff005fa8)),
               ),
               onPressed: () {
                 if (_formKey.currentState.validate()) {
@@ -549,7 +549,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       decoration: InputDecoration(
                         border: UnderlineInputBorder(
                           borderSide:
-                              BorderSide(color: Colors.blue, width: 0.0),
+                              BorderSide(color: Color(0xff005fa8), width: 0.0),
                         ),
                         labelText: 'Reason',
                         labelStyle: TextStyle(color: Colors.black54),
@@ -579,7 +579,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
             FlatButton(
               child: Text(
                 'Send',
-                style: TextStyle(color: Colors.blue),
+                style: TextStyle(color: Color(0xff005fa8)),
               ),
               onPressed: () {
                 if (_formKey.currentState.validate()) {
@@ -640,7 +640,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                         ? minutes.toString() + 'm'
                         : hour.toString() + 'h ' + minutes.toString() + 'm',
                     style: TextStyle(
-                        color: Colors.blue,
+                        color: Color(0xff005fa8),
                         fontSize: 19,
                         fontWeight: FontWeight.w200),
                   ),
@@ -743,7 +743,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         child: FloatingActionButton(
             tooltip: 'Request session',
             elevation: 8,
-            backgroundColor: Colors.blue,
+            backgroundColor: Color(0xff005fa8),
             splashColor: Colors.blue[900],
             child: Icon(
               Icons.add,
@@ -856,8 +856,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                     },
                     calendarStyle: CalendarStyle(
                       markersColor: Colors.red,
-                      weekdayStyle: TextStyle(color: Colors.blue),
-                      weekendStyle: TextStyle(color: Colors.blue),
+                      weekdayStyle: TextStyle(color: Color(0xff005fa8)),
+                      weekendStyle: TextStyle(color: Color(0xff005fa8)),
                       outsideStyle: TextStyle(color: Colors.black45),
                       unavailableStyle: TextStyle(color: Colors.black45),
                       outsideWeekendStyle: TextStyle(color: Colors.black45),
@@ -901,7 +901,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                         return Container(
                           margin: EdgeInsets.all(6.0),
                           decoration: BoxDecoration(
-                            border: Border.all(color: Colors.blue),
+                            border: Border.all(color: Color(0xff005fa8)),
                             shape: BoxShape.circle,
                           ),
                           width: 100,
@@ -911,7 +911,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                               '${date.day}',
                               style: TextStyle(
                                   fontSize: 17.0,
-                                  color: Colors.blue,
+                                  color: Color(0xff005fa8),
                                   fontWeight: FontWeight.w900),
                             ),
                           ),
@@ -921,7 +921,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                         return Container(
                           decoration: BoxDecoration(
                             boxShadow: kElevationToShadow[4],
-                            color: Colors.blue,
+                            color: Color(0xff005fa8),
                             shape: BoxShape.circle,
                           ),
                           margin: EdgeInsets.all(2.0),

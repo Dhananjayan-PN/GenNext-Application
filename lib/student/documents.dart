@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
@@ -304,7 +303,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
             FlatButton(
               child: Text(
                 'Cancel',
-                style: TextStyle(color: Colors.blue),
+                style: TextStyle(color: Color(0xff005fa8)),
               ),
               onPressed: () {
                 Navigator.pop(context);
@@ -339,7 +338,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
       child: Card(
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
-            side: BorderSide(color: Colors.blue, width: 0.8),
+            side: BorderSide(color: Color(0xff005fa8), width: 0.8),
             borderRadius: BorderRadius.all(Radius.circular(5))),
         elevation: 2,
         child: Material(
@@ -426,7 +425,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
       child: Card(
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
-            side: BorderSide(color: Colors.blue, width: 0.8),
+            side: BorderSide(color: Color(0xff005fa8), width: 0.8),
             borderRadius: BorderRadius.all(Radius.circular(5))),
         elevation: 2,
         child: Material(
@@ -516,7 +515,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
       child: Card(
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
-            side: BorderSide(color: Colors.blue, width: 0.8),
+            side: BorderSide(color: Color(0xff005fa8), width: 0.8),
             borderRadius: BorderRadius.all(Radius.circular(5))),
         elevation: 2,
         child: Material(
@@ -623,7 +622,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                       child: InkWell(
                         child: Icon(
                           Icons.add,
-                          color: Colors.blue[700],
+                          color: Color(0xff005fa8),
                         ),
                         onTap: () async {
                           List data = await Navigator.push(
@@ -669,7 +668,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                       child: InkWell(
                         child: Icon(
                           Icons.add,
-                          color: Colors.blue[700],
+                          color: Color(0xff005fa8),
                         ),
                         onTap: () async {
                           List data = await Navigator.push(
@@ -715,7 +714,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
                       child: InkWell(
                         child: Icon(
                           Icons.add,
-                          color: Colors.blue[700],
+                          color: Color(0xff005fa8),
                         ),
                         onTap: () async {
                           List data = await Navigator.push(
@@ -894,7 +893,8 @@ class _TranscriptScreenState extends State<TranscriptScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: GradientAppBar(
+      appBar: AppBar(
+        backgroundColor: Color(0xff005fa8),
         actions: <Widget>[
           FlatButton(
             child: Text(
@@ -924,11 +924,6 @@ class _TranscriptScreenState extends State<TranscriptScreen> {
           style: TextStyle(
               color: Colors.white,
               fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
-        ),
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xff00AEEF), Color(0xff0072BC)],
         ),
       ),
       body: Form(
@@ -985,7 +980,7 @@ class _TranscriptScreenState extends State<TranscriptScreen> {
                   RaisedButton(
                     elevation: 2,
                     color: Colors.grey[50],
-                    textColor: Colors.blue,
+                    textColor: Color(0xff005fa8),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(5))),
                     child: Text('Choose File'),
@@ -1017,17 +1012,22 @@ class _TranscriptScreenState extends State<TranscriptScreen> {
             ),
             Padding(
               padding: EdgeInsets.only(left: 26, right: 45, top: 20),
-              child: TextFormField(
-                controller: _spec,
-                maxLines: null,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue, width: 0.0),
+              child: Theme(
+                data: ThemeData(primaryColor: Color(0xff005fa8)),
+                child: TextFormField(
+                  cursorColor: Color(0xff005fa8),
+                  controller: _spec,
+                  maxLines: null,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Color(0xff005fa8), width: 0.0),
+                    ),
                   ),
+                  validator: (value) {
+                    return null;
+                  },
                 ),
-                validator: (value) {
-                  return null;
-                },
               ),
             )
           ],
@@ -1078,7 +1078,8 @@ class _ECScreenState extends State<ECScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: GradientAppBar(
+      appBar: AppBar(
+        backgroundColor: Color(0xff005fa8),
         actions: <Widget>[
           FlatButton(
             child: Text(
@@ -1106,11 +1107,6 @@ class _ECScreenState extends State<ECScreen> {
               color: Colors.white,
               fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
         ),
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xff00AEEF), Color(0xff0072BC)],
-        ),
       ),
       body: Form(
         key: _formKey,
@@ -1126,6 +1122,7 @@ class _ECScreenState extends State<ECScreen> {
             Padding(
               padding: EdgeInsets.only(left: 25, right: 45),
               child: TextFormField(
+                cursorColor: Color(0xff005fa8),
                 controller: _title,
                 validator: (value) {
                   return null;
@@ -1141,33 +1138,38 @@ class _ECScreenState extends State<ECScreen> {
             ),
             Padding(
               padding: EdgeInsets.only(left: 25, right: 45),
-              child: DateTimeField(
-                initialValue: widget.startDate ?? null,
-                controller: _startDateController,
-                decoration: InputDecoration(
-                  border: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue, width: 0.0),
+              child: Theme(
+                data: ThemeData(primaryColor: Color(0xff005fa8)),
+                child: DateTimeField(
+                  cursorColor: Color(0xff005fa8),
+                  initialValue: widget.startDate ?? null,
+                  controller: _startDateController,
+                  decoration: InputDecoration(
+                    border: UnderlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Color(0xff005fa8), width: 0.0),
+                    ),
                   ),
+                  format: DateFormat.yMMMMd(),
+                  onChanged: (value) {
+                    setState(() {
+                      _startDate = value;
+                    });
+                  },
+                  onShowPicker: (context, currentValue) async {
+                    final _date = await showDatePicker(
+                        context: context,
+                        firstDate: DateTime(1900),
+                        initialDate:
+                            currentValue ?? widget.startDate ?? DateTime.now(),
+                        lastDate: DateTime(2150));
+                    if (_date != null) {
+                      return _date;
+                    } else {
+                      return currentValue;
+                    }
+                  },
                 ),
-                format: DateFormat.yMMMMd(),
-                onChanged: (value) {
-                  setState(() {
-                    _startDate = value;
-                  });
-                },
-                onShowPicker: (context, currentValue) async {
-                  final _date = await showDatePicker(
-                      context: context,
-                      firstDate: DateTime(1900),
-                      initialDate:
-                          currentValue ?? widget.startDate ?? DateTime.now(),
-                      lastDate: DateTime(2150));
-                  if (_date != null) {
-                    return _date;
-                  } else {
-                    return currentValue;
-                  }
-                },
               ),
             ),
             Padding(
@@ -1179,33 +1181,38 @@ class _ECScreenState extends State<ECScreen> {
             ),
             Padding(
               padding: EdgeInsets.only(left: 25, right: 45),
-              child: DateTimeField(
-                initialValue: widget.endDate ?? null,
-                controller: _endDateController,
-                decoration: InputDecoration(
-                  border: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue, width: 0.0),
+              child: Theme(
+                data: ThemeData(primaryColor: Color(0xff005fa8)),
+                child: DateTimeField(
+                  cursorColor: Color(0xff005fa8),
+                  initialValue: widget.endDate ?? null,
+                  controller: _endDateController,
+                  decoration: InputDecoration(
+                    border: UnderlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Color(0xff005fa8), width: 0.0),
+                    ),
                   ),
+                  format: DateFormat.yMMMMd(),
+                  onChanged: (value) {
+                    setState(() {
+                      _endDate = value;
+                    });
+                  },
+                  onShowPicker: (context, currentValue) async {
+                    final _date = await showDatePicker(
+                        context: context,
+                        firstDate: DateTime(1900),
+                        initialDate:
+                            currentValue ?? widget.endDate ?? DateTime.now(),
+                        lastDate: DateTime(2150));
+                    if (_date != null) {
+                      return _date;
+                    } else {
+                      return currentValue;
+                    }
+                  },
                 ),
-                format: DateFormat.yMMMMd(),
-                onChanged: (value) {
-                  setState(() {
-                    _endDate = value;
-                  });
-                },
-                onShowPicker: (context, currentValue) async {
-                  final _date = await showDatePicker(
-                      context: context,
-                      firstDate: DateTime(1900),
-                      initialDate:
-                          currentValue ?? widget.endDate ?? DateTime.now(),
-                      lastDate: DateTime(2150));
-                  if (_date != null) {
-                    return _date;
-                  } else {
-                    return currentValue;
-                  }
-                },
               ),
             ),
             Padding(
@@ -1217,17 +1224,21 @@ class _ECScreenState extends State<ECScreen> {
             ),
             Padding(
               padding: EdgeInsets.only(left: 25, right: 45, top: 15),
-              child: TextFormField(
-                controller: _desc,
-                maxLines: null,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue, width: 0.0),
+              child: Theme(
+                data: ThemeData(primaryColor: Color(0xff005fa8)),
+                child: TextFormField(
+                  cursorColor: Color(0xff005fa8),
+                  controller: _desc,
+                  maxLines: null,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue, width: 0.0),
+                    ),
                   ),
+                  validator: (value) {
+                    return null;
+                  },
                 ),
-                validator: (value) {
-                  return null;
-                },
               ),
             )
           ],
@@ -1265,7 +1276,8 @@ class _MiscDocsScreenState extends State<MiscDocsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: GradientAppBar(
+      appBar: AppBar(
+        backgroundColor: Color(0xff005fa8),
         actions: <Widget>[
           FlatButton(
             child: Text(
@@ -1288,11 +1300,6 @@ class _MiscDocsScreenState extends State<MiscDocsScreen> {
               color: Colors.white,
               fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
         ),
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xff00AEEF), Color(0xff0072BC)],
-        ),
       ),
       body: Form(
         key: _formKey,
@@ -1307,11 +1314,15 @@ class _MiscDocsScreenState extends State<MiscDocsScreen> {
             ),
             Padding(
               padding: EdgeInsets.only(left: 25, right: 45),
-              child: TextFormField(
-                controller: _title,
-                validator: (value) {
-                  return null;
-                },
+              child: Theme(
+                data: ThemeData(primaryColor: Color(0xff005fa8)),
+                child: TextFormField(
+                  cursorColor: Color(0xff005fa8),
+                  controller: _title,
+                  validator: (value) {
+                    return null;
+                  },
+                ),
               ),
             ),
             Padding(
@@ -1382,7 +1393,7 @@ class _MiscDocsScreenState extends State<MiscDocsScreen> {
                   RaisedButton(
                     elevation: 2,
                     color: Colors.grey[50],
-                    textColor: Colors.blue,
+                    textColor: Color(0xff005fa8),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(5))),
                     child: Text('Choose File'),

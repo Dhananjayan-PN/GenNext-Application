@@ -201,7 +201,7 @@ class _DashBoardState extends State<DashBoard> {
               InkWell(
                 child: Text(
                   'See all',
-                  style: TextStyle(color: Colors.blue, fontSize: 15),
+                  style: TextStyle(color: Color(0xff005fa8), fontSize: 15),
                 ),
                 onTap: () {
                   curPage = AllUniversitiesScreen();
@@ -304,15 +304,7 @@ class _DashBoardState extends State<DashBoard> {
                               ImageProvider imageProvider, bool isError) =>
                           Container(
                             decoration: BoxDecoration(
-                              gradient: isError
-                                  ? LinearGradient(
-                                      end: Alignment.topRight,
-                                      begin: Alignment.bottomLeft,
-                                      colors: [
-                                          Color(0xff00AEEF),
-                                          Color(0xff0072BC)
-                                        ])
-                                  : null,
+                              color: isError ? Color(0xff005fa8) : null,
                               image: imageProvider != null
                                   ? DecorationImage(
                                       alignment: Alignment.center,
@@ -461,7 +453,7 @@ class _DashBoardState extends State<DashBoard> {
               InkWell(
                 child: Text(
                   'See all',
-                  style: TextStyle(color: Colors.blue, fontSize: 15),
+                  style: TextStyle(color: Color(0xff005fa8), fontSize: 15),
                 ),
                 onTap: () {
                   curPage = ScheduleScreen();

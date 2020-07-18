@@ -205,7 +205,7 @@ class _UniversityPageState extends State<UniversityPage> {
             FlatButton(
               child: Text(
                 'Cancel',
-                style: TextStyle(color: Colors.blue),
+                style: TextStyle(color: Color(0xff005fa8)),
               ),
               onPressed: () {
                 Navigator.pop(context);
@@ -255,8 +255,8 @@ class _UniversityPageState extends State<UniversityPage> {
       standOutFactors.add(
         Chip(
           backgroundColor: Colors.white12,
-          shape:
-              StadiumBorder(side: BorderSide(color: Colors.blue, width: 0.0)),
+          shape: StadiumBorder(
+              side: BorderSide(color: Color(0xff005fa8), width: 0.0)),
           label: Text(widget.university['stand_out_factors'][i]),
           elevation: 1,
         ),
@@ -274,8 +274,8 @@ class _UniversityPageState extends State<UniversityPage> {
         Chip(
           visualDensity: VisualDensity.compact,
           backgroundColor: Colors.white12,
-          shape:
-              StadiumBorder(side: BorderSide(color: Colors.blue, width: 0.0)),
+          shape: StadiumBorder(
+              side: BorderSide(color: Color(0xff005fa8), width: 0.0)),
           label: Text(
             widget.university['top_majors'][i],
             style:
@@ -290,8 +290,8 @@ class _UniversityPageState extends State<UniversityPage> {
         Chip(
           visualDensity: VisualDensity.compact,
           backgroundColor: Colors.white12,
-          shape:
-              StadiumBorder(side: BorderSide(color: Colors.blue, width: 0.0)),
+          shape: StadiumBorder(
+              side: BorderSide(color: Color(0xff005fa8), width: 0.0)),
           label: Text(
             widget.university['testing_requirements'][i],
             style:
@@ -307,13 +307,13 @@ class _UniversityPageState extends State<UniversityPage> {
           avatar: Icon(
             Icons.insert_drive_file,
             size: 18,
-            color: Colors.blue[600],
+            color: Color(0xff005fa8),
           ),
           labelPadding: EdgeInsets.only(right: 5),
           visualDensity: VisualDensity.compact,
           backgroundColor: Colors.white12,
-          shape:
-              StadiumBorder(side: BorderSide(color: Colors.blue, width: 0.0)),
+          shape: StadiumBorder(
+              side: BorderSide(color: Color(0xff005fa8), width: 0.0)),
           label: Text(
             widget.university['document_data'][i]['document_name'],
             style:
@@ -476,7 +476,7 @@ class _UniversityPageState extends State<UniversityPage> {
                               : Icon(
                                   Icons.add,
                                   size: 25,
-                                  color: Colors.blue,
+                                  color: Color(0xff005fa8),
                                 ),
                           onTap: () {
                             inList
@@ -638,9 +638,10 @@ class _UniversityPageState extends State<UniversityPage> {
                         descShowFull
                             ? Text(
                                 "Less",
-                                style: TextStyle(color: Colors.blue),
+                                style: TextStyle(color: Color(0xff005fa8)),
                               )
-                            : Text("More", style: TextStyle(color: Colors.blue))
+                            : Text("More",
+                                style: TextStyle(color: Color(0xff005fa8)))
                       ],
                     ),
                   ),
@@ -860,7 +861,7 @@ class _AddToListDialogState extends State<AddToListDialog> {
         FlatButton(
           child: Text(
             'Add',
-            style: TextStyle(color: Colors.blue),
+            style: TextStyle(color: Color(0xff005fa8)),
           ),
           onPressed: () {
             Navigator.pop(context, _listGroup);

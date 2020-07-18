@@ -279,7 +279,7 @@ class _CounsellingScreenState extends State<CounsellingScreen> {
                               leading: CircleAvatar(
                                 backgroundImage: CachedNetworkImageProvider(
                                     snapshot.data['counselor_profile_pic']),
-                                backgroundColor: Colors.blue[400],
+                                backgroundColor: Colors.blue[800],
                                 radius: 28,
                               ),
                               title: Text(
@@ -358,7 +358,7 @@ class _CounsellingScreenState extends State<CounsellingScreen> {
                           'Request for another',
                           style: TextStyle(
                             fontSize: 15,
-                            color: Colors.blue,
+                            color: Color(0xff005fa8),
                           ),
                           textAlign: TextAlign.left,
                         ),

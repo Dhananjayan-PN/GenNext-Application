@@ -19,7 +19,9 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitUp,
     ]);
     return MaterialApp(
-      theme: Platform.isAndroid ? ThemeData(fontFamily: 'Roboto') : null,
+      theme: Platform.isAndroid
+          ? ThemeData(fontFamily: 'Roboto', primaryColor: Color(0xff005fa8))
+          : ThemeData(primaryColor: Color(0xff005fa8)),
       home: LoginPage(),
       debugShowCheckedModeBanner: false,
     );

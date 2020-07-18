@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:searchable_dropdown/searchable_dropdown.dart';
 import 'package:http/http.dart' as http;
@@ -328,7 +327,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
             FlatButton(
               child: Text(
                 'Cancel',
-                style: TextStyle(color: Colors.blue),
+                style: TextStyle(color: Color(0xff005fa8)),
               ),
               onPressed: () {
                 Navigator.pop(context);
@@ -604,7 +603,8 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
         drawer: NavDrawer(
             name: newUser.firstname + ' ' + newUser.lastname,
             email: newUser.email),
-        appBar: GradientAppBar(
+        appBar: AppBar(
+          backgroundColor: Color(0xff005fa8),
           elevation: 6,
           title: Text(
             'My Universities',
@@ -613,10 +613,6 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                 fontSize: 20,
                 fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
           ),
-          gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
           bottom: TabBar(
             tabs: [
               Tab(
@@ -743,7 +739,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                                   child: InkWell(
                                     child: Icon(
                                       Icons.add,
-                                      color: Colors.blue[700],
+                                      color: Color(0xff005fa8),
                                     ),
                                     onTap: () {
                                       if (uniList.isNotEmpty) {
@@ -993,7 +989,7 @@ class _AddToListDialogState extends State<AddToListDialog> {
         FlatButton(
           child: Text(
             'Add',
-            style: TextStyle(color: Colors.blue),
+            style: TextStyle(color: Color(0xff005fa8)),
           ),
           onPressed: () {
             Navigator.pop(context, _listGroup);

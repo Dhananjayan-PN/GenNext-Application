@@ -2,7 +2,6 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:searchable_dropdown/searchable_dropdown.dart';
-import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 // import 'package:url_launcher/url_launcher.dart';
@@ -270,7 +269,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
             FlatButton(
               child: Text(
                 'Cancel',
-                style: TextStyle(color: Colors.blue),
+                style: TextStyle(color: Color(0xff005fa8)),
               ),
               onPressed: () {
                 Navigator.pop(context);
@@ -480,7 +479,8 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
         drawer: NavDrawer(
             name: newUser.firstname + ' ' + newUser.lastname,
             email: newUser.email),
-        appBar: GradientAppBar(
+        appBar: AppBar(
+          backgroundColor: Color(0xff005fa8),
           elevation: 6,
           title: Text(
             'My Applications',
@@ -489,10 +489,6 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                 fontSize: 20,
                 fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
           ),
-          gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
           bottom: TabBar(
             tabs: [
               Tab(
@@ -831,7 +827,8 @@ class _NewApplicationScreenState extends State<NewApplicationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: GradientAppBar(
+      appBar: AppBar(
+        backgroundColor: Color(0xff005fa8),
         actions: <Widget>[
           FlatButton(
             child: Text(
@@ -853,11 +850,6 @@ class _NewApplicationScreenState extends State<NewApplicationScreen> {
           style: TextStyle(
               color: Colors.white,
               fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
-        ),
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xff00AEEF), Color(0xff0072BC)],
         ),
       ),
       body: Form(
@@ -926,7 +918,8 @@ class _NewApplicationScreenState extends State<NewApplicationScreen> {
                 controller: _datetimecontroller,
                 decoration: InputDecoration(
                   border: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue, width: 0.0),
+                    borderSide:
+                        BorderSide(color: Color(0xff005fa8), width: 0.0),
                   ),
                 ),
                 format: DateFormat.yMMMMd(),
@@ -963,7 +956,8 @@ class _NewApplicationScreenState extends State<NewApplicationScreen> {
                 maxLines: null,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue, width: 0.0),
+                    borderSide:
+                        BorderSide(color: Color(0xff005fa8), width: 0.0),
                   ),
                 ),
                 validator: (value) {
@@ -1177,7 +1171,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
             FlatButton(
               child: Text(
                 'Cancel',
-                style: TextStyle(color: Colors.blue),
+                style: TextStyle(color: Color(0xff005fa8)),
               ),
               onPressed: () {
                 Navigator.pop(context);
@@ -1501,18 +1495,14 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
         );
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: GradientAppBar(
+      appBar: AppBar(
+        backgroundColor: Color(0xff005fa8),
         title: Text(
           'Manage Application',
           maxLines: 1,
           style: TextStyle(
               color: Colors.white,
               fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
-        ),
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xff00AEEF), Color(0xff0072BC)],
         ),
       ),
       body: ListView(
@@ -1567,7 +1557,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                         child: Icon(
                           Icons.add,
                           size: 20,
-                          color: Colors.blue,
+                          color: Color(0xff005fa8),
                         ),
                         itemBuilder: (BuildContext context) {
                           return {'Create New', 'Attach Existing'}
@@ -1633,7 +1623,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                         child: Icon(
                           Icons.add,
                           size: 20,
-                          color: Colors.blue,
+                          color: Color(0xff005fa8),
                         ),
                         itemBuilder: (BuildContext context) {
                           return {'Create New', 'Attach Existing'}
@@ -1699,7 +1689,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                         child: Icon(
                           Icons.add,
                           size: 20,
-                          color: Colors.blue,
+                          color: Color(0xff005fa8),
                         ),
                         itemBuilder: (BuildContext context) {
                           return {'Create New', 'Attach Existing'}

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:expand_widget/expand_widget.dart';
@@ -235,7 +234,7 @@ class _EssaysScreenState extends State<EssaysScreen> {
             FlatButton(
               child: Text(
                 'Cancel',
-                style: TextStyle(color: Colors.blue),
+                style: TextStyle(color: Color(0xff005fa8)),
               ),
               onPressed: () {
                 Navigator.pop(context);
@@ -410,11 +409,11 @@ class _EssaysScreenState extends State<EssaysScreen> {
                                   child: InkWell(
                                     child: CircleAvatar(
                                       radius: 17.8,
-                                      backgroundColor: Colors.blue,
+                                      backgroundColor: Color(0xff005fa8),
                                       child: CircleAvatar(
                                         backgroundImage: CachedNetworkImageProvider(
                                             'https://upload.wikimedia.org/wikipedia/en/thumb/4/4f/University_of_Massachusetts_Amherst_seal.svg/1200px-University_of_Massachusetts_Amherst_seal.svg.png'),
-                                        backgroundColor: Colors.blue[400],
+                                        backgroundColor: Colors.blue[800],
                                         radius: 17,
                                       ),
                                     ),
@@ -425,11 +424,11 @@ class _EssaysScreenState extends State<EssaysScreen> {
                           InkWell(
                             child: CircleAvatar(
                               radius: 17.8,
-                              backgroundColor: Colors.blue,
+                              backgroundColor: Color(0xff005fa8),
                               child: CircleAvatar(
                                 backgroundImage: CachedNetworkImageProvider(
                                     'https://bloximages.chicago2.vip.townnews.com/madison.com/content/tncms/assets/v3/editorial/6/7a/67a00837-e31a-5fca-b89f-98985000d03e/5978bc84a81af.image.jpg'),
-                                backgroundColor: Colors.blue[400],
+                                backgroundColor: Colors.blue[800],
                                 radius: 17,
                               ),
                             ),
@@ -454,33 +453,31 @@ class _EssaysScreenState extends State<EssaysScreen> {
       drawer: NavDrawer(
           name: newUser.firstname + ' ' + newUser.lastname,
           email: newUser.email),
-      appBar: GradientAppBar(
-          actions: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(right: 8),
-              child: IconButton(
-                icon: Icon(
-                  Icons.add,
-                  color: Colors.white,
-                  size: 26,
-                ),
-                onPressed: () {
-                  _fetchCreateDetails(context);
-                },
-              ),
-            )
-          ],
-          title: Text(
-            'My Essays',
-            maxLines: 1,
-            style: TextStyle(
+      appBar: AppBar(
+        backgroundColor: Color(0xff005fa8),
+        actions: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(right: 8),
+            child: IconButton(
+              icon: Icon(
+                Icons.add,
                 color: Colors.white,
-                fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
-          ),
-          gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Color(0xff00AEEF), Color(0xff0072BC)])),
+                size: 26,
+              ),
+              onPressed: () {
+                _fetchCreateDetails(context);
+              },
+            ),
+          )
+        ],
+        title: Text(
+          'My Essays',
+          maxLines: 1,
+          style: TextStyle(
+              color: Colors.white,
+              fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
+        ),
+      ),
       body: RefreshIndicator(
         key: refreshKey,
         onRefresh: () {
@@ -640,34 +637,31 @@ class _NewEssayScreenState extends State<NewEssayScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
-        appBar: GradientAppBar(
-            actions: <Widget>[
-              FlatButton(
-                child: Text(
-                  widget.op == 'Edit' ? 'SAVE' : 'CREATE',
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.w500),
-                ),
-                onPressed: () {
-                  if (_formKey.currentState.validate()) {
-                    List data = [_title.text, _prompt.text];
-                    Navigator.pop(context, data);
-                  }
-                },
-              )
-            ],
-            title: Text(
-              widget.op == 'Edit' ? 'Edit Essay Details' : 'New Essay',
-              maxLines: 1,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight:
-                      Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
-            ),
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xff00AEEF), Color(0xff0072BC)])),
+        appBar: AppBar(
+          backgroundColor: Color(0xff005fa8),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                widget.op == 'Edit' ? 'SAVE' : 'CREATE',
+                style:
+                    TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+              ),
+              onPressed: () {
+                if (_formKey.currentState.validate()) {
+                  List data = [_title.text, _prompt.text];
+                  Navigator.pop(context, data);
+                }
+              },
+            )
+          ],
+          title: Text(
+            widget.op == 'Edit' ? 'Edit Essay Details' : 'New Essay',
+            maxLines: 1,
+            style: TextStyle(
+                color: Colors.white,
+                fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
+          ),
+        ),
         body: Padding(
           padding: EdgeInsets.all(25),
           child: Form(
@@ -678,14 +672,18 @@ class _NewEssayScreenState extends State<NewEssayScreen> {
                   'Title',
                   style: TextStyle(fontSize: 25, color: Colors.black87),
                 ),
-                TextFormField(
-                  controller: _title,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Enter a title';
-                    }
-                    return null;
-                  },
+                Theme(
+                  data: ThemeData(primaryColor: Color(0xff005fa8)),
+                  child: TextFormField(
+                    cursorColor: Color(0xff005fa8),
+                    controller: _title,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Enter a title';
+                      }
+                      return null;
+                    },
+                  ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 20),
@@ -694,22 +692,26 @@ class _NewEssayScreenState extends State<NewEssayScreen> {
                     style: TextStyle(fontSize: 25, color: Colors.black87),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 20),
-                  child: TextFormField(
-                    controller: _prompt,
-                    maxLines: null,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue, width: 0.0),
+                Theme(
+                  data: ThemeData(primaryColor: Color(0xff005fa8)),
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 20),
+                    child: TextFormField(
+                      cursorColor: Color(0xff005fa8),
+                      controller: _prompt,
+                      maxLines: null,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.red, width: 0.0),
+                        ),
                       ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'An essay without a prompt? Really?';
+                        }
+                        return null;
+                      },
                     ),
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'An essay without a prompt? Really?';
-                      }
-                      return null;
-                    },
                   ),
                 )
               ],
@@ -793,7 +795,8 @@ class _EssayEditorState extends State<EssayEditor> {
       length: 2,
       child: Scaffold(
           backgroundColor: Colors.white,
-          appBar: GradientAppBar(
+          appBar: AppBar(
+            backgroundColor: Color(0xff005fa8),
             actions: <Widget>[
               FlatButton(
                 child: Text(
@@ -819,10 +822,6 @@ class _EssayEditorState extends State<EssayEditor> {
                   fontWeight:
                       Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
             ),
-            gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
             bottom: TabBar(
               tabs: [
                 Tab(
@@ -840,80 +839,88 @@ class _EssayEditorState extends State<EssayEditor> {
           ),
           body: TabBarView(
             children: <Widget>[
-              ZefyrScaffold(
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(top: 13, left: 15, right: 15),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Prompt:',
-                          style: TextStyle(
-                              color: Colors.black87,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600),
+              Theme(
+                data: ThemeData(primaryColor: Color(0xff005fa8)),
+                child: ZefyrScaffold(
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(top: 13, left: 15, right: 15),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'Prompt:',
+                            style: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600),
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 15, right: 15),
-                      child: ExpandText(
-                        this.essayPrompt ?? '',
-                        expandOnGesture: true,
-                        textAlign: TextAlign.left,
-                        style: TextStyle(color: Colors.black87, fontSize: 15),
-                        arrowPadding: EdgeInsets.all(0),
-                        maxLines: 1,
+                      Padding(
+                        padding: EdgeInsets.only(left: 15, right: 15),
+                        child: ExpandText(
+                          this.essayPrompt ?? '',
+                          expandOnGesture: true,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(color: Colors.black87, fontSize: 15),
+                          arrowPadding: EdgeInsets.all(0),
+                          maxLines: 1,
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: ZefyrEditor(
-                        padding: EdgeInsets.only(
-                            left: 16, right: 16, top: 0, bottom: 10),
-                        controller: _controller1,
-                        focusNode: _focusNode1,
+                      Expanded(
+                        child: ZefyrEditor(
+                          padding: EdgeInsets.only(
+                              left: 16, right: 16, top: 0, bottom: 10),
+                          controller: _controller1,
+                          focusNode: _focusNode1,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-              ZefyrScaffold(
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(top: 13, left: 15, right: 15),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Prompt:',
-                          style: TextStyle(
-                              color: Colors.black87,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600),
+              Theme(
+                data: ThemeData(primaryColor: Color(0xff005fa8)),
+                child: ZefyrScaffold(
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(top: 13, left: 15, right: 15),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            'Prompt:',
+                            style: TextStyle(
+                                color: Colors.black87,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600),
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 15, right: 15),
-                      child: ExpandText(
-                        this.essayPrompt ?? '',
-                        textAlign: TextAlign.left,
-                        arrowPadding: EdgeInsets.all(0),
-                        maxLines: 1,
+                      Padding(
+                        padding: EdgeInsets.only(left: 15, right: 15),
+                        child: ExpandText(
+                          this.essayPrompt ?? '',
+                          textAlign: TextAlign.left,
+                          arrowPadding: EdgeInsets.all(0),
+                          maxLines: 1,
+                        ),
                       ),
-                    ),
-                    Expanded(
-                      child: ZefyrEditor(
-                        mode: ZefyrMode(
-                            canEdit: false, canFormat: false, canSelect: true),
-                        padding: EdgeInsets.only(
-                            left: 16, right: 16, top: 0, bottom: 10),
-                        controller: _controller2,
-                        focusNode: _focusNode2,
+                      Expanded(
+                        child: ZefyrEditor(
+                          mode: ZefyrMode(
+                              canEdit: false,
+                              canFormat: false,
+                              canSelect: true),
+                          padding: EdgeInsets.only(
+                              left: 16, right: 16, top: 0, bottom: 10),
+                          controller: _controller2,
+                          focusNode: _focusNode2,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -9,7 +8,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:async';
 import 'package:intl/intl.dart';
 import 'dart:io';
-//import 'dart:convert';
+// import 'dart:convert';
 
 List chats = [
   'Chad Sprice',
@@ -129,7 +128,7 @@ class _AllChatsState extends State<AllChats> {
         floatingActionButton: FloatingActionButton(
             tooltip: 'New Chat',
             elevation: 8,
-            backgroundColor: Colors.blue,
+            backgroundColor: Color(0xff005fa8),
             splashColor: Colors.blue[900],
             child: Icon(
               Icons.add,
@@ -140,7 +139,8 @@ class _AllChatsState extends State<AllChats> {
               newChat();
             }),
         backgroundColor: Colors.white,
-        appBar: GradientAppBar(
+        appBar: AppBar(
+          backgroundColor: Color(0xff005fa8),
           leading: IconButton(
               icon: Icon(
                 Icons.arrow_back,
@@ -165,10 +165,6 @@ class _AllChatsState extends State<AllChats> {
                 fontSize: 20,
                 fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
           ),
-          gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
         ),
         body: Column(
           children: <Widget>[
@@ -391,7 +387,8 @@ class _OpenChatState extends State<OpenChat> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GradientAppBar(
+      appBar: AppBar(
+        backgroundColor: Color(0xff005fa8),
         leading: IconButton(
             icon: Icon(
               Icons.arrow_back,
@@ -428,10 +425,6 @@ class _OpenChatState extends State<OpenChat> {
             ),
           ],
         ),
-        gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
       ),
       body: Column(
         children: <Widget>[

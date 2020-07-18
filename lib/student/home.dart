@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/services.dart';
-import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:io';
 import '../login.dart';
@@ -26,6 +24,7 @@ String tok = token;
 String dom = domain;
 Widget curPage = StudentHomeScreen(user: newUser);
 PageController _controller;
+
 final navlistelements = [
   ['Home', StudentHomeScreen(user: newUser), Icons.home],
   ['Counselling', CounsellingScreen(), Icons.people],
@@ -191,7 +190,7 @@ class NavDrawer extends StatelessWidget {
           leading: Icon(
             element[2],
             size: 26,
-            color: Color(0xff00AEEF),
+            color: Color(0xff005fa8),
           ),
           title: Align(
             alignment: Alignment(-1, 0),
@@ -231,10 +230,11 @@ class NavDrawer extends StatelessWidget {
             height: 210,
             child: UserAccountsDrawerHeader(
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                    colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
+                color: Color(0xff005fa8),
+                // gradient: LinearGradient(
+                //     begin: Alignment.bottomCenter,
+                //     end: Alignment.topCenter,
+                //     colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
               ),
               accountName: Text(name,
                   style: TextStyle(
@@ -248,7 +248,7 @@ class NavDrawer extends StatelessWidget {
                       fontWeight: FontWeight.w300)),
               currentAccountPicture: CircleAvatar(
                 backgroundImage: CachedNetworkImageProvider(newUser.dp),
-                backgroundColor: Colors.blue[400],
+                backgroundColor: Colors.blue[800],
                 radius: 30,
               ),
               onDetailsPressed: () {
@@ -322,7 +322,7 @@ class NavDrawer extends StatelessWidget {
                       FlatButton(
                         child: Text(
                           'Cancel',
-                          style: TextStyle(color: Colors.blue),
+                          style: TextStyle(color: Color(0xff005fa8)),
                         ),
                         onPressed: () {
                           Navigator.pop(context);
@@ -358,7 +358,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
   Widget build(BuildContext context) {
-    return GradientAppBar(
+    return AppBar(
       elevation: 6,
       title: Text(
         titletext,
@@ -367,10 +367,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
             fontSize: 20,
             fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
       ),
-      gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
+      backgroundColor: Color(0xff005fa8),
     );
   }
 }
@@ -385,29 +382,11 @@ class HomeAppBarState extends State<HomeAppBar> {
   int counter = notifications.length;
 
   @override
-  void initState() {
-    super.initState();
-    BackButtonInterceptor.add(myInterceptor);
-  }
-
-  @override
-  void dispose() {
-    BackButtonInterceptor.remove(myInterceptor);
-    super.dispose();
-  }
-
-  bool myInterceptor(bool stopDefaultButtonEvent) {
-    return true;
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return GradientAppBar(
+    return AppBar(
+      elevation: 6,
       title: Text('Home'),
-      gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
+      backgroundColor: Color(0xff005fa8),
       actions: <Widget>[
         Stack(
           children: <Widget>[

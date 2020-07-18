@@ -51,12 +51,15 @@ class ProfileScreenState extends State<ProfileScreen> {
               ListTile(
                 leading: CircleAvatar(
                   backgroundImage: CachedNetworkImageProvider(newUser.dp),
-                  backgroundColor: Colors.blue[400],
-                  radius: 30,
+                  backgroundColor: Colors.blue[800],
+                  radius: 29,
                 ),
-                title: Text(
-                  newUser.firstname + ' ' + newUser.lastname,
-                  style: TextStyle(fontSize: 17),
+                title: Padding(
+                  padding: EdgeInsets.only(top: 5),
+                  child: Text(
+                    newUser.firstname + ' ' + newUser.lastname,
+                    style: TextStyle(fontSize: 17),
+                  ),
                 ),
                 subtitle: Text('Student'),
                 trailing: Padding(
@@ -64,7 +67,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                   child: IconButton(
                     icon: Icon(
                       Icons.edit,
-                      color: Colors.blue,
+                      color: Color(0xff005fa8),
                     ),
                     onPressed: () {},
                   ),
