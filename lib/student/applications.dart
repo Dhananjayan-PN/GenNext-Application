@@ -13,6 +13,8 @@ import 'dart:convert';
 import 'dart:async';
 import 'dart:io';
 import 'home.dart';
+import 'essays.dart';
+import 'documents.dart';
 import '../shimmer_skeleton.dart';
 
 class ApplicationsScreen extends StatefulWidget {
@@ -224,52 +226,6 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
     }
   }
 
-  _loading() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          contentPadding: EdgeInsets.all(0),
-          elevation: 20,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          content: Container(
-            height: 150,
-            width: 80,
-            decoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            ),
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(
-                    height: 50,
-                    width: 50,
-                    child: SpinKitWave(
-                      color: Colors.grey.withOpacity(0.8),
-                      size: 25,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 23.0),
-                    child: Text(
-                      "Saving your changes",
-                      style: TextStyle(color: Colors.black, fontSize: 15),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   _error() {
     showDialog(
       context: context,
@@ -419,7 +375,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
               onPressed: () {
                 Navigator.pop(context);
                 deleteApplication(id);
-                _loading();
+                loading(context);
               },
             ),
           ],
@@ -553,7 +509,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                             ),
                           );
                           editApplication(application, details[1], details[2]);
-                          _loading();
+                          loading(context);
                           break;
                         case 'Delete':
                           _deleteApplication(application['application_id']);
@@ -673,7 +629,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                   );
                   if (data != null) {
                     createApplication(data[0], data[1], data[2]);
-                    _loading();
+                    loading(context);
                   }
                 },
               ),

@@ -258,52 +258,6 @@ class _DashBoardState extends State<DashBoard> {
     );
   }
 
-  _loading() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          contentPadding: EdgeInsets.all(0),
-          elevation: 20,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0))),
-          content: Container(
-            height: 150,
-            width: 80,
-            decoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(Radius.circular(20.0)),
-            ),
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(
-                    height: 50,
-                    width: 50,
-                    child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-                      strokeWidth: 3.0,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 23.0),
-                    child: Text(
-                      "Saving your changes",
-                      style: TextStyle(color: Colors.blue, fontSize: 15),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   _error() {
     showDialog(
       context: context,
@@ -429,7 +383,7 @@ class _DashBoardState extends State<DashBoard> {
                 if (_formKey.currentState.validate()) {
                   _reason.clear();
                   Navigator.pop(context);
-                  _loading();
+                  loading(context);
                   deny(id);
                 }
               },
@@ -469,7 +423,7 @@ class _DashBoardState extends State<DashBoard> {
                   color: Colors.green,
                 ),
                 onPressed: () {
-                  _loading();
+                  loading(context);
                   accept(request['student_id']);
                 },
               ),
