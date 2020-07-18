@@ -22,6 +22,7 @@ String tok = token;
 String dom = domain;
 Widget curPage = CounselorHomeScreen(user: newUser);
 PageController _controller;
+
 final navlistelements = [
   ['Home', CounselorHomeScreen(user: newUser), Icons.home],
   ['My Students', MyStudentsScreen(), Icons.group],
@@ -291,7 +292,7 @@ class NavDrawer extends StatelessWidget {
                     FlatButton(
                       child: Text(
                         'Cancel',
-                        style: TextStyle(color: Colors.blue),
+                        style: TextStyle(color: Color(0xff005fa8)),
                       ),
                       onPressed: () {
                         Navigator.pop(context);
