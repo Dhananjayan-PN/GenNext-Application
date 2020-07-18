@@ -4,7 +4,6 @@ import 'package:page_transition/page_transition.dart';
 import 'package:gradient_app_bar/gradient_app_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:searchable_dropdown/searchable_dropdown.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http/http.dart' as http;
 import 'package:checklist/checklist.dart';
 import 'dart:async';
@@ -110,7 +109,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
       }
     } else {
       Navigator.pop(context);
-      _error();
+      error(context);
     }
   }
 
@@ -222,10 +221,10 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
         }
         refresh();
       } else {
-        _error();
+        error(context);
       }
     } else {
-      _error();
+      error(context);
     }
   }
 
@@ -242,11 +241,11 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
         refresh();
       } else {
         Navigator.pop(context);
-        _error();
+        error(context);
       }
     } else {
       Navigator.pop(context);
-      _error();
+      error(context);
     }
   }
 
@@ -270,10 +269,10 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
       if (data['Response'] == 'University successfully changed.') {
         // refresh();
       } else {
-        _error();
+        error(context);
       }
     } else {
-      _error();
+      error(context);
     }
   }
 
@@ -461,51 +460,6 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
       loading(context);
       add(id, catString, 'FF');
     }
-  }
-
-  _error([String message]) {
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          contentPadding: EdgeInsets.all(0),
-          elevation: 20,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          content: Container(
-            height: 150,
-            width: 80,
-            decoration: BoxDecoration(
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            ),
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Icon(
-                    Icons.error_outline,
-                    size: 40,
-                    color: Colors.red.withOpacity(0.9),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Text(
-                      message ??
-                          'Something went wrong.\nCheck your connection and try again later.',
-                      style: TextStyle(color: Colors.black, fontSize: 12),
-                      textAlign: TextAlign.center,
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
   }
 
   _success(String op) {
@@ -841,8 +795,8 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                                       if (uniList.isNotEmpty) {
                                         addToList(categories[i]);
                                       } else {
-                                        _error(
-                                            'There are no more universities available\nCome back some other time to try again');
+                                        error(context,
+                                            'There are no more universities available.\nCome back another time to try again.');
                                       }
                                     },
                                   ),

@@ -84,6 +84,53 @@ loading(context) {
   );
 }
 
+error(BuildContext context,
+    [String message =
+        'Something went wrong.\nCheck your connection and try again later.']) {
+  showDialog(
+    context: context,
+    barrierDismissible: true,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        contentPadding: EdgeInsets.all(0),
+        elevation: 20,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10.0))),
+        content: Container(
+          height: 150,
+          width: 80,
+          decoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          ),
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Icon(
+                  Icons.error_outline,
+                  size: 40,
+                  color: Colors.red.withOpacity(0.9),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 10),
+                  child: Text(
+                    message ??
+                        'Something went wrong.\nCheck your connection and try again later.',
+                    style: TextStyle(color: Colors.black, fontSize: 12),
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      );
+    },
+  );
+}
+
 class NavDrawer extends StatelessWidget {
   final String name;
   final String email;
