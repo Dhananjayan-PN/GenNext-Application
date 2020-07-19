@@ -82,7 +82,8 @@ class _EssaysScreenState extends State<EssaysScreen> {
               'essay_title': essay['essay_title'],
               'essay_prompt': essay['essay_prompt'],
               'student_essay_content': editedEssayContent,
-              'counselor_essay_content': essay['counselor_essay_content'],
+              'counselor_essay_content': essay['counselor_essay_content'] ??
+                  '[{\"attributes\":{\"align\":\"justify\"},\"insert\":\"\\n\"},{\"insert\":\"\\n\"}]',
               'counselor_comments': essay['counselor_comments'],
               'approval': essay['essay_approval_status']
             }))
@@ -371,7 +372,7 @@ class _EssaysScreenState extends State<EssaysScreen> {
               ),
             ),
             subtitle: Padding(
-              padding: EdgeInsets.only(bottom: 8),
+              padding: EdgeInsets.only(left: 2, bottom: 8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -380,19 +381,23 @@ class _EssaysScreenState extends State<EssaysScreen> {
                       ? Text(
                           'Complete',
                           style: TextStyle(
-                              color: Colors.green, fontWeight: FontWeight.w400),
+                              fontSize: 13,
+                              color: Colors.green,
+                              fontWeight: FontWeight.w400),
                         )
                       : essay['essay_approval_status'] == 'N' &&
                               essay['student_essay_content'] != ''
                           ? Text(
                               'In Progress',
                               style: TextStyle(
+                                  fontSize: 13,
                                   color: Colors.orange,
                                   fontWeight: FontWeight.w400),
                             )
                           : Text(
                               'Pending',
                               style: TextStyle(
+                                  fontSize: 13,
                                   color: Colors.red,
                                   fontWeight: FontWeight.w400),
                             ),
@@ -841,21 +846,19 @@ class _EssayEditorState extends State<EssayEditor> {
           body: TabBarView(
             children: <Widget>[
               Theme(
-                data: ThemeData(primaryColor: Color(0xff005fa8)),
+                data: ThemeData(cursorColor: Color(0xff005fa8)),
                 child: ZefyrScaffold(
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Padding(
                         padding: EdgeInsets.only(top: 13, left: 15, right: 15),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Prompt:',
-                            style: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600),
-                          ),
+                        child: Text(
+                          'Prompt:',
+                          style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600),
                         ),
                       ),
                       Padding(
@@ -867,6 +870,14 @@ class _EssayEditorState extends State<EssayEditor> {
                           style: TextStyle(color: Colors.black87, fontSize: 15),
                           arrowPadding: EdgeInsets.all(0),
                           maxLines: 1,
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 5, bottom: 5),
+                        child: Divider(
+                          thickness: 0.5,
+                          endIndent: 40,
+                          indent: 40,
                         ),
                       ),
                       Expanded(
@@ -881,47 +892,51 @@ class _EssayEditorState extends State<EssayEditor> {
                   ),
                 ),
               ),
-              Theme(
-                data: ThemeData(primaryColor: Color(0xff005fa8)),
-                child: ZefyrScaffold(
-                  child: Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(top: 13, left: 15, right: 15),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Prompt:',
-                            style: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600),
-                          ),
+              ZefyrScaffold(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(top: 13, left: 15, right: 15),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Prompt:',
+                          style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600),
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 15, right: 15),
-                        child: ExpandText(
-                          this.essayPrompt ?? '',
-                          textAlign: TextAlign.left,
-                          arrowPadding: EdgeInsets.all(0),
-                          maxLines: 1,
-                        ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 15, right: 15),
+                      child: ExpandText(
+                        this.essayPrompt ?? '',
+                        textAlign: TextAlign.left,
+                        arrowPadding: EdgeInsets.all(0),
+                        maxLines: 1,
                       ),
-                      Expanded(
-                        child: ZefyrEditor(
-                          mode: ZefyrMode(
-                              canEdit: false,
-                              canFormat: false,
-                              canSelect: true),
-                          padding: EdgeInsets.only(
-                              left: 16, right: 16, top: 0, bottom: 10),
-                          controller: _controller2,
-                          focusNode: _focusNode2,
-                        ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 5, bottom: 5),
+                      child: Divider(
+                        thickness: 0.5,
+                        endIndent: 40,
+                        indent: 40,
                       ),
-                    ],
-                  ),
+                    ),
+                    Expanded(
+                      child: ZefyrEditor(
+                        mode: ZefyrMode(
+                            canEdit: false, canFormat: false, canSelect: true),
+                        padding: EdgeInsets.only(
+                            left: 16, right: 16, top: 0, bottom: 10),
+                        controller: _controller2,
+                        focusNode: _focusNode2,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

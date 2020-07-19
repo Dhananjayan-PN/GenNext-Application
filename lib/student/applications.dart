@@ -987,16 +987,18 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
     super.initState();
     app = widget.application;
     _appNotes.text = app['application_notes'] ?? '';
+    getApplication();
   }
 
-  Future<void> getApplication(int id) async {
+  Future<void> getApplication() async {
     final response = await http.get(
-      dom + 'api/student/get-application/$id',
+      dom + 'api/student/get-application/${app['application_id']}',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
     );
     if (response.statusCode == 200) {
       setState(() {
         app = json.decode(response.body)['application_data'];
+        app['university_id'] = widget.application['university_id'];
       });
     } else {
       throw 'failed';
@@ -1086,10 +1088,6 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
         miscList.add(app['misc_doc_data'][i]['misc_doc_id']);
       }
     }
-    setState(() {
-      saved = false;
-      saving = true;
-    });
     final response = await http.put(
       dom + 'api/student/edit-application',
       headers: {
@@ -1190,7 +1188,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
 
   void refresh() async {
     setState(() {
-      getApplication(widget.application['application_id']);
+      getApplication();
     });
   }
 
@@ -1266,6 +1264,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
         child: Material(
           color: Colors.transparent,
           child: ListTile(
+            isThreeLine: true,
             dense: true,
             key: Key(transcript['transcript_id'].toString()),
             title: Padding(
@@ -1275,17 +1274,27 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                 style: TextStyle(color: Colors.black, fontSize: 15),
               ),
             ),
-            subtitle: transcript['in_progress']
-                ? Text(
-                    'Complete',
-                    style: TextStyle(
-                        color: Colors.green, fontWeight: FontWeight.w400),
-                  )
-                : Text(
-                    'Pending',
-                    style: TextStyle(
-                        color: Colors.red, fontWeight: FontWeight.w400),
-                  ),
+            subtitle: Padding(
+              padding: EdgeInsets.only(bottom: 5),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text('Grade ${transcript['grade']}',
+                      style: TextStyle(color: Colors.black54)),
+                  transcript['in_progress']
+                      ? Text(
+                          'Complete',
+                          style: TextStyle(
+                              color: Colors.green, fontWeight: FontWeight.w400),
+                        )
+                      : Text(
+                          'Pending',
+                          style: TextStyle(
+                              color: Colors.red, fontWeight: FontWeight.w400),
+                        ),
+                ],
+              ),
+            ),
             trailing: IconButton(
               icon: Icon(Icons.close),
               onPressed: () {
@@ -1330,22 +1339,15 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                   Text(document['misc_doc_type'],
                       style: TextStyle(color: Colors.black54)),
                   document['in_progress']
-                      ? Padding(
-                          padding: EdgeInsets.only(top: 2),
-                          child: Text(
-                            'Complete',
-                            style: TextStyle(
-                                color: Colors.green,
-                                fontWeight: FontWeight.w400),
-                          ),
+                      ? Text(
+                          'Complete',
+                          style: TextStyle(
+                              color: Colors.green, fontWeight: FontWeight.w400),
                         )
-                      : Padding(
-                          padding: EdgeInsets.only(top: 2),
-                          child: Text(
-                            'Pending',
-                            style: TextStyle(
-                                color: Colors.red, fontWeight: FontWeight.w400),
-                          ),
+                      : Text(
+                          'Pending',
+                          style: TextStyle(
+                              color: Colors.red, fontWeight: FontWeight.w400),
                         ),
                 ],
               ),
