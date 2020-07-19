@@ -1568,8 +1568,24 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                         onSelected: (value) async {
                           switch (value) {
                             case 'Create New':
+                              final data = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => NewEssayScreen(
+                                    op: 'Create',
+                                  ),
+                                ),
+                              );
                               break;
                             case 'Attach Existing':
+                              final data = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => AttachExistingScreen(
+                                    appId: widget.application['application_id'],
+                                  ),
+                                ),
+                              );
                               break;
                           }
                         },
@@ -1634,8 +1650,24 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                         onSelected: (value) async {
                           switch (value) {
                             case 'Create New':
+                              final data = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => TranscriptScreen(
+                                    op: 'Create',
+                                  ),
+                                ),
+                              );
                               break;
                             case 'Attach Existing':
+                              final data = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => AttachExistingScreen(
+                                    appId: widget.application['application_id'],
+                                  ),
+                                ),
+                              );
                               break;
                           }
                         },
@@ -1700,8 +1732,24 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                         onSelected: (value) async {
                           switch (value) {
                             case 'Create New':
+                              final data = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MiscDocsScreen(
+                                    op: 'Create',
+                                  ),
+                                ),
+                              );
                               break;
                             case 'Attach Existing':
+                              final data = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => AttachExistingScreen(
+                                    appId: widget.application['application_id'],
+                                  ),
+                                ),
+                              );
                               break;
                           }
                         },
@@ -1822,6 +1870,95 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                   })
                 ],
               ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class AttachExistingScreen extends StatefulWidget {
+  final int appId;
+  AttachExistingScreen({@required this.appId});
+  @override
+  _AttachExistingScreenState createState() => _AttachExistingScreenState();
+}
+
+class _AttachExistingScreenState extends State<AttachExistingScreen> {
+  Future unattachedDocs;
+
+  @override
+  void initState() {
+    super.initState();
+    unattachedDocs = getUnattachedDocs();
+  }
+
+  Future<void> getUnattachedDocs() async {
+    final response = await http.get(
+      dom + 'api/student/get-unnatached/${widget.appId}',
+      headers: {HttpHeaders.authorizationHeader: "Token $tok"},
+    );
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw 'failed';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Color(0xff005fa8),
+        actions: <Widget>[
+          FlatButton(
+            child: Text(
+              'ATTACH',
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          )
+        ],
+        title: Text(
+          'Attach Documents',
+          style: TextStyle(
+              color: Colors.white,
+              fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
+        ),
+      ),
+      body: ListView(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(left: 20, top: 30),
+            child: Text(
+              'Select Documents',
+              style: TextStyle(fontSize: 20, color: Colors.black87),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 22, top: 20),
+            child: Text(
+              'Essays',
+              style: TextStyle(fontSize: 17, color: Colors.black87),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 22, top: 30),
+            child: Text(
+              'Transcripts',
+              style: TextStyle(fontSize: 17, color: Colors.black87),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 22, top: 30),
+            child: Text(
+              'Misc Documents',
+              style: TextStyle(fontSize: 17, color: Colors.black87),
             ),
           )
         ],
