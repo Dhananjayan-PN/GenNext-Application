@@ -1763,8 +1763,10 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                                   ),
                                 ),
                               );
-                              createDocument('Essay', data);
-                              loading(context);
+                              if (data != null) {
+                                createDocument('Essay', data);
+                                loading(context);
+                              }
                               break;
                             case 'Attach Existing':
                               if (unattachedDocs['essay_data'].isEmpty) {
@@ -1780,8 +1782,10 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                                     ),
                                   ),
                                 );
-                                attachDocuments('Essay', data);
-                                loading(context);
+                                if (data != null) {
+                                  attachDocuments('Essay', data);
+                                  loading(context);
+                                }
                               }
                               break;
                           }
@@ -1860,8 +1864,11 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                                   ),
                                 ),
                               );
-                              createDocument('Transcript', data);
-                              loading(context);
+                              if (data != null) {
+                                createDocument('Transcript', data);
+                                loading(context);
+                              }
+
                               break;
                             case 'Attach Existing':
                               if (unattachedDocs['transcript_data'].isEmpty) {
@@ -1878,8 +1885,10 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                                     ),
                                   ),
                                 );
-                                attachDocuments('Transcript', data);
-                                loading(context);
+                                if (data != null) {
+                                  attachDocuments('Transcript', data);
+                                  loading(context);
+                                }
                               }
                               break;
                           }
@@ -1958,8 +1967,10 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                                   ),
                                 ),
                               );
-                              createDocument('Document', data);
-                              loading(context);
+                              if (data != null) {
+                                createDocument('Document', data);
+                                loading(context);
+                              }
                               break;
                             case 'Attach Existing':
                               if (unattachedDocs['misc_doc_data'].isEmpty) {
@@ -1975,8 +1986,10 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                                     ),
                                   ),
                                 );
-                                attachDocuments('Document', data);
-                                loading(context);
+                                if (data != null) {
+                                  attachDocuments('Document', data);
+                                  loading(context);
+                                }
                               }
                               break;
                           }
