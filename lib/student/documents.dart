@@ -919,12 +919,8 @@ class _TranscriptScreenState extends State<TranscriptScreen> {
           )
         ],
         title: Text(
-          widget.op == 'Create' ? 'Add Transcript' : 'Edit Transcript',
-          maxLines: 1,
-          style: TextStyle(
-              color: Colors.white,
-              fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
-        ),
+            widget.op == 'Create' ? 'Add Transcript' : 'Edit Transcript',
+            maxLines: 1),
       ),
       body: Form(
         key: _formKey,
@@ -1105,9 +1101,6 @@ class _ECScreenState extends State<ECScreen> {
               ? 'Add Extracurricular'
               : 'Edit Extracurricular',
           maxLines: 1,
-          style: TextStyle(
-              color: Colors.white,
-              fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
         ),
       ),
       body: Form(
@@ -1298,9 +1291,6 @@ class _MiscDocsScreenState extends State<MiscDocsScreen> {
         title: Text(
           widget.op == 'Create' ? 'Add Document' : 'Edit Document',
           maxLines: 1,
-          style: TextStyle(
-              color: Colors.white,
-              fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
         ),
       ),
       body: Form(

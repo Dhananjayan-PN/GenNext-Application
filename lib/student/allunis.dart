@@ -407,10 +407,6 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
           elevation: 6,
           title: Text(
             'Explore',
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
           ),
           bottom: TabBar(
             tabs: [

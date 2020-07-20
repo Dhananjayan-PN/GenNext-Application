@@ -475,13 +475,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
         appBar: AppBar(
           backgroundColor: Color(0xff005fa8),
           elevation: 6,
-          title: Text(
-            'My Applications',
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
-          ),
+          title: Text('My Applications'),
           bottom: TabBar(
             tabs: [
               Tab(
@@ -842,9 +836,6 @@ class _NewApplicationScreenState extends State<NewApplicationScreen> {
         title: Text(
           widget.op == 'Create' ? 'New Application' : 'Edit Application',
           maxLines: 1,
-          style: TextStyle(
-              color: Colors.white,
-              fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
         ),
       ),
       body: Form(
@@ -1676,13 +1667,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Color(0xff005fa8),
-        title: Text(
-          'Manage Application',
-          maxLines: 1,
-          style: TextStyle(
-              color: Colors.white,
-              fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
-        ),
+        title: Text('Manage Application'),
       ),
       body: ListView(
         children: <Widget>[
@@ -2344,12 +2329,7 @@ class _AttachExistingScreenState extends State<AttachExistingScreen> {
             },
           )
         ],
-        title: Text(
-          'Attach ${widget.op}s',
-          style: TextStyle(
-              color: Colors.white,
-              fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
-        ),
+        title: Text('Attach ${widget.op}s'),
       ),
       body: ListView(
         children: <Widget>[

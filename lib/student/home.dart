@@ -364,10 +364,6 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
       elevation: 6,
       title: Text(
         titletext,
-        style: TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
       ),
       backgroundColor: Color(0xff005fa8),
     );

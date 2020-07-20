@@ -669,10 +669,10 @@ class _DashBoardState extends State<DashBoard> {
           },
         ),
         Padding(
-          padding: EdgeInsets.only(bottom: 20, top: 15, left: 18, right: 18),
+          padding: EdgeInsets.only(bottom: 30, top: 10, left: 18, right: 18),
           child: Card(
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(15))),
+                borderRadius: BorderRadius.all(Radius.circular(10))),
             elevation: 6,
             child: Column(
               children: <Widget>[

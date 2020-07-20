@@ -478,9 +478,6 @@ class _EssaysScreenState extends State<EssaysScreen> {
         title: Text(
           'My Essays',
           maxLines: 1,
-          style: TextStyle(
-              color: Colors.white,
-              fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
         ),
       ),
       body: RefreshIndicator(
@@ -663,9 +660,6 @@ class _NewEssayScreenState extends State<NewEssayScreen> {
           title: Text(
             widget.op == 'Edit' ? 'Edit Essay Details' : 'New Essay',
             maxLines: 1,
-            style: TextStyle(
-                color: Colors.white,
-                fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
           ),
         ),
         body: Padding(
@@ -822,11 +816,6 @@ class _EssayEditorState extends State<EssayEditor> {
               essayTitle,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 17,
-                  fontWeight:
-                      Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
             ),
             bottom: TabBar(
               tabs: [

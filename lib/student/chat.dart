@@ -158,13 +158,7 @@ class _AllChatsState extends State<AllChats> {
             )
           ],
           centerTitle: true,
-          title: Text(
-            'Chats',
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
-          ),
+          title: Text('Chats'),
         ),
         body: Column(
           children: <Widget>[
@@ -415,14 +409,7 @@ class _OpenChatState extends State<OpenChat> {
             ),
             Padding(
               padding: EdgeInsets.only(left: 15),
-              child: Text(
-                otherUser,
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight:
-                        Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
-              ),
+              child: Text(otherUser),
             ),
           ],
         ),

@@ -601,13 +601,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
         appBar: AppBar(
           backgroundColor: Color(0xff005fa8),
           elevation: 6,
-          title: Text(
-            'My Universities',
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
-          ),
+          title: Text('My Universities'),
           bottom: TabBar(
             tabs: [
               Tab(
@@ -908,6 +902,7 @@ class AddToListDialog extends StatefulWidget {
 
 class _AddToListDialogState extends State<AddToListDialog> {
   ListGroup _listGroup = ListGroup.reach;
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(

@@ -38,7 +38,7 @@ class ProfileScreenState extends State<ProfileScreen> {
       drawer: NavDrawer(
           name: newUser.firstname + ' ' + newUser.lastname,
           email: newUser.email),
-      appBar: CustomAppBar('My Profile'),
+      appBar: CustomAppBar('Profile'),
       body: Padding(
         padding: EdgeInsets.only(top: 15, left: 10, right: 10),
         child: Card(
