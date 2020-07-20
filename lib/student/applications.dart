@@ -968,6 +968,10 @@ class SingleAppScreen extends StatefulWidget {
 
 class _SingleAppScreenState extends State<SingleAppScreen> {
   TextEditingController _appNotes = TextEditingController();
+
+  List<Widget> essayCards;
+  List<Widget> transcriptCards;
+  List<Widget> miscCards;
   Map app;
   Map unattachedDocs;
   bool saved = true;
@@ -994,6 +998,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
         app = json.decode(response.body)['application_data'];
         app['university_id'] = widget.application['university_id'];
       });
+      setState(() {});
     } else {
       throw 'failed';
     }
@@ -1173,7 +1178,6 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
         },
       ),
     );
-    print(response.body);
     if (response.statusCode == 200) {
       if (json.decode(response.body)['response'] ==
           'Application successfully edited.') {
@@ -1208,7 +1212,6 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                   'counselor_essay_content': ''
                 }))
             .timeout(Duration(seconds: 10));
-        print(response.body);
         if (response.statusCode == 200) {
           final data = jsonDecode(response.body);
           if (data['Response'] == 'Essay successfully created.') {
@@ -1232,8 +1235,8 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
         };
         var formData = dio.FormData.fromMap({
           "user_id": newUser.id,
-          "transcript_grade": data[0],
-          "transcript_title": data[1],
+          "transcript_grade": data[1],
+          "transcript_title": data[0],
           "transcript_special_circumstances": data[2],
           "transcript_is_flagged": false,
         });
@@ -1544,9 +1547,9 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> essayCards = [];
-    List<Widget> transcriptCards = [];
-    List<Widget> miscCards = [];
+    essayCards = [];
+    transcriptCards = [];
+    miscCards = [];
     DateTime deadline = DateTime.parse(app["application_deadline"]);
     var timeleft = DateTime.now().isBefore(deadline)
         ? deadline.difference(DateTime.now()).inDays
@@ -1710,7 +1713,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                 ),
               ),
               child: ExpansionTile(
-                initiallyExpanded: false,
+                initiallyExpanded: app['essay_data'].isNotEmpty,
                 title: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -1811,7 +1814,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
               ),
               elevation: 4,
               child: ExpansionTile(
-                initiallyExpanded: false,
+                initiallyExpanded: app['transcript_data'].isNotEmpty,
                 title: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -1914,7 +1917,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                 ),
               ),
               child: ExpansionTile(
-                initiallyExpanded: false,
+                initiallyExpanded: app['misc_doc_data'].isNotEmpty,
                 title: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
