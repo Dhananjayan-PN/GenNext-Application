@@ -932,6 +932,7 @@ class _AddToListDialogState extends State<AddToListDialog> {
               child: Column(
                 children: <Widget>[
                   RadioListTile(
+                    activeColor: Color(0xff005fa8),
                     title: Text('Reach'),
                     value: ListGroup.reach,
                     groupValue: _listGroup,
@@ -942,6 +943,7 @@ class _AddToListDialogState extends State<AddToListDialog> {
                     },
                   ),
                   RadioListTile(
+                    activeColor: Color(0xff005fa8),
                     title: Text('Match'),
                     value: ListGroup.match,
                     groupValue: _listGroup,
@@ -952,6 +954,7 @@ class _AddToListDialogState extends State<AddToListDialog> {
                     },
                   ),
                   RadioListTile(
+                    activeColor: Color(0xff005fa8),
                     title: Text('Safety'),
                     value: ListGroup.safety,
                     groupValue: _listGroup,
