@@ -916,10 +916,31 @@ class _NewApplicationScreenState extends State<NewApplicationScreen> {
                 },
                 onShowPicker: (context, currentValue) async {
                   final _date = await showDatePicker(
-                      context: context,
-                      firstDate: DateTime(1900),
-                      initialDate: currentValue ?? DateTime.now(),
-                      lastDate: DateTime(2150));
+                    context: context,
+                    firstDate: DateTime(1900),
+                    initialDate: currentValue ?? DateTime.now(),
+                    lastDate: DateTime(2150),
+                    builder: (context, child) {
+                      return Theme(
+                        data: ThemeData(
+                            colorScheme: ColorScheme(
+                                brightness: Brightness.light,
+                                error: Color(0xff005fa8),
+                                onError: Colors.red,
+                                background: Color(0xff005fa8),
+                                primary: Color(0xff005fa8),
+                                primaryVariant: Color(0xff005fa8),
+                                secondary: Color(0xff005fa8),
+                                secondaryVariant: Color(0xff005fa8),
+                                onPrimary: Colors.white,
+                                surface: Color(0xff005fa8),
+                                onSecondary: Colors.black,
+                                onSurface: Colors.black,
+                                onBackground: Colors.black)),
+                        child: child,
+                      );
+                    },
+                  );
                   if (_date != null) {
                     return _date;
                   } else {

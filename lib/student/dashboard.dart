@@ -609,7 +609,7 @@ class _DashBoardState extends State<DashBoard> {
                                               minutes.toString() +
                                               'm',
                                       style: TextStyle(
-                                          color: Colors.blue,
+                                          color: Color(0xff005fa8),
                                           fontSize: 18,
                                           fontWeight: FontWeight.w200),
                                     ),

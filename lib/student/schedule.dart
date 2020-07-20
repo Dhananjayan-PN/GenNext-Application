@@ -298,16 +298,60 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       },
                       onShowPicker: (context, currentValue) async {
                         final _date = await showDatePicker(
-                            context: context,
-                            firstDate: DateTime(1900),
-                            initialDate:
-                                currentValue ?? _selectedDay ?? DateTime.now(),
-                            lastDate: DateTime(2150));
+                          context: context,
+                          firstDate: DateTime(1900),
+                          initialDate:
+                              currentValue ?? _selectedDay ?? DateTime.now(),
+                          lastDate: DateTime(2150),
+                          builder: (context, child) {
+                            return Theme(
+                              data: ThemeData(
+                                  colorScheme: ColorScheme(
+                                      brightness: Brightness.light,
+                                      error: Color(0xff005fa8),
+                                      onError: Colors.red,
+                                      background: Color(0xff005fa8),
+                                      primary: Color(0xff005fa8),
+                                      primaryVariant: Color(0xff005fa8),
+                                      secondary: Color(0xff005fa8),
+                                      secondaryVariant: Color(0xff005fa8),
+                                      onPrimary: Colors.white,
+                                      surface: Color(0xff005fa8),
+                                      onSecondary: Colors.black,
+                                      onSurface: Colors.black,
+                                      onBackground: Colors.black)),
+                              child: child,
+                            );
+                          },
+                        );
                         if (_date != null) {
                           final _time = await showTimePicker(
                             context: context,
                             initialTime: TimeOfDay.fromDateTime(
                                 currentValue ?? _selectedDay ?? DateTime.now()),
+                            builder: (context, child) {
+                              return Theme(
+                                data: ThemeData(
+                                  primaryColor: Color(0xff005fa8),
+                                  accentColor: Color(0xff005fa8),
+                                  colorScheme: ColorScheme(
+                                      brightness: Brightness.light,
+                                      error: Color(0xff005fa8),
+                                      onError: Colors.red,
+                                      background: Color(0xff005fa8),
+                                      primary: Color(0xff005fa8),
+                                      primaryVariant: Color(0xff005fa8),
+                                      secondary: Color(0xff005fa8),
+                                      secondaryVariant: Color(0xff005fa8),
+                                      onPrimary: Colors.white,
+                                      surface: Color(0xff005fa8),
+                                      onSecondary: Colors.black,
+                                      onSurface: Colors.black,
+                                      onBackground: Colors.black),
+                                ),
+                                child: child,
+                              );
+                            },
                           );
                           return DateTimeField.combine(_date, _time);
                         } else {
@@ -442,15 +486,60 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       },
                       onShowPicker: (context, currentValue) async {
                         final _date = await showDatePicker(
-                            context: context,
-                            firstDate: DateTime(1900),
-                            initialDate: currentValue ?? time,
-                            lastDate: DateTime(2150));
+                          context: context,
+                          firstDate: DateTime(1900),
+                          initialDate: currentValue ?? time,
+                          lastDate: DateTime(2150),
+                          builder: (context, child) {
+                            return Theme(
+                              data: ThemeData(
+                                colorScheme: ColorScheme(
+                                    brightness: Brightness.light,
+                                    error: Color(0xff005fa8),
+                                    onError: Colors.red,
+                                    background: Color(0xff005fa8),
+                                    primary: Color(0xff005fa8),
+                                    primaryVariant: Color(0xff005fa8),
+                                    secondary: Color(0xff005fa8),
+                                    secondaryVariant: Color(0xff005fa8),
+                                    onPrimary: Colors.white,
+                                    surface: Color(0xff005fa8),
+                                    onSecondary: Colors.black,
+                                    onSurface: Colors.black,
+                                    onBackground: Colors.black),
+                              ),
+                              child: child,
+                            );
+                          },
+                        );
                         if (_date != null) {
                           final _time = await showTimePicker(
                             context: context,
                             initialTime:
                                 TimeOfDay.fromDateTime(currentValue ?? time),
+                            builder: (context, child) {
+                              return Theme(
+                                data: ThemeData(
+                                  primaryColor: Color(0xff005fa8),
+                                  accentColor: Color(0xff005fa8),
+                                  colorScheme: ColorScheme(
+                                      brightness: Brightness.light,
+                                      error: Color(0xff005fa8),
+                                      onError: Colors.red,
+                                      background: Color(0xff005fa8),
+                                      primary: Color(0xff005fa8),
+                                      primaryVariant: Color(0xff005fa8),
+                                      secondary: Color(0xff005fa8),
+                                      secondaryVariant: Color(0xff005fa8),
+                                      onPrimary: Colors.white,
+                                      surface: Color(0xff005fa8),
+                                      onSecondary: Colors.black,
+                                      onSurface: Colors.black,
+                                      onBackground: Colors.black),
+                                ),
+                                child: child,
+                              );
+                            },
                           );
                           return DateTimeField.combine(_date, _time);
                         } else {

@@ -20,8 +20,12 @@ class MyApp extends StatelessWidget {
     ]);
     return MaterialApp(
       theme: Platform.isAndroid
-          ? ThemeData(fontFamily: 'Roboto', primaryColor: Color(0xff005fa8))
-          : ThemeData(primaryColor: Color(0xff005fa8)),
+          ? ThemeData(
+              fontFamily: 'Roboto',
+              primaryColor: Color(0xff005fa8),
+              accentColor: Color(0xff005fa8))
+          : ThemeData(
+              primaryColor: Color(0xff005fa8), accentColor: Color(0xff005fa8)),
       home: LoginPage(),
       debugShowCheckedModeBanner: false,
     );
