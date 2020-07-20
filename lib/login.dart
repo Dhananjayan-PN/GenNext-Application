@@ -275,205 +275,212 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
-        systemNavigationBarColor: Color(0xff00AEEF),
-        statusBarColor: Color(0xff0072BC).withAlpha(150),
+        systemNavigationBarColor: Colors.white,
+        statusBarColor: Color(0xff005fa8).withAlpha(200),
       ),
       child: WillPopScope(
         onWillPop: () async => Future.value(false),
         child: Scaffold(
+          backgroundColor: Colors.white,
           key: _scafKey,
-          body: Container(
-            color: Colors.white,
-            child: ListView(
-              children: <Widget>[
-                Padding(
-                  padding:
-                      EdgeInsets.only(top: 75, right: 100, left: 0, bottom: 0),
-                  child: Transform.scale(
-                    scale: 1,
-                    child: Container(
-                      alignment: Alignment.centerLeft,
-                      height: 45,
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        boxShadow: [...kElevationToShadow[8]],
-                        color: Color(0xff005fa8),
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(20),
-                            bottomRight: Radius.circular(20)),
-                      ),
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Padding(
-                          padding: EdgeInsets.only(bottom: 1.3),
-                          child: Text(
-                            'Are you future-ready ?',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 19,
-                              fontWeight: FontWeight.w300,
-                            ),
-                            textAlign: TextAlign.right,
-                          ),
+          body: ScrollConfiguration(
+            behavior: ScrollBehavior()
+              ..buildViewportChrome(context, null, AxisDirection.down),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: 100, right: 100),
+                    child: Transform.scale(
+                      scale: 1,
+                      child: Container(
+                        alignment: Alignment.centerLeft,
+                        height: 45,
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                          boxShadow: [...kElevationToShadow[8]],
+                          color: Color(0xff005fa8),
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(20),
+                              bottomRight: Radius.circular(20)),
                         ),
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 40, right: 20, left: 8),
-                  child: Image.asset(
-                    'images/CollegeGenieLogo-2.png',
-                    height: 175,
-                    width: 200,
-                    fit: BoxFit.contain,
-                    colorBlendMode: BlendMode.darken,
-                  ),
-                ),
-                Form(
-                  key: formKey,
-                  child: Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(top: 35, left: 35, right: 50),
-                        child: Theme(
-                          data: Theme.of(context).copyWith(
-                            primaryColor: Color(0xff0072BC),
-                          ),
-                          child: TextFormField(
-                            cursorColor: Color(0xff005fa8),
-                            key: ValueKey('Username'),
-                            controller: username,
-                            validator: (value) {
-                              return value.isEmpty
-                                  ? 'Enter your username'
-                                  : null;
-                            },
-                            onSaved: (value) => _username = value,
-                            style: TextStyle(
-                              color: Colors.black,
-                            ),
-                            decoration: InputDecoration(
-                              icon: Icon(Icons.person),
-                              labelText: 'Username',
-                              labelStyle: TextStyle(
-                                color: Colors.black54,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 20, left: 35, right: 50),
-                        child: Theme(
-                          data: Theme.of(context).copyWith(
-                            primaryColor: Color(0xff0072BC),
-                          ),
-                          child: TextFormField(
-                            cursorColor: Color(0xff005fa8),
-                            key: ValueKey('Password'),
-                            controller: password,
-                            validator: (String value) {
-                              return value.isEmpty
-                                  ? 'Enter your password'
-                                  : null;
-                            },
-                            onSaved: (value) => _password = value,
-                            style: TextStyle(
-                              color: Colors.black,
-                            ),
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              icon: Icon(Icons.vpn_key),
-                              labelText: 'Password',
-                              labelStyle: TextStyle(
-                                color: Colors.black54,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 45, right: 50),
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: Container(
-                      height: 40,
-                      width: 100,
-                      decoration: BoxDecoration(
-                        boxShadow: [...kElevationToShadow[8]],
-                        color: Color(0xff005fa8),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: FlatButton(
-                        splashColor: Colors.blue[900],
-                        onPressed: () {
-                          validateAndSave();
-                        },
-                        child: Center(
+                        child: Align(
+                          alignment: Alignment.center,
                           child: Padding(
-                            padding: EdgeInsets.only(bottom: 1),
+                            padding: EdgeInsets.only(bottom: 1.3),
                             child: Text(
-                              'Sign In',
-                              key: ValueKey('button'),
+                              'Are you future-ready ?',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 19,
-                                fontWeight: FontWeight.w400,
+                                fontWeight: FontWeight.w300,
                               ),
-                              textAlign: TextAlign.center,
+                              textAlign: TextAlign.right,
                             ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 35, left: 55, right: 55),
-                  child: Container(
-                    alignment: Alignment.topRight,
-                    height: 25,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                  Padding(
+                    padding: EdgeInsets.only(top: 45, right: 20, left: 8),
+                    child: Image.asset(
+                      'images/CollegeGenieLogo-2.png',
+                      height: 175,
+                      width: 200,
+                      fit: BoxFit.contain,
+                      colorBlendMode: BlendMode.darken,
+                    ),
+                  ),
+                  Form(
+                    key: formKey,
+                    child: Column(
                       children: <Widget>[
-                        Text(
-                          'Your first time here? ',
-                          style: TextStyle(
-                            fontSize: 17,
-                            color: Colors.black54,
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: 35, left: 35, right: 50),
+                          child: Theme(
+                            data: Theme.of(context).copyWith(
+                              primaryColor: Color(0xff0072BC),
+                            ),
+                            child: TextFormField(
+                              cursorColor: Color(0xff005fa8),
+                              key: ValueKey('Username'),
+                              controller: username,
+                              validator: (value) {
+                                return value.isEmpty
+                                    ? 'Enter your username'
+                                    : null;
+                              },
+                              onSaved: (value) => _username = value,
+                              style: TextStyle(
+                                color: Colors.black,
+                              ),
+                              decoration: InputDecoration(
+                                icon: Icon(Icons.person),
+                                labelText: 'Username',
+                                labelStyle: TextStyle(
+                                  color: Colors.black54,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                        Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            splashColor: Color(0xff005fa8),
-                            onTap: () {
-                              formKey.currentState.reset();
-                              Navigator.push(
-                                  context,
-                                  PageTransition(
-                                      type: PageTransitionType.rightToLeft,
-                                      child: SignUpPage()));
-                            },
-                            child: Text(
-                              'Register',
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: 20, left: 35, right: 50),
+                          child: Theme(
+                            data: Theme.of(context).copyWith(
+                              primaryColor: Color(0xff0072BC),
+                            ),
+                            child: TextFormField(
+                              cursorColor: Color(0xff005fa8),
+                              key: ValueKey('Password'),
+                              controller: password,
+                              validator: (String value) {
+                                return value.isEmpty
+                                    ? 'Enter your password'
+                                    : null;
+                              },
+                              onSaved: (value) => _password = value,
                               style: TextStyle(
-                                fontSize: 17,
-                                color: Color(0xff005fa8),
+                                color: Colors.black,
                               ),
-                              textAlign: TextAlign.left,
+                              obscureText: true,
+                              decoration: InputDecoration(
+                                icon: Icon(Icons.vpn_key),
+                                labelText: 'Password',
+                                labelStyle: TextStyle(
+                                  color: Colors.black54,
+                                ),
+                              ),
                             ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                ),
-              ],
+                  Padding(
+                    padding: EdgeInsets.only(top: 45, right: 50),
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Container(
+                        height: 40,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          boxShadow: [...kElevationToShadow[8]],
+                          color: Color(0xff005fa8),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: FlatButton(
+                          splashColor: Colors.blue[900],
+                          onPressed: () {
+                            validateAndSave();
+                          },
+                          child: Center(
+                            child: Padding(
+                              padding: EdgeInsets.only(bottom: 1),
+                              child: Text(
+                                'Sign In',
+                                key: ValueKey('button'),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 19,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 35, left: 55, right: 55),
+                    child: Container(
+                      alignment: Alignment.topRight,
+                      height: 25,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            'Your first time here? ',
+                            style: TextStyle(
+                              fontSize: 17,
+                              color: Colors.black54,
+                            ),
+                          ),
+                          Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              splashColor: Color(0xff005fa8),
+                              onTap: () {
+                                formKey.currentState.reset();
+                                Navigator.push(
+                                    context,
+                                    PageTransition(
+                                        type: PageTransitionType.rightToLeft,
+                                        child: SignUpPage()));
+                              },
+                              child: Text(
+                                'Register',
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  color: Color(0xff005fa8),
+                                ),
+                                textAlign: TextAlign.left,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

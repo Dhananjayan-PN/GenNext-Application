@@ -477,7 +477,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         systemNavigationBarColor: Colors.white,
-        statusBarColor: Color(0xff0072BC).withAlpha(150),
+        statusBarColor: Color(0xff005fa8).withAlpha(200),
       ),
       child: PageView(
         controller: _controller,
