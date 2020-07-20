@@ -7,6 +7,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 // import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart' as dio;
 import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'dart:async';
@@ -977,6 +978,7 @@ class SingleAppScreen extends StatefulWidget {
 class _SingleAppScreenState extends State<SingleAppScreen> {
   TextEditingController _appNotes = TextEditingController();
   Map app;
+  Map unattachedDocs;
   bool saved = true;
   bool saving = false;
   bool savingfailed = false;
@@ -988,6 +990,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
     app = widget.application;
     _appNotes.text = app['application_notes'] ?? '';
     getApplication();
+    getUnattachedDocs();
   }
 
   Future<void> getApplication() async {
@@ -999,6 +1002,21 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
       setState(() {
         app = json.decode(response.body)['application_data'];
         app['university_id'] = widget.application['university_id'];
+      });
+    } else {
+      throw 'failed';
+    }
+  }
+
+  Future<void> getUnattachedDocs() async {
+    final response = await http.get(
+      dom +
+          'api/student/get-unattached/${widget.application['application_id']}',
+      headers: {HttpHeaders.authorizationHeader: "Token $tok"},
+    );
+    if (response.statusCode == 200) {
+      setState(() {
+        unattachedDocs = jsonDecode(response.body);
       });
     } else {
       throw 'failed';
@@ -1097,7 +1115,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
       body: jsonEncode(
         <String, dynamic>{
           'application_id': app['application_id'],
-          'university_id': app['university_id'],
+          'university_id': widget.application['university_id'],
           'application_deadline': app["application_deadline"],
           'application_notes': app["application_notes"],
           'application_status': app['completion_status'],
@@ -1118,6 +1136,174 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
     } else {
       refresh();
       error(context);
+    }
+  }
+
+  Future<void> attachDocuments(String category, List<int> docIds) async {
+    List essayList = [];
+    List transcriptList = [];
+    List miscList = [];
+    for (int i = 0; i < app['essay_data'].length; i++) {
+      essayList.add(app['essay_data'][i]['essay_id']);
+    }
+    for (int i = 0; i < app['transcript_data'].length; i++) {
+      transcriptList.add(app['transcript_data'][i]['transcript_id']);
+    }
+    for (int i = 0; i < app['misc_doc_data'].length; i++) {
+      miscList.add(app['misc_doc_data'][i]['misc_doc_id']);
+    }
+    switch (category) {
+      case 'Essay':
+        essayList.addAll(docIds);
+        break;
+      case 'Transcript':
+        transcriptList.addAll(docIds);
+        break;
+      case 'Document':
+        miscList.addAll(docIds);
+        break;
+    }
+    final response = await http.put(
+      dom + 'api/student/edit-application',
+      headers: {
+        HttpHeaders.authorizationHeader: "Token $tok",
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{
+          'application_id': app['application_id'],
+          'university_id': widget.application['university_id'],
+          'application_deadline': app["application_deadline"],
+          'application_notes': app["application_notes"],
+          'application_status': app['completion_status'],
+          'essay_ids': essayList.toString(),
+          'transcript_ids': transcriptList.toString(),
+          'misc_doc_ids': miscList.toString(),
+        },
+      ),
+    );
+    print(response.body);
+    if (response.statusCode == 200) {
+      if (json.decode(response.body)['response'] ==
+          'Application successfully edited.') {
+        refresh();
+        Navigator.pop(context);
+      } else {
+        refresh();
+        Navigator.pop(context);
+        error(context);
+      }
+    } else {
+      refresh();
+      Navigator.pop(context);
+      error(context);
+    }
+  }
+
+  Future<void> createDocument(String category, List data) async {
+    switch (category) {
+      case 'Essay':
+        final response = await http
+            .post(dom + 'api/student/create-essay/',
+                headers: {
+                  HttpHeaders.authorizationHeader: "Token $tok",
+                  'Content-Type': 'application/json; charset=UTF-8',
+                },
+                body: jsonEncode(<String, dynamic>{
+                  'user_id': newUser.id,
+                  'essay_title': data[0],
+                  'essay_prompt': data[1],
+                  'student_essay_content': '',
+                  'counselor_essay_content': ''
+                }))
+            .timeout(Duration(seconds: 10));
+        print(response.body);
+        if (response.statusCode == 200) {
+          final data = jsonDecode(response.body);
+          if (data['Response'] == 'Essay successfully created.') {
+            int documentId = data['essay_id'];
+            attachDocuments(category, [documentId]);
+          } else {
+            Navigator.pop(context);
+            error(context);
+          }
+        } else {
+          Navigator.pop(context);
+          error(context);
+        }
+        break;
+
+      case 'Transcript':
+        var dioRequest = dio.Dio();
+        dioRequest.options.headers = {
+          HttpHeaders.authorizationHeader: "Token $tok",
+          'Content-Type': 'application/x-www-form-urlencoded',
+        };
+        var formData = dio.FormData.fromMap({
+          "user_id": newUser.id,
+          "transcript_grade": data[0],
+          "transcript_title": data[1],
+          "transcript_special_circumstances": data[2],
+          "transcript_is_flagged": false,
+        });
+        var file = await dio.MultipartFile.fromFile(
+          data[3].path,
+        );
+        formData.files.add(MapEntry('transcript', file));
+        var response = await dioRequest.post(
+          dom + 'api/student/upload-document/',
+          data: formData,
+        );
+        if (response.statusCode == 200) {
+          if (response.data['Response'] == 'Document successfully uploaded.') {
+            int documentId = response.data['document_id'];
+            attachDocuments(category, [documentId]);
+          } else {
+            Navigator.pop(context);
+            error(context);
+            refresh();
+          }
+        } else {
+          Navigator.pop(context);
+          error(context);
+          refresh();
+        }
+        break;
+      case 'Document':
+        var dioRequest = dio.Dio();
+        dioRequest.options.headers = {
+          HttpHeaders.authorizationHeader: "Token $tok",
+          'Content-Type': 'application/x-www-form-urlencoded',
+        };
+        var formData = dio.FormData.fromMap({
+          "user_id": newUser.id,
+          "misc_title": data[0],
+          "misc_doc_type": data[1],
+          "misc_is_flagged": false,
+        });
+        var file = await dio.MultipartFile.fromFile(
+          data[2].path,
+        );
+        formData.files.add(MapEntry('misc_document', file));
+        var response = await dioRequest.post(
+          dom + 'api/student/upload-document/',
+          data: formData,
+        );
+        if (response.statusCode == 200) {
+          if (response.data['Response'] == 'Document successfully uploaded.') {
+            int documentId = response.data['document_id'];
+            attachDocuments(category, [documentId]);
+          } else {
+            Navigator.pop(context);
+            error(context);
+            refresh();
+          }
+        } else {
+          Navigator.pop(context);
+          error(context);
+          refresh();
+        }
+        break;
     }
   }
 
@@ -1189,12 +1375,13 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
   void refresh() async {
     setState(() {
       getApplication();
+      getUnattachedDocs();
     });
   }
 
   Widget buildEssayCard(essay) {
     return Padding(
-      padding: EdgeInsets.only(top: 5, left: 15, right: 15, bottom: 8),
+      padding: EdgeInsets.only(left: 15, right: 15),
       child: Card(
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
@@ -1252,7 +1439,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
 
   Widget buildTranscriptCard(transcript) {
     return Padding(
-      padding: EdgeInsets.only(top: 5, left: 15, right: 15, bottom: 8),
+      padding: EdgeInsets.only(left: 15, right: 15),
       child: Card(
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
@@ -1309,7 +1496,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
 
   Widget buildMiscCard(document) {
     return Padding(
-      padding: EdgeInsets.only(top: 5, left: 15, right: 15, bottom: 8),
+      padding: EdgeInsets.only(left: 15, right: 15),
       child: Card(
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
@@ -1538,7 +1725,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                 ),
               ),
               child: ExpansionTile(
-                initiallyExpanded: essayCards.isNotEmpty,
+                initiallyExpanded: false,
                 title: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -1576,16 +1763,26 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                                   ),
                                 ),
                               );
+                              createDocument('Essay', data);
+                              loading(context);
                               break;
                             case 'Attach Existing':
-                              final data = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => AttachExistingScreen(
-                                    appId: widget.application['application_id'],
+                              if (unattachedDocs['essay_data'].isEmpty) {
+                                error(context,
+                                    'There are no essays available to attach\nCreate one before you attach it');
+                              } else {
+                                final data = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AttachExistingScreen(
+                                      op: 'Essay',
+                                      docList: unattachedDocs['essay_data'],
+                                    ),
                                   ),
-                                ),
-                              );
+                                );
+                                attachDocuments('Essay', data);
+                                loading(context);
+                              }
                               break;
                           }
                         },
@@ -1594,7 +1791,12 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                   ],
                 ),
                 children: essayCards.isNotEmpty
-                    ? essayCards
+                    ? [
+                        ...essayCards,
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 10),
+                        )
+                      ]
                     : [
                         Padding(
                           padding: EdgeInsets.only(
@@ -1620,7 +1822,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
               ),
               elevation: 4,
               child: ExpansionTile(
-                initiallyExpanded: transcriptCards.isNotEmpty,
+                initiallyExpanded: false,
                 title: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -1658,16 +1860,27 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                                   ),
                                 ),
                               );
+                              createDocument('Transcript', data);
+                              loading(context);
                               break;
                             case 'Attach Existing':
-                              final data = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => AttachExistingScreen(
-                                    appId: widget.application['application_id'],
+                              if (unattachedDocs['transcript_data'].isEmpty) {
+                                error(context,
+                                    'There are no transcripts available to attach\nCreate one before you attach it');
+                              } else {
+                                final data = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AttachExistingScreen(
+                                      op: 'Transcript',
+                                      docList:
+                                          unattachedDocs['transcript_data'],
+                                    ),
                                   ),
-                                ),
-                              );
+                                );
+                                attachDocuments('Transcript', data);
+                                loading(context);
+                              }
                               break;
                           }
                         },
@@ -1676,7 +1889,12 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                   ],
                 ),
                 children: transcriptCards.isNotEmpty
-                    ? transcriptCards
+                    ? [
+                        ...transcriptCards,
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 10),
+                        )
+                      ]
                     : [
                         Padding(
                           padding: EdgeInsets.only(
@@ -1702,7 +1920,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                 ),
               ),
               child: ExpansionTile(
-                initiallyExpanded: miscCards.isNotEmpty,
+                initiallyExpanded: false,
                 title: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -1740,16 +1958,26 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                                   ),
                                 ),
                               );
+                              createDocument('Document', data);
+                              loading(context);
                               break;
                             case 'Attach Existing':
-                              final data = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => AttachExistingScreen(
-                                    appId: widget.application['application_id'],
+                              if (unattachedDocs['misc_doc_data'].isEmpty) {
+                                error(context,
+                                    'There are no document available to attach\nCreate one before you attach it');
+                              } else {
+                                final data = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => AttachExistingScreen(
+                                      op: 'Document',
+                                      docList: unattachedDocs['misc_doc_data'],
+                                    ),
                                   ),
-                                ),
-                              );
+                                );
+                                attachDocuments('Document', data);
+                                loading(context);
+                              }
                               break;
                           }
                         },
@@ -1758,7 +1986,12 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                   ],
                 ),
                 children: miscCards.isNotEmpty
-                    ? miscCards
+                    ? [
+                        ...miscCards,
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 10),
+                        )
+                      ]
                     : [
                         Padding(
                           padding: EdgeInsets.only(
@@ -1860,7 +2093,8 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                               borderRadius: BorderRadius.circular(10)),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10)),
-                          hintText: 'Take note of your tasks for this app...',
+                          hintText:
+                              'Take note of important stuff for this app...',
                           hintStyle:
                               TextStyle(color: Colors.black54, fontSize: 14),
                         ),
@@ -1879,35 +2113,206 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
 }
 
 class AttachExistingScreen extends StatefulWidget {
-  final int appId;
-  AttachExistingScreen({@required this.appId});
+  final String op;
+  final List docList;
+  AttachExistingScreen({@required this.op, @required this.docList});
   @override
   _AttachExistingScreenState createState() => _AttachExistingScreenState();
 }
 
 class _AttachExistingScreenState extends State<AttachExistingScreen> {
-  Future unattachedDocs;
+  List<int> selected = [];
 
   @override
   void initState() {
     super.initState();
-    unattachedDocs = getUnattachedDocs();
   }
 
-  Future<void> getUnattachedDocs() async {
-    final response = await http.get(
-      dom + 'api/student/get-unnatached/${widget.appId}',
-      headers: {HttpHeaders.authorizationHeader: "Token $tok"},
+  Widget buildEssayCard(essay) {
+    return Padding(
+      padding: EdgeInsets.only(top: 5, left: 15, right: 15),
+      child: Card(
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+            side: BorderSide(color: Color(0xff005fa8), width: 0.8),
+            borderRadius: BorderRadius.all(Radius.circular(5))),
+        elevation: 2,
+        child: Material(
+          color: Colors.transparent,
+          child: ListTile(
+              dense: true,
+              key: Key(essay['essay_id'].toString()),
+              trailing: Checkbox(
+                activeColor: Color(0xff005fa8),
+                value: selected.contains(essay['essay_id']),
+                onChanged: (newValue) {
+                  if (selected.contains(essay['essay_id'])) {
+                    selected.remove(essay['essay_id']);
+                  } else {
+                    selected.add(essay['essay_id']);
+                  }
+                  setState(() {});
+                },
+              ),
+              title: Padding(
+                padding: EdgeInsets.only(top: 5),
+                child: Text(
+                  essay['essay_title'],
+                  style: TextStyle(color: Colors.black, fontSize: 15),
+                ),
+              ),
+              subtitle: essay['essay_approval_status'] == 'Y'
+                  ? Text(
+                      'Complete',
+                      style: TextStyle(
+                          color: Colors.green, fontWeight: FontWeight.w400),
+                    )
+                  : essay['essay_approval_status'] == 'N' &&
+                          essay['student_essay_content'] != ''
+                      ? Text(
+                          'In Progress',
+                          style: TextStyle(
+                              color: Colors.orange,
+                              fontWeight: FontWeight.w400),
+                        )
+                      : Text(
+                          'Pending',
+                          style: TextStyle(
+                              color: Colors.red, fontWeight: FontWeight.w400),
+                        ),
+              onTap: () {
+                if (selected.contains(essay['essay_id'])) {
+                  selected.remove(essay['essay_id']);
+                } else {
+                  selected.add(essay['essay_id']);
+                }
+                setState(() {});
+              }),
+        ),
+      ),
     );
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw 'failed';
-    }
+  }
+
+  Widget buildTranscriptCard(transcript) {
+    return Padding(
+      padding: EdgeInsets.only(top: 5, left: 15, right: 15),
+      child: Card(
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+            side: BorderSide(color: Color(0xff005fa8), width: 0.8),
+            borderRadius: BorderRadius.all(Radius.circular(5))),
+        elevation: 2,
+        child: Material(
+          color: Colors.transparent,
+          child: ListTile(
+            trailing: Checkbox(
+              activeColor: Color(0xff005fa8),
+              value: selected.contains(transcript['transcript_id']),
+              onChanged: (newValue) {
+                if (selected.contains(transcript['transcript_id'])) {
+                  selected.remove(transcript['transcript_id']);
+                } else {
+                  selected.add(transcript['transcript_id']);
+                }
+                setState(() {});
+              },
+            ),
+            dense: true,
+            key: Key(transcript['transcript_id'].toString()),
+            title: Padding(
+              padding: EdgeInsets.only(top: 5),
+              child: Text(
+                transcript['title'],
+                style: TextStyle(color: Colors.black, fontSize: 15),
+              ),
+            ),
+            subtitle: Text(
+              'Grade ${transcript['grade']}',
+              style:
+                  TextStyle(color: Colors.black87, fontWeight: FontWeight.w400),
+            ),
+            onTap: () {
+              if (selected.contains(transcript['transcript_id'])) {
+                selected.remove(transcript['transcript_id']);
+              } else {
+                selected.add(transcript['transcript_id']);
+              }
+              setState(() {});
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildMiscCard(document) {
+    return Padding(
+      padding: EdgeInsets.only(top: 5, left: 15, right: 15),
+      child: Card(
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+            side: BorderSide(color: Color(0xff005fa8), width: 0.8),
+            borderRadius: BorderRadius.all(Radius.circular(5))),
+        elevation: 2,
+        child: Material(
+          color: Colors.transparent,
+          child: ListTile(
+            trailing: Checkbox(
+              activeColor: Color(0xff005fa8),
+              value: selected.contains(document['misc_doc_id']),
+              onChanged: (newValue) {
+                if (selected.contains(document['misc_doc_id'])) {
+                  selected.remove(document['misc_doc_id']);
+                } else {
+                  selected.add(document['misc_doc_id']);
+                }
+                setState(() {});
+              },
+            ),
+            dense: true,
+            key: Key(document['misc_doc_id'].toString()),
+            title: Padding(
+              padding: EdgeInsets.only(top: 5),
+              child: Text(
+                document['title'],
+                style: TextStyle(color: Colors.black, fontSize: 15),
+              ),
+            ),
+            subtitle: Text(
+              document['misc_doc_type'],
+              style:
+                  TextStyle(color: Colors.black87, fontWeight: FontWeight.w400),
+            ),
+            onTap: () {
+              if (selected.contains(document['misc_doc_id'])) {
+                selected.remove(document['misc_doc_id']);
+              } else {
+                selected.add(document['misc_doc_id']);
+              }
+              setState(() {});
+            },
+          ),
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> docCards = [];
+    for (int i = 0; i < widget.docList.length; i++) {
+      switch (widget.op) {
+        case 'Essay':
+          docCards.add(buildEssayCard(widget.docList[i]));
+          break;
+        case 'Transcript':
+          docCards.add(buildTranscriptCard(widget.docList[i]));
+          break;
+        case 'Document':
+          docCards.add(buildMiscCard(widget.docList[i]));
+          break;
+      }
+    }
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -1915,17 +2320,19 @@ class _AttachExistingScreenState extends State<AttachExistingScreen> {
         actions: <Widget>[
           FlatButton(
             child: Text(
-              'ATTACH',
+              'DONE',
               style:
                   TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
             ),
             onPressed: () {
-              Navigator.pop(context);
+              if (selected.isNotEmpty) {
+                Navigator.pop(context, selected);
+              }
             },
           )
         ],
         title: Text(
-          'Attach Documents',
+          'Attach ${widget.op}s',
           style: TextStyle(
               color: Colors.white,
               fontWeight: Platform.isIOS ? FontWeight.w500 : FontWeight.w400),
@@ -1934,33 +2341,13 @@ class _AttachExistingScreenState extends State<AttachExistingScreen> {
       body: ListView(
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.only(left: 20, top: 30),
+            padding: EdgeInsets.only(left: 20, top: 30, bottom: 10),
             child: Text(
-              'Select Documents',
+              'Select ${widget.op}s',
               style: TextStyle(fontSize: 20, color: Colors.black87),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 22, top: 20),
-            child: Text(
-              'Essays',
-              style: TextStyle(fontSize: 17, color: Colors.black87),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 22, top: 30),
-            child: Text(
-              'Transcripts',
-              style: TextStyle(fontSize: 17, color: Colors.black87),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 22, top: 30),
-            child: Text(
-              'Misc Documents',
-              style: TextStyle(fontSize: 17, color: Colors.black87),
-            ),
-          )
+          ...docCards
         ],
       ),
     );
