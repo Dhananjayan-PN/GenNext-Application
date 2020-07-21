@@ -1,11 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:percent_indicator/percent_indicator.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
+import 'imports.dart';
 import 'home.dart';
 
 enum ListGroup { reach, match, safety }

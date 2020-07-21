@@ -1,21 +1,10 @@
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-import 'package:back_button_interceptor/back_button_interceptor.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:searchable_dropdown/searchable_dropdown.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-// import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter/material.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:intl/intl.dart';
-import 'dart:convert';
-import 'dart:async';
-import 'dart:io';
+import 'imports.dart';
 import 'home.dart';
 import 'essays.dart';
 import 'documents.dart';
-import '../shimmer_skeleton.dart';
 
 class ApplicationsScreen extends StatefulWidget {
   @override

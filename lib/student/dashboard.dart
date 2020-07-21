@@ -1,20 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:gennextapp/student/allunis.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
 // import 'package:badges/badges.dart';
-import 'package:percent_indicator/percent_indicator.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'schedule.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
-import 'dart:async';
-import 'dart:convert';
 import '../usermodel.dart';
-import '../shimmer_skeleton.dart';
 import 'universitypage.dart';
-import 'dart:io';
+import 'allunis.dart';
+import 'imports.dart';
 import 'home.dart';
 
 class DashBoard extends StatefulWidget {

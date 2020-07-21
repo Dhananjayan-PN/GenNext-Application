@@ -1,15 +1,6 @@
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-import 'package:flutter/material.dart';
-import 'package:back_button_interceptor/back_button_interceptor.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as http;
-import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
+import 'imports.dart';
 import 'home.dart';
 
 class ScheduleScreen extends StatefulWidget {

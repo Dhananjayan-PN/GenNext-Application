@@ -1,7 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:back_button_interceptor/back_button_interceptor.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:page_transition/page_transition.dart';
+import 'imports.dart';
 import 'home.dart';
 
 class ProfileScreen extends StatefulWidget {

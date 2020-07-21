@@ -1,15 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:back_button_interceptor/back_button_interceptor.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:searchable_dropdown/searchable_dropdown.dart';
 import 'package:http/http.dart' as http;
-import 'package:checklist/checklist.dart';
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 import 'universitypage.dart';
-import '../shimmer_skeleton.dart';
+import 'imports.dart';
 import 'home.dart';
 
 enum ListGroup { reach, match, safety }

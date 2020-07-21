@@ -1,14 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:back_button_interceptor/back_button_interceptor.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-// import 'home.dart';
 //import 'package:http/http.dart' as http;
-import 'dart:async';
 import 'package:intl/intl.dart';
-import 'dart:io';
-// import 'dart:convert';
+import 'imports.dart';
+// import 'home.dart';
 
 List chats = [
   'Chad Sprice',

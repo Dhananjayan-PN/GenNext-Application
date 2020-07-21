@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:back_button_interceptor/back_button_interceptor.dart';
+import 'imports.dart';
 import 'home.dart';
 
 final notifications = ['Are you future ready?'];

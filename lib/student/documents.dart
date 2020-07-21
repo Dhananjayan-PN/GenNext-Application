@@ -1,18 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 import 'package:dio/dio.dart' as dio;
-import 'package:file_picker/file_picker.dart';
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
+import 'package:intl/intl.dart';
+import 'imports.dart';
 import 'home.dart';
 
 class DocumentsScreen extends StatefulWidget {

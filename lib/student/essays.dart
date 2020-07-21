@@ -1,16 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:back_button_interceptor/back_button_interceptor.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:expand_widget/expand_widget.dart';
 import 'package:http/http.dart' as http;
-import '../shimmer_skeleton.dart';
-import 'package:quill_delta/quill_delta.dart';
-import 'package:quill_zefyr_bijection/quill_zefyr_bijection.dart';
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-import 'package:zefyr/zefyr.dart';
+import 'imports.dart';
 import 'home.dart';
 
 class EssaysScreen extends StatefulWidget {
@@ -794,115 +783,69 @@ class _EssayEditorState extends State<EssayEditor> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-          backgroundColor: Colors.white,
-          appBar: AppBar(
-            backgroundColor: Color(0xff005fa8),
-            actions: <Widget>[
-              FlatButton(
-                child: Text(
-                  'SAVE',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 15),
-                ),
-                onPressed: () {
-                  final data = jsonEncode(_controller1.document);
-                  Navigator.pop(context, data);
-                },
-              )
-            ],
-            title: Text(
-              essayTitle,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            bottom: TabBar(
-              tabs: [
-                Tab(
-                    child: Padding(
-                  padding: EdgeInsets.only(left: 3.0),
-                  child: Text('My Version'),
-                )),
-                Tab(
-                    child: Padding(
-                  padding: EdgeInsets.only(left: 3.0),
-                  child: Text('Counselor Version'),
-                )),
-              ],
-            ),
-          ),
-          body: TabBarView(
-            children: <Widget>[
-              Theme(
-                data: ThemeData(cursorColor: Color(0xff005fa8)),
-                child: ZefyrScaffold(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(top: 13, left: 15, right: 15),
-                        child: Text(
-                          'Prompt:',
-                          style: TextStyle(
-                              color: Colors.black87,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 15, right: 15),
-                        child: ExpandText(
-                          this.essayPrompt ?? '',
-                          expandOnGesture: true,
-                          textAlign: TextAlign.left,
-                          style: TextStyle(color: Colors.black87, fontSize: 15),
-                          arrowPadding: EdgeInsets.all(0),
-                          maxLines: 1,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 5, bottom: 5),
-                        child: Divider(
-                          thickness: 0.5,
-                          endIndent: 40,
-                          indent: 40,
-                        ),
-                      ),
-                      Expanded(
-                        child: ZefyrEditor(
-                          padding: EdgeInsets.only(
-                              left: 16, right: 16, top: 0, bottom: 10),
-                          controller: _controller1,
-                          focusNode: _focusNode1,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          backgroundColor: Color(0xff005fa8),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'SAVE',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 15),
               ),
-              ZefyrScaffold(
+              onPressed: () {
+                final data = jsonEncode(_controller1.document);
+                Navigator.pop(context, data);
+              },
+            )
+          ],
+          title: Text(
+            essayTitle,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          bottom: TabBar(
+            tabs: [
+              Tab(
+                  child: Padding(
+                padding: EdgeInsets.only(left: 3.0),
+                child: Text('My Version'),
+              )),
+              Tab(
+                  child: Padding(
+                padding: EdgeInsets.only(left: 3.0),
+                child: Text('Counselor Version'),
+              )),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: <Widget>[
+            Theme(
+              data: ThemeData(cursorColor: Color(0xff005fa8)),
+              child: ZefyrScaffold(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Padding(
                       padding: EdgeInsets.only(top: 13, left: 15, right: 15),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Prompt:',
-                          style: TextStyle(
-                              color: Colors.black87,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600),
-                        ),
+                      child: Text(
+                        'Prompt:',
+                        style: TextStyle(
+                            color: Colors.black87,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600),
                       ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(left: 15, right: 15),
                       child: ExpandText(
                         this.essayPrompt ?? '',
+                        expandOnGesture: true,
                         textAlign: TextAlign.left,
+                        style: TextStyle(color: Colors.black87, fontSize: 15),
                         arrowPadding: EdgeInsets.all(0),
                         maxLines: 1,
                       ),
@@ -917,19 +860,66 @@ class _EssayEditorState extends State<EssayEditor> {
                     ),
                     Expanded(
                       child: ZefyrEditor(
-                        mode: ZefyrMode(
-                            canEdit: false, canFormat: false, canSelect: true),
                         padding: EdgeInsets.only(
                             left: 16, right: 16, top: 0, bottom: 10),
-                        controller: _controller2,
-                        focusNode: _focusNode2,
+                        controller: _controller1,
+                        focusNode: _focusNode1,
                       ),
                     ),
                   ],
                 ),
               ),
-            ],
-          )),
+            ),
+            ZefyrScaffold(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: 13, left: 15, right: 15),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Prompt:',
+                        style: TextStyle(
+                            color: Colors.black87,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 15, right: 15),
+                    child: ExpandText(
+                      this.essayPrompt ?? '',
+                      textAlign: TextAlign.left,
+                      arrowPadding: EdgeInsets.all(0),
+                      maxLines: 1,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 5, bottom: 5),
+                    child: Divider(
+                      thickness: 0.5,
+                      endIndent: 40,
+                      indent: 40,
+                    ),
+                  ),
+                  Expanded(
+                    child: ZefyrEditor(
+                      mode: ZefyrMode(
+                          canEdit: false, canFormat: false, canSelect: true),
+                      padding: EdgeInsets.only(
+                          left: 16, right: 16, top: 0, bottom: 10),
+                      controller: _controller2,
+                      focusNode: _focusNode2,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
