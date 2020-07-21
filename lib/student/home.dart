@@ -3,7 +3,6 @@ import 'package:page_transition/page_transition.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter/services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'dart:io';
 import '../login.dart';
 import '../main.dart';
 import '../usermodel.dart';
