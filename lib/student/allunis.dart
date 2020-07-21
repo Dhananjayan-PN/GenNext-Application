@@ -303,7 +303,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
                 unis[index]['university_name'],
                 style: TextStyle(
                     color: Colors.white,
-                    fontSize: 15,
+                    fontSize: 16,
                     fontWeight: FontWeight.w500),
               ),
               subtitle: Text(
@@ -362,24 +362,22 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
             ),
           ),
         );
-    return Padding(
-      padding: EdgeInsets.only(top: 5, left: 10, right: 10),
-      child: Hero(
-        tag: unis[index]['university_id'],
-        child: Card(
-          clipBehavior: Clip.antiAlias,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10))),
-          elevation: 6,
-          child: CachedNetworkImage(
-            key: Key(unis[index]['university_id'].toString()),
-            imageUrl: unis[index]['image_url'] ??
-                'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
-            placeholder: (context, url) => CardPlaceHolder(),
-            errorWidget: (context, url, error) => cardData(null, true),
-            imageBuilder: (context, imageProvider) =>
-                cardData(imageProvider, false),
-          ),
+    return Hero(
+      tag: unis[index]['university_id'],
+      child: Card(
+        margin: EdgeInsets.only(top: 5, left: 15, right: 15, bottom: 5),
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        elevation: 6,
+        child: CachedNetworkImage(
+          key: Key(unis[index]['university_id'].toString()),
+          imageUrl: unis[index]['image_url'] ??
+              'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
+          placeholder: (context, url) => CardPlaceHolder(),
+          errorWidget: (context, url, error) => cardData(null, true),
+          imageBuilder: (context, imageProvider) =>
+              cardData(imageProvider, false),
         ),
       ),
     );

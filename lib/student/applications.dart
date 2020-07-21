@@ -307,7 +307,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                 ? DecorationImage(
                     alignment: Alignment.center,
                     colorFilter: ColorFilter.mode(
-                        Colors.black.withAlpha(120), BlendMode.darken),
+                        Colors.black.withAlpha(100), BlendMode.darken),
                     image: imageProvider,
                     fit: BoxFit.cover,
                   )
@@ -426,26 +426,19 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
         );
     return Hero(
       tag: application['application_id'].toString(),
-      child: Padding(
-        padding: EdgeInsets.only(top: 5, left: 10, right: 10),
-        child: Material(
-          shadowColor: Colors.grey.withOpacity(0.5),
-          color: Colors.transparent,
-          elevation: 6,
-          child: Card(
-            clipBehavior: Clip.antiAlias,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10))),
-            elevation: 0,
-            child: CachedNetworkImage(
-              imageUrl: application['image_url'] ??
-                  'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
-              placeholder: (context, url) => CardPlaceHolder(),
-              errorWidget: (context, url, error) => cardData(null, true),
-              imageBuilder: (context, imageProvider) =>
-                  cardData(imageProvider, false),
-            ),
-          ),
+      child: Card(
+        margin: EdgeInsets.only(top: 5, left: 15, right: 15, bottom: 5),
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        elevation: 6,
+        child: CachedNetworkImage(
+          imageUrl: application['image_url'] ??
+              'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
+          placeholder: (context, url) => CardPlaceHolder(),
+          errorWidget: (context, url, error) => cardData(null, true),
+          imageBuilder: (context, imageProvider) =>
+              cardData(imageProvider, false),
         ),
       ),
     );

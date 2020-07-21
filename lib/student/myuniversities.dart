@@ -493,7 +493,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                 uni['university_name'],
                 style: TextStyle(
                     color: Colors.white,
-                    fontSize: 15,
+                    fontSize: 16,
                     fontWeight: FontWeight.w500),
               ),
               subtitle: Text(
@@ -552,29 +552,24 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
             ),
           ),
         );
-    return Padding(
-      padding: EdgeInsets.only(top: 4, left: 10, right: 10),
-      child: Hero(
-        tag: starred != null
-            ? uni['university_id'].toString() + 'starred'
-            : uni['university_id'],
-        child: Card(
-          clipBehavior: Clip.antiAlias,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10))),
-          elevation: 5,
-          child: Material(
-            color: Colors.transparent,
-            child: CachedNetworkImage(
-                key: Key(uni['university_id'].toString()),
-                imageUrl: uni['image_url'] ??
-                    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
-                placeholder: (context, url) => CardPlaceHolder(),
-                errorWidget: (context, url, error) => cardData(null, true),
-                imageBuilder: (context, imageProvider) =>
-                    cardData(imageProvider, false)),
-          ),
-        ),
+    return Hero(
+      tag: starred != null
+          ? uni['university_id'].toString() + 'starred'
+          : uni['university_id'],
+      child: Card(
+        margin: EdgeInsets.only(top: 5, left: 15, right: 15, bottom: 5),
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        elevation: 6,
+        child: CachedNetworkImage(
+            key: Key(uni['university_id'].toString()),
+            imageUrl: uni['image_url'] ??
+                'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
+            placeholder: (context, url) => CardPlaceHolder(),
+            errorWidget: (context, url, error) => cardData(null, true),
+            imageBuilder: (context, imageProvider) =>
+                cardData(imageProvider, false)),
       ),
     );
   }
