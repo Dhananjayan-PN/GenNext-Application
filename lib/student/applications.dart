@@ -83,7 +83,6 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
         );
       }
     } else {
-      Navigator.pop(context);
       error(context);
     }
   }

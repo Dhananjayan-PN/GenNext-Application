@@ -1,15 +1,10 @@
-import 'package:flutter/services.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'imports.dart';
 import 'package:http/http.dart' as http;
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-import 'main.dart';
-import 'package:page_transition/page_transition.dart';
 import 'student/home.dart';
 import 'counselor/home.dart';
+import 'university/home.dart';
 import 'signup.dart';
+import 'main.dart';
 import 'usermodel.dart';
 
 Route logoutRoute() {
@@ -50,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
           : role == 'C'
               ? CounselorHomeScreen(user: user)
               : role == 'R'
-                  ? Container() //University Rep Page
+                  ? UniHomeScreen(user: user)
                   : role == 'A'
                       ? Container() //Admin Page
                       : null,

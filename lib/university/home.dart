@@ -21,7 +21,7 @@ final navlistelements = [
   ['Home', UniHomeScreen(user: newUser), Icons.home],
   ['My Profile', RepProfileScreen(), Icons.account_box],
   ['University Profile', UniProfileScreen(), Icons.account_balance],
-  ['All Universities', AllUnisScreen(), Icons.all_inclusive],
+  ['All Universities', AllUniversitiesScreen(), Icons.all_inclusive],
   ['Counselor Connect', CounselorConnectScreen(), Icons.link],
   ['Student Engagement', StudentEngagementScreen(), Icons.group],
 ];
@@ -429,7 +429,7 @@ class HomeAppBarState extends State<HomeAppBar> {
 
 class UniHomeScreen extends StatefulWidget {
   final User user;
-  UniHomeScreen({this.user});
+  UniHomeScreen({@required this.user});
   @override
   _UniHomeScreenState createState() => _UniHomeScreenState();
 }

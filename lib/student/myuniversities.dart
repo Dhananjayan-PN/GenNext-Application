@@ -98,7 +98,6 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
         }
       }
     } else {
-      Navigator.pop(context);
       error(context);
     }
   }
