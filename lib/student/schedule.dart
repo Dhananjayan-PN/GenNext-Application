@@ -1,6 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'imports.dart';
+import '../imports.dart';
 import 'home.dart';
 
 class ScheduleScreen extends StatefulWidget {

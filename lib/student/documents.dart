@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart' as dio;
 import 'package:intl/intl.dart';
-import 'imports.dart';
+import '../imports.dart';
 import 'home.dart';
 
 class DocumentsScreen extends StatefulWidget {

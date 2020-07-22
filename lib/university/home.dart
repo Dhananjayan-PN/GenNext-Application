@@ -2,34 +2,28 @@ import '../imports.dart';
 import '../login.dart';
 import '../main.dart';
 import '../usermodel.dart';
-import 'chat.dart';
+import 'allunis.dart';
+import 'counselorconnect.dart';
+import 'engagement.dart';
+import 'repprofile.dart';
+import 'universityprofile.dart';
 import 'dashboard.dart';
 import 'notifications.dart';
-import 'essays.dart';
-import 'profile.dart';
-import 'documents.dart';
-import 'myuniversities.dart';
-import 'allunis.dart';
-import 'applications.dart';
-import 'counselor.dart';
-import 'schedule.dart';
+import 'chat.dart';
 
 User newUser;
 String tok = token;
 String dom = domain;
-Widget curPage = StudentHomeScreen(user: newUser);
+Widget curPage = UniHomeScreen(user: newUser);
 PageController _controller;
 
 final navlistelements = [
-  ['Home', StudentHomeScreen(user: newUser), Icons.home],
-  ['Counselling', CounsellingScreen(), Icons.people],
-  ['Schedule', ScheduleScreen(), Icons.date_range],
-  ['Explore Universities', AllUniversitiesScreen(), Icons.explore],
-  ['My Profile', ProfileScreen(), Icons.account_box],
-  ['My Universities', MyUniversitiesScreen(), Icons.account_balance],
-  ['My Applications', ApplicationsScreen(), Icons.assignment],
-  ['My Essays', EssaysScreen(), Icons.edit],
-  ['My Documents', DocumentsScreen(), Icons.description],
+  ['Home', UniHomeScreen(user: newUser), Icons.home],
+  ['My Profile', RepProfileScreen(), Icons.account_box],
+  ['University Profile', UniProfileScreen(), Icons.account_balance],
+  ['All Universities', AllUnisScreen(), Icons.all_inclusive],
+  ['Counselor Connect', CounselorConnectScreen(), Icons.link],
+  ['Student Engagement', StudentEngagementScreen(), Icons.group],
 ];
 
 loading(BuildContext context) {
@@ -228,10 +222,6 @@ class NavDrawer extends StatelessWidget {
             child: UserAccountsDrawerHeader(
               decoration: BoxDecoration(
                 color: Color(0xff005fa8),
-                // gradient: LinearGradient(
-                //     begin: Alignment.bottomCenter,
-                //     end: Alignment.topCenter,
-                //     colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
               ),
               accountName: Text(name,
                   style: TextStyle(
@@ -250,11 +240,11 @@ class NavDrawer extends StatelessWidget {
               ),
               onDetailsPressed: () {
                 Navigator.pop(context);
-                curPage = ProfileScreen();
+                curPage = RepProfileScreen();
                 Navigator.pushAndRemoveUntil(
                   context,
                   PageTransition(
-                      type: PageTransitionType.fade, child: ProfileScreen()),
+                      type: PageTransitionType.fade, child: RepProfileScreen()),
                   (Route<dynamic> route) => false,
                 );
               },
@@ -437,17 +427,14 @@ class HomeAppBarState extends State<HomeAppBar> {
   }
 }
 
-class StudentHomeScreen extends StatefulWidget {
+class UniHomeScreen extends StatefulWidget {
   final User user;
-  StudentHomeScreen({this.user});
+  UniHomeScreen({this.user});
   @override
-  _StudentHomeScreenState createState() => _StudentHomeScreenState(user: user);
+  _UniHomeScreenState createState() => _UniHomeScreenState();
 }
 
-class _StudentHomeScreenState extends State<StudentHomeScreen> {
-  final User user;
-  _StudentHomeScreenState({this.user});
-
+class _UniHomeScreenState extends State<UniHomeScreen> {
   @override
   void initState() {
     super.initState();
@@ -464,7 +451,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    newUser = user;
+    newUser = widget.user;
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         systemNavigationBarIconBrightness: Brightness.dark,
@@ -477,11 +464,11 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
           Scaffold(
               backgroundColor: Colors.white,
               drawer: NavDrawer(
-                name: '${user.firstname} ${user.lastname}',
-                email: user.email,
+                name: '${widget.user.firstname} ${widget.user.lastname}',
+                email: widget.user.email,
               ),
               appBar: HomeAppBar(),
-              body: DashBoard(user: user)),
+              body: DashBoard(user: widget.user)),
           AllChats(pgcontroller: _controller)
         ],
       ),

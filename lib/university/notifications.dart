@@ -107,7 +107,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         PageTransition(
             duration: Duration(milliseconds: 500),
             type: PageTransitionType.leftToRight,
-            child: StudentHomeScreen(
+            child: UniHomeScreen(
               user: newUser,
             )));
     return true;

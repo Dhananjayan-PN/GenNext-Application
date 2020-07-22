@@ -1,6 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'universitypage.dart';
-import 'imports.dart';
+import '../imports.dart';
 import 'home.dart';
 
 enum ListGroup { reach, match, safety }

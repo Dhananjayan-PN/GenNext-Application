@@ -1,5 +1,5 @@
 import 'package:http/http.dart' as http;
-import 'imports.dart';
+import '../imports.dart';
 import 'home.dart';
 
 class CounsellingScreen extends StatefulWidget {

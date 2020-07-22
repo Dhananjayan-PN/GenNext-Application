@@ -1,4 +1,4 @@
-import 'imports.dart';
+import '../imports.dart';
 import 'home.dart';
 
 class ProfileScreen extends StatefulWidget {

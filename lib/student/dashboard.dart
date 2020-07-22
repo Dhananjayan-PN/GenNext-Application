@@ -5,7 +5,7 @@ import 'schedule.dart';
 import '../usermodel.dart';
 import 'universitypage.dart';
 import 'allunis.dart';
-import 'imports.dart';
+import '../imports.dart';
 import 'home.dart';
 
 class DashBoard extends StatefulWidget {
