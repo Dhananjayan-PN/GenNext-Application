@@ -255,185 +255,183 @@ class _EssaysScreenState extends State<EssaysScreen> {
   }
 
   Widget buildEssayCard(essay) {
-    return Padding(
-      padding: EdgeInsets.only(top: 5, left: 10, right: 10),
-      child: Card(
-        clipBehavior: Clip.antiAlias,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10))),
-        elevation: 6,
-        child: Material(
-          color: Colors.transparent,
-          child: ListTile(
-            key: Key(essay['essay_id'].toString()),
-            title: Padding(
-              padding: EdgeInsets.only(top: 5),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(top: 5),
-                    child: Text(
-                      essay['essay_title'],
-                      style: TextStyle(color: Colors.black, fontSize: 18),
-                    ),
+    return Card(
+      margin: EdgeInsets.only(top: 7, left: 15, right: 15, bottom: 7),
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10))),
+      elevation: 6,
+      child: Material(
+        color: Colors.transparent,
+        child: ListTile(
+          key: Key(essay['essay_id'].toString()),
+          title: Padding(
+            padding: EdgeInsets.only(top: 5),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(top: 5),
+                  child: Text(
+                    essay['essay_title'],
+                    style: TextStyle(color: Colors.black, fontSize: 18),
                   ),
-                  Spacer(),
-                  Padding(
-                    padding: EdgeInsets.only(top: 5),
-                    child: InkWell(
-                      child: Icon(
-                        Icons.create,
-                        color: Colors.black.withOpacity(0.75),
-                      ),
-                      onTap: () async {
-                        String studentString = essay['student_essay_content'] ==
-                                    '' ||
-                                essay['student_essay_content'] == null
-                            ? '[{\"attributes\":{\"align\":\"justify\"},\"insert\":\"\\n\"},{\"insert\":\"\\n\"}]'
-                            : essay['student_essay_content'];
-                        String counselorString = essay[
-                                        'counselor_essay_content'] ==
-                                    '' ||
-                                essay['counselor_essay_content'] == null
-                            ? '[{\"attributes\":{\"align\":\"justify\"},\"insert\":\"\\n\"},{\"insert\":\"\\n\"}]'
-                            : essay['counselor_essay_content'];
-                        final editedEssayContent = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EssayEditor(
-                              essayTitle: essay['essay_title'],
-                              essayPrompt: essay['essay_prompt'],
-                              studentEdit:
-                                  QuillZefyrBijection.convertJSONToZefyrDelta(
-                                      '{\"ops\":' + studentString + '}'),
-                              counselorEdit:
-                                  QuillZefyrBijection.convertJSONToZefyrDelta(
-                                      '{\"ops\":' + counselorString + '}'),
-                            ),
+                ),
+                Spacer(),
+                Padding(
+                  padding: EdgeInsets.only(top: 5),
+                  child: InkWell(
+                    child: Icon(
+                      Icons.create,
+                      color: Colors.black.withOpacity(0.75),
+                    ),
+                    onTap: () async {
+                      String studentString = essay['student_essay_content'] ==
+                                  '' ||
+                              essay['student_essay_content'] == null
+                          ? '[{\"attributes\":{\"align\":\"justify\"},\"insert\":\"\\n\"},{\"insert\":\"\\n\"}]'
+                          : essay['student_essay_content'];
+                      String counselorString = essay[
+                                      'counselor_essay_content'] ==
+                                  '' ||
+                              essay['counselor_essay_content'] == null
+                          ? '[{\"attributes\":{\"align\":\"justify\"},\"insert\":\"\\n\"},{\"insert\":\"\\n\"}]'
+                          : essay['counselor_essay_content'];
+                      final editedEssayContent = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EssayEditor(
+                            essayTitle: essay['essay_title'],
+                            essayPrompt: essay['essay_prompt'],
+                            studentEdit:
+                                QuillZefyrBijection.convertJSONToZefyrDelta(
+                                    '{\"ops\":' + studentString + '}'),
+                            counselorEdit:
+                                QuillZefyrBijection.convertJSONToZefyrDelta(
+                                    '{\"ops\":' + counselorString + '}'),
                           ),
+                        ),
+                      );
+                      if (editedEssayContent != null) {
+                        editEssay(essay, editedEssayContent);
+                        loading(context);
+                      }
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 10, top: 5),
+                  child: PopupMenuButton(
+                    child: Icon(Icons.more_vert),
+                    itemBuilder: (BuildContext context) {
+                      return {'Edit Details', 'Delete'}.map((String choice) {
+                        return PopupMenuItem<String>(
+                          height: 35,
+                          value: choice,
+                          child: Text(choice,
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.black87,
+                                  fontWeight: FontWeight.w400)),
                         );
-                        if (editedEssayContent != null) {
-                          editEssay(essay, editedEssayContent);
+                      }).toList();
+                    },
+                    onSelected: (value) async {
+                      switch (value) {
+                        case 'Edit Details':
+                          final List details = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => NewEssayScreen(
+                                      op: 'Edit',
+                                      title: essay['essay_title'],
+                                      prompt: essay['essay_prompt'])));
+                          editEssayDetails(essay, details[0], details[1]);
                           loading(context);
-                        }
-                      },
-                    ),
+                          break;
+                        case 'Delete':
+                          _deleteEssay(essay['essay_id']);
+                          break;
+                      }
+                    },
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 10, top: 5),
-                    child: PopupMenuButton(
-                      child: Icon(Icons.more_vert),
-                      itemBuilder: (BuildContext context) {
-                        return {'Edit Details', 'Delete'}.map((String choice) {
-                          return PopupMenuItem<String>(
-                            height: 35,
-                            value: choice,
-                            child: Text(choice,
-                                style: TextStyle(
-                                    fontSize: 13,
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.w400)),
-                          );
-                        }).toList();
-                      },
-                      onSelected: (value) async {
-                        switch (value) {
-                          case 'Edit Details':
-                            final List details = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => NewEssayScreen(
-                                        op: 'Edit',
-                                        title: essay['essay_title'],
-                                        prompt: essay['essay_prompt'])));
-                            editEssayDetails(essay, details[0], details[1]);
-                            loading(context);
-                            break;
-                          case 'Delete':
-                            _deleteEssay(essay['essay_id']);
-                            break;
-                        }
-                      },
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-            subtitle: Padding(
-              padding: EdgeInsets.only(left: 2, bottom: 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  essay['essay_approval_status'] == 'Y'
-                      ? Text(
-                          'Complete',
-                          style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.green,
-                              fontWeight: FontWeight.w400),
-                        )
-                      : essay['essay_approval_status'] == 'N' &&
-                              essay['student_essay_content'] != ''
-                          ? Text(
-                              'In Progress',
-                              style: TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.orange,
-                                  fontWeight: FontWeight.w400),
-                            )
-                          : Text(
-                              'Pending',
-                              style: TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                  if (essay['universities'].length != 0) ...[
-                    Padding(
-                      padding: EdgeInsets.only(top: 5),
-                      child: Stack(
-                        textDirection: TextDirection.ltr,
-                        overflow: Overflow.visible,
-                        children: <Widget>[
-                          essay['universities'].length == 1
-                              ? Positioned(
-                                  left: 20,
-                                  child: InkWell(
-                                    child: CircleAvatar(
-                                      radius: 17.8,
-                                      backgroundColor: Color(0xff005fa8),
-                                      child: CircleAvatar(
-                                        backgroundImage: CachedNetworkImageProvider(
-                                            'https://upload.wikimedia.org/wikipedia/en/thumb/4/4f/University_of_Massachusetts_Amherst_seal.svg/1200px-University_of_Massachusetts_Amherst_seal.svg.png'),
-                                        backgroundColor: Colors.blue[800],
-                                        radius: 17,
-                                      ),
-                                    ),
-                                    onTap: () {},
-                                  ),
-                                )
-                              : Container(),
-                          InkWell(
-                            child: CircleAvatar(
-                              radius: 17.8,
-                              backgroundColor: Color(0xff005fa8),
-                              child: CircleAvatar(
-                                backgroundImage: CachedNetworkImageProvider(
-                                    'https://bloximages.chicago2.vip.townnews.com/madison.com/content/tncms/assets/v3/editorial/6/7a/67a00837-e31a-5fca-b89f-98985000d03e/5978bc84a81af.image.jpg'),
-                                backgroundColor: Colors.blue[800],
-                                radius: 17,
-                              ),
-                            ),
-                            onTap: () {},
+          ),
+          subtitle: Padding(
+            padding: EdgeInsets.only(left: 2, bottom: 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                essay['essay_approval_status'] == 'Y'
+                    ? Text(
+                        'Complete',
+                        style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.green,
+                            fontWeight: FontWeight.w400),
+                      )
+                    : essay['essay_approval_status'] == 'N' &&
+                            essay['student_essay_content'] != ''
+                        ? Text(
+                            'In Progress',
+                            style: TextStyle(
+                                fontSize: 13,
+                                color: Colors.orange,
+                                fontWeight: FontWeight.w400),
+                          )
+                        : Text(
+                            'Pending',
+                            style: TextStyle(
+                                fontSize: 13,
+                                color: Colors.red,
+                                fontWeight: FontWeight.w400),
                           ),
-                        ],
-                      ),
+                if (essay['universities'].length != 0) ...[
+                  Padding(
+                    padding: EdgeInsets.only(top: 5),
+                    child: Stack(
+                      textDirection: TextDirection.ltr,
+                      overflow: Overflow.visible,
+                      children: <Widget>[
+                        essay['universities'].length == 1
+                            ? Positioned(
+                                left: 20,
+                                child: InkWell(
+                                  child: CircleAvatar(
+                                    radius: 17.8,
+                                    backgroundColor: Color(0xff005fa8),
+                                    child: CircleAvatar(
+                                      backgroundImage: CachedNetworkImageProvider(
+                                          'https://upload.wikimedia.org/wikipedia/en/thumb/4/4f/University_of_Massachusetts_Amherst_seal.svg/1200px-University_of_Massachusetts_Amherst_seal.svg.png'),
+                                      backgroundColor: Colors.blue[800],
+                                      radius: 17,
+                                    ),
+                                  ),
+                                  onTap: () {},
+                                ),
+                              )
+                            : Container(),
+                        InkWell(
+                          child: CircleAvatar(
+                            radius: 17.8,
+                            backgroundColor: Color(0xff005fa8),
+                            child: CircleAvatar(
+                              backgroundImage: CachedNetworkImageProvider(
+                                  'https://bloximages.chicago2.vip.townnews.com/madison.com/content/tncms/assets/v3/editorial/6/7a/67a00837-e31a-5fca-b89f-98985000d03e/5978bc84a81af.image.jpg'),
+                              backgroundColor: Colors.blue[800],
+                              radius: 17,
+                            ),
+                          ),
+                          onTap: () {},
+                        ),
+                      ],
                     ),
-                  ]
-                ],
-              ),
+                  ),
+                ]
+              ],
             ),
           ),
         ),
@@ -540,53 +538,49 @@ class _EssaysScreenState extends State<EssaysScreen> {
                   ),
                 );
               } else {
-                return Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(
-                          top: 5, left: 18, right: 30, bottom: 20),
-                      child: Row(
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(top: 5, right: 6),
-                            child: Icon(
-                              Icons.search,
-                              size: 30,
-                              color: Colors.black54,
+                return ListView.builder(
+                  itemCount: snapshot.data.length + 1,
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
+                      return Padding(
+                        padding: EdgeInsets.only(
+                            top: 5, left: 18, right: 30, bottom: 20),
+                        child: Row(
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(top: 5, right: 6),
+                              child: Icon(
+                                Icons.search,
+                                size: 30,
+                                color: Colors.black54,
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            child: TextField(
-                              cursorColor: Color(0xff005fa8),
-                              decoration: InputDecoration(
-                                  labelText: "Search",
-                                  contentPadding: EdgeInsets.all(2)),
-                              controller: controller,
+                            Expanded(
+                              child: TextField(
+                                cursorColor: Color(0xff005fa8),
+                                decoration: InputDecoration(
+                                    labelText: "Search",
+                                    contentPadding: EdgeInsets.all(2)),
+                                controller: controller,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: snapshot.data.length,
-                        itemBuilder: (context, index) {
-                          return filter == null || filter == ""
-                              ? buildEssayCard(snapshot.data[index])
-                              : snapshot.data[index]['essay_title']
-                                      .toLowerCase()
-                                      .contains(filter)
-                                  ? buildEssayCard(snapshot.data[index])
-                                  : snapshot.data[index]['universities']
-                                          .toString()
-                                          .toLowerCase()
-                                          .contains(filter)
-                                      ? buildEssayCard(snapshot.data[index])
-                                      : Container();
-                        },
-                      ),
-                    ),
-                  ],
+                          ],
+                        ),
+                      );
+                    }
+                    return filter == null || filter == ""
+                        ? buildEssayCard(snapshot.data[index - 1])
+                        : snapshot.data[index - 1]['essay_title']
+                                .toLowerCase()
+                                .contains(filter)
+                            ? buildEssayCard(snapshot.data[index - 1])
+                            : snapshot.data[index - 1]['universities']
+                                    .toString()
+                                    .toLowerCase()
+                                    .contains(filter)
+                                ? buildEssayCard(snapshot.data[index - 1])
+                                : Container();
+                  },
                 );
               }
             }

@@ -337,16 +337,26 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(
-                        'Due: ' +
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            'Due: ',
+                            style: TextStyle(
+                              fontSize: 13.5,
+                              color: Colors.white,
+                            ),
+                          ),
+                          Text(
                             DateFormat.yMMMMd('en_US').format(deadline) +
-                            ' ($timeleft)',
-                        style: TextStyle(
-                            fontSize: 13.5,
-                            color: timecolor,
-                            fontWeight: timecolor == Colors.red
-                                ? FontWeight.w600
-                                : null),
+                                ' ($timeleft)',
+                            style: TextStyle(
+                                fontSize: 13.5,
+                                color: timecolor,
+                                fontWeight: timecolor == Colors.red
+                                    ? FontWeight.w600
+                                    : null),
+                          ),
+                        ],
                       ),
                       application["completion_status"]
                           ? Text('Completed',
@@ -426,7 +436,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
     return Hero(
       tag: application['application_id'].toString(),
       child: Card(
-        margin: EdgeInsets.only(top: 5, left: 15, right: 15, bottom: 5),
+        margin: EdgeInsets.only(top: 7, left: 15, right: 15, bottom: 7),
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -570,55 +580,49 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                         ),
                       );
                     } else {
-                      return Column(
-                        children: <Widget>[
-                          Padding(
-                            padding:
-                                EdgeInsets.only(top: 5, left: 18, right: 30),
-                            child: Row(
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.only(top: 5, right: 6),
-                                  child: Icon(
-                                    Icons.search,
-                                    size: 30,
-                                    color: Colors.black54,
+                      return Scrollbar(
+                        child: ListView.builder(
+                            primary: true,
+                            scrollDirection: Axis.vertical,
+                            itemCount: snapshot.data.length + 1,
+                            itemBuilder: (BuildContext context, int index) {
+                              if (index == 0) {
+                                return Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 5, left: 18, right: 30, bottom: 25),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.only(top: 5, right: 6),
+                                        child: Icon(
+                                          Icons.search,
+                                          size: 30,
+                                          color: Colors.black54,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: TextField(
+                                          cursorColor: Color(0xff005fa8),
+                                          decoration: InputDecoration(
+                                              labelText: "Search",
+                                              contentPadding:
+                                                  EdgeInsets.all(2)),
+                                          controller: controller1,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                Expanded(
-                                  child: TextField(
-                                    cursorColor: Color(0xff005fa8),
-                                    decoration: InputDecoration(
-                                        labelText: "Search",
-                                        contentPadding: EdgeInsets.all(2)),
-                                    controller: controller1,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.only(top: 20.0),
-                              child: Scrollbar(
-                                child: ListView.builder(
-                                    primary: true,
-                                    scrollDirection: Axis.vertical,
-                                    itemCount: snapshot.data.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return filter1 == null || filter1 == ""
-                                          ? buildCard(snapshot.data[index])
-                                          : snapshot.data[index]['university']
-                                                  .toLowerCase()
-                                                  .contains(filter1)
-                                              ? buildCard(snapshot.data[index])
-                                              : Container();
-                                    }),
-                              ),
-                            ),
-                          ),
-                        ],
+                                );
+                              }
+                              return filter1 == null || filter1 == ""
+                                  ? buildCard(snapshot.data[index - 1])
+                                  : snapshot.data[index - 1]['university']
+                                          .toLowerCase()
+                                          .contains(filter1)
+                                      ? buildCard(snapshot.data[index - 1])
+                                      : Container();
+                            }),
                       );
                     }
                   }
@@ -690,55 +694,49 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                         ),
                       );
                     } else {
-                      return Column(
-                        children: <Widget>[
-                          Padding(
-                            padding:
-                                EdgeInsets.only(top: 5, left: 18, right: 30),
-                            child: Row(
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.only(top: 5, right: 6),
-                                  child: Icon(
-                                    Icons.search,
-                                    size: 30,
-                                    color: Colors.black54,
+                      return Scrollbar(
+                        child: ListView.builder(
+                            primary: true,
+                            scrollDirection: Axis.vertical,
+                            itemCount: snapshot.data.length + 1,
+                            itemBuilder: (BuildContext context, int index) {
+                              if (index == 0) {
+                                return Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 5, left: 18, right: 30, bottom: 25),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.only(top: 5, right: 6),
+                                        child: Icon(
+                                          Icons.search,
+                                          size: 30,
+                                          color: Colors.black54,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: TextField(
+                                          cursorColor: Color(0xff005fa8),
+                                          decoration: InputDecoration(
+                                              labelText: "Search",
+                                              contentPadding:
+                                                  EdgeInsets.all(2)),
+                                          controller: controller2,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                Expanded(
-                                  child: TextField(
-                                    cursorColor: Color(0xff005fa8),
-                                    decoration: InputDecoration(
-                                        labelText: "Search",
-                                        contentPadding: EdgeInsets.all(2)),
-                                    controller: controller2,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.only(top: 20.0),
-                              child: Scrollbar(
-                                child: ListView.builder(
-                                    primary: true,
-                                    scrollDirection: Axis.vertical,
-                                    itemCount: snapshot.data.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return filter2 == null || filter2 == ""
-                                          ? buildCard(snapshot.data[index])
-                                          : snapshot.data[index]['university']
-                                                  .toLowerCase()
-                                                  .contains(filter2)
-                                              ? buildCard(snapshot.data[index])
-                                              : Container();
-                                    }),
-                              ),
-                            ),
-                          ),
-                        ],
+                                );
+                              }
+                              return filter2 == null || filter2 == ""
+                                  ? buildCard(snapshot.data[index - 1])
+                                  : snapshot.data[index - 1]['university']
+                                          .toLowerCase()
+                                          .contains(filter2)
+                                      ? buildCard(snapshot.data[index - 1])
+                                      : Container();
+                            }),
                       );
                     }
                   }
