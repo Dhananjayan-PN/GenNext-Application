@@ -14,8 +14,10 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
   GlobalKey<ScaffoldState> _scafKey = GlobalKey<ScaffoldState>();
   var refreshKey1 = GlobalKey<RefreshIndicatorState>();
   var refreshKey2 = GlobalKey<RefreshIndicatorState>();
-  TextEditingController controller = TextEditingController();
-  String filter;
+  TextEditingController controller1 = TextEditingController();
+  TextEditingController controller2 = TextEditingController();
+  String filter1;
+  String filter2;
   List unis;
   Future allUniList;
   Future recoUniList;
@@ -24,9 +26,14 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
   void initState() {
     super.initState();
     BackButtonInterceptor.add(myInterceptor);
-    controller.addListener(() {
+    controller1.addListener(() {
       setState(() {
-        filter = controller.text;
+        filter1 = controller1.text;
+      });
+    });
+    controller2.addListener(() {
+      setState(() {
+        filter2 = controller2.text;
       });
     });
     allUniList = getAllUniversities();
@@ -35,7 +42,8 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
 
   @override
   void dispose() {
-    controller.dispose();
+    controller1.dispose();
+    controller2.dispose();
     BackButtonInterceptor.remove(myInterceptor);
     super.dispose();
   }
@@ -365,7 +373,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
     return Hero(
       tag: unis[index]['university_id'],
       child: Card(
-        margin: EdgeInsets.only(top: 5, left: 15, right: 15, bottom: 5),
+        margin: EdgeInsets.only(top: 7, left: 15, right: 15, bottom: 7),
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -486,56 +494,49 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
                         ),
                       );
                     } else {
-                      return Column(
-                        children: <Widget>[
-                          Padding(
-                            padding:
-                                EdgeInsets.only(top: 5, left: 18, right: 30),
-                            child: Row(
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.only(top: 5, right: 6),
-                                  child: Icon(
-                                    Icons.search,
-                                    size: 30,
-                                    color: Colors.black54,
+                      return Scrollbar(
+                        child: ListView.builder(
+                            primary: true,
+                            scrollDirection: Axis.vertical,
+                            itemCount: snapshot.data.length + 1,
+                            itemBuilder: (BuildContext context, int index) {
+                              if (index == 0) {
+                                return Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 5, left: 18, right: 30, bottom: 25),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.only(top: 5, right: 6),
+                                        child: Icon(
+                                          Icons.search,
+                                          size: 30,
+                                          color: Colors.black54,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: TextField(
+                                          cursorColor: Color(0xff005fa8),
+                                          decoration: InputDecoration(
+                                              labelText: "Search",
+                                              contentPadding:
+                                                  EdgeInsets.all(2)),
+                                          controller: controller1,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                Expanded(
-                                  child: TextField(
-                                    cursorColor: Color(0xff005fa8),
-                                    decoration: InputDecoration(
-                                        labelText: "Search",
-                                        contentPadding: EdgeInsets.all(2)),
-                                    controller: controller,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.only(top: 20.0),
-                              child: Scrollbar(
-                                child: ListView.builder(
-                                    primary: true,
-                                    scrollDirection: Axis.vertical,
-                                    itemCount: snapshot.data.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return filter == null || filter == ""
-                                          ? buildCard(snapshot.data, index)
-                                          : snapshot.data[index]
-                                                      ['university_name']
-                                                  .toLowerCase()
-                                                  .contains(filter)
-                                              ? buildCard(snapshot.data, index)
-                                              : Container();
-                                    }),
-                              ),
-                            ),
-                          ),
-                        ],
+                                );
+                              }
+                              return filter1 == null || filter1 == ""
+                                  ? buildCard(snapshot.data, index - 1)
+                                  : snapshot.data[index - 1]['university_name']
+                                          .toLowerCase()
+                                          .contains(filter1)
+                                      ? buildCard(snapshot.data, index - 1)
+                                      : Container();
+                            }),
                       );
                     }
                   }
@@ -621,56 +622,49 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
                         ),
                       );
                     } else {
-                      return Column(
-                        children: <Widget>[
-                          Padding(
-                            padding:
-                                EdgeInsets.only(top: 5, left: 18, right: 30),
-                            child: Row(
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.only(top: 5, right: 6),
-                                  child: Icon(
-                                    Icons.search,
-                                    size: 30,
-                                    color: Colors.black54,
+                      return Scrollbar(
+                        child: ListView.builder(
+                            primary: true,
+                            scrollDirection: Axis.vertical,
+                            itemCount: snapshot.data.length + 1,
+                            itemBuilder: (BuildContext context, int index) {
+                              if (index == 0) {
+                                return Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 5, left: 18, right: 30, bottom: 25),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.only(top: 5, right: 6),
+                                        child: Icon(
+                                          Icons.search,
+                                          size: 30,
+                                          color: Colors.black54,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: TextField(
+                                          cursorColor: Color(0xff005fa8),
+                                          decoration: InputDecoration(
+                                              labelText: "Search",
+                                              contentPadding:
+                                                  EdgeInsets.all(2)),
+                                          controller: controller2,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                Expanded(
-                                  child: TextField(
-                                    cursorColor: Color(0xff005fa8),
-                                    decoration: InputDecoration(
-                                        labelText: "Search",
-                                        contentPadding: EdgeInsets.all(2)),
-                                    controller: controller,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.only(top: 20.0),
-                              child: Scrollbar(
-                                child: ListView.builder(
-                                    primary: true,
-                                    scrollDirection: Axis.vertical,
-                                    itemCount: snapshot.data.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return filter == null || filter == ""
-                                          ? buildCard(snapshot.data, index)
-                                          : snapshot.data[index]
-                                                      ['university_name']
-                                                  .toLowerCase()
-                                                  .contains(filter)
-                                              ? buildCard(snapshot.data, index)
-                                              : Container();
-                                    }),
-                              ),
-                            ),
-                          ),
-                        ],
+                                );
+                              }
+                              return filter2 == null || filter2 == ""
+                                  ? buildCard(snapshot.data, index - 1)
+                                  : snapshot.data[index - 1]['university_name']
+                                          .toLowerCase()
+                                          .contains(filter2)
+                                      ? buildCard(snapshot.data, index - 1)
+                                      : Container();
+                            }),
                       );
                     }
                   }

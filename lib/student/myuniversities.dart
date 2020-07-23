@@ -14,14 +14,12 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   final _formKey = GlobalKey<FormState>();
   GlobalKey<ScaffoldState> _scafKey = GlobalKey<ScaffoldState>();
   var refreshKey2 = GlobalKey<RefreshIndicatorState>();
-  TextEditingController controller1 = TextEditingController();
-  TextEditingController controller2 = TextEditingController();
+  TextEditingController controller = TextEditingController();
   ScrollController scrollController = ScrollController();
   Map<String, int> uniIds = {};
   List<DropdownMenuItem<String>> uniList = [];
   List collegelist;
-  String filter1;
-  String filter2;
+  String filter;
   List unis;
   bool isStarred;
 
@@ -34,14 +32,9 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   void initState() {
     super.initState();
     BackButtonInterceptor.add(myInterceptor);
-    controller1.addListener(() {
+    controller.addListener(() {
       setState(() {
-        filter1 = controller1.text.toLowerCase();
-      });
-    });
-    controller2.addListener(() {
-      setState(() {
-        filter2 = controller2.text.toLowerCase();
+        filter = controller.text.toLowerCase();
       });
     });
     collegeList = getCollegeList();
@@ -51,8 +44,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
 
   @override
   void dispose() {
-    controller1.dispose();
-    controller2.dispose();
+    controller.dispose();
     BackButtonInterceptor.remove(myInterceptor);
     super.dispose();
   }
@@ -556,7 +548,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
           ? uni['university_id'].toString() + 'starred'
           : uni['university_id'],
       child: Card(
-        margin: EdgeInsets.only(top: 5, left: 15, right: 15, bottom: 5),
+        margin: EdgeInsets.only(top: 7, left: 15, right: 15, bottom: 7),
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10))),
@@ -694,7 +686,8 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                         canDrag: false,
                         onDropChecklist: (oldIndex, newIndex, state) {},
                         title: Padding(
-                          padding: EdgeInsets.only(left: 20, top: 20),
+                          padding:
+                              EdgeInsets.only(left: 20, top: 20, bottom: 3),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -808,58 +801,50 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                         ),
                       );
                     } else {
-                      return Column(
-                        children: <Widget>[
-                          Padding(
-                            padding:
-                                EdgeInsets.only(top: 5, left: 18, right: 30),
-                            child: Row(
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.only(top: 5, right: 6),
-                                  child: Icon(
-                                    Icons.search,
-                                    size: 30,
-                                    color: Colors.black54,
+                      return Scrollbar(
+                        child: ListView.builder(
+                            primary: true,
+                            scrollDirection: Axis.vertical,
+                            itemCount: snapshot.data.length + 1,
+                            itemBuilder: (BuildContext context, int index) {
+                              if (index == 0) {
+                                return Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 5, left: 18, right: 30, bottom: 25),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.only(top: 5, right: 6),
+                                        child: Icon(
+                                          Icons.search,
+                                          size: 30,
+                                          color: Colors.black54,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: TextField(
+                                          cursorColor: Color(0xff005fa8),
+                                          decoration: InputDecoration(
+                                              labelText: "Search",
+                                              contentPadding:
+                                                  EdgeInsets.all(2)),
+                                          controller: controller,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                Expanded(
-                                  child: TextField(
-                                    cursorColor: Color(0xff005fa8),
-                                    decoration: InputDecoration(
-                                        labelText: "Search",
-                                        contentPadding: EdgeInsets.all(2)),
-                                    controller: controller2,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.only(top: 20.0),
-                              child: Scrollbar(
-                                child: ListView.builder(
-                                    primary: true,
-                                    scrollDirection: Axis.vertical,
-                                    itemCount: snapshot.data.length,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return filter2 == null || filter2 == ""
-                                          ? buildCard(
-                                              snapshot.data[index], true)
-                                          : snapshot.data[index]
-                                                      ['university_name']
-                                                  .toLowerCase()
-                                                  .contains(filter2)
-                                              ? buildCard(
-                                                  snapshot.data[index], true)
-                                              : Container();
-                                    }),
-                              ),
-                            ),
-                          ),
-                        ],
+                                );
+                              }
+                              return filter == null || filter == ""
+                                  ? buildCard(snapshot.data[index - 1], true)
+                                  : snapshot.data[index - 1]['university_name']
+                                          .toLowerCase()
+                                          .contains(filter)
+                                      ? buildCard(
+                                          snapshot.data[index - 1], true)
+                                      : Container();
+                            }),
                       );
                     }
                   }
