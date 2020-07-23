@@ -20,7 +20,7 @@ class ProfileScreenState extends State<ProfileScreen> {
   }
 
   bool myInterceptor(bool stopDefaultButtonEvent) {
-    print("BACK BUTTON!");
+    curPage = StudentHomeScreen(user: newUser);
     Navigator.push(
         context,
         PageTransition(

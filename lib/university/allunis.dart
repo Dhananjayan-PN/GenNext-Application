@@ -37,14 +37,16 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
   }
 
   bool myInterceptor(bool stopDefaultButtonEvent) {
-    print("BACK BUTTON!");
+    curPage = UniHomeScreen(user: newUser);
     Navigator.push(
-        context,
-        PageTransition(
-            type: PageTransitionType.fade,
-            child: UniHomeScreen(
-              user: newUser,
-            )));
+      context,
+      PageTransition(
+        type: PageTransitionType.fade,
+        child: UniHomeScreen(
+          user: newUser,
+        ),
+      ),
+    );
     return true;
   }
 

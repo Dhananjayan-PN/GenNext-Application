@@ -29,7 +29,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
   }
 
   bool myInterceptor(bool stopDefaultButtonEvent) {
-    print("BACK BUTTON!");
+    curPage = StudentHomeScreen(user: newUser);
     Navigator.push(
         context,
         PageTransition(

@@ -44,12 +44,14 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   }
 
   bool myInterceptor(bool stopDefaultButtonEvent) {
-    print("BACK BUTTON!");
+    curPage = StudentHomeScreen(user: newUser);
     Navigator.push(
-        context,
-        PageTransition(
-            type: PageTransitionType.fade,
-            child: StudentHomeScreen(user: newUser)));
+      context,
+      PageTransition(
+        type: PageTransitionType.fade,
+        child: StudentHomeScreen(user: newUser),
+      ),
+    );
     return true;
   }
 

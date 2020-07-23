@@ -101,7 +101,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   }
 
   bool myInterceptor(bool stopDefaultButtonEvent) {
-    print("BACK BUTTON!");
+    curPage = UniHomeScreen(user: newUser);
     Navigator.push(
         context,
         PageTransition(

@@ -28,6 +28,18 @@ class _UniversityPageState extends State<UniversityPage> {
     super.initState();
     isStarred = widget.university['favorited_status'] ?? false;
     inList = widget.university['in_college_list'] ?? false;
+    BackButtonInterceptor.add(myInterceptor);
+  }
+
+  @override
+  void dispose() {
+    BackButtonInterceptor.remove(myInterceptor);
+    super.dispose();
+  }
+
+  bool myInterceptor(bool stopDefaultButtonEvent) {
+    Navigator.pop(context);
+    return true;
   }
 
   Color colorPicker(double rating) {

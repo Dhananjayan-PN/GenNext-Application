@@ -20,7 +20,7 @@ class _RepProfileScreenState extends State<RepProfileScreen> {
   }
 
   bool myInterceptor(bool stopDefaultButtonEvent) {
-    print("BACK BUTTON!");
+    curPage = UniHomeScreen(user: newUser);
     Navigator.push(
         context,
         PageTransition(
