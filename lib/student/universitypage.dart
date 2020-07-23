@@ -19,15 +19,14 @@ class _UniversityPageState extends State<UniversityPage> {
   List<Widget> testingReqs;
   List<Widget> documentChips;
   String educationString = '';
-  bool descShowFull = false;
   bool isStarred;
   bool inList;
 
   @override
   void initState() {
     super.initState();
-    isStarred = widget.university['favorited_status'];
-    inList = widget.university['in_college_list'];
+    isStarred = widget.university['favorited_status'] ?? false;
+    inList = widget.university['in_college_list'] ?? false;
   }
 
   Color colorPicker(double rating) {
@@ -245,80 +244,92 @@ class _UniversityPageState extends State<UniversityPage> {
     testingReqs = [];
     documentChips = [];
     educationString = '';
-    for (int i = 0; i < widget.university['stand_out_factors'].length; i++) {
-      standOutFactors.add(
-        Chip(
-          backgroundColor: Colors.white12,
-          shape: StadiumBorder(
-              side: BorderSide(color: Color(0xff005fa8), width: 0.0)),
-          label: Text(widget.university['stand_out_factors'][i]),
-          elevation: 1,
-        ),
-      );
-    }
-    for (int i = 0; i < widget.university['degree_levels'].length; i++) {
-      if (i == 0) {
-        educationString += '${widget.university['degree_levels'][i]}';
-      } else {
-        educationString += ', ${widget.university['degree_levels'][i]}';
+    if (widget.university['stand_out_factors'] != null) {
+      for (int i = 0; i < widget.university['stand_out_factors'].length; i++) {
+        standOutFactors.add(
+          Chip(
+            backgroundColor: Colors.white12,
+            shape: StadiumBorder(
+                side: BorderSide(color: Color(0xff005fa8), width: 0.0)),
+            label: Text(widget.university['stand_out_factors'][i]),
+            elevation: 1,
+          ),
+        );
       }
     }
-    for (int i = 0; i < 10; i++) {
-      topMajors.add(
-        Chip(
-          visualDensity: VisualDensity.compact,
-          backgroundColor: Colors.white12,
-          shape: StadiumBorder(
-              side: BorderSide(color: Color(0xff005fa8), width: 0.0)),
-          label: Text(
-            widget.university['top_majors'][i],
-            style:
-                TextStyle(fontSize: 11, color: Colors.black.withOpacity(0.8)),
-          ),
-          elevation: 1,
-        ),
-      );
+    if (widget.university['degree_levels'] != null) {
+      for (int i = 0; i < widget.university['degree_levels'].length; i++) {
+        if (i == 0) {
+          educationString += '${widget.university['degree_levels'][i]}';
+        } else {
+          educationString += ', ${widget.university['degree_levels'][i]}';
+        }
+      }
     }
-    for (int i = 0; i < widget.university['testing_requirements'].length; i++) {
-      testingReqs.add(
-        Chip(
-          visualDensity: VisualDensity.compact,
-          backgroundColor: Colors.white12,
-          shape: StadiumBorder(
-              side: BorderSide(color: Color(0xff005fa8), width: 0.0)),
-          label: Text(
-            widget.university['testing_requirements'][i],
-            style:
-                TextStyle(fontSize: 11, color: Colors.black.withOpacity(0.8)),
+    if (widget.university['top_majors'] != null) {
+      for (int i = 0; i < widget.university['top_majors'].length; i++) {
+        topMajors.add(
+          Chip(
+            visualDensity: VisualDensity.compact,
+            backgroundColor: Colors.white12,
+            shape: StadiumBorder(
+                side: BorderSide(color: Color(0xff005fa8), width: 0.0)),
+            label: Text(
+              widget.university['top_majors'][i],
+              style:
+                  TextStyle(fontSize: 11, color: Colors.black.withOpacity(0.8)),
+            ),
+            elevation: 1,
           ),
-          elevation: 1,
-        ),
-      );
+        );
+      }
     }
-    for (int i = 0; i < widget.university['document_data'].length; i++) {
-      documentChips.add(
-        ActionChip(
-          avatar: Icon(
-            Icons.insert_drive_file,
-            size: 18,
-            color: Color(0xff005fa8),
+    if (widget.university['testing_requirements'] != null) {
+      for (int i = 0;
+          i < widget.university['testing_requirements'].length;
+          i++) {
+        testingReqs.add(
+          Chip(
+            visualDensity: VisualDensity.compact,
+            backgroundColor: Colors.white12,
+            shape: StadiumBorder(
+                side: BorderSide(color: Color(0xff005fa8), width: 0.0)),
+            label: Text(
+              widget.university['testing_requirements'][i],
+              style:
+                  TextStyle(fontSize: 11, color: Colors.black.withOpacity(0.8)),
+            ),
+            elevation: 1,
           ),
-          labelPadding: EdgeInsets.only(right: 5),
-          visualDensity: VisualDensity.compact,
-          backgroundColor: Colors.white12,
-          shape: StadiumBorder(
-              side: BorderSide(color: Color(0xff005fa8), width: 0.0)),
-          label: Text(
-            widget.university['document_data'][i]['document_name'],
-            style:
-                TextStyle(fontSize: 12.5, color: Colors.black.withOpacity(0.8)),
+        );
+      }
+    }
+    if (widget.university['document_data'] != null) {
+      for (int i = 0; i < widget.university['document_data'].length; i++) {
+        documentChips.add(
+          ActionChip(
+            avatar: Icon(
+              Icons.insert_drive_file,
+              size: 18,
+              color: Color(0xff005fa8),
+            ),
+            labelPadding: EdgeInsets.only(right: 5),
+            visualDensity: VisualDensity.compact,
+            backgroundColor: Colors.white12,
+            shape: StadiumBorder(
+                side: BorderSide(color: Color(0xff005fa8), width: 0.0)),
+            label: Text(
+              widget.university['document_data'][i]['document_name'],
+              style: TextStyle(
+                  fontSize: 12.5, color: Colors.black.withOpacity(0.8)),
+            ),
+            elevation: 1,
+            onPressed: () {
+              launch(widget.university['document_data'][i]['document_url']);
+            },
           ),
-          elevation: 1,
-          onPressed: () {
-            launch(widget.university['document_data'][i]['document_url']);
-          },
-        ),
-      );
+        );
+      }
     }
     return Scaffold(
       key: _scafKey,
@@ -527,16 +538,19 @@ class _UniversityPageState extends State<UniversityPage> {
                     ),
                     Text(
                       widget.university['usnews_ranking']
-                              .toString()
-                              .endsWith('1')
+                                  .toString()
+                                  .endsWith('1') &&
+                              widget.university['usnews_ranking'] != 11
                           ? 'st'
                           : widget.university['usnews_ranking']
-                                  .toString()
-                                  .endsWith('2')
+                                      .toString()
+                                      .endsWith('2') &&
+                                  widget.university['usnews_ranking'] != 12
                               ? 'nd'
                               : widget.university['usnews_ranking']
-                                      .toString()
-                                      .endsWith('3')
+                                          .toString()
+                                          .endsWith('3') &&
+                                      widget.university['usnews_ranking'] != 13
                                   ? 'rd'
                                   : 'th',
                       style: TextStyle(color: Colors.black54, fontSize: 13),
@@ -574,11 +588,11 @@ class _UniversityPageState extends State<UniversityPage> {
                   ],
                 ),
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.only(left: 18, top: 6),
+                      padding: EdgeInsets.only(left: 18, top: 8),
                       child: Icon(
                         Icons.school,
                         color: Colors.black54,
@@ -586,10 +600,40 @@ class _UniversityPageState extends State<UniversityPage> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 6, top: 7),
-                      child: Text(
-                        educationString,
-                        style: TextStyle(color: Colors.black54, fontSize: 15),
+                      padding: EdgeInsets.only(left: 6, top: 9),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: Text(
+                          educationString,
+                          softWrap: true,
+                          style: TextStyle(color: Colors.black54, fontSize: 15),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(left: 18, top: 5),
+                      child: Icon(
+                        Icons.link,
+                        color: Colors.black54,
+                        size: 22,
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 6, top: 5),
+                      child: InkWell(
+                        child: Text(
+                          'Visit Website',
+                          style: TextStyle(color: Color(0xff005fa8)),
+                        ),
+                        onTap: () {
+                          launch(widget.university['website_url']);
+                        },
                       ),
                     ),
                   ],
@@ -613,50 +657,32 @@ class _UniversityPageState extends State<UniversityPage> {
                   padding: EdgeInsets.only(top: 2, left: 19, right: 18),
                   child: Text(
                     widget.university['university_description'] ?? '',
-                    maxLines: descShowFull ? 1000 : 10,
+                    maxLines: 100,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                         color: Colors.black.withOpacity(0.7), fontSize: 15),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 19, right: 25),
-                  child: InkWell(
-                    onTap: () {
-                      setState(() {
-                        descShowFull = !descShowFull;
-                      });
-                    },
-                    child: Row(
-                      children: <Widget>[
-                        descShowFull
-                            ? Text(
-                                "Less",
-                                style: TextStyle(color: Color(0xff005fa8)),
-                              )
-                            : Text("More",
-                                style: TextStyle(color: Color(0xff005fa8)))
-                      ],
+                if (topMajors.isNotEmpty) ...[
+                  Padding(
+                    padding: EdgeInsets.only(top: 15, left: 18),
+                    child: Text(
+                      'Top Majors',
+                      style: TextStyle(color: Colors.black87, fontSize: 20),
                     ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 15, left: 18),
-                  child: Text(
-                    'Top Majors',
-                    style: TextStyle(color: Colors.black87, fontSize: 20),
+                  Padding(
+                    padding: EdgeInsets.only(
+                        left: 22, top: 2, right: 16, bottom: 15),
+                    child: Wrap(
+                      spacing: 4,
+                      direction: Axis.horizontal,
+                      children: topMajors,
+                    ),
                   ),
-                ),
+                ],
                 Padding(
-                  padding: EdgeInsets.only(left: 22, top: 2, right: 16),
-                  child: Wrap(
-                    spacing: 4,
-                    direction: Axis.horizontal,
-                    children: topMajors,
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 15, left: 18),
+                  padding: EdgeInsets.only(left: 18),
                   child: Text(
                     'Cost',
                     style: TextStyle(color: Colors.black87, fontSize: 20),
@@ -709,7 +735,7 @@ class _UniversityPageState extends State<UniversityPage> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 5, left: 25),
+                  padding: EdgeInsets.only(top: 5, left: 25, bottom: 15),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
@@ -731,37 +757,41 @@ class _UniversityPageState extends State<UniversityPage> {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 15, left: 18),
-                  child: Text(
-                    'Testing',
-                    style: TextStyle(color: Colors.black87, fontSize: 20),
+                if (testingReqs.isNotEmpty) ...[
+                  Padding(
+                    padding: EdgeInsets.only(left: 18),
+                    child: Text(
+                      'Testing',
+                      style: TextStyle(color: Colors.black87, fontSize: 20),
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 22, top: 2, right: 16),
-                  child: Wrap(
-                    spacing: 4,
-                    direction: Axis.horizontal,
-                    children: testingReqs,
+                  Padding(
+                    padding: EdgeInsets.only(
+                        left: 22, top: 2, right: 16, bottom: 15),
+                    child: Wrap(
+                      spacing: 4,
+                      direction: Axis.horizontal,
+                      children: testingReqs,
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 15, left: 18),
-                  child: Text(
-                    'Documents',
-                    style: TextStyle(color: Colors.black87, fontSize: 20),
+                ],
+                if (documentChips.isNotEmpty) ...[
+                  Padding(
+                    padding: EdgeInsets.only(left: 18),
+                    child: Text(
+                      'Documents',
+                      style: TextStyle(color: Colors.black87, fontSize: 20),
+                    ),
                   ),
-                ),
-                Padding(
-                  padding:
-                      EdgeInsets.only(left: 22, top: 2, right: 16, bottom: 25),
-                  child: Wrap(
-                    spacing: 4,
-                    direction: Axis.horizontal,
-                    children: documentChips,
+                  Padding(
+                    padding: EdgeInsets.only(
+                        left: 22, top: 2, right: 16, bottom: 25),
+                    child: Wrap(
+                        spacing: 4,
+                        direction: Axis.horizontal,
+                        children: documentChips),
                   ),
-                ),
+                ]
               ],
             ),
           ),
