@@ -876,7 +876,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           if (snapshot.hasData) {
             if (snapshot.data == 'No counselor') {
               return Padding(
-                padding: EdgeInsets.only(left: 25, right: 25, bottom: 110),
+                padding: EdgeInsets.only(left: 40, right: 40, bottom: 60),
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -884,8 +884,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       Padding(
                           padding: EdgeInsets.only(bottom: 0),
                           child: SizedBox(
-                            height: 100,
-                            width: 200,
+                            height: 105,
+                            width: 210,
                             child: Image.asset(
                               'images/gennextlonglogo-4.png',
                               fit: BoxFit.contain,

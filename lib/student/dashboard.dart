@@ -535,7 +535,7 @@ class _DashBoardState extends State<DashBoard> {
                     elevation: 6,
                     child: Padding(
                       padding: EdgeInsets.only(
-                          left: 5, right: 5, top: 10, bottom: 10),
+                          left: 12, right: 12, top: 10, bottom: 10),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
@@ -555,7 +555,7 @@ class _DashBoardState extends State<DashBoard> {
                             textAlign: TextAlign.center,
                           ),
                           Padding(
-                            padding: EdgeInsets.only(top: 8),
+                            padding: EdgeInsets.only(top: 6, bottom: 1),
                             child: ActionChip(
                               visualDensity: VisualDensity.compact,
                               shape: StadiumBorder(
