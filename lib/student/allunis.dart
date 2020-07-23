@@ -283,7 +283,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
     });
   }
 
-  Widget buildCard(snapshot, int index) {
+  Widget buildCard(snapshot, int index, bool rec) {
     unis = snapshot;
     Widget cardData(ImageProvider imageProvider, bool isError) => Container(
           decoration: BoxDecoration(
@@ -371,7 +371,9 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
           ),
         );
     return Hero(
-      tag: unis[index]['university_id'],
+      tag: rec
+          ? unis[index]['university_id'].toString() + 'rec'
+          : unis[index]['university_id'],
       child: Card(
         margin: EdgeInsets.only(top: 7, left: 15, right: 15, bottom: 7),
         clipBehavior: Clip.antiAlias,
@@ -530,11 +532,12 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
                                 );
                               }
                               return filter1 == null || filter1 == ""
-                                  ? buildCard(snapshot.data, index - 1)
+                                  ? buildCard(snapshot.data, index - 1, true)
                                   : snapshot.data[index - 1]['university_name']
                                           .toLowerCase()
                                           .contains(filter1)
-                                      ? buildCard(snapshot.data, index - 1)
+                                      ? buildCard(
+                                          snapshot.data, index - 1, true)
                                       : Container();
                             }),
                       );
@@ -658,11 +661,12 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
                                 );
                               }
                               return filter2 == null || filter2 == ""
-                                  ? buildCard(snapshot.data, index - 1)
+                                  ? buildCard(snapshot.data, index - 1, false)
                                   : snapshot.data[index - 1]['university_name']
                                           .toLowerCase()
                                           .contains(filter2)
-                                      ? buildCard(snapshot.data, index - 1)
+                                      ? buildCard(
+                                          snapshot.data, index - 1, false)
                                       : Container();
                             }),
                       );

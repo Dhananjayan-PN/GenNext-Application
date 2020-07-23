@@ -7,7 +7,8 @@ enum ListGroup { reach, match, safety }
 class UniversityPage extends StatefulWidget {
   final Map university;
   final bool starred;
-  UniversityPage({@required this.university, this.starred});
+  final bool rec;
+  UniversityPage({@required this.university, this.starred, this.rec});
   @override
   _UniversityPageState createState() => _UniversityPageState();
 }
@@ -344,7 +345,9 @@ class _UniversityPageState extends State<UniversityPage> {
             flexibleSpace: Hero(
               tag: widget.starred != null
                   ? widget.university['university_id'].toString() + 'starred'
-                  : widget.university['university_id'],
+                  : widget.rec != null
+                      ? widget.university['university_id'].toString() + 'rec'
+                      : widget.university['university_id'],
               child: Stack(
                 children: <Widget>[
                   Positioned(

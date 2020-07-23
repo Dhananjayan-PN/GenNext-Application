@@ -104,137 +104,127 @@ class _CounsellingScreenState extends State<CounsellingScreen> {
             if (snapshot.hasData) {
               if (snapshot.data == 'No counselor') {
                 return Padding(
-                  padding: EdgeInsets.all(15),
+                  padding: EdgeInsets.all(20),
                   child: Card(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10))),
-                    elevation: 6,
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(top: 20, bottom: 10),
-                            child: Image.asset(
-                              'images/gennextlonglogo-4.png',
-                              height: 90,
-                              width: 270,
-                              fit: BoxFit.fill,
-                            ),
+                    elevation: 4,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(top: 40, bottom: 30),
+                          child: Image.asset(
+                            'images/gennextlonglogo-4.png',
+                            height: 90,
+                            width: 270,
+                            fit: BoxFit.fill,
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                                left: 20, right: 20, bottom: 50),
-                            child: Text(
-                              'Whether you know exactly what and where you want to study or are completely confused about where to start, we’re here for you.' +
-                                  '\nFrom program and university selection, to completing applications, to meeting deadlines, to preparing for the visa interview,' +
-                                  ' we will guide you every step of the way to ensure your success.'
-                                      '\n\nTake advantage of our years of experience guiding thousands of students just like you achieve their dreams, all for FREE.',
-                              style: TextStyle(fontSize: 15),
-                            ),
+                        ),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(left: 20, right: 20, bottom: 50),
+                          child: Text(
+                            'Whether you know exactly what and where you want to study or are completely confused about where to start, we’re here for you.' +
+                                '\nFrom program and university selection, to completing applications, to meeting deadlines, to preparing for the visa interview,' +
+                                ' we will guide you every step of the way to ensure your success.'
+                                    '\n\nTake advantage of our years of experience guiding thousands of students just like you achieve their dreams, all for FREE.',
+                            style: TextStyle(fontSize: 15),
                           ),
-                          Padding(
-                              padding:
-                                  EdgeInsets.only(top: 15, left: 30, right: 30),
-                              child: Text(
-                                "You haven't requested for counselling yet.",
-                                style: TextStyle(
-                                    color: Colors.black87,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w900),
-                                textAlign: TextAlign.center,
-                              )),
-                          Padding(
-                            padding: EdgeInsets.only(top: 5, bottom: 20),
-                            child: Text("Click the button to get started!",
-                                style: TextStyle(
-                                    color: Colors.black87,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w900),
-                                textAlign: TextAlign.center),
+                        ),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: 15, left: 30, right: 30),
+                          child: Text(
+                            "You haven't requested for counselling yet.",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 13.5,
+                                fontWeight: FontWeight.w500),
+                            textAlign: TextAlign.center,
                           ),
-                          RaisedButton(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            textColor: Colors.white,
-                            padding: EdgeInsets.all(0.0),
-                            child: Container(
-                              padding: EdgeInsets.all(10.0),
-                              decoration: BoxDecoration(
-                                color: Color(0xff005fa8),
-                                shape: BoxShape.rectangle,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Text(
-                                'Request Counselling',
-                                style: TextStyle(),
-                              ),
-                            ),
-                            onPressed: () {},
-                          )
-                        ],
-                      ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 2, bottom: 20),
+                          child: Text("Click the button to get started!",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 13.5,
+                                  fontWeight: FontWeight.w500),
+                              textAlign: TextAlign.center),
+                        ),
+                        ActionChip(
+                          backgroundColor: Colors.white,
+                          shape: StadiumBorder(
+                              side: BorderSide(
+                                  color: Color(0xff005fa8), width: 0.0)),
+                          label: Text('Request Counselling'),
+                          onPressed: () {},
+                        )
+                      ],
                     ),
                   ),
                 );
               } else if (snapshot.data == 'Request sent') {
                 return Padding(
-                  padding: EdgeInsets.all(15),
+                  padding: EdgeInsets.all(20),
                   child: Card(
+                    elevation: 4,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10))),
-                    elevation: 6,
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(top: 20, bottom: 10),
-                            child: Image.asset(
-                              'images/gennextlonglogo-4.png',
-                              height: 90,
-                              width: 270,
-                              fit: BoxFit.fill,
-                            ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(top: 40, bottom: 30),
+                          child: Image.asset(
+                            'images/gennextlonglogo-4.png',
+                            height: 90,
+                            width: 270,
+                            fit: BoxFit.fill,
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                                left: 20, right: 20, bottom: 50),
-                            child: Text(
-                              'Whether you know exactly what and where you want to study or are completely confused about where to start, we’re here for you.' +
-                                  '\nFrom program and university selection, to completing applications, to meeting deadlines, to preparing for the visa interview,' +
-                                  ' we will guide you every step of the way to ensure your success.'
-                                      '\n\nTake advantage of our years of experience guiding thousands of students just like you achieve their dreams, all for FREE.',
-                              style: TextStyle(fontSize: 15),
-                            ),
+                        ),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(left: 20, right: 20, bottom: 50),
+                          child: Text(
+                            'Whether you know exactly what and where you want to study or are completely confused about where to start, we’re here for you.' +
+                                '\nFrom program and university selection, to completing applications, to meeting deadlines, to preparing for the visa interview,' +
+                                ' we will guide you every step of the way to ensure your success.'
+                                    '\n\nTake advantage of our years of experience guiding thousands of students just like you achieve their dreams, all for FREE.',
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w300,
+                                color: Colors.black87),
                           ),
-                          Padding(
-                            padding:
-                                EdgeInsets.only(top: 15, left: 30, right: 30),
-                            child: Text(
-                              "We have received you're request for counselling!",
-                              style: TextStyle(
-                                  color: Colors.black87,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w900),
-                              textAlign: TextAlign.center,
-                            ),
+                        ),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: 15, left: 10, right: 10),
+                          child: Text(
+                            "We have received you're request",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 13.5,
+                                fontWeight: FontWeight.w500),
+                            textAlign: TextAlign.center,
                           ),
-                          Padding(
-                            padding:
-                                EdgeInsets.only(top: 15, left: 30, right: 30),
-                            child: Text(
-                              "Please be patient while we assign you a counselor.",
-                              style: TextStyle(
-                                  color: Colors.black87,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w900),
-                              textAlign: TextAlign.center,
-                            ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              top: 3, left: 10, right: 10, bottom: 25),
+                          child: Text(
+                            "Please be patient while we assign you a counselor.",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 13.5,
+                                fontWeight: FontWeight.w500),
+                            textAlign: TextAlign.center,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 );
