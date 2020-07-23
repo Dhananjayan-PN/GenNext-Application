@@ -1,6 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import '../imports.dart';
+import 'counselor.dart';
 import 'home.dart';
 
 class ScheduleScreen extends StatefulWidget {
@@ -873,37 +874,45 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           if (snapshot.hasData) {
             if (snapshot.data == 'No counselor') {
               return Padding(
-                padding: EdgeInsets.only(bottom: 70),
+                padding: EdgeInsets.only(left: 25, right: 25, bottom: 110),
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Opacity(
-                        opacity: 0.9,
-                        child: Image.asset(
-                          "images/snap.gif",
-                          height: 100.0,
-                          width: 100.0,
-                        ),
-                      ),
+                      Padding(
+                          padding: EdgeInsets.only(bottom: 0),
+                          child: SizedBox(
+                            height: 100,
+                            width: 200,
+                            child: Image.asset(
+                              'images/gennextlonglogo-4.png',
+                              fit: BoxFit.contain,
+                            ),
+                          )),
                       Text(
-                        'Oh Snap!',
-                        style: TextStyle(fontSize: 18, color: Colors.black54),
+                        'This feature is available only to students assigned to a counselor.\nRequest now to unlock all benefits.',
+                        style: TextStyle(color: Colors.black54),
+                        textAlign: TextAlign.center,
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 5, left: 30, right: 30),
-                        child: Text(
-                          "You haven't requested for counselling yet.",
-                          style: TextStyle(color: Colors.black54),
-                          textAlign: TextAlign.center,
+                        padding: EdgeInsets.only(top: 8),
+                        child: ActionChip(
+                          shape: StadiumBorder(
+                              side: BorderSide(
+                                  color: Color(0xff005fa8), width: 0.0)),
+                          backgroundColor: Colors.white,
+                          label: Text('Request'),
+                          onPressed: () {
+                            curPage = CounsellingScreen();
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              PageTransition(
+                                  type: PageTransitionType.fade,
+                                  child: CounsellingScreen()),
+                              (Route<dynamic> route) => false,
+                            );
+                          },
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 3),
-                        child: Text(
-                            "Head over to the 'Counselor' section to\nrequest for counselling!",
-                            style: TextStyle(color: Colors.black54),
-                            textAlign: TextAlign.center),
                       )
                     ],
                   ),
