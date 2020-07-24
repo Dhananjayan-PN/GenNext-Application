@@ -728,8 +728,28 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
             ),
           ];
           if (snapshot.hasError) {
-            return Center(
-              child: Text('Error'),
+            return Padding(
+              padding: EdgeInsets.only(bottom: 40.0),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      Icons.error_outline,
+                      size: 30,
+                      color: Colors.red.withOpacity(0.9),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 10),
+                      child: Text(
+                        'Unable to establish a connection with our servers.\nCheck your connection and try again later.',
+                        style: TextStyle(color: Colors.black54),
+                        textAlign: TextAlign.center,
+                      ),
+                    )
+                  ],
+                ),
+              ),
             );
           }
           if (snapshot.hasData) {

@@ -276,7 +276,7 @@ class _EssaysScreenState extends State<EssaysScreen> {
                     width: MediaQuery.of(context).size.width * 0.65,
                     child: Text(
                       essay['essay_title'],
-                      style: TextStyle(color: Colors.black, fontSize: 18),
+                      style: TextStyle(color: Colors.black, fontSize: 17),
                     ),
                   ),
                 ),

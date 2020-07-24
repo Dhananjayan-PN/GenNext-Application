@@ -293,10 +293,10 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       onShowPicker: (context, currentValue) async {
                         final _date = await showDatePicker(
                           context: context,
-                          firstDate: DateTime(1900),
+                          firstDate: DateTime.now(),
                           initialDate:
                               currentValue ?? _selectedDay ?? DateTime.now(),
-                          lastDate: DateTime(2150),
+                          lastDate: DateTime(2500),
                           builder: (context, child) {
                             return Theme(
                               data: ThemeData(
@@ -481,9 +481,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       onShowPicker: (context, currentValue) async {
                         final _date = await showDatePicker(
                           context: context,
-                          firstDate: DateTime(1900),
+                          firstDate: DateTime.now(),
                           initialDate: currentValue ?? time,
-                          lastDate: DateTime(2150),
+                          lastDate: DateTime(2500),
                           builder: (context, child) {
                             return Theme(
                               data: ThemeData(

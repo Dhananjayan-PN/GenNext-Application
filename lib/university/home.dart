@@ -454,7 +454,6 @@ class _UniHomeScreenState extends State<UniHomeScreen> {
     newUser = widget.user;
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
-        systemNavigationBarIconBrightness: Brightness.dark,
         systemNavigationBarColor: Colors.white,
         statusBarColor: Color(0xff005fa8).withAlpha(200),
       ),
