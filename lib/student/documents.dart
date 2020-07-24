@@ -584,6 +584,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
       backgroundColor: Colors.white,
       appBar: CustomAppBar('My Documents'),
       drawer: NavDrawer(
+          user: newUser,
           name: newUser.firstname + ' ' + newUser.lastname,
           email: newUser.email),
       body: FutureBuilder(

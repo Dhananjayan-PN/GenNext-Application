@@ -146,6 +146,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
         key: _scafKey,
         backgroundColor: Colors.white,
         drawer: NavDrawer(
+            user: newUser,
             name: newUser.firstname + ' ' + newUser.lastname,
             email: newUser.email),
         appBar: AppBar(

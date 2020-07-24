@@ -1,6 +1,6 @@
 import '../imports.dart';
 import '../login.dart';
-import '../main.dart';
+import '../landingpage.dart';
 import '../usermodel.dart';
 import 'allunis.dart';
 import 'counselorconnect.dart';
@@ -16,15 +16,6 @@ String tok = token1 ?? token2;
 String dom = domain;
 Widget curPage = UniHomeScreen(user: newUser);
 PageController _controller;
-
-final navlistelements = [
-  ['Home', UniHomeScreen(user: newUser), Icons.home],
-  ['My Profile', RepProfileScreen(), Icons.account_box],
-  ['University Profile', UniProfileScreen(), Icons.account_balance],
-  ['All Universities', AllUniversitiesScreen(), Icons.all_inclusive],
-  ['Counselor Connect', CounselorConnectScreen(), Icons.link],
-  ['Student Engagement', StudentEngagementScreen(), Icons.group],
-];
 
 loading(BuildContext context) {
   showDialog(
@@ -163,13 +154,27 @@ success(BuildContext context, String message) {
   );
 }
 
-class NavDrawer extends StatelessWidget {
+class NavDrawer extends StatefulWidget {
   final String name;
   final String email;
-  NavDrawer({this.name, this.email});
+  final User user;
+  NavDrawer({@required this.user, this.name, this.email});
 
   @override
+  _NavDrawerState createState() => _NavDrawerState();
+}
+
+class _NavDrawerState extends State<NavDrawer> {
+  @override
   Widget build(BuildContext context) {
+    final navlistelements = [
+      ['Home', UniHomeScreen(user: widget.user), Icons.home],
+      ['My Profile', RepProfileScreen(), Icons.account_box],
+      ['University Profile', UniProfileScreen(), Icons.account_balance],
+      ['All Universities', AllUniversitiesScreen(), Icons.all_inclusive],
+      ['Counselor Connect', CounselorConnectScreen(), Icons.link],
+      ['Student Engagement', StudentEngagementScreen(), Icons.group],
+    ];
     List<Widget> navlist = [];
     for (var i = 0; i < navlistelements.length; i++) {
       var element = navlistelements[i];
@@ -223,12 +228,12 @@ class NavDrawer extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Color(0xff005fa8),
               ),
-              accountName: Text(name,
+              accountName: Text(widget.name,
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
                       fontWeight: FontWeight.w400)),
-              accountEmail: Text(email,
+              accountEmail: Text(widget.email,
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 12,
@@ -320,7 +325,15 @@ class NavDrawer extends StatelessWidget {
                           'Sign out',
                           style: TextStyle(color: Colors.red),
                         ),
-                        onPressed: () {
+                        onPressed: () async {
+                          try {
+                            final directory =
+                                await getApplicationDocumentsDirectory();
+                            final file = File('${directory.path}/tok.txt');
+                            file.delete();
+                          } catch (_) {
+                            print('Error');
+                          }
                           Navigator.pop(context);
                           Navigator.of(context).pushAndRemoveUntil(
                               logoutRoute(), (route) => false);
@@ -453,6 +466,7 @@ class _UniHomeScreenState extends State<UniHomeScreen> {
   Widget build(BuildContext context) {
     tok = token1 ?? token2;
     newUser = widget.user;
+    curPage = UniHomeScreen(user: newUser);
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         systemNavigationBarColor: Colors.white,
@@ -464,6 +478,7 @@ class _UniHomeScreenState extends State<UniHomeScreen> {
           Scaffold(
               backgroundColor: Colors.white,
               drawer: NavDrawer(
+                user: widget.user,
                 name: '${widget.user.firstname} ${widget.user.lastname}',
                 email: widget.user.email,
               ),

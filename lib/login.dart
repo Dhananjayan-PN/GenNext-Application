@@ -1,3 +1,4 @@
+import 'landingpage.dart';
 import 'imports.dart';
 import 'package:http/http.dart' as http;
 import 'student/home.dart';
@@ -151,10 +152,6 @@ class _LoginPageState extends State<LoginPage> {
               color: Color(0xff005fa8),
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.all(Radius.circular(10.0)),
-              // gradient: LinearGradient(
-              //     begin: Alignment.topCenter,
-              //     end: Alignment.bottomCenter,
-              //     colors: [Color(0xff005fa8), Color(0xff0072BC)]),
             ),
             child: Center(
               child: Column(
@@ -277,6 +274,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    token1 = null;
     token2 = null;
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(

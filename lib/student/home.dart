@@ -1,6 +1,6 @@
 import '../imports.dart';
 import '../login.dart';
-import '../main.dart';
+import '../landingpage.dart';
 import '../usermodel.dart';
 import 'chat.dart';
 import 'dashboard.dart';
@@ -17,20 +17,8 @@ import 'schedule.dart';
 User newUser;
 String tok = token1 ?? token2;
 String dom = domain;
-Widget curPage = StudentHomeScreen(user: newUser);
+Widget curPage;
 PageController _controller;
-
-final navlistelements = [
-  ['Home', StudentHomeScreen(user: newUser), Icons.home],
-  ['Counselling', CounsellingScreen(), Icons.people],
-  ['Schedule', ScheduleScreen(), Icons.date_range],
-  ['Explore Universities', AllUniversitiesScreen(), Icons.explore],
-  ['My Profile', ProfileScreen(), Icons.account_box],
-  ['My Universities', MyUniversitiesScreen(), Icons.account_balance],
-  ['My Applications', ApplicationsScreen(), Icons.assignment],
-  ['My Essays', EssaysScreen(), Icons.edit],
-  ['My Documents', DocumentsScreen(), Icons.description],
-];
 
 loading(BuildContext context) {
   showDialog(
@@ -169,13 +157,30 @@ success(BuildContext context, String message) {
   );
 }
 
-class NavDrawer extends StatelessWidget {
+class NavDrawer extends StatefulWidget {
   final String name;
   final String email;
-  NavDrawer({this.name, this.email});
+  final User user;
+  NavDrawer({this.user, this.name, this.email});
 
   @override
+  _NavDrawerState createState() => _NavDrawerState();
+}
+
+class _NavDrawerState extends State<NavDrawer> {
+  @override
   Widget build(BuildContext context) {
+    final navlistelements = [
+      ['Home', StudentHomeScreen(user: widget.user), Icons.home],
+      ['Counselling', CounsellingScreen(), Icons.people],
+      ['Schedule', ScheduleScreen(), Icons.date_range],
+      ['Explore Universities', AllUniversitiesScreen(), Icons.explore],
+      ['My Profile', ProfileScreen(), Icons.account_box],
+      ['My Universities', MyUniversitiesScreen(), Icons.account_balance],
+      ['My Applications', ApplicationsScreen(), Icons.assignment],
+      ['My Essays', EssaysScreen(), Icons.edit],
+      ['My Documents', DocumentsScreen(), Icons.description],
+    ];
     List<Widget> navlist = [];
     for (var i = 0; i < navlistelements.length; i++) {
       var element = navlistelements[i];
@@ -227,12 +232,12 @@ class NavDrawer extends StatelessWidget {
             height: 210,
             child: UserAccountsDrawerHeader(
               decoration: BoxDecoration(color: Color(0xff005fa8)),
-              accountName: Text(name,
+              accountName: Text(widget.name,
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
                       fontWeight: FontWeight.w400)),
-              accountEmail: Text(email,
+              accountEmail: Text(widget.email,
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 12,
@@ -324,7 +329,15 @@ class NavDrawer extends StatelessWidget {
                           'Sign out',
                           style: TextStyle(color: Colors.red),
                         ),
-                        onPressed: () {
+                        onPressed: () async {
+                          try {
+                            final directory =
+                                await getApplicationDocumentsDirectory();
+                            final file = File('${directory.path}/tok.txt');
+                            file.delete();
+                          } catch (_) {
+                            print('Error');
+                          }
                           Navigator.pop(context);
                           Navigator.of(context).pushAndRemoveUntil(
                               logoutRoute(), (route) => false);
@@ -433,7 +446,7 @@ class HomeAppBarState extends State<HomeAppBar> {
 
 class StudentHomeScreen extends StatefulWidget {
   final User user;
-  StudentHomeScreen({@required this.user});
+  StudentHomeScreen({this.user});
   @override
   _StudentHomeScreenState createState() => _StudentHomeScreenState();
 }
@@ -456,6 +469,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
   @override
   Widget build(BuildContext context) {
     tok = token1 ?? token2;
+    curPage = StudentHomeScreen(user: widget.user);
     newUser = widget.user;
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
@@ -468,6 +482,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
           Scaffold(
             backgroundColor: Colors.white,
             drawer: NavDrawer(
+              user: widget.user,
               name: '${widget.user.firstname} ${widget.user.lastname}',
               email: widget.user.email,
             ),

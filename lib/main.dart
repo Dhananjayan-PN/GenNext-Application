@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'dart:io' show Platform;
-import 'login.dart';
-
-String token1;
-String domain = "https://gennext.ml/";
+import 'landingpage.dart';
 
 void main() {
   initializeDateFormatting().then((_) => runApp(MyApp()));
@@ -26,7 +23,7 @@ class MyApp extends StatelessWidget {
               accentColor: Color(0xff005fa8))
           : ThemeData(
               primaryColor: Color(0xff005fa8), accentColor: Color(0xff005fa8)),
-      home: LoginPage(),
+      home: LandingPage(),
       debugShowCheckedModeBanner: false,
     );
   }

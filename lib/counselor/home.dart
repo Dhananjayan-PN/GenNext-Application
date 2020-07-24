@@ -1,11 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:back_button_interceptor/back_button_interceptor.dart';
-import 'package:flutter/services.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import '../imports.dart';
 import '../login.dart';
-import '../main.dart';
+import '../landingpage.dart';
 import '../usermodel.dart';
 import 'dashboard.dart';
 import 'notifications.dart';
@@ -312,7 +307,15 @@ class NavDrawer extends StatelessWidget {
                           'Sign out',
                           style: TextStyle(color: Colors.red),
                         ),
-                        onPressed: () {
+                        onPressed: () async {
+                          try {
+                            final directory =
+                                await getApplicationDocumentsDirectory();
+                            final file = File('${directory.path}/tok.txt');
+                            file.delete();
+                          } catch (_) {
+                            print('Error');
+                          }
                           Navigator.pop(context);
                           Navigator.of(context).pushAndRemoveUntil(
                               logoutRoute(), (route) => false);

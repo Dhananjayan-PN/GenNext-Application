@@ -57,6 +57,7 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       drawer: NavDrawer(
+          user: newUser,
           name: newUser.firstname + ' ' + newUser.lastname,
           email: newUser.email),
       appBar: CustomAppBar('Profile'),
