@@ -18,7 +18,7 @@ import 'schedule.dart';
 import 'connectwithunis.dart';
 
 User newUser;
-String tok = token;
+String tok = token1 ?? token2;
 String dom = domain;
 Widget curPage = CounselorHomeScreen(user: newUser);
 PageController _controller;
@@ -441,16 +441,11 @@ class HomeAppBarState extends State<HomeAppBar> {
 class CounselorHomeScreen extends StatefulWidget {
   final User user;
   CounselorHomeScreen({this.user});
-  // This widget defines the homepage of the application
   @override
-  _CounselorHomeScreenState createState() =>
-      _CounselorHomeScreenState(user: user);
+  _CounselorHomeScreenState createState() => _CounselorHomeScreenState();
 }
 
 class _CounselorHomeScreenState extends State<CounselorHomeScreen> {
-  final User user;
-  _CounselorHomeScreenState({this.user});
-
   @override
   void initState() {
     super.initState();
@@ -467,7 +462,8 @@ class _CounselorHomeScreenState extends State<CounselorHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    newUser = user;
+    tok = token1 ?? token2;
+    newUser = widget.user;
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         systemNavigationBarColor: Colors.white,
@@ -479,11 +475,11 @@ class _CounselorHomeScreenState extends State<CounselorHomeScreen> {
           Scaffold(
               backgroundColor: Colors.white,
               drawer: NavDrawer(
-                name: '${user.firstname} ${user.lastname}',
-                email: user.email,
+                name: '${widget.user.firstname} ${widget.user.lastname}',
+                email: widget.user.email,
               ),
               appBar: HomeAppBar(),
-              body: DashBoard(user: user)),
+              body: DashBoard(user: widget.user)),
           AllChats(pgcontroller: _controller)
         ],
       ),

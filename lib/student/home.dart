@@ -15,7 +15,7 @@ import 'counselor.dart';
 import 'schedule.dart';
 
 User newUser;
-String tok = token;
+String tok = token1 ?? token2;
 String dom = domain;
 Widget curPage = StudentHomeScreen(user: newUser);
 PageController _controller;
@@ -226,13 +226,7 @@ class NavDrawer extends StatelessWidget {
           Container(
             height: 210,
             child: UserAccountsDrawerHeader(
-              decoration: BoxDecoration(
-                color: Color(0xff005fa8),
-                // gradient: LinearGradient(
-                //     begin: Alignment.bottomCenter,
-                //     end: Alignment.topCenter,
-                //     colors: [Color(0xff00AEEF), Color(0xff0072BC)]),
-              ),
+              decoration: BoxDecoration(color: Color(0xff005fa8)),
               accountName: Text(name,
                   style: TextStyle(
                       color: Colors.white,
@@ -439,15 +433,12 @@ class HomeAppBarState extends State<HomeAppBar> {
 
 class StudentHomeScreen extends StatefulWidget {
   final User user;
-  StudentHomeScreen({this.user});
+  StudentHomeScreen({@required this.user});
   @override
-  _StudentHomeScreenState createState() => _StudentHomeScreenState(user: user);
+  _StudentHomeScreenState createState() => _StudentHomeScreenState();
 }
 
 class _StudentHomeScreenState extends State<StudentHomeScreen> {
-  final User user;
-  _StudentHomeScreenState({this.user});
-
   @override
   void initState() {
     super.initState();
@@ -464,7 +455,8 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    newUser = user;
+    tok = token1 ?? token2;
+    newUser = widget.user;
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         systemNavigationBarColor: Colors.white,
@@ -474,13 +466,14 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
         controller: _controller,
         children: [
           Scaffold(
-              backgroundColor: Colors.white,
-              drawer: NavDrawer(
-                name: '${user.firstname} ${user.lastname}',
-                email: user.email,
-              ),
-              appBar: HomeAppBar(),
-              body: DashBoard(user: user)),
+            backgroundColor: Colors.white,
+            drawer: NavDrawer(
+              name: '${widget.user.firstname} ${widget.user.lastname}',
+              email: widget.user.email,
+            ),
+            appBar: HomeAppBar(),
+            body: DashBoard(user: widget.user),
+          ),
           AllChats(pgcontroller: _controller)
         ],
       ),

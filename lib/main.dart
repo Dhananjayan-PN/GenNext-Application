@@ -5,7 +5,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'dart:io' show Platform;
 import 'login.dart';
 
-String token;
+String token1;
 String domain = "https://gennext.ml/";
 
 void main() {

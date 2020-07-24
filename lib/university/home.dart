@@ -12,7 +12,7 @@ import 'notifications.dart';
 import 'chat.dart';
 
 User newUser;
-String tok = token;
+String tok = token1 ?? token2;
 String dom = domain;
 Widget curPage = UniHomeScreen(user: newUser);
 PageController _controller;
@@ -451,6 +451,7 @@ class _UniHomeScreenState extends State<UniHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    tok = token1 ?? token2;
     newUser = widget.user;
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(

@@ -7,6 +7,7 @@ import 'signup.dart';
 import 'main.dart';
 import 'usermodel.dart';
 
+String token2;
 Route logoutRoute() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => LoginPage(),
@@ -37,6 +38,11 @@ class _LoginPageState extends State<LoginPage> {
   String _username;
   String _password;
   User user;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   Route homepageRoute(String role) {
     return PageRouteBuilder(
@@ -75,10 +81,13 @@ class _LoginPageState extends State<LoginPage> {
         body: jsonEncode(<String, String>{'username': uname, 'password': pass}),
       );
       if (result.statusCode == 200) {
-        token = json.decode(result.body)['token'];
+        token2 = json.decode(result.body)['token'];
+        final directory = await getApplicationDocumentsDirectory();
+        final file = File('${directory.path}/tok.txt');
+        await file.writeAsString(token2);
         final response = await http.get(
           domain + 'authenticate/details',
-          headers: {HttpHeaders.authorizationHeader: "Token $token"},
+          headers: {HttpHeaders.authorizationHeader: "Token $token2"},
         );
         if (response.statusCode == 200) {
           user = User.fromJson(json.decode(response.body));
@@ -268,6 +277,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    token2 = null;
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         systemNavigationBarIconBrightness: Brightness.dark,
