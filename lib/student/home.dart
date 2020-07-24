@@ -468,11 +468,14 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIOverlays(
+        [SystemUiOverlay.top, SystemUiOverlay.bottom]);
     tok = token1 ?? token2;
     curPage = StudentHomeScreen(user: widget.user);
     newUser = widget.user;
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.dark,
         systemNavigationBarColor: Colors.white,
         statusBarColor: Color(0xff005fa8).withAlpha(200),
       ),
