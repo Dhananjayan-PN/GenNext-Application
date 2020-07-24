@@ -273,7 +273,6 @@ class _EssaysScreenState extends State<EssaysScreen> {
                 Padding(
                   padding: EdgeInsets.only(top: 5),
                   child: Container(
-                    color: Colors.blue[100],
                     width: MediaQuery.of(context).size.width * 0.65,
                     child: Text(
                       essay['essay_title'],
