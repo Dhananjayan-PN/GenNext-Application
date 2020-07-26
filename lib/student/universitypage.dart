@@ -369,20 +369,23 @@ class _UniversityPageState extends State<UniversityPage> {
                           'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
                       imageBuilder: (context, imageProvider) => Container(
                         decoration: BoxDecoration(
-                          image: imageProvider != null
-                              ? DecorationImage(
-                                  alignment: Alignment.center,
-                                  colorFilter: ColorFilter.mode(
-                                      Colors.black.withAlpha(50),
-                                      BlendMode.darken),
-                                  image: imageProvider,
-                                  fit: BoxFit.cover,
-                                )
-                              : DecorationImage(
-                                  image: NetworkImage(
-                                      'https://www.shareicon.net/data/512x512/2016/08/18/814358_school_512x512.png',
-                                      scale: 6.5),
-                                ),
+                          image: DecorationImage(
+                            alignment: Alignment.center,
+                            colorFilter: ColorFilter.mode(
+                                Colors.black.withAlpha(50), BlendMode.darken),
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      errorWidget: (context, url, error) => Container(
+                        decoration: BoxDecoration(
+                          color: Color(0xff005fa8),
+                          image: DecorationImage(
+                            image: NetworkImage(
+                                'https://www.shareicon.net/data/512x512/2016/08/18/814358_school_512x512.png',
+                                scale: 6.5),
+                          ),
                         ),
                       ),
                     ),
