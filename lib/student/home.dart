@@ -9,6 +9,7 @@ import 'essays.dart';
 import 'profile.dart';
 import 'documents.dart';
 import 'myuniversities.dart';
+import 'scores.dart';
 import 'allunis.dart';
 import 'applications.dart';
 import 'counselor.dart';
@@ -184,6 +185,7 @@ class _NavDrawerState extends State<NavDrawer> {
       ['My Universities', MyUniversitiesScreen(), Icons.account_balance],
       ['My Applications', ApplicationsScreen(), Icons.assignment],
       ['My Essays', EssaysScreen(), Icons.edit],
+      ['My Test Scores', TestScoresScreen(), Icons.assessment],
       ['My Documents', DocumentsScreen(), Icons.description],
     ];
     List<Widget> navlist = [];
