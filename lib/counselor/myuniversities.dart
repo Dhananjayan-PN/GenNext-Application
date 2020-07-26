@@ -52,6 +52,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   }
 
   Future<void> getUniversities() async {
+    String tok = await getToken();
     final response = await http.get(
       dom + 'api/counselor/get-connected-unis',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},

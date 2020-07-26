@@ -39,6 +39,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
   }
 
   Future<void> getDocuments() async {
+    String tok = await getToken();
     final response = await http.get(
       dom + 'api/student/get-my-documents',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
@@ -51,6 +52,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
   }
 
   Future<void> deleteDocument(String type, int id) async {
+    String tok = await getToken();
     final response = await http.delete(
       dom + 'api/student/delete-document/$type/$id',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
@@ -76,6 +78,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
 
   Future<void> uploadTranscript(String op, int id, String title, int grade,
       String spec, File transcript) async {
+    String tok = await getToken();
     var dioRequest = dio.Dio();
     dioRequest.options.headers = {
       HttpHeaders.authorizationHeader: "Token $tok",
@@ -129,6 +132,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
 
   Future<void> addExtracurricular(String op, int id, String title,
       DateTime startDate, DateTime endDate, String desc) async {
+    String tok = await getToken();
     final response = op == 'create'
         ? await http.post(
             dom + 'api/student/upload-document/',
@@ -190,6 +194,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
 
   Future<void> uploadMiscDoc(
       String op, int id, String title, String type, File transcript) async {
+    String tok = await getToken();
     var dioRequest = dio.Dio();
     dioRequest.options.headers = {
       HttpHeaders.authorizationHeader: "Token $tok",

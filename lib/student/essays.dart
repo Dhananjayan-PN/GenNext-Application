@@ -48,6 +48,7 @@ class _EssaysScreenState extends State<EssaysScreen> {
   }
 
   Future<void> getEssays() async {
+    String tok = await getToken();
     final response = await http.get(
       dom + 'api/student/get-my-essays',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
@@ -60,6 +61,7 @@ class _EssaysScreenState extends State<EssaysScreen> {
   }
 
   Future<void> editEssay(essay, String editedEssayContent) async {
+    String tok = await getToken();
     final response = await http
         .put(dom + 'api/student/edit-essay',
             headers: {
@@ -95,6 +97,7 @@ class _EssaysScreenState extends State<EssaysScreen> {
   }
 
   Future<void> deleteEssay(int id) async {
+    String tok = await getToken();
     final response = await http.delete(
       dom + 'api/student/delete-essay/$id',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
@@ -116,6 +119,7 @@ class _EssaysScreenState extends State<EssaysScreen> {
   }
 
   Future<void> editEssayDetails(essay, String title, String prompt) async {
+    String tok = await getToken();
     final response = await http.put(
       dom + 'api/student/edit-essay',
       headers: {
@@ -151,6 +155,7 @@ class _EssaysScreenState extends State<EssaysScreen> {
   }
 
   Future<void> createEssay(String title, String prompt) async {
+    String tok = await getToken();
     final response = await http
         .post(dom + 'api/student/create-essay/',
             headers: {

@@ -56,6 +56,7 @@ class _UniversityPageState extends State<UniversityPage> {
   }
 
   Future<void> editFavoritedStatus(uni, int id, bool curStatus) async {
+    String tok = await getToken();
     final statString = curStatus ? 'unfavorite' : 'favorite';
     final response = await http.put(
       dom + 'api/student/edit-favorite-status/$id/$statString',
@@ -114,6 +115,7 @@ class _UniversityPageState extends State<UniversityPage> {
   }
 
   Future<void> remove(int id, String category) async {
+    String tok = await getToken();
     final response = await http.delete(
       dom + 'api/student/delete-college-from-list/$id/$category',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
@@ -137,6 +139,7 @@ class _UniversityPageState extends State<UniversityPage> {
   }
 
   Future<void> add(int id, String category) async {
+    String tok = await getToken();
     final response = await http.put(dom + 'api/student/college-list/add',
         headers: {
           HttpHeaders.authorizationHeader: "Token $tok",
@@ -451,8 +454,7 @@ class _UniversityPageState extends State<UniversityPage> {
               ),
             ),
           ),
-          SliverFillRemaining(
-            hasScrollBody: false,
+          SliverToBoxAdapter(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -785,10 +787,12 @@ class _UniversityPageState extends State<UniversityPage> {
                   Padding(
                     padding: EdgeInsets.only(
                         left: 22, top: 2, right: 16, bottom: 15),
-                    child: Wrap(
-                      spacing: 4,
-                      direction: Axis.horizontal,
-                      children: testingReqs,
+                    child: Container(
+                      child: Wrap(
+                        spacing: 4,
+                        direction: Axis.horizontal,
+                        children: testingReqs,
+                      ),
                     ),
                   ),
                 ],

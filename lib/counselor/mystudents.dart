@@ -51,6 +51,7 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
   }
 
   Future<void> getMyStudents() async {
+    String tok = await getToken();
     final response = await http.get(
       dom + 'api/counselor/counseled-students',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},

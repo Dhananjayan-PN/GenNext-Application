@@ -12,10 +12,15 @@ import 'notifications.dart';
 import 'chat.dart';
 
 User newUser;
-String tok = token1 ?? token2;
 String dom = domain;
 Widget curPage = UniHomeScreen(user: newUser);
 PageController _controller;
+
+Future<String> getToken() async {
+  final directory = await getApplicationDocumentsDirectory();
+  String tok = await File('${directory.path}/tok.txt').readAsString();
+  return tok;
+}
 
 loading(BuildContext context) {
   showDialog(
@@ -464,7 +469,6 @@ class _UniHomeScreenState extends State<UniHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    tok = token1 ?? token2;
     newUser = widget.user;
     curPage = UniHomeScreen(user: newUser);
     return AnnotatedRegion<SystemUiOverlayStyle>(

@@ -15,10 +15,15 @@ import 'counselor.dart';
 import 'schedule.dart';
 
 User newUser;
-String tok = token1 ?? token2;
 String dom = domain;
 Widget curPage;
 PageController _controller;
+
+Future<String> getToken() async {
+  final directory = await getApplicationDocumentsDirectory();
+  String tok = await File('${directory.path}/tok.txt').readAsString();
+  return tok;
+}
 
 loading(BuildContext context) {
   showDialog(
@@ -470,7 +475,6 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays(
         [SystemUiOverlay.top, SystemUiOverlay.bottom]);
-    tok = token1 ?? token2;
     curPage = StudentHomeScreen(user: widget.user);
     newUser = widget.user;
     return AnnotatedRegion<SystemUiOverlayStyle>(

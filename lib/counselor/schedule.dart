@@ -66,6 +66,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   }
 
   Future<void> getMyStudents() async {
+    String tok = await getToken();
     final response = await http.get(
       dom + 'api/counselor/counseled-students',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
@@ -89,6 +90,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   }
 
   Future<void> getEvents() async {
+    String tok = await getToken();
     final response =
         await http.get(dom + 'api/counselor/get-sessions-calendar', headers: {
       HttpHeaders.authorizationHeader: 'Token $tok',
@@ -102,6 +104,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   }
 
   Future<void> createSession(int id) async {
+    String tok = await getToken();
     final response = await http.post(
       dom + 'api/counselor/counselor-sessions/create/',
       headers: <String, String>{
@@ -185,6 +188,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   }
 
   Future<void> editSession(int id, String complete) async {
+    String tok = await getToken();
     final response = await http.put(
       dom + 'api/counselor/edit-sessions-calendar',
       headers: {
@@ -267,6 +271,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   }
 
   Future<void> deleteSession(int id) async {
+    String tok = await getToken();
     final response = await http.delete(
       dom + 'api/counselor/delete-counselor-session/$id',
       headers: {

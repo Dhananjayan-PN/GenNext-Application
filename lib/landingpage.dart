@@ -5,7 +5,6 @@ import 'university/home.dart';
 import 'login.dart';
 import 'imports.dart';
 
-String token1;
 String domain = "https://gennext.ml/";
 
 class LandingPage extends StatefulWidget {
@@ -65,8 +64,8 @@ class _LandingPageState extends State<LandingPage> {
     bool exists = await File('${directory.path}/tok.txt').exists();
     if (exists) {
       final file = File('${directory.path}/tok.txt');
-      token1 = await file.readAsString();
-      getUserDetails(token1);
+      String token = await file.readAsString();
+      getUserDetails(token);
     } else {
       Navigator.pushAndRemoveUntil(
         context,

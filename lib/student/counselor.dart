@@ -36,6 +36,7 @@ class _CounsellingScreenState extends State<CounsellingScreen> {
   }
 
   Future<void> getCounselorInfo() async {
+    String tok = await getToken();
     final response = await http.get(
       dom + 'api/student/get-counselor-information',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},

@@ -61,6 +61,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
   }
 
   Future<void> getAllUniversities() async {
+    String tok = await getToken();
     final response = await http.get(
       dom + 'api/student/get-all-universities',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
@@ -73,6 +74,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
   }
 
   Future<void> getRecommended() async {
+    String tok = await getToken();
     final response = await http.get(
       dom + 'api/student/recommend-universities',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
@@ -86,6 +88,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
 
   Future<void> editFavoritedStatus(uni, int id, bool curStatus) async {
     final statString = curStatus ? 'unfavorite' : 'favorite';
+    String tok = await getToken();
     final response = await http.put(
       dom + 'api/student/edit-favorite-status/$id/$statString',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
@@ -140,6 +143,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
   }
 
   Future<void> remove(int id, String category) async {
+    String tok = await getToken();
     final response = await http.delete(
       dom + 'api/student/delete-college-from-list/$id/$category',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
@@ -162,6 +166,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
   }
 
   Future<void> add(int id, String category) async {
+    String tok = await getToken();
     final response = await http.put(dom + 'api/student/college-list/add',
         headers: {
           HttpHeaders.authorizationHeader: "Token $tok",

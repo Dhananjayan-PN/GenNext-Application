@@ -56,6 +56,7 @@ class _DashBoardState extends State<DashBoard> {
   }
 
   Future<void> getRecommendedUnis() async {
+    String tok = await getToken();
     final response = await http.get(
       dom + 'api/student/recommend-universities',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
@@ -68,6 +69,7 @@ class _DashBoardState extends State<DashBoard> {
   }
 
   Future<void> getAllUniversities() async {
+    String tok = await getToken();
     final response = await http.get(
       dom + 'api/student/get-all-universities',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
@@ -80,6 +82,7 @@ class _DashBoardState extends State<DashBoard> {
   }
 
   Future<void> getUpcomingSessions() async {
+    String tok = await getToken();
     final response = await http.get(
       dom + 'api/student/get-counselor-sessions',
       headers: {
@@ -106,6 +109,7 @@ class _DashBoardState extends State<DashBoard> {
   }
 
   Future<void> getStudentNotes() async {
+    String tok = await getToken();
     saving = true;
     final response = await http.get(dom + 'authenticate/get-notes', headers: {
       HttpHeaders.authorizationHeader: 'Token $tok',
@@ -138,6 +142,7 @@ class _DashBoardState extends State<DashBoard> {
   }
 
   Future<void> editStudentNotes() async {
+    String tok = await getToken();
     final response = await http.put(
       dom + 'authenticate/edit-notes',
       headers: {

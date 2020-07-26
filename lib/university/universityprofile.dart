@@ -41,6 +41,7 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
   }
 
   Future<void> getUniversity(int id) async {
+    String tok = await getToken();
     final response = await http.get(
       dom + 'api/university/',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},

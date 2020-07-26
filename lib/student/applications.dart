@@ -60,6 +60,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
   }
 
   Future<void> getAvailableUniversities() async {
+    String tok = await getToken();
     uniIds = {};
     uniList = [];
     final response = await http.get(
@@ -88,6 +89,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
   }
 
   Future<void> getCompletedApplications() async {
+    String tok = await getToken();
     final response = await http.get(
       dom + 'api/student/get-applications',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
@@ -100,6 +102,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
   }
 
   Future<void> getPendingApplications() async {
+    String tok = await getToken();
     final response = await http.get(
       dom + 'api/student/get-applications',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
@@ -125,6 +128,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
     for (int i = 0; i < application['misc_doc_data'].length; i++) {
       miscList.add(application['misc_doc_data'][i]['misc_doc_id']);
     }
+    String tok = await getToken();
     final response = await http.put(
       dom + 'api/student/edit-application',
       headers: {
@@ -161,6 +165,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
   }
 
   Future<void> deleteApplication(int id) async {
+    String tok = await getToken();
     final response = await http.delete(
       dom + 'api/student/delete-application/$id',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
@@ -184,6 +189,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
 
   Future<void> createApplication(
       String uniName, DateTime deadline, String notes) async {
+    String tok = await getToken();
     final response = await http.post(
       dom + 'api/student/create-application',
       headers: <String, String>{
@@ -990,6 +996,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
   }
 
   Future<void> getApplication() async {
+    String tok = await getToken();
     final response = await http.get(
       dom + 'api/student/get-application/${app['application_id']}',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
@@ -1006,6 +1013,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
   }
 
   Future<void> getUnattachedDocs() async {
+    String tok = await getToken();
     final response = await http.get(
       dom +
           'api/student/get-unattached/${widget.application['application_id']}',
@@ -1037,6 +1045,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
       saved = false;
       saving = true;
     });
+    String tok = await getToken();
     final response = await http.put(
       dom + 'api/student/edit-application',
       headers: {
@@ -1103,6 +1112,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
         miscList.add(app['misc_doc_data'][i]['misc_doc_id']);
       }
     }
+    String tok = await getToken();
     final response = await http.put(
       dom + 'api/student/edit-application',
       headers: {
@@ -1160,6 +1170,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
         miscList.addAll(docIds);
         break;
     }
+    String tok = await getToken();
     final response = await http.put(
       dom + 'api/student/edit-application',
       headers: {
@@ -1197,6 +1208,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
   }
 
   Future<void> createDocument(String category, List data) async {
+    String tok = await getToken();
     switch (category) {
       case 'Essay':
         final response = await http

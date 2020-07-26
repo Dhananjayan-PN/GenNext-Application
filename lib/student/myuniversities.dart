@@ -64,6 +64,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   Future<void> getAvailableUniversities() async {
     uniIds = {};
     uniList = [];
+    String tok = await getToken();
     final response = await http.get(
       dom + 'api/student/get-all-universities',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
@@ -95,6 +96,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   }
 
   Future<void> getCollegeList() async {
+    String tok = await getToken();
     final response = await http.get(
       dom + 'api/student/get-college-list',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
@@ -111,6 +113,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   }
 
   Future<void> getFavorited() async {
+    String tok = await getToken();
     final response = await http.get(
       dom + 'api/student/get-favorited-universities',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
@@ -123,6 +126,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   }
 
   Future<void> editFavoritedStatus(uni, int id, bool curStatus) async {
+    String tok = await getToken();
     final statString = curStatus ? 'unfavorite' : 'favorite';
     final response = await http.put(
       dom + 'api/student/edit-favorite-status/$id/$statString',
@@ -179,6 +183,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   }
 
   Future<void> add(int id, String category, String op) async {
+    String tok = await getToken();
     final response = await http.put(
       dom + 'api/student/college-list/add',
       headers: {
@@ -211,6 +216,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   }
 
   Future<void> remove(int id, String category) async {
+    String tok = await getToken();
     final response = await http.delete(
       dom + 'api/student/delete-college-from-list/$id/$category',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
@@ -233,6 +239,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
   }
 
   Future<void> changeCategory(int id, String category) async {
+    String tok = await getToken();
     final response = await http.put(
       dom + 'api/student/college-list/change',
       headers: {

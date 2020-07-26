@@ -53,6 +53,7 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
   }
 
   Future getAvailableUniversities() async {
+    String tok = await getToken();
     final response = await http.get(
       dom + 'api/counselor/connect-with-unis',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
@@ -66,6 +67,7 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
   }
 
   Future sendRequest(int id, int index) async {
+    String tok = await getToken();
     final response = await http.put(
       dom + 'api/counselor/connect-with-unis/$id',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},

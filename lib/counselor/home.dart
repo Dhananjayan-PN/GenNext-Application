@@ -13,7 +13,6 @@ import 'schedule.dart';
 import 'connectwithunis.dart';
 
 User newUser;
-String tok = token1 ?? token2;
 String dom = domain;
 Widget curPage = CounselorHomeScreen(user: newUser);
 PageController _controller;
@@ -27,6 +26,12 @@ final navlistelements = [
   ['My Universities', MyUniversitiesScreen(), Icons.account_balance],
   ['Connect with Universities', ConnectUniversitiesScreen(), Icons.link]
 ];
+
+Future<String> getToken() async {
+  final directory = await getApplicationDocumentsDirectory();
+  String tok = await File('${directory.path}/tok.txt').readAsString();
+  return tok;
+}
 
 loading(context) {
   showDialog(
@@ -465,7 +470,6 @@ class _CounselorHomeScreenState extends State<CounselorHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    tok = token1 ?? token2;
     newUser = widget.user;
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
