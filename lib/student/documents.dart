@@ -248,7 +248,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
   Future<File> urlToFile(String fileUrl) async {
     Directory tempDir = await getApplicationSupportDirectory();
     String tempPath = tempDir.path;
-    File file = File('$tempPath/' + fileUrl.split('/').last);
+    File file = File('$tempPath/' + fileUrl.split('/').last.split('?').first);
     http.Response response = await http.get(fileUrl);
     await file.writeAsBytes(response.bodyBytes);
     return file;
@@ -987,7 +987,7 @@ class _TranscriptScreenState extends State<TranscriptScreen> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(left: 25, right: 25, top: 10),
+              padding: EdgeInsets.only(left: 25, right: 10, top: 10),
               child: Row(
                 children: <Widget>[
                   RaisedButton(
@@ -1010,8 +1010,11 @@ class _TranscriptScreenState extends State<TranscriptScreen> {
                   ),
                   Padding(
                     padding: EdgeInsets.only(left: 10),
-                    child: Text(
-                        transcript?.path?.split('/')?.last ?? 'No file chosen'),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.48,
+                      child: Text(transcript?.path?.split('/')?.last ??
+                          'No file chosen'),
+                    ),
                   )
                 ],
               ),
@@ -1320,6 +1323,7 @@ class _MiscDocsScreenState extends State<MiscDocsScreen> {
   @override
   void initState() {
     super.initState();
+    _type = widget.type;
     _title.text = widget.title ?? '';
     transcript = widget.file;
   }
@@ -1436,7 +1440,7 @@ class _MiscDocsScreenState extends State<MiscDocsScreen> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(left: 25, right: 25, top: 10),
+              padding: EdgeInsets.only(left: 25, right: 10, top: 10),
               child: Row(
                 children: <Widget>[
                   RaisedButton(
@@ -1459,8 +1463,11 @@ class _MiscDocsScreenState extends State<MiscDocsScreen> {
                   ),
                   Padding(
                     padding: EdgeInsets.only(left: 10),
-                    child: Text(
-                        transcript?.path?.split('/')?.last ?? 'No file chosen'),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.48,
+                      child: Text(transcript?.path?.split('/')?.last ??
+                          'No file chosen'),
+                    ),
                   )
                 ],
               ),
