@@ -246,7 +246,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
   }
 
   Future<File> urlToFile(String fileUrl) async {
-    Directory tempDir = await getTemporaryDirectory();
+    Directory tempDir = await getApplicationSupportDirectory();
     String tempPath = tempDir.path;
     File file = File('$tempPath/' + fileUrl.split('/').last);
     http.Response response = await http.get(fileUrl);
