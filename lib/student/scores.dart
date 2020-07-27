@@ -238,7 +238,10 @@ class _TestScoresScreenState extends State<TestScoresScreen> {
                                         ? 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/TOEFL_Logo.svg/1280px-TOEFL_Logo.svg.png'
                                         : test['test_type'] == 'IELTS'
                                             ? 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/IELTS_logo.svg/1280px-IELTS_logo.svg.png'
-                                            : null,
+                                            : test['test_type'] ==
+                                                    'SAT Subject Test'
+                                                ? 'https://i.ibb.co/c85zVX0/SUBJECT.png'
+                                                : null,
                         fit: BoxFit.contain,
                       ),
                     ),
@@ -484,251 +487,253 @@ class _NewScoreScreenState extends State<NewScoreScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Color(0xff005fa8),
-          actions: <Widget>[
-            FlatButton(
-              child: Text(
-                widget.op == 'Edit' ? 'SAVE' : 'ADD',
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
-              ),
-              onPressed: () {
-                if (_formKey.currentState.validate() &&
-                    _testDate != null &&
-                    _report != null) {
-                  List data = [
-                    int.parse(_score.text),
-                    _type,
-                    _testDate,
-                    _report
-                  ];
-                  Navigator.pop(context, data);
-                }
-              },
-            )
-          ],
-          title: Text(
-            widget.op == 'Edit' ? 'Edit Test Score' : 'Add Test Score',
-            maxLines: 1,
-          ),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Color(0xff005fa8),
+        actions: <Widget>[
+          FlatButton(
+            child: Text(
+              widget.op == 'Edit' ? 'SAVE' : 'ADD',
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+            ),
+            onPressed: () {
+              if (_formKey.currentState.validate() &&
+                  _testDate != null &&
+                  _report != null) {
+                List data = [int.parse(_score.text), _type, _testDate, _report];
+                Navigator.pop(context, data);
+              }
+            },
+          )
+        ],
+        title: Text(
+          widget.op == 'Edit' ? 'Edit Test Score' : 'Add Test Score',
+          maxLines: 1,
         ),
-        body: Padding(
-          padding: EdgeInsets.all(25),
-          child: Form(
-            key: _formKey,
-            child: ListView(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(top: 5),
-                  child: Text(
-                    'Test Type',
-                    style: TextStyle(fontSize: 23, color: Colors.black87),
-                  ),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(25),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(top: 5),
+                child: Text(
+                  'Test Type',
+                  style: TextStyle(fontSize: 23, color: Colors.black87),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(left: 1, right: 45),
-                  child: DropdownButtonFormField(
-                    hint: Text(
-                      "Type of Test",
-                      style: TextStyle(color: Colors.black54, fontSize: 16),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 1, right: 45),
+                child: DropdownButtonFormField(
+                  hint: Text(
+                    "Type of Test",
+                    style: TextStyle(color: Colors.black54, fontSize: 16),
+                  ),
+                  itemHeight: kMinInteractiveDimension,
+                  items: [
+                    DropdownMenuItem(
+                        child: Text(
+                          'SAT',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        value: 'SAT'),
+                    DropdownMenuItem(
+                        child: Text(
+                          'SAT Subject Test',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        value: 'SAT Subject Test'),
+                    DropdownMenuItem(
+                        child: Text(
+                          'ACT',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        value: 'ACT'),
+                    DropdownMenuItem(
+                        child: Text(
+                          'TOEFL iBT',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        value: 'TOEFL'),
+                    DropdownMenuItem(
+                        child: Text(
+                          'IELTS',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        value: 'IELTS'),
+                    DropdownMenuItem(
+                        child: Text(
+                          'Advanced Placement',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        value: 'Advanced Placement'),
+                  ],
+                  value: _type,
+                  validator: (value) => value == null
+                      ? 'Do tell us what type of test this is'
+                      : null,
+                  isExpanded: true,
+                  onChanged: (value) {
+                    setState(() {
+                      _type = value;
+                    });
+                  },
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 30),
+                child: Text(
+                  'Score',
+                  style: TextStyle(fontSize: 22, color: Colors.black87),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 1, right: 45),
+                child: TextFormField(
+                  cursorColor: Color(0xff005fa8),
+                  controller: _score,
+                  keyboardType: TextInputType.number,
+                  validator: (value) {
+                    if (value == '') {
+                      return 'Enter a score';
+                    }
+                    if (_type == 'SAT' &&
+                        (int.parse(value) < 200 || int.parse(value) > 1600)) {
+                      return 'The SAT is scored on a scale of 200 to 1600';
+                    } else if (_type == 'ACT' &&
+                        (int.parse(value) < 1 || int.parse(value) > 36)) {
+                      return 'The ACT is scored on a scale of 1 to 36';
+                    } else if (_type == 'TOEFL' &&
+                        (int.parse(value) < 0 || int.parse(value) > 120)) {
+                      return 'The TOEFL iBT is scored on a scale of 0 to 120';
+                    } else if (_type == 'IELTS' &&
+                        (int.parse(value) < 1 || int.parse(value) > 9)) {
+                      return 'The IELTS is scored on a scale of 1 to 9';
+                    } else if (_type == 'Advanced Placement' &&
+                        (int.parse(value) < 1 || int.parse(value) > 5)) {
+                      return 'AP Exams are scored on a scale of 1 to 5';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 30),
+                child: Text(
+                  'Test Date',
+                  style: TextStyle(fontSize: 23, color: Colors.black87),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 1, right: 45),
+                child: Theme(
+                  data: ThemeData(primaryColor: Color(0xff005fa8)),
+                  child: DateTimeField(
+                    cursorColor: Color(0xff005fa8),
+                    initialValue: widget.date ?? null,
+                    controller: _dateController,
+                    decoration: InputDecoration(
+                      border: UnderlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Color(0xff005fa8), width: 0.0),
+                      ),
                     ),
-                    itemHeight: kMinInteractiveDimension,
-                    items: [
-                      DropdownMenuItem(
-                          child: Text(
-                            'SAT',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          value: 'SAT'),
-                      DropdownMenuItem(
-                          child: Text(
-                            'ACT',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          value: 'ACT'),
-                      DropdownMenuItem(
-                          child: Text(
-                            'TOEFL iBT',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          value: 'TOEFL'),
-                      DropdownMenuItem(
-                          child: Text(
-                            'IELTS',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          value: 'IELTS'),
-                      DropdownMenuItem(
-                          child: Text(
-                            'Advanced Placement',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          value: 'Advanced Placement'),
-                    ],
-                    value: _type,
-                    validator: (value) => value == null
-                        ? 'Do tell us what type of test this is'
-                        : null,
-                    isExpanded: true,
+                    format: DateFormat.yMMMMd(),
                     onChanged: (value) {
                       setState(() {
-                        _type = value;
+                        _testDate = value;
                       });
                     },
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 30),
-                  child: Text(
-                    'Score',
-                    style: TextStyle(fontSize: 22, color: Colors.black87),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 1, right: 45),
-                  child: TextFormField(
-                    cursorColor: Color(0xff005fa8),
-                    controller: _score,
-                    keyboardType: TextInputType.number,
-                    validator: (value) {
-                      if (value == '') {
-                        return 'Enter a score';
+                    validator: (value) => value == null
+                        ? 'Do tell us when you took this test'
+                        : null,
+                    onShowPicker: (context, currentValue) async {
+                      final _date = await showDatePicker(
+                        context: context,
+                        firstDate: DateTime(1900),
+                        initialDate:
+                            currentValue ?? widget.date ?? DateTime.now(),
+                        lastDate: DateTime.now(),
+                        builder: (context, child) {
+                          return Theme(
+                            data: ThemeData(
+                                colorScheme: ColorScheme(
+                                    brightness: Brightness.light,
+                                    error: Color(0xff005fa8),
+                                    onError: Colors.red,
+                                    background: Color(0xff005fa8),
+                                    primary: Color(0xff005fa8),
+                                    primaryVariant: Color(0xff005fa8),
+                                    secondary: Color(0xff005fa8),
+                                    secondaryVariant: Color(0xff005fa8),
+                                    onPrimary: Colors.white,
+                                    surface: Color(0xff005fa8),
+                                    onSecondary: Colors.black,
+                                    onSurface: Colors.black,
+                                    onBackground: Colors.black)),
+                            child: child,
+                          );
+                        },
+                      );
+                      if (_date != null) {
+                        return _date;
+                      } else {
+                        return currentValue;
                       }
-                      if (_type == 'SAT' &&
-                          (int.parse(value) < 200 || int.parse(value) > 1600)) {
-                        return 'The SAT is scored on a scale of 200 to 1600';
-                      } else if (_type == 'ACT' &&
-                          (int.parse(value) < 1 || int.parse(value) > 36)) {
-                        return 'The ACT is scored on a scale of 1 to 36';
-                      } else if (_type == 'TOEFL' &&
-                          (int.parse(value) < 0 || int.parse(value) > 120)) {
-                        return 'The TOEFL iBT is scored on a scale of 0 to 120';
-                      } else if (_type == 'IELTS' &&
-                          (int.parse(value) < 1 || int.parse(value) > 9)) {
-                        return 'The IELTS is scored on a scale of 1 to 9';
-                      } else if (_type == 'Advanced Placement' &&
-                          (int.parse(value) < 1 || int.parse(value) > 5)) {
-                        return 'AP Exams are scored on a scale of 1 to 5';
-                      }
-                      return null;
                     },
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 30),
-                  child: Text(
-                    'Test Date',
-                    style: TextStyle(fontSize: 23, color: Colors.black87),
-                  ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 30),
+                child: Text(
+                  'Score Report',
+                  style: TextStyle(fontSize: 23, color: Colors.black87),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(left: 1, right: 45),
-                  child: Theme(
-                    data: ThemeData(primaryColor: Color(0xff005fa8)),
-                    child: DateTimeField(
-                      cursorColor: Color(0xff005fa8),
-                      initialValue: widget.date ?? null,
-                      controller: _dateController,
-                      decoration: InputDecoration(
-                        border: UnderlineInputBorder(
-                          borderSide:
-                              BorderSide(color: Color(0xff005fa8), width: 0.0),
-                        ),
-                      ),
-                      format: DateFormat.yMMMMd(),
-                      onChanged: (value) {
-                        setState(() {
-                          _testDate = value;
-                        });
-                      },
-                      validator: (value) => value == null
-                          ? 'Do tell us when you took this test'
-                          : null,
-                      onShowPicker: (context, currentValue) async {
-                        final _date = await showDatePicker(
-                          context: context,
-                          firstDate: DateTime(1900),
-                          initialDate:
-                              currentValue ?? widget.date ?? DateTime.now(),
-                          lastDate: DateTime.now(),
-                          builder: (context, child) {
-                            return Theme(
-                              data: ThemeData(
-                                  colorScheme: ColorScheme(
-                                      brightness: Brightness.light,
-                                      error: Color(0xff005fa8),
-                                      onError: Colors.red,
-                                      background: Color(0xff005fa8),
-                                      primary: Color(0xff005fa8),
-                                      primaryVariant: Color(0xff005fa8),
-                                      secondary: Color(0xff005fa8),
-                                      secondaryVariant: Color(0xff005fa8),
-                                      onPrimary: Colors.white,
-                                      surface: Color(0xff005fa8),
-                                      onSecondary: Colors.black,
-                                      onSurface: Colors.black,
-                                      onBackground: Colors.black)),
-                              child: child,
-                            );
-                          },
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 1, right: 10, top: 10),
+                child: Row(
+                  children: <Widget>[
+                    RaisedButton(
+                      elevation: 2,
+                      color: Colors.grey[50],
+                      textColor: Color(0xff005fa8),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(5))),
+                      child: Text('Choose File'),
+                      onPressed: () async {
+                        File file = await FilePicker.getFile(
+                          type: FileType.any,
                         );
-                        if (_date != null) {
-                          return _date;
-                        } else {
-                          return currentValue;
+                        if (file != null) {
+                          setState(() {
+                            _report = file;
+                          });
                         }
                       },
                     ),
-                  ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 10),
+                      child: _report == null
+                          ? Text(
+                              'No file chosen',
+                              style: TextStyle(color: Colors.red),
+                            )
+                          : Container(
+                              width: MediaQuery.of(context).size.width * 0.48,
+                              child: Text(_report?.path?.split('/')?.last)),
+                    )
+                  ],
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 30),
-                  child: Text(
-                    'Score Report',
-                    style: TextStyle(fontSize: 23, color: Colors.black87),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 1, right: 10, top: 10),
-                  child: Row(
-                    children: <Widget>[
-                      RaisedButton(
-                        elevation: 2,
-                        color: Colors.grey[50],
-                        textColor: Color(0xff005fa8),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(5))),
-                        child: Text('Choose File'),
-                        onPressed: () async {
-                          File file = await FilePicker.getFile(
-                            type: FileType.any,
-                          );
-                          if (file != null) {
-                            setState(() {
-                              _report = file;
-                            });
-                          }
-                        },
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 10),
-                        child: _report == null
-                            ? Text(
-                                'No file chosen',
-                                style: TextStyle(color: Colors.red),
-                              )
-                            : Container(
-                                width: MediaQuery.of(context).size.width * 0.48,
-                                child: Text(_report?.path?.split('/')?.last)),
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
