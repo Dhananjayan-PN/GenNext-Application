@@ -240,7 +240,7 @@ class _TestScoresScreenState extends State<TestScoresScreen> {
                                             ? 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/IELTS_logo.svg/1280px-IELTS_logo.svg.png'
                                             : test['test_type'] ==
                                                     'SAT Subject Test'
-                                                ? 'https://i.ibb.co/c85zVX0/SUBJECT.png'
+                                                ? 'https://i.ibb.co/9hRGHBS/SUBJECT.png'
                                                 : null,
                         fit: BoxFit.contain,
                       ),
@@ -615,6 +615,9 @@ class _NewScoreScreenState extends State<NewScoreScreen> {
                     } else if (_type == 'Advanced Placement' &&
                         (int.parse(value) < 1 || int.parse(value) > 5)) {
                       return 'AP Exams are scored on a scale of 1 to 5';
+                    } else if (_type == 'SAT Subject Test' &&
+                        (int.parse(value) < 200 || int.parse(value) > 800)) {
+                      return 'SAT Subject Tests are scored on a scale of 200 to 800';
                     }
                     return null;
                   },
