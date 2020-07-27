@@ -214,7 +214,7 @@ class _OpenChatState extends State<OpenChat> {
   _OpenChatState({this.otherUser});
 
   List messages = [
-    ['Hey!', 'user'],
+    ['Hey!!', 'user'],
     ['Hello', 'me'],
     ['How has your day been going?', 'user'],
     ['Not too bad tbh', 'me'],
