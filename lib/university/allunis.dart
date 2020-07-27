@@ -105,6 +105,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
                     color: Colors.white.withOpacity(0.9), fontSize: 13.5),
               ),
               onTap: () async {
+                // ignore: unused_local_variable
                 final data = await Navigator.push(
                   context,
                   PageTransition(

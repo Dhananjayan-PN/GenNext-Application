@@ -427,13 +427,15 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                   ),
                 ),
                 onTap: () async {
+                  // ignore: unused_local_variable
                   final bool data = await Navigator.push(
                     context,
                     PageTransition(
-                        type: PageTransitionType.rightToLeftWithFade,
-                        child: SingleAppScreen(
-                          application: application,
-                        )),
+                      type: PageTransitionType.rightToLeftWithFade,
+                      child: SingleAppScreen(
+                        application: application,
+                      ),
+                    ),
                   );
                   refresh();
                 }),

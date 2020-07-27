@@ -532,6 +532,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                             : starred != null
                                 ? addToListFF(uni['university_id'],
                                     uni['university_name'])
+                                // ignore: unnecessary_statements
                                 : null;
                       },
                     ),
@@ -539,6 +540,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                 ],
               ),
               onTap: () async {
+                // ignore: unused_local_variable
                 final data = await Navigator.push(
                   context,
                   PageTransition(

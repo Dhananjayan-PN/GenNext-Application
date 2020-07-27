@@ -56,6 +56,7 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scafKey,
       backgroundColor: Colors.white,
       drawer: NavDrawer(
           user: newUser,

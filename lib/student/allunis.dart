@@ -362,13 +362,15 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
                 ],
               ),
               onTap: () async {
+                // ignore: unused_local_variable
                 final data = await Navigator.push(
                   context,
                   PageTransition(
-                      type: PageTransitionType.fade,
-                      child: UniversityPage(
-                        university: unis[index],
-                      )),
+                    type: PageTransitionType.fade,
+                    child: UniversityPage(
+                      university: unis[index],
+                    ),
+                  ),
                 );
                 refresh();
               },
