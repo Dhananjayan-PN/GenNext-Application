@@ -73,8 +73,67 @@ class _TestScoresScreenState extends State<TestScoresScreen> {
     }
   }
 
-  Future<void> uploadTestSCore(String op, int id, int score, String type,
-      DateTime testDate, File report) async {}
+  Future<void> uploadTestScore(String op, int id, int score, String type,
+      DateTime testDate, File report) async {
+    String tok = await getToken();
+    var dioRequest = dio.Dio();
+    dioRequest.options.headers = {
+      HttpHeaders.authorizationHeader: "Token $tok",
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+    var formData = dio.FormData.fromMap({
+      "user_id": newUser.id,
+      "test_type": type,
+      "date_of_test": testDate.toIso8601String().substring(0, 10),
+      "score": score,
+    });
+    if (op == 'edit') {
+      formData.fields.add(MapEntry('test_score_id', id.toString()));
+    }
+    var file = await dio.MultipartFile.fromFile(
+      report.path,
+    );
+    formData.files.add(MapEntry('document', file));
+    var response = op == 'create'
+        ? await dioRequest.post(
+            dom + 'api/student/add-test-score',
+            data: formData,
+          )
+        : await dioRequest.put(
+            dom + 'api/student/edit-test-score',
+            data: formData,
+          );
+    if (response.statusCode == 200) {
+      if (op == 'edit' &&
+          response.data['Response'] == 'Test score successfully edited.') {
+        Navigator.pop(context);
+        success(context, 'Test score successfully edited.\nGet working!');
+        refresh();
+      } else if (op == 'create' &&
+          response.data['Response'] == 'Test score successfully created.') {
+        Navigator.pop(context);
+        success(context, 'Test score successfully added.\nGreat work!');
+        refresh();
+      } else {
+        Navigator.pop(context);
+        error(context);
+        refresh();
+      }
+    } else {
+      Navigator.pop(context);
+      error(context);
+      refresh();
+    }
+  }
+
+  Future<File> urlToFile(String fileUrl) async {
+    Directory tempDir = await getApplicationSupportDirectory();
+    String tempPath = tempDir.path;
+    File file = File('$tempPath/' + fileUrl.split('/').last.split('?').first);
+    http.Response response = await http.get(fileUrl);
+    await file.writeAsBytes(response.bodyBytes);
+    return file;
+  }
 
   _deleteScore(int id) {
     showDialog(
@@ -204,15 +263,23 @@ class _TestScoresScreenState extends State<TestScoresScreen> {
                         onSelected: (value) async {
                           switch (value) {
                             case 'Edit':
-                              // final List details = await Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //         builder: (context) => NewEssayScreen(
-                              //             op: 'Edit',
-                              //             title: essay['essay_title'],
-                              //             prompt: essay['essay_prompt'])));
-                              // editEssayDetails(essay, details[0], details[1]);
-                              // loading(context);
+                              File file = await urlToFile(test['document_url']);
+                              final List data = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => NewScoreScreen(
+                                    op: 'Edit',
+                                    score: int.parse(test['score']),
+                                    type: test['test_type'],
+                                    date: DateTime.parse(
+                                        test['date_of_test'] + 'T00:00:00Z'),
+                                    report: file,
+                                  ),
+                                ),
+                              );
+                              uploadTestScore('edit', test['test_score_id'],
+                                  data[0], data[1], data[2], data[3]);
+                              loading(context);
                               break;
                             case 'Delete':
                               _deleteScore(test['test_score_id']);
@@ -279,12 +346,13 @@ class _TestScoresScreenState extends State<TestScoresScreen> {
                 size: 26,
               ),
               onPressed: () async {
-                final List details = await Navigator.push(
+                final List data = await Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => NewScoreScreen(op: 'Create')));
-                // createEssay(details[0], details[1]);
-                // loading(context);
+                uploadTestScore(
+                    'create', null, data[0], data[1], data[2], data[3]);
+                loading(context);
               },
             ),
           )
@@ -345,7 +413,7 @@ class _TestScoresScreenState extends State<TestScoresScreen> {
                             padding:
                                 EdgeInsets.only(top: 5, left: 30, right: 30),
                             child: Text(
-                              "Looks like you haven't added\nany test scores yet",
+                              "Looks like you haven't added any test scores",
                               style: TextStyle(color: Colors.black54),
                               textAlign: TextAlign.center,
                             )),
@@ -623,7 +691,7 @@ class _NewScoreScreenState extends State<NewScoreScreen> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: 1, right: 25, top: 10),
+                  padding: EdgeInsets.only(left: 1, right: 10, top: 10),
                   child: Row(
                     children: <Widget>[
                       RaisedButton(
@@ -651,7 +719,9 @@ class _NewScoreScreenState extends State<NewScoreScreen> {
                                 'No file chosen',
                                 style: TextStyle(color: Colors.red),
                               )
-                            : Text(_report?.path?.split('/')?.last),
+                            : Container(
+                                width: MediaQuery.of(context).size.width * 0.48,
+                                child: Text(_report?.path?.split('/')?.last)),
                       )
                     ],
                   ),
