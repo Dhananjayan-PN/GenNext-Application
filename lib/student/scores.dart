@@ -73,6 +73,9 @@ class _TestScoresScreenState extends State<TestScoresScreen> {
     }
   }
 
+  Future<void> uploadTestSCore(String op, int id, int score, String type,
+      DateTime testDate, File report) async {}
+
   _deleteScore(int id) {
     showDialog(
       context: context,
