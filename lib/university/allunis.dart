@@ -232,48 +232,50 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
                 } else {
                   return Column(
                     children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(top: 5, left: 18, right: 30),
-                        child: Row(
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(top: 5, right: 6),
-                              child: Icon(
-                                Icons.search,
-                                size: 30,
-                                color: Colors.black54,
-                              ),
-                            ),
-                            Expanded(
-                              child: TextField(
-                                cursorColor: Color(0xff005fa8),
-                                decoration: InputDecoration(
-                                    labelText: "Search",
-                                    contentPadding: EdgeInsets.all(2)),
-                                controller: controller,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
                       Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 20.0),
-                          child: Scrollbar(
-                            child: ListView.builder(
-                              primary: true,
-                              scrollDirection: Axis.vertical,
-                              itemCount: snapshot.data.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return filter == null || filter == ""
-                                    ? buildCard(snapshot.data[index])
-                                    : snapshot.data[index]['university_name']
-                                            .toLowerCase()
-                                            .contains(filter)
-                                        ? buildCard(snapshot.data[index])
-                                        : Container();
-                              },
-                            ),
+                        child: Scrollbar(
+                          child: ListView.builder(
+                            primary: true,
+                            scrollDirection: Axis.vertical,
+                            itemCount: snapshot.data.length + 1,
+                            itemBuilder: (BuildContext context, int index) {
+                              if (index == 0) {
+                                return Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 5, left: 18, right: 30, bottom: 20),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Padding(
+                                        padding:
+                                            EdgeInsets.only(top: 5, right: 6),
+                                        child: Icon(
+                                          Icons.search,
+                                          size: 30,
+                                          color: Colors.black54,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: TextField(
+                                          cursorColor: Color(0xff005fa8),
+                                          decoration: InputDecoration(
+                                              labelText: "Search",
+                                              contentPadding:
+                                                  EdgeInsets.all(2)),
+                                          controller: controller,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                              return filter == null || filter == ""
+                                  ? buildCard(snapshot.data[index - 1])
+                                  : snapshot.data[index - 1]['university_name']
+                                          .toLowerCase()
+                                          .contains(filter)
+                                      ? buildCard(snapshot.data[index - 1])
+                                      : Container();
+                            },
                           ),
                         ),
                       ),
@@ -306,6 +308,8 @@ class UniversityPage extends StatefulWidget {
 class _UniversityPageState extends State<UniversityPage> {
   GlobalKey<ScaffoldState> _scafKey = GlobalKey<ScaffoldState>();
   List<Widget> standOutFactors;
+  List<Widget> appChips;
+  List<Widget> deadlines;
   List<Widget> topMajors;
   List<Widget> testingReqs;
   List<Widget> documentChips;
@@ -318,6 +322,8 @@ class _UniversityPageState extends State<UniversityPage> {
 
   @override
   Widget build(BuildContext context) {
+    deadlines = [];
+    appChips = [];
     topMajors = [];
     standOutFactors = [];
     testingReqs = [];
@@ -410,6 +416,88 @@ class _UniversityPageState extends State<UniversityPage> {
         );
       }
     }
+    if (widget.university['application_fee'] != null) {
+      appChips.add(
+        Chip(
+          backgroundColor: Colors.white12,
+          shape: StadiumBorder(
+              side: BorderSide(color: Color(0xff005fa8), width: 0.0)),
+          label: Text(
+            r'$' + widget.university['application_fee'].toString(),
+            style: TextStyle(fontSize: 16),
+          ),
+          elevation: 1,
+        ),
+      );
+    }
+    if (widget.university['common_app_accepted_status'] != null) {
+      appChips.add(
+        Chip(
+          labelPadding: EdgeInsets.only(right: 5, left: 5),
+          avatar: widget.university['common_app_accepted_status']
+              ? Padding(
+                  padding: EdgeInsets.only(left: 2),
+                  child: Icon(
+                    Icons.check_circle,
+                    size: 26,
+                    color: Colors.green,
+                  ),
+                )
+              : Padding(
+                  padding: EdgeInsets.only(left: 2),
+                  child: Icon(
+                    Icons.cancel,
+                    color: Colors.red,
+                  ),
+                ),
+          backgroundColor: Colors.white12,
+          shape: StadiumBorder(
+              side: BorderSide(color: Color(0xff005fa8), width: 0.0)),
+          label: CachedNetworkImage(
+            width: 65,
+            fit: BoxFit.contain,
+            imageUrl:
+                'https://membersupport.commonapp.org/servlet/rtaImage?eid=ka10V000001DsVb&feoid=00N0V000008rTCP&refid=0EM0V0000017WaN',
+          ),
+          elevation: 1,
+        ),
+      );
+    }
+    if (widget.university['application_types'] != null) {
+      for (int i = 0; i < widget.university['application_types'].length; i++) {
+        deadlines.add(
+          Padding(
+            padding: EdgeInsets.only(top: 5, left: 25),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(bottom: 1),
+                  child: Text(
+                    widget.university['application_types'][i].keys.first
+                            .toString()
+                            .toUpperCase() +
+                        ':',
+                    style: TextStyle(
+                        color: Colors.black.withOpacity(0.65), fontSize: 12.5),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 5, top: 0.5),
+                  child: Text(
+                    widget.university['application_types'][i][widget
+                            .university['application_types'][i].keys.first]
+                        .toString(),
+                    style: TextStyle(
+                        color: Colors.black.withOpacity(0.8), fontSize: 18.5),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+    }
     return Scaffold(
       key: _scafKey,
       backgroundColor: Colors.white,
@@ -467,6 +555,75 @@ class _UniversityPageState extends State<UniversityPage> {
                   Positioned(
                     child: Column(
                       children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Spacer(),
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 35, right: 20),
+                              child: CircleAvatar(
+                                backgroundImage: CachedNetworkImageProvider(
+                                    widget.university['logo_url']),
+                                backgroundColor: Colors.white,
+                                radius: 33,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Spacer(),
+                            Padding(
+                              padding: EdgeInsets.only(right: 11, bottom: 125),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Row(
+                                    children: <Widget>[
+                                      Material(
+                                        color: Colors.transparent,
+                                        child: Text(
+                                          widget.university['acceptance_rate']
+                                              .toString()
+                                              .split('.')
+                                              .first,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.white,
+                                            fontSize: 23,
+                                          ),
+                                        ),
+                                      ),
+                                      Material(
+                                        color: Colors.transparent,
+                                        child: Text(
+                                          '%',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.white,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  Material(
+                                    color: Colors.transparent,
+                                    child: Text(
+                                      widget.university['selectivity']
+                                          .toString()
+                                          .toUpperCase(),
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.white,
+                                        fontSize: 9,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
                         Container(
                           height: 30,
                           decoration: BoxDecoration(
@@ -506,7 +663,7 @@ class _UniversityPageState extends State<UniversityPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.only(left: 21, top: 5),
+                      padding: EdgeInsets.only(left: 22, top: 5),
                       child: Icon(
                         Icons.location_on,
                         color: Colors.black54,
@@ -527,7 +684,7 @@ class _UniversityPageState extends State<UniversityPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.only(left: 21, top: 4),
+                      padding: EdgeInsets.only(left: 22, top: 4),
                       child: Icon(
                         Icons.show_chart,
                         color: Colors.black54,
@@ -564,7 +721,7 @@ class _UniversityPageState extends State<UniversityPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.only(left: 21, top: 5),
+                      padding: EdgeInsets.only(left: 22, top: 5),
                       child: Icon(
                         widget.university['research_or_not']
                             ? IconData(0xF0093, fontFamily: 'maticons')
@@ -594,7 +751,7 @@ class _UniversityPageState extends State<UniversityPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.only(left: 21, top: 8),
+                      padding: EdgeInsets.only(left: 22, top: 8),
                       child: Icon(
                         Icons.school,
                         color: Colors.black54,
@@ -614,6 +771,34 @@ class _UniversityPageState extends State<UniversityPage> {
                     ),
                   ],
                 ),
+                if (widget.university['university_rep'] !=
+                        'college_genie_representative' &&
+                    widget.university['university_rep'] != null) ...[
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(left: 22, top: 5),
+                        child: Icon(
+                          Icons.person,
+                          color: Colors.black54,
+                          size: 22,
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 5, top: 5),
+                        child: InkWell(
+                          child: Text(
+                            '@' + widget.university['university_rep'],
+                            style: TextStyle(color: Color(0xff005fa8)),
+                          ),
+                          onTap: () {},
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -696,7 +881,7 @@ class _UniversityPageState extends State<UniversityPage> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
                       Text(
-                        'IN STATE',
+                        'IN STATE:',
                         style: TextStyle(
                             color: Colors.black.withOpacity(0.65),
                             fontSize: 13),
@@ -719,7 +904,7 @@ class _UniversityPageState extends State<UniversityPage> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
                       Text(
-                        'OUT OF STATE',
+                        'OUT OF STATE:',
                         style: TextStyle(
                             color: Colors.black.withOpacity(0.65),
                             fontSize: 13),
@@ -742,7 +927,7 @@ class _UniversityPageState extends State<UniversityPage> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
                       Text(
-                        'INTERNATIONAL',
+                        'INTERNATIONAL:',
                         style: TextStyle(
                             color: Colors.black.withOpacity(0.65),
                             fontSize: 13),
@@ -779,6 +964,29 @@ class _UniversityPageState extends State<UniversityPage> {
                     ),
                   ),
                 ],
+                Padding(
+                  padding: EdgeInsets.only(left: 18),
+                  child: Text(
+                    'Application & Dates',
+                    style: TextStyle(color: Colors.black87, fontSize: 20),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 23, top: 1, right: 16),
+                  child: Container(
+                    child: Wrap(
+                      spacing: 4,
+                      direction: Axis.horizontal,
+                      children: appChips,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 15),
+                  child: Column(
+                    children: deadlines,
+                  ),
+                ),
                 if (documentChips.isNotEmpty) ...[
                   Padding(
                     padding: EdgeInsets.only(left: 18),
