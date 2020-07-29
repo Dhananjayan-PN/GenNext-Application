@@ -43,11 +43,11 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
   Future<void> getUniversity(int id) async {
     String tok = await getToken();
     final response = await http.get(
-      dom + 'api/university/',
+      dom + 'api/university/profile',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
     );
     if (response.statusCode == 200) {
-      return json.decode(response.body)['recommended_universities'];
+      return json.decode(response.body)['data??'];
     } else {
       throw 'failed';
     }
@@ -62,7 +62,7 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
           user: newUser,
           name: newUser.firstname + ' ' + newUser.lastname,
           email: newUser.email),
-      appBar: CustomAppBar('Profile'),
+      appBar: CustomAppBar('UniveProfile'),
       body: Container(),
     );
   }
