@@ -493,9 +493,8 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                                         EdgeInsets.only(right: 28, bottom: 20),
                                     child: ClipOval(
                                       child: Material(
-                                        elevation: 4,
                                         shape: CircleBorder(),
-                                        color: Colors.black.withOpacity(0.25),
+                                        color: Colors.black.withOpacity(0.4),
                                         child: IconButton(
                                           iconSize: 30,
                                           color: Colors.white,
