@@ -89,6 +89,39 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
     }
   }
 
+  Future<void> editCost(Map profile, List<int> costs) async {
+    String tok = await getToken();
+    final response = await http
+        .put(
+          dom + 'api/university/edit-profile',
+          headers: {
+            HttpHeaders.authorizationHeader: "Token $tok",
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(
+            <String, dynamic>{
+              'university_id': profile['university_id'],
+              'cost_of_attendance': '${costs[0]}:${costs[1]}:${costs[2]}',
+            },
+          ),
+        )
+        .timeout(Duration(seconds: 10));
+    print(response.body);
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (data['Response'] == 'University successfully edited.') {
+        Navigator.pop(context);
+        refresh();
+      } else {
+        Navigator.pop(context);
+        error(context);
+      }
+    } else {
+      Navigator.pop(context);
+      error(context);
+    }
+  }
+
   void refresh() {
     setState(() {
       uniData = getUniversity();
@@ -860,12 +893,20 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                                 ),
                               ),
                               onTap: () async {
-                                final data = await Navigator.push(
+                                final List<int> data = await Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => EditCost(),
+                                    builder: (context) => EditCost(
+                                      inState: snapshot.data['in_state_cost'],
+                                      outOfState:
+                                          snapshot.data['out_of_state_cost'],
+                                      international:
+                                          snapshot.data['international_cost'],
+                                    ),
                                   ),
                                 );
+                                editCost(snapshot.data, data);
+                                loading(context);
                               },
                             )
                           ],
@@ -1320,13 +1361,25 @@ class _EditTopMajorsState extends State<EditTopMajors> {
 }
 
 class EditCost extends StatefulWidget {
+  final int inState;
+  final int outOfState;
+  final int international;
+  EditCost({@required this.inState, this.outOfState, this.international});
   @override
   _EditCostState createState() => _EditCostState();
 }
 
 class _EditCostState extends State<EditCost> {
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  TextEditingController _inState = TextEditingController();
+  TextEditingController _outOfState = TextEditingController();
+  TextEditingController _international = TextEditingController();
+
   @override
   void initState() {
+    _inState.text = widget.inState.toString();
+    _outOfState.text = widget.outOfState.toString();
+    _international.text = widget.international.toString();
     super.initState();
   }
 
@@ -1344,13 +1397,116 @@ class _EditCostState extends State<EditCost> {
                   TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
             ),
             onPressed: () {
-              Navigator.pop(context);
+              if (_formKey.currentState.validate()) {
+                List<int> data = [
+                  int.parse(_inState.text),
+                  int.parse(_outOfState.text),
+                  int.parse(_international.text),
+                ];
+                Navigator.pop(context, data);
+              }
             },
           )
         ],
         title: Text('Edit Cost', maxLines: 1),
       ),
-      body: Container(),
+      body: Form(
+        key: _formKey,
+        child: ListView(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(left: 25, top: 30),
+              child: Text(
+                'In-State Cost',
+                style: TextStyle(fontSize: 20, color: Colors.black87),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 25, right: 25, top: 0),
+              child: Theme(
+                data: ThemeData(primaryColor: Color(0xff005fa8)),
+                child: TextFormField(
+                  cursorColor: Color(0xff005fa8),
+                  keyboardType: TextInputType.number,
+                  controller: _inState,
+                  decoration: InputDecoration(
+                    border: UnderlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Color(0xff005fa8), width: 0.0),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'This field is required';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 25, top: 35),
+              child: Text(
+                'Out-of-State Cost',
+                style: TextStyle(fontSize: 20, color: Colors.black87),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 25, right: 25),
+              child: Theme(
+                data: ThemeData(primaryColor: Color(0xff005fa8)),
+                child: TextFormField(
+                  cursorColor: Color(0xff005fa8),
+                  keyboardType: TextInputType.number,
+                  controller: _outOfState,
+                  decoration: InputDecoration(
+                    border: UnderlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Color(0xff005fa8), width: 0.0),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'This field is required';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 25, top: 35),
+              child: Text(
+                'International Cost',
+                style: TextStyle(fontSize: 20, color: Colors.black87),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 25, right: 25),
+              child: Theme(
+                data: ThemeData(primaryColor: Color(0xff005fa8)),
+                child: TextFormField(
+                  cursorColor: Color(0xff005fa8),
+                  keyboardType: TextInputType.number,
+                  controller: _international,
+                  decoration: InputDecoration(
+                    border: UnderlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Color(0xff005fa8), width: 0.0),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'This field is required';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }
