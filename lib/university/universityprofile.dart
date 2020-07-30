@@ -500,11 +500,22 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                                           color: Colors.white,
                                           icon: Icon(Icons.create),
                                           onPressed: () async {
-                                            final data = await Navigator.push(
+                                            final List data =
+                                                await Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    EditImages(),
+                                                    EditImages(
+                                                  imageUrl: snapshot
+                                                      .data['image_url'],
+                                                  logoUrl:
+                                                      snapshot.data['logo_url'],
+                                                  acceptance: int.parse(snapshot
+                                                      .data['acceptance_rate']
+                                                      .toString()
+                                                      .split('.')
+                                                      .first),
+                                                ),
                                               ),
                                             );
                                           },
@@ -1172,6 +1183,13 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
 }
 
 class EditImages extends StatefulWidget {
+  final String imageUrl;
+  final String logoUrl;
+  final int acceptance;
+  EditImages(
+      {@required this.imageUrl,
+      @required this.logoUrl,
+      @required this.acceptance});
   @override
   _EditImagesState createState() => _EditImagesState();
 }
@@ -1202,7 +1220,49 @@ class _EditImagesState extends State<EditImages> {
         ],
         title: Text('Edit Appearance', maxLines: 1),
       ),
-      body: Container(),
+      body: ListView(
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.all(10),
+            height: 300,
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(15)),
+              child: CachedNetworkImage(
+                fit: BoxFit.cover,
+                imageUrl: widget.imageUrl ??
+                    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
+                imageBuilder: (context, imageProvider) => Container(
+                  decoration: BoxDecoration(
+                    image: imageProvider != null
+                        ? DecorationImage(
+                            alignment: Alignment.center,
+                            colorFilter: ColorFilter.mode(
+                                Colors.black.withAlpha(50), BlendMode.darken),
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                          )
+                        : DecorationImage(
+                            image: NetworkImage(
+                                'https://www.shareicon.net/data/512x512/2016/08/18/814358_school_512x512.png',
+                                scale: 6.5),
+                          ),
+                  ),
+                ),
+                errorWidget: (context, url, error) => Container(
+                  decoration: BoxDecoration(
+                    color: Color(0xff005fa8),
+                    image: DecorationImage(
+                      image: NetworkImage(
+                          'https://www.shareicon.net/data/512x512/2016/08/18/814358_school_512x512.png',
+                          scale: 6.5),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
