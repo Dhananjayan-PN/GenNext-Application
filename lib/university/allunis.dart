@@ -747,11 +747,11 @@ class _UniversityPageState extends State<UniversityPage> {
                   ],
                 ),
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.only(left: 22, top: 8),
+                      padding: EdgeInsets.only(left: 22, top: 9),
                       child: Icon(
                         Icons.school,
                         color: Colors.black54,
@@ -804,7 +804,7 @@ class _UniversityPageState extends State<UniversityPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.only(left: 21, top: 5),
+                      padding: EdgeInsets.only(left: 22, top: 5),
                       child: Icon(
                         Icons.link,
                         color: Colors.black54,
@@ -812,7 +812,7 @@ class _UniversityPageState extends State<UniversityPage> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(left: 6, top: 5),
+                      padding: EdgeInsets.only(left: 7, top: 5),
                       child: InkWell(
                         child: Text(
                           'Visit Website',
