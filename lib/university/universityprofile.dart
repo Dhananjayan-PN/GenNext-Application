@@ -57,6 +57,38 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
     }
   }
 
+  Future<void> editAbout(Map profile, String newAbout) async {
+    String tok = await getToken();
+    final response = await http
+        .put(
+          dom + 'api/university/edit-profile',
+          headers: {
+            HttpHeaders.authorizationHeader: "Token $tok",
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(
+            <String, dynamic>{
+              'university_id': profile['university_id'],
+              'university_description': newAbout,
+            },
+          ),
+        )
+        .timeout(Duration(seconds: 10));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (data['Response'] == 'University successfully edited.') {
+        Navigator.pop(context);
+        refresh();
+      } else {
+        Navigator.pop(context);
+        error(context);
+      }
+    } else {
+      Navigator.pop(context);
+      error(context);
+    }
+  }
+
   void refresh() {
     setState(() {
       uniData = getUniversity();
@@ -725,12 +757,19 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                                 ),
                               ),
                               onTap: () async {
-                                final data = await Navigator.push(
+                                final String data = await Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => EditAbout(),
+                                    builder: (context) => EditAbout(
+                                      about: snapshot
+                                          .data['university_description'],
+                                    ),
                                   ),
                                 );
+                                if (data != null) {
+                                  editAbout(snapshot.data, data);
+                                  loading(context);
+                                }
                               },
                             )
                           ],
@@ -1165,13 +1204,19 @@ class _EditUniDetailsState extends State<EditUniDetails> {
 }
 
 class EditAbout extends StatefulWidget {
+  final String about;
+  EditAbout({@required this.about});
   @override
   _EditAboutState createState() => _EditAboutState();
 }
 
 class _EditAboutState extends State<EditAbout> {
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  TextEditingController _about = TextEditingController();
+
   @override
   void initState() {
+    _about.text = widget.about;
     super.initState();
   }
 
@@ -1189,13 +1234,51 @@ class _EditAboutState extends State<EditAbout> {
                   TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
             ),
             onPressed: () {
-              Navigator.pop(context);
+              if (_formKey.currentState.validate()) {
+                Navigator.pop(context, _about.text);
+              }
             },
           )
         ],
         title: Text('Edit About', maxLines: 1),
       ),
-      body: Container(),
+      body: Form(
+        key: _formKey,
+        child: ListView(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(left: 25, top: 30),
+              child: Text(
+                'About',
+                style: TextStyle(fontSize: 25, color: Colors.black87),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 25, right: 25, top: 10),
+              child: Theme(
+                data: ThemeData(primaryColor: Color(0xff005fa8)),
+                child: TextFormField(
+                  cursorColor: Color(0xff005fa8),
+                  controller: _about,
+                  maxLines: null,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Color(0xff005fa8), width: 0.0),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'This field is required';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
     );
   }
 }
