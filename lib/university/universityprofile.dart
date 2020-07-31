@@ -232,6 +232,48 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
     }
   }
 
+  Future<void> editTesting(Map profile, List newTesting) async {
+    String tok = await getToken();
+    String newTestingString = '[';
+    for (int i = 0; i < newTesting.length; i++) {
+      if (i == 0) {
+        newTestingString += r"'" + newTesting[0] + r"'";
+      } else {
+        newTestingString += ", " + r"'" + newTesting[i] + r"'";
+      }
+    }
+    final response = await http
+        .put(
+          dom + 'api/university/edit-profile',
+          headers: {
+            HttpHeaders.authorizationHeader: "Token $tok",
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(
+            <String, dynamic>{
+              'university_id': profile['university_id'],
+              'testing_requirements': newTestingString + ']',
+            },
+          ),
+        )
+        .timeout(Duration(seconds: 10));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (data['Response'] == 'University successfully edited.') {
+        Navigator.pop(context);
+        refresh();
+      } else {
+        Navigator.pop(context);
+        error(context);
+        refresh();
+      }
+    } else {
+      Navigator.pop(context);
+      error(context);
+      refresh();
+    }
+  }
+
   void refresh() {
     setState(() {
       uniData = getUniversity();
@@ -988,7 +1030,7 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                                 ),
                               ),
                               onTap: () async {
-                                final List newTopMajors = await Navigator.push(
+                                final List data = await Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => EditTopMajors(
@@ -997,8 +1039,8 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                                   ),
                                 );
                                 refresh();
-                                if (newTopMajors != null) {
-                                  editTopMajors(snapshot.data, newTopMajors);
+                                if (data != null) {
+                                  editTopMajors(snapshot.data, data);
                                   loading(context);
                                 }
                               },
@@ -1008,7 +1050,7 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                       ),
                       Padding(
                         padding: EdgeInsets.only(
-                            left: 20, top: 2, right: 16, bottom: 20),
+                            left: 21, top: 2, right: 16, bottom: 20),
                         child: topMajors.isNotEmpty
                             ? Wrap(
                                 spacing: 4,
@@ -1016,7 +1058,7 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                                 children: topMajors,
                               )
                             : Text(
-                                'No Top majors',
+                                'No Top Majors',
                                 style: TextStyle(
                                   color: Colors.black54,
                                   fontSize: 12,
@@ -1156,12 +1198,20 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                                 ),
                               ),
                               onTap: () async {
-                                final data = await Navigator.push(
+                                final List data = await Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => EditTesting(),
+                                    builder: (context) => EditTesting(
+                                      curTesting:
+                                          snapshot.data['testing_requirements'],
+                                    ),
                                   ),
                                 );
+                                refresh();
+                                if (data != null) {
+                                  editTesting(snapshot.data, data);
+                                  loading(context);
+                                }
                               },
                             )
                           ],
@@ -1169,7 +1219,7 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                       ),
                       Padding(
                         padding: EdgeInsets.only(
-                            left: 22, top: 2, right: 16, bottom: 20),
+                            left: 21, top: 2, right: 16, bottom: 20),
                         child: testingReqs.isNotEmpty
                             ? Container(
                                 child: Wrap(
@@ -1272,7 +1322,7 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                             Spacer(),
                             InkWell(
                               child: Text(
-                                'EDIT',
+                                'ADD',
                                 style: TextStyle(
                                   fontSize: 13,
                                   color: Color(0xff005fa8),
@@ -1283,7 +1333,7 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                                 final data = await Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => EditDocuments(),
+                                    builder: (context) => AddDocument(),
                                   ),
                                 );
                               },
@@ -1293,7 +1343,7 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                       ),
                       Padding(
                         padding: EdgeInsets.only(
-                            left: 20, top: 2, right: 1, bottom: 20),
+                            left: 21, top: 2, right: 1, bottom: 20),
                         child: documentChips.isNotEmpty
                             ? Wrap(
                                 spacing: 4,
@@ -1741,18 +1791,59 @@ class _EditCostState extends State<EditCost> {
 }
 
 class EditTesting extends StatefulWidget {
+  final List curTesting;
+  EditTesting({@required this.curTesting});
   @override
   _EditTestingState createState() => _EditTestingState();
 }
 
 class _EditTestingState extends State<EditTesting> {
+  List newTesting;
+  List options = ['SAT', 'ACT', 'SAT Subject', 'TOEFL', 'IELTS', 'AP'];
+  List<Widget> testOptions;
+
   @override
   void initState() {
     super.initState();
+    newTesting = widget.curTesting;
   }
 
   @override
   Widget build(BuildContext context) {
+    testOptions = [];
+    for (int i = 0; i < options.length; i++) {
+      testOptions.add(
+        Material(
+          color: Colors.transparent,
+          child: ListTile(
+              key: Key(options[i]),
+              leading: Checkbox(
+                activeColor: Color(0xff005fa8),
+                value: newTesting.contains(options[i]),
+                onChanged: (newValue) {
+                  if (newTesting.contains(options[i])) {
+                    newTesting.remove(options[i]);
+                  } else {
+                    newTesting.add(options[i]);
+                  }
+                  setState(() {});
+                },
+              ),
+              title: Text(
+                options[i],
+                style: TextStyle(color: Colors.black, fontSize: 17),
+              ),
+              onTap: () {
+                if (newTesting.contains(options[i])) {
+                  newTesting.remove(options[i]);
+                } else {
+                  newTesting.add(options[i]);
+                }
+                setState(() {});
+              }),
+        ),
+      );
+    }
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -1765,13 +1856,29 @@ class _EditTestingState extends State<EditTesting> {
                   TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
             ),
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pop(context, newTesting);
             },
           )
         ],
         title: Text('Edit Testing', maxLines: 1),
       ),
-      body: Container(),
+      body: ListView(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(left: 20, top: 30),
+            child: Text(
+              'Testing',
+              style: TextStyle(fontSize: 25, color: Colors.black87),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 10),
+            child: Column(
+              children: testOptions,
+            ),
+          )
+        ],
+      ),
     );
   }
 }
@@ -1812,12 +1919,12 @@ class _EditApplicationState extends State<EditApplication> {
   }
 }
 
-class EditDocuments extends StatefulWidget {
+class AddDocument extends StatefulWidget {
   @override
-  _EditDocumentsState createState() => _EditDocumentsState();
+  _AddDocumentState createState() => _AddDocumentState();
 }
 
-class _EditDocumentsState extends State<EditDocuments> {
+class _AddDocumentState extends State<AddDocument> {
   @override
   void initState() {
     super.initState();
