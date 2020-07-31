@@ -158,6 +158,48 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
     }
   }
 
+  Future<void> editTopMajors(Map profile, List newTopMajors) async {
+    String tok = await getToken();
+    String newMajorString = '[';
+    for (int i = 0; i < newTopMajors.length; i++) {
+      if (i == 0) {
+        newMajorString += r"'" + newTopMajors[0] + r"'";
+      } else {
+        newMajorString += ", " + r"'" + newTopMajors[i] + r"'";
+      }
+    }
+    final response = await http
+        .put(
+          dom + 'api/university/edit-profile',
+          headers: {
+            HttpHeaders.authorizationHeader: "Token $tok",
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(
+            <String, dynamic>{
+              'university_id': profile['university_id'],
+              'top_majors': newMajorString + ']',
+            },
+          ),
+        )
+        .timeout(Duration(seconds: 10));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (data['Response'] == 'University successfully edited.') {
+        Navigator.pop(context);
+        refresh();
+      } else {
+        Navigator.pop(context);
+        error(context);
+        refresh();
+      }
+    } else {
+      Navigator.pop(context);
+      error(context);
+      refresh();
+    }
+  }
+
   Future<void> editCost(Map profile, List<int> costs) async {
     String tok = await getToken();
     final response = await http
@@ -175,7 +217,6 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
           ),
         )
         .timeout(Duration(seconds: 10));
-    print(response.body);
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       if (data['Response'] == 'University successfully edited.') {
@@ -947,12 +988,19 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                                 ),
                               ),
                               onTap: () async {
-                                final data = await Navigator.push(
+                                final List newTopMajors = await Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => EditTopMajors(),
+                                    builder: (context) => EditTopMajors(
+                                      curMajors: snapshot.data['top_majors'],
+                                    ),
                                   ),
                                 );
+                                refresh();
+                                if (newTopMajors != null) {
+                                  editTopMajors(snapshot.data, newTopMajors);
+                                  loading(context);
+                                }
                               },
                             )
                           ],
@@ -1275,90 +1323,6 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
   }
 }
 
-class EditImages extends StatefulWidget {
-  final String imageUrl;
-  final String logoUrl;
-  final int acceptance;
-  EditImages(
-      {@required this.imageUrl,
-      @required this.logoUrl,
-      @required this.acceptance});
-  @override
-  _EditImagesState createState() => _EditImagesState();
-}
-
-class _EditImagesState extends State<EditImages> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Color(0xff005fa8),
-        actions: <Widget>[
-          FlatButton(
-            child: Text(
-              'SAVE',
-              style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          )
-        ],
-        title: Text('Edit Appearance', maxLines: 1),
-      ),
-      body: ListView(
-        children: <Widget>[
-          Container(
-            height: 300,
-            child: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(1)),
-              child: CachedNetworkImage(
-                fit: BoxFit.cover,
-                imageUrl: widget.imageUrl ??
-                    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
-                imageBuilder: (context, imageProvider) => Container(
-                  decoration: BoxDecoration(
-                    image: imageProvider != null
-                        ? DecorationImage(
-                            alignment: Alignment.center,
-                            colorFilter: ColorFilter.mode(
-                                Colors.black.withAlpha(50), BlendMode.darken),
-                            image: imageProvider,
-                            fit: BoxFit.cover,
-                          )
-                        : DecorationImage(
-                            image: NetworkImage(
-                                'https://www.shareicon.net/data/512x512/2016/08/18/814358_school_512x512.png',
-                                scale: 6.5),
-                          ),
-                  ),
-                ),
-                errorWidget: (context, url, error) => Container(
-                  decoration: BoxDecoration(
-                    color: Color(0xff005fa8),
-                    image: DecorationImage(
-                      image: NetworkImage(
-                          'https://www.shareicon.net/data/512x512/2016/08/18/814358_school_512x512.png',
-                          scale: 6.5),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class EditUniDetails extends StatefulWidget {
   @override
   _EditUniDetailsState createState() => _EditUniDetailsState();
@@ -1476,18 +1440,54 @@ class _EditAboutState extends State<EditAbout> {
 }
 
 class EditTopMajors extends StatefulWidget {
+  final List curMajors;
+  EditTopMajors({@required this.curMajors});
   @override
   _EditTopMajorsState createState() => _EditTopMajorsState();
 }
 
 class _EditTopMajorsState extends State<EditTopMajors> {
+  TextEditingController _major = TextEditingController();
+  List tms;
+  List<Widget> chips;
+
   @override
   void initState() {
     super.initState();
+    tms = widget.curMajors;
   }
 
   @override
   Widget build(BuildContext context) {
+    chips = [];
+    for (int i = 0; i < tms.length; i++) {
+      chips.add(
+        Chip(
+          visualDensity: VisualDensity.compact,
+          labelPadding: EdgeInsets.only(left: 10, top: 1, bottom: 1),
+          padding: EdgeInsets.only(left: 3),
+          backgroundColor: Colors.white12,
+          shape: StadiumBorder(
+              side: BorderSide(color: Color(0xff005fa8), width: 0.0)),
+          label: Text(
+            tms[i],
+            overflow: TextOverflow.ellipsis,
+            style:
+                TextStyle(fontSize: 11, color: Colors.black.withOpacity(0.8)),
+          ),
+          elevation: 1,
+          deleteIcon: Icon(
+            Icons.close,
+            size: 22,
+          ),
+          onDeleted: () {
+            setState(() {
+              tms.remove(tms[i]);
+            });
+          },
+        ),
+      );
+    }
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -1500,13 +1500,91 @@ class _EditTopMajorsState extends State<EditTopMajors> {
                   TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
             ),
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pop(context, tms);
             },
           )
         ],
         title: Text('Edit Top Majors', maxLines: 1),
       ),
-      body: Container(),
+      body: ListView(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(left: 20, top: 30),
+            child: Text(
+              'Top majors',
+              style: TextStyle(fontSize: 25, color: Colors.black87),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 21, top: 2, right: 15, bottom: 20),
+            child: tms.isNotEmpty
+                ? Wrap(
+                    spacing: 4,
+                    direction: Axis.horizontal,
+                    children: chips,
+                  )
+                : Padding(
+                    padding: EdgeInsets.only(left: 3, top: 5),
+                    child: Text(
+                      'No Top Majors',
+                      style: TextStyle(
+                        color: Colors.black54,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 25, right: 25, top: 0),
+            child: Row(
+              children: <Widget>[
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.55,
+                  child: Theme(
+                    data: ThemeData(primaryColor: Color(0xff005fa8)),
+                    child: TextFormField(
+                      cursorColor: Color(0xff005fa8),
+                      keyboardType: TextInputType.number,
+                      controller: _major,
+                      decoration: InputDecoration(
+                        border: UnderlineInputBorder(
+                          borderSide:
+                              BorderSide(color: Color(0xff005fa8), width: 0.0),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'This field is required';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 10, top: 5),
+                  child: RaisedButton(
+                    elevation: 2,
+                    color: Color(0xff005fa8),
+                    textColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    child: Text('ADD'),
+                    onPressed: () async {
+                      if (_major.text.isNotEmpty) {
+                        setState(() {
+                          tms.add(_major.text);
+                          _major.clear();
+                        });
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
