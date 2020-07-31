@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart' as dio;
 import '../imports.dart';
 import 'home.dart';
 
@@ -54,6 +55,74 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
       return json.decode(response.body)['university_data'];
     } else {
       throw 'failed';
+    }
+  }
+
+  Future<void> editImage(Map profile, File image) async {
+    String tok = await getToken();
+    var dioRequest = dio.Dio();
+    dioRequest.options.headers = {
+      HttpHeaders.authorizationHeader: "Token $tok",
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+    var formData = dio.FormData.fromMap({
+      'university_id': profile['university_id'],
+    });
+    var file = await dio.MultipartFile.fromFile(
+      image.path,
+    );
+    formData.files.add(MapEntry('university_image', file));
+    var response = await dioRequest.put(
+      dom + 'api/university/edit-profile',
+      data: formData,
+    );
+    if (response.statusCode == 200) {
+      if (response.data['Response'] == 'University successfully edited.') {
+        Navigator.pop(context);
+        refresh();
+      } else {
+        Navigator.pop(context);
+        error(context);
+        refresh();
+      }
+    } else {
+      Navigator.pop(context);
+      error(context);
+      refresh();
+    }
+  }
+
+  Future<void> editLogo(Map profile, File image) async {
+    String tok = await getToken();
+    var dioRequest = dio.Dio();
+    dioRequest.options.headers = {
+      HttpHeaders.authorizationHeader: "Token $tok",
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+    var formData = dio.FormData.fromMap({
+      'university_id': profile['university_id'],
+    });
+    var file = await dio.MultipartFile.fromFile(
+      image.path,
+    );
+    formData.files.add(MapEntry('university_logo', file));
+    var response = await dioRequest.put(
+      dom + 'api/university/edit-profile',
+      data: formData,
+    );
+    if (response.statusCode == 200) {
+      if (response.data['Response'] == 'University successfully edited.') {
+        Navigator.pop(context);
+        refresh();
+      } else {
+        Navigator.pop(context);
+        error(context);
+        refresh();
+      }
+    } else {
+      Navigator.pop(context);
+      error(context);
+      refresh();
     }
   }
 
@@ -418,12 +487,50 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                                   Padding(
                                     padding:
                                         EdgeInsets.only(bottom: 42, right: 20),
-                                    child: CircleAvatar(
-                                      backgroundImage:
-                                          CachedNetworkImageProvider(
-                                              snapshot.data['logo_url']),
-                                      backgroundColor: Colors.white,
-                                      radius: 33,
+                                    child: Stack(
+                                      children: <Widget>[
+                                        CircleAvatar(
+                                          backgroundImage:
+                                              CachedNetworkImageProvider(
+                                            snapshot.data['logo_url'],
+                                          ),
+                                          backgroundColor: Colors.white,
+                                          radius: 33,
+                                        ),
+                                        ClipOval(
+                                          child: Material(
+                                            color: Colors.transparent,
+                                            child: InkWell(
+                                              child: Container(
+                                                height: 66,
+                                                width: 66,
+                                                color: Colors.black
+                                                    .withOpacity(0.35),
+                                                child: Center(
+                                                    child: Text(
+                                                  'EDIT',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 11,
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
+                                                )),
+                                              ),
+                                              onTap: () async {
+                                                File image =
+                                                    await FilePicker.getFile(
+                                                  type: FileType.image,
+                                                );
+                                                if (image != null) {
+                                                  editLogo(
+                                                      snapshot.data, image);
+                                                  loading(context);
+                                                }
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
@@ -500,24 +607,14 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                                           color: Colors.white,
                                           icon: Icon(Icons.create),
                                           onPressed: () async {
-                                            final List data =
-                                                await Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    EditImages(
-                                                  imageUrl: snapshot
-                                                      .data['image_url'],
-                                                  logoUrl:
-                                                      snapshot.data['logo_url'],
-                                                  acceptance: int.parse(snapshot
-                                                      .data['acceptance_rate']
-                                                      .toString()
-                                                      .split('.')
-                                                      .first),
-                                                ),
-                                              ),
+                                            File image =
+                                                await FilePicker.getFile(
+                                              type: FileType.image,
                                             );
+                                            if (image != null) {
+                                              editImage(snapshot.data, image);
+                                              loading(context);
+                                            }
                                           },
                                         ),
                                       ),
@@ -1223,10 +1320,9 @@ class _EditImagesState extends State<EditImages> {
       body: ListView(
         children: <Widget>[
           Container(
-            margin: EdgeInsets.all(10),
             height: 300,
             child: ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(15)),
+              borderRadius: BorderRadius.all(Radius.circular(1)),
               child: CachedNetworkImage(
                 fit: BoxFit.cover,
                 imageUrl: widget.imageUrl ??
