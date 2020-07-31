@@ -804,36 +804,32 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                           ),
                         ],
                       ),
-                      if (snapshot.data['university_rep'] !=
-                              'college_genie_representative' &&
-                          snapshot.data['university_rep'] != null) ...[
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(left: 22, top: 5),
-                              child: Icon(
-                                Icons.person,
-                                color: Colors.black54,
-                                size: 22,
-                              ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(left: 22, top: 5),
+                            child: Icon(
+                              Icons.person,
+                              color: Colors.black54,
+                              size: 22,
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 5, top: 5),
-                              child: InkWell(
-                                child: Text(
-                                  '@' + snapshot.data['university_rep'],
-                                  style: TextStyle(
-                                    color: Color(0xff005fa8),
-                                  ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 5, top: 5),
+                            child: InkWell(
+                              child: Text(
+                                '@' + snapshot.data['university_rep'],
+                                style: TextStyle(
+                                  color: Color(0xff005fa8),
                                 ),
-                                onTap: () {},
                               ),
+                              onTap: () {},
                             ),
-                          ],
-                        ),
-                      ],
+                          ),
+                        ],
+                      ),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.start,
