@@ -52,7 +52,17 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
     );
     if (response.statusCode == 200) {
-      return json.decode(response.body)['university_data'];
+      final result = await http.get(
+        dom + 'api/university/get-documents',
+        headers: {HttpHeaders.authorizationHeader: "Token $tok"},
+      );
+      if (result.statusCode == 200) {
+        Map uni_data = json.decode(response.body)['university_data'];
+        uni_data['document_data'] = json.decode(result.body)['document_data'];
+        return uni_data;
+      } else {
+        throw 'failed';
+      }
     } else {
       throw 'failed';
     }
@@ -126,6 +136,61 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
     }
   }
 
+  Future<void> editDetails(Map profile, List details) async {
+    String tok = await getToken();
+    String newFactors = '[';
+    String newDegrees = '[';
+    for (int i = 0; i < details[5].length; i++) {
+      if (i == 0) {
+        newFactors += r'"' + details[5][0] + r'"';
+      } else {
+        newFactors += ", " + r'"' + details[5][i] + r'"';
+      }
+    }
+    for (int i = 0; i < details[3].length; i++) {
+      if (i == 0) {
+        newDegrees += r'"' + details[3][0] + r'"';
+      } else {
+        newDegrees += ", " + r'"' + details[3][i] + r'"';
+      }
+    }
+    final response = await http
+        .put(
+          dom + 'api/university/edit-profile',
+          headers: {
+            HttpHeaders.authorizationHeader: "Token $tok",
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(
+            <String, dynamic>{
+              'university_id': profile['university_id'],
+              'degree_levels':
+                  newDegrees + ']' == '[]' ? null : newDegrees + ']',
+              'university_stand_out_factors':
+                  newFactors + ']' == '[]' ? null : newFactors + ']',
+              // 'acceptance_rate': details[0],
+              'university_ranking': details[1],
+              'university_research_or_not': details[2],
+              'website': details[4]
+            },
+          ),
+        )
+        .timeout(Duration(seconds: 10));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (data['Response'] == 'University successfully edited.') {
+        Navigator.pop(context);
+        refresh();
+      } else {
+        Navigator.pop(context);
+        error(context);
+      }
+    } else {
+      Navigator.pop(context);
+      error(context);
+    }
+  }
+
   Future<void> editAbout(Map profile, String newAbout) async {
     String tok = await getToken();
     final response = await http
@@ -163,9 +228,9 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
     String newMajorString = '[';
     for (int i = 0; i < newTopMajors.length; i++) {
       if (i == 0) {
-        newMajorString += r"'" + newTopMajors[0] + r"'";
+        newMajorString += r'"' + newTopMajors[0] + r'"';
       } else {
-        newMajorString += ", " + r"'" + newTopMajors[i] + r"'";
+        newMajorString += ", " + r'"' + newTopMajors[i] + r'"';
       }
     }
     final response = await http
@@ -178,7 +243,8 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
           body: jsonEncode(
             <String, dynamic>{
               'university_id': profile['university_id'],
-              'top_majors': newMajorString + ']',
+              'top_majors':
+                  newMajorString + ']' == '[]' ? null : newMajorString + ']',
             },
           ),
         )
@@ -237,9 +303,9 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
     String newTestingString = '[';
     for (int i = 0; i < newTesting.length; i++) {
       if (i == 0) {
-        newTestingString += r"'" + newTesting[0] + r"'";
+        newTestingString += r'"' + newTesting[0] + r'"';
       } else {
-        newTestingString += ", " + r"'" + newTesting[i] + r"'";
+        newTestingString += ", " + r'"' + newTesting[i] + r'"';
       }
     }
     final response = await http
@@ -252,7 +318,9 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
           body: jsonEncode(
             <String, dynamic>{
               'university_id': profile['university_id'],
-              'testing_requirements': newTestingString + ']',
+              'testing_requirements': newTestingString + ']' == '[]'
+                  ? null
+                  : newTestingString + ']',
             },
           ),
         )
@@ -274,10 +342,149 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
     }
   }
 
+  Future<void> addDocument(Map profile, String title, File document) async {
+    try {
+      String tok = await getToken();
+      var dioRequest = dio.Dio();
+      dioRequest.options.headers = {
+        HttpHeaders.authorizationHeader: "Token $tok",
+        'Content-Type': 'application/x-www-form-urlencoded',
+      };
+      var formData = dio.FormData.fromMap({
+        'university_id': profile['university_id'],
+        'title': title,
+      });
+      var file = await dio.MultipartFile.fromFile(
+        document.path,
+      );
+      formData.files.add(MapEntry('document', file));
+      var response = await dioRequest.post(
+        dom + 'api/university/create-document/',
+        data: formData,
+      );
+      if (response.statusCode == 200) {
+        if (response.data['Response'] ==
+            'University document successfully created.') {
+          Navigator.pop(context);
+          refresh();
+        } else {
+          Navigator.pop(context);
+          error(context);
+          refresh();
+        }
+      } else {
+        Navigator.pop(context);
+        error(context);
+        refresh();
+      }
+    } catch (e) {
+      Navigator.pop(context);
+      error(context);
+      refresh();
+    }
+  }
+
+  Future<void> deleteDocument(Map profile, int documentID) async {
+    String tok = await getToken();
+    final response = await http
+        .put(
+          dom + 'api/university/delete-document/$documentID',
+          headers: {
+            HttpHeaders.authorizationHeader: "Token $tok",
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(
+            <String, dynamic>{
+              'university_id': profile['university_id'],
+            },
+          ),
+        )
+        .timeout(Duration(seconds: 10));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (data['Response'] == 'University document successfully deleted.') {
+        Navigator.pop(context);
+        refresh();
+      } else {
+        Navigator.pop(context);
+        error(context);
+      }
+    } else {
+      Navigator.pop(context);
+      error(context);
+    }
+  }
+
   void refresh() {
     setState(() {
       uniData = getUniversity();
     });
+  }
+
+  _deleteDocument(Map profile, int documentId) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(0),
+          elevation: 20,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          content: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(top: 18),
+                  child: Icon(
+                    Icons.delete,
+                    size: 40,
+                    color: Colors.red.withOpacity(0.9),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 5),
+                  child: Text(
+                    'Are you sure you want to delete\nthis document?',
+                    style: TextStyle(color: Colors.black, fontSize: 14),
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: Color(0xff005fa8)),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            FlatButton(
+              child: Text(
+                'Delete',
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+                deleteDocument(profile, documentId);
+                loading(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -400,24 +607,46 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
             if (snapshot.data['document_data'] != null) {
               for (int i = 0; i < snapshot.data['document_data'].length; i++) {
                 documentChips.add(
-                  ActionChip(
-                    avatar: Icon(
-                      Icons.insert_drive_file,
-                      size: 18,
-                      color: Color(0xff005fa8),
+                  InkWell(
+                    child: Card(
+                      shape: StadiumBorder(
+                        side: BorderSide(color: Color(0xff005fa8), width: 0.0),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Padding(
+                            padding:
+                                EdgeInsets.only(top: 5, left: 10, bottom: 5),
+                            child: Text(
+                              snapshot.data['document_data'][i]
+                                  ['document_title'],
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.black.withOpacity(0.8),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(right: 5, left: 1),
+                            child: InkWell(
+                              child: Icon(
+                                Icons.close,
+                                size: 21,
+                              ),
+                              onTap: () {
+                                _deleteDocument(
+                                    snapshot.data,
+                                    snapshot.data['document_data'][i]
+                                        ['document_id']);
+                              },
+                            ),
+                          )
+                        ],
+                      ),
+                      elevation: 1,
                     ),
-                    labelPadding: EdgeInsets.only(right: 5),
-                    visualDensity: VisualDensity.compact,
-                    backgroundColor: Colors.white12,
-                    shape: StadiumBorder(
-                        side: BorderSide(color: Color(0xff005fa8), width: 0.0)),
-                    label: Text(
-                      snapshot.data['document_data'][i]['document_name'],
-                      style: TextStyle(
-                          fontSize: 12.5, color: Colors.black.withOpacity(0.8)),
-                    ),
-                    elevation: 1,
-                    onPressed: () {
+                    onTap: () {
                       launch(snapshot.data['document_data'][i]['document_url']);
                     },
                   ),
@@ -758,12 +987,32 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                                   ),
                                 ),
                                 onTap: () async {
-                                  final data = await Navigator.push(
+                                  final List data = await Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => EditUniDetails(),
+                                      builder: (context) => EditUniDetails(
+                                        research:
+                                            snapshot.data['research_or_not'],
+                                        website: snapshot.data['website_url'],
+                                        acceptance: int.parse(snapshot
+                                            .data['acceptance_rate']
+                                            .toString()
+                                            .split('.')
+                                            .first),
+                                        ranking:
+                                            snapshot.data['usnews_ranking'],
+                                        degreeLevels:
+                                            snapshot.data['degree_levels'],
+                                        standOutFactors:
+                                            snapshot.data['stand_out_factors'],
+                                      ),
                                     ),
                                   );
+                                  refresh();
+                                  if (data != null) {
+                                    editDetails(snapshot.data, data);
+                                    loading(context);
+                                  }
                                 },
                               ),
                             )
@@ -1307,7 +1556,7 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                               ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(left: 18, right: 25),
+                        padding: EdgeInsets.only(left: 20, right: 25),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
@@ -1330,12 +1579,14 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                                 ),
                               ),
                               onTap: () async {
-                                final data = await Navigator.push(
+                                final List data = await Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => AddDocument(),
                                   ),
                                 );
+                                addDocument(snapshot.data, data[0], data[1]);
+                                loading(context);
                               },
                             )
                           ],
@@ -1343,18 +1594,21 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                       ),
                       Padding(
                         padding: EdgeInsets.only(
-                            left: 21, top: 2, right: 1, bottom: 20),
+                            left: 20, top: 3, right: 1, bottom: 25),
                         child: documentChips.isNotEmpty
                             ? Wrap(
                                 spacing: 4,
                                 direction: Axis.horizontal,
                                 children: documentChips,
                               )
-                            : Text(
-                                'No Documents',
-                                style: TextStyle(
-                                  color: Colors.black54,
-                                  fontSize: 12,
+                            : Padding(
+                                padding: EdgeInsets.only(left: 1),
+                                child: Text(
+                                  'No Documents',
+                                  style: TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: 12,
+                                  ),
                                 ),
                               ),
                       ),
@@ -1374,18 +1628,109 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
 }
 
 class EditUniDetails extends StatefulWidget {
+  final bool research;
+  final String website;
+  final int acceptance;
+  final int ranking;
+  final List degreeLevels;
+  final List standOutFactors;
+  EditUniDetails({
+    @required this.research,
+    @required this.website,
+    @required this.acceptance,
+    @required this.ranking,
+    @required this.degreeLevels,
+    @required this.standOutFactors,
+  });
   @override
   _EditUniDetailsState createState() => _EditUniDetailsState();
 }
 
 class _EditUniDetailsState extends State<EditUniDetails> {
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  TextEditingController _website = TextEditingController();
+  TextEditingController _acceptance = TextEditingController();
+  TextEditingController _ranking = TextEditingController();
+  TextEditingController _addDegree = TextEditingController();
+  TextEditingController _addFactor = TextEditingController();
+
+  List _standOutFactors;
+  List<Widget> factorChips;
+  List _degreeLevels;
+  List<Widget> degreeChips;
+  bool _research;
+
   @override
   void initState() {
     super.initState();
+    _research = widget.research;
+    _website.text = widget.website;
+    _ranking.text = widget.ranking.toString();
+    _acceptance.text = widget.acceptance.toString();
+    _standOutFactors = widget.standOutFactors ?? [];
+    _degreeLevels = widget.degreeLevels ?? [];
   }
 
   @override
   Widget build(BuildContext context) {
+    factorChips = [];
+    degreeChips = [];
+    for (int i = 0; i < _standOutFactors.length; i++) {
+      factorChips.add(
+        Chip(
+          visualDensity: VisualDensity.compact,
+          labelPadding: EdgeInsets.only(left: 10, top: 1, bottom: 1),
+          padding: EdgeInsets.only(left: 3),
+          backgroundColor: Colors.white12,
+          shape: StadiumBorder(
+              side: BorderSide(color: Color(0xff005fa8), width: 0.0)),
+          label: Text(
+            _standOutFactors[i],
+            overflow: TextOverflow.ellipsis,
+            style:
+                TextStyle(fontSize: 11, color: Colors.black.withOpacity(0.8)),
+          ),
+          elevation: 1,
+          deleteIcon: Icon(
+            Icons.close,
+            size: 22,
+          ),
+          onDeleted: () {
+            setState(() {
+              _standOutFactors.remove(_standOutFactors[i]);
+            });
+          },
+        ),
+      );
+    }
+    for (int i = 0; i < _degreeLevels.length; i++) {
+      degreeChips.add(
+        Chip(
+          visualDensity: VisualDensity.compact,
+          labelPadding: EdgeInsets.only(left: 10, top: 1, bottom: 1),
+          padding: EdgeInsets.only(left: 3),
+          backgroundColor: Colors.white12,
+          shape: StadiumBorder(
+              side: BorderSide(color: Color(0xff005fa8), width: 0.0)),
+          label: Text(
+            _degreeLevels[i],
+            overflow: TextOverflow.ellipsis,
+            style:
+                TextStyle(fontSize: 11, color: Colors.black.withOpacity(0.8)),
+          ),
+          elevation: 1,
+          deleteIcon: Icon(
+            Icons.close,
+            size: 22,
+          ),
+          onDeleted: () {
+            setState(() {
+              _degreeLevels.remove(_degreeLevels[i]);
+            });
+          },
+        ),
+      );
+    }
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -1398,13 +1743,330 @@ class _EditUniDetailsState extends State<EditUniDetails> {
                   TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
             ),
             onPressed: () {
-              Navigator.pop(context);
+              if (_formKey.currentState.validate()) {
+                List data = [
+                  int.parse(_acceptance.text),
+                  int.parse(_ranking.text),
+                  _research,
+                  _degreeLevels,
+                  _website.text,
+                  _standOutFactors
+                ];
+                Navigator.pop(context, data);
+              }
             },
           )
         ],
         title: Text('Edit Details', maxLines: 1),
       ),
-      body: Container(),
+      body: Form(
+        key: _formKey,
+        child: ListView(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(left: 20, top: 30),
+              child: Text(
+                'Acceptance %',
+                style: TextStyle(fontSize: 21, color: Colors.black87),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 20, right: 30),
+              child: Theme(
+                data: ThemeData(primaryColor: Color(0xff005fa8)),
+                child: TextFormField(
+                  keyboardType: TextInputType.number,
+                  cursorColor: Color(0xff005fa8),
+                  controller: _acceptance,
+                  decoration: InputDecoration(
+                    border: UnderlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Color(0xff005fa8), width: 0.0),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'This field is required';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 20, top: 30),
+              child: Text(
+                'Ranking',
+                style: TextStyle(fontSize: 21, color: Colors.black87),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 20, right: 30),
+              child: Theme(
+                data: ThemeData(primaryColor: Color(0xff005fa8)),
+                child: TextFormField(
+                  keyboardType: TextInputType.number,
+                  cursorColor: Color(0xff005fa8),
+                  controller: _ranking,
+                  decoration: InputDecoration(
+                    border: UnderlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Color(0xff005fa8), width: 0.0),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'This field is required';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 20, top: 30),
+              child: Text(
+                'Research',
+                style: TextStyle(fontSize: 21, color: Colors.black87),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 20, right: 30, top: 2),
+              child: DropdownButtonFormField(
+                icon: Icon(
+                  Icons.arrow_drop_down,
+                  size: 25,
+                ),
+                hint: Text(
+                  "Research Option",
+                  style: TextStyle(fontSize: 16),
+                ),
+                itemHeight: kMinInteractiveDimension,
+                items: [
+                  DropdownMenuItem(
+                    child: Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(left: 5, right: 5),
+                          child: Icon(
+                            IconData(0xF0093, fontFamily: 'maticons'),
+                            color: Colors.black87,
+                          ),
+                        ),
+                        Text(
+                          'Research Intensive',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ],
+                    ),
+                    value: true,
+                  ),
+                  DropdownMenuItem(
+                    child: Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(left: 5, right: 5),
+                          child: Icon(IconData(0xF13F4, fontFamily: 'maticons'),
+                              color: Colors.black87),
+                        ),
+                        Text(
+                          'No Research',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                      ],
+                    ),
+                    value: false,
+                  ),
+                ],
+                value: _research,
+                validator: (value) =>
+                    value == null ? 'This field is important' : null,
+                isExpanded: true,
+                onChanged: (value) {
+                  setState(() {
+                    _research = value;
+                  });
+                },
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 20, top: 30),
+              child: Text(
+                'Degrees Offered',
+                style: TextStyle(fontSize: 21, color: Colors.black87),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 20, top: 2, right: 15),
+              child: _degreeLevels.isNotEmpty
+                  ? Wrap(
+                      spacing: 4,
+                      direction: Axis.horizontal,
+                      children: degreeChips,
+                    )
+                  : Padding(
+                      padding: EdgeInsets.only(left: 1),
+                      child: Text(
+                        'No Degree Levels',
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 22, right: 10),
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    child: Theme(
+                      data: ThemeData(primaryColor: Color(0xff005fa8)),
+                      child: TextFormField(
+                        cursorColor: Color(0xff005fa8),
+                        keyboardType: TextInputType.number,
+                        controller: _addDegree,
+                        decoration: InputDecoration(
+                          border: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color(0xff005fa8), width: 0.0),
+                          ),
+                        ),
+                        validator: (value) {
+                          return null;
+                        },
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 10, top: 5),
+                    child: RaisedButton(
+                      visualDensity: VisualDensity.compact,
+                      elevation: 2,
+                      color: Color(0xff005fa8),
+                      textColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(5))),
+                      child: Text('ADD'),
+                      onPressed: () async {
+                        if (_addDegree.text.isNotEmpty) {
+                          setState(() {
+                            _degreeLevels.add(_addDegree.text);
+                            _addDegree.clear();
+                          });
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 20, top: 30),
+              child: Text(
+                'Website',
+                style: TextStyle(fontSize: 21, color: Colors.black87),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 20, right: 30),
+              child: Theme(
+                data: ThemeData(primaryColor: Color(0xff005fa8)),
+                child: TextFormField(
+                  cursorColor: Color(0xff005fa8),
+                  controller: _website,
+                  decoration: InputDecoration(
+                    border: UnderlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Color(0xff005fa8), width: 0.0),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'This field is required';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 20, top: 30),
+              child: Text(
+                'Stand Out Factors',
+                style: TextStyle(fontSize: 21, color: Colors.black87),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 20, top: 2, right: 15),
+              child: _standOutFactors.isNotEmpty
+                  ? Wrap(
+                      spacing: 4,
+                      direction: Axis.horizontal,
+                      children: factorChips,
+                    )
+                  : Padding(
+                      padding: EdgeInsets.only(left: 1),
+                      child: Text(
+                        'No Stand Out Factors',
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 22, right: 10, bottom: 20),
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    child: Theme(
+                      data: ThemeData(primaryColor: Color(0xff005fa8)),
+                      child: TextFormField(
+                        cursorColor: Color(0xff005fa8),
+                        keyboardType: TextInputType.number,
+                        controller: _addFactor,
+                        decoration: InputDecoration(
+                          border: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Color(0xff005fa8), width: 0.0),
+                          ),
+                        ),
+                        validator: (value) {
+                          return null;
+                        },
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 10, top: 5),
+                    child: RaisedButton(
+                      visualDensity: VisualDensity.compact,
+                      elevation: 2,
+                      color: Color(0xff005fa8),
+                      textColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(5))),
+                      child: Text('ADD'),
+                      onPressed: () async {
+                        if (_addFactor.text.isNotEmpty) {
+                          setState(() {
+                            _standOutFactors.add(_addFactor.text);
+                            _addFactor.clear();
+                          });
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -1925,6 +2587,9 @@ class AddDocument extends StatefulWidget {
 }
 
 class _AddDocumentState extends State<AddDocument> {
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  TextEditingController _title = TextEditingController();
+  File _document;
   @override
   void initState() {
     super.initState();
@@ -1939,18 +2604,100 @@ class _AddDocumentState extends State<AddDocument> {
         actions: <Widget>[
           FlatButton(
             child: Text(
-              'SAVE',
+              'ADD',
               style:
                   TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
             ),
             onPressed: () {
-              Navigator.pop(context);
+              if (_formKey.currentState.validate() && _document != null) {
+                List data = [_title.text, _document];
+                Navigator.pop(context, data);
+              }
             },
           )
         ],
-        title: Text('Edit Documents', maxLines: 1),
+        title: Text('Add Document', maxLines: 1),
       ),
-      body: Container(),
+      body: Form(
+        key: _formKey,
+        child: ListView(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(left: 20, top: 30),
+              child: Text(
+                'Title',
+                style: TextStyle(fontSize: 21, color: Colors.black87),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 23, right: 30),
+              child: Theme(
+                data: ThemeData(primaryColor: Color(0xff005fa8)),
+                child: TextFormField(
+                  cursorColor: Color(0xff005fa8),
+                  controller: _title,
+                  decoration: InputDecoration(
+                    border: UnderlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Color(0xff005fa8), width: 0.0),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Document title is required';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 20, top: 30),
+              child: Text(
+                'Document',
+                style: TextStyle(fontSize: 21, color: Colors.black87),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 21, right: 10, top: 10),
+              child: Row(
+                children: <Widget>[
+                  RaisedButton(
+                    elevation: 2,
+                    color: Colors.grey[50],
+                    textColor: Color(0xff005fa8),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                    child: Text('Choose File'),
+                    onPressed: () async {
+                      File file = await FilePicker.getFile(
+                        type: FileType.any,
+                      );
+                      if (file != null) {
+                        setState(() {
+                          _document = file;
+                        });
+                      }
+                    },
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 0.48,
+                      child: Text(
+                          _document?.path?.split('/')?.last ?? 'No file chosen',
+                          style: TextStyle(
+                              color: _document == null
+                                  ? Colors.red
+                                  : Colors.black87)),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
