@@ -397,6 +397,47 @@ class _UniversityPageState extends State<UniversityPage> {
         ),
       );
     }
+    if (widget.university['coalition_app_accepted_status'] != null) {
+      appChips.add(
+        Chip(
+          labelPadding: EdgeInsets.only(right: 5, left: 5),
+          backgroundColor: Colors.white12,
+          shape: StadiumBorder(
+              side: BorderSide(color: Color(0xff005fa8), width: 0.0)),
+          label: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(left: 2),
+                child: CachedNetworkImage(
+                  width: 70,
+                  fit: BoxFit.contain,
+                  imageUrl:
+                      'https://thebiz.bentley.edu/wp-content/uploads/2016/10/coalition-logo-simple-horz-color-01.png',
+                ),
+              ),
+              widget.university['coalition_app_accepted_status']
+                  ? Padding(
+                      padding: EdgeInsets.only(left: 2),
+                      child: Icon(
+                        Icons.check_circle,
+                        size: 26,
+                        color: Colors.green,
+                      ),
+                    )
+                  : Padding(
+                      padding: EdgeInsets.only(left: 2),
+                      child: Icon(
+                        Icons.cancel,
+                        color: Colors.red,
+                      ),
+                    ),
+            ],
+          ),
+          elevation: 1,
+        ),
+      );
+    }
     if (widget.university['application_types'] != null) {
       for (int i = 0; i < widget.university['application_types'].length; i++) {
         deadlines.add(
