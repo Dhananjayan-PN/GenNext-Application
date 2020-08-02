@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart' as dio;
+import 'package:intl/intl.dart';
 import '../imports.dart';
 import 'home.dart';
 
@@ -154,6 +155,7 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
         newDegrees += ", " + r'"' + details[3][i] + r'"';
       }
     }
+    print(newFactors);
     final response = await http
         .put(
           dom + 'api/university/edit-profile',
@@ -168,7 +170,7 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                   newDegrees + ']' == '[]' ? null : newDegrees + ']',
               'university_stand_out_factors':
                   newFactors + ']' == '[]' ? null : newFactors + ']',
-              // 'acceptance_rate': details[0],
+              'acceptance_rate': details[0],
               'university_ranking': details[1],
               'university_research_or_not': details[2],
               'website': details[4]
@@ -339,6 +341,64 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
       Navigator.pop(context);
       error(context);
       refresh();
+    }
+  }
+
+  Future<void> editApplication(Map profile, int fee, bool commonApp,
+      bool coalition, Map applicationTypes) async {
+    String tok = await getToken();
+    String appTypesString = '[';
+    for (int i = 0; i < applicationTypes.length; i++) {
+      if (i == 0) {
+        String mapString = '{"' +
+            applicationTypes.keys.elementAt(0).toString() +
+            r'"' +
+            ': ' +
+            r'"' +
+            applicationTypes[applicationTypes.keys.elementAt(0).toString()] +
+            r'"}';
+        appTypesString += mapString;
+      } else {
+        String mapString = ', {"' +
+            applicationTypes.keys.elementAt(i).toString() +
+            r'"' +
+            ': ' +
+            r'"' +
+            applicationTypes[applicationTypes.keys.elementAt(i).toString()] +
+            r'"}';
+        appTypesString += mapString;
+      }
+    }
+    final response = await http
+        .put(
+          dom + 'api/university/edit-profile',
+          headers: {
+            HttpHeaders.authorizationHeader: "Token $tok",
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(
+            <String, dynamic>{
+              'university_id': profile['university_id'],
+              'application_fee': fee,
+              'common_app_accepted_status': commonApp,
+              'coalition_app_accepted_status': coalition,
+              'application_types': appTypesString + ']'
+            },
+          ),
+        )
+        .timeout(Duration(seconds: 10));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (data['Response'] == 'University successfully edited.') {
+        Navigator.pop(context);
+        refresh();
+      } else {
+        Navigator.pop(context);
+        error(context);
+      }
+    } else {
+      Navigator.pop(context);
+      error(context);
     }
   }
 
@@ -551,7 +611,10 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                     backgroundColor: Colors.white12,
                     shape: StadiumBorder(
                         side: BorderSide(color: Color(0xff005fa8), width: 0.0)),
-                    label: Text(snapshot.data['stand_out_factors'][i]),
+                    label: Text(
+                      snapshot.data['stand_out_factors'][i],
+                      style: TextStyle(fontSize: 15),
+                    ),
                     elevation: 1,
                   ),
                 );
@@ -671,30 +734,79 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
               appChips.add(
                 Chip(
                   labelPadding: EdgeInsets.only(right: 5, left: 5),
-                  avatar: snapshot.data['common_app_accepted_status']
-                      ? Padding(
-                          padding: EdgeInsets.only(left: 2),
-                          child: Icon(
-                            Icons.check_circle,
-                            size: 26,
-                            color: Colors.green,
-                          ),
-                        )
-                      : Padding(
-                          padding: EdgeInsets.only(left: 2),
-                          child: Icon(
-                            Icons.cancel,
-                            color: Colors.red,
-                          ),
-                        ),
                   backgroundColor: Colors.white12,
                   shape: StadiumBorder(
                       side: BorderSide(color: Color(0xff005fa8), width: 0.0)),
-                  label: CachedNetworkImage(
-                    width: 65,
-                    fit: BoxFit.contain,
-                    imageUrl:
-                        'https://membersupport.commonapp.org/servlet/rtaImage?eid=ka10V000001DsVb&feoid=00N0V000008rTCP&refid=0EM0V0000017WaN',
+                  label: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(left: 3),
+                        child: CachedNetworkImage(
+                          width: 65,
+                          fit: BoxFit.contain,
+                          imageUrl:
+                              'https://membersupport.commonapp.org/servlet/rtaImage?eid=ka10V000001DsVb&feoid=00N0V000008rTCP&refid=0EM0V0000017WaN',
+                        ),
+                      ),
+                      snapshot.data['common_app_accepted_status']
+                          ? Padding(
+                              padding: EdgeInsets.only(left: 2),
+                              child: Icon(
+                                Icons.check_circle,
+                                size: 26,
+                                color: Colors.green,
+                              ),
+                            )
+                          : Padding(
+                              padding: EdgeInsets.only(left: 2),
+                              child: Icon(
+                                Icons.cancel,
+                                color: Colors.red,
+                              ),
+                            ),
+                    ],
+                  ),
+                  elevation: 1,
+                ),
+              );
+            }
+            if (snapshot.data['coalition_app_accepted_status'] != null) {
+              appChips.add(
+                Chip(
+                  labelPadding: EdgeInsets.only(right: 5, left: 5),
+                  backgroundColor: Colors.white12,
+                  shape: StadiumBorder(
+                      side: BorderSide(color: Color(0xff005fa8), width: 0.0)),
+                  label: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(left: 2),
+                        child: CachedNetworkImage(
+                          width: 70,
+                          fit: BoxFit.contain,
+                          imageUrl:
+                              'https://thebiz.bentley.edu/wp-content/uploads/2016/10/coalition-logo-simple-horz-color-01.png',
+                        ),
+                      ),
+                      snapshot.data['coalition_app_accepted_status']
+                          ? Padding(
+                              padding: EdgeInsets.only(left: 2),
+                              child: Icon(
+                                Icons.check_circle,
+                                size: 26,
+                                color: Colors.green,
+                              ),
+                            )
+                          : Padding(
+                              padding: EdgeInsets.only(left: 2),
+                              child: Icon(
+                                Icons.cancel,
+                                color: Colors.red,
+                              ),
+                            ),
+                    ],
                   ),
                   elevation: 1,
                 ),
@@ -723,14 +835,14 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(left: 5, top: 0.5),
+                          padding: EdgeInsets.only(left: 6, top: 0.5),
                           child: Text(
                             snapshot.data['application_types'][i][snapshot
                                     .data['application_types'][i].keys.first]
                                 .toString(),
                             style: TextStyle(
                                 color: Colors.black.withOpacity(0.8),
-                                fontSize: 18.5),
+                                fontSize: 17.5),
                           ),
                         ),
                       ],
@@ -1486,7 +1598,7 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                               ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(left: 18, right: 25),
+                        padding: EdgeInsets.only(left: 20, right: 25),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
@@ -1509,12 +1621,43 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                                 ),
                               ),
                               onTap: () async {
-                                final data = await Navigator.push(
+                                Map _appTypes = {};
+                                for (int i = 0;
+                                    i <
+                                        snapshot
+                                            .data['application_types'].length;
+                                    i++) {
+                                  _appTypes[snapshot
+                                          .data['application_types'][i]
+                                          .keys
+                                          .first] =
+                                      snapshot.data['application_types'][i][
+                                              snapshot
+                                                  .data['application_types'][i]
+                                                  .keys
+                                                  .first]
+                                          .toString();
+                                }
+                                final List data = await Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => EditApplication(),
+                                    builder: (context) => EditApplication(
+                                      applicationFee:
+                                          snapshot.data['application_fee'],
+                                      commonApp: snapshot
+                                          .data['common_app_accepted_status'],
+                                      coalition: snapshot.data[
+                                          'coalition_app_accepted_status'],
+                                      applicationTypes: _appTypes,
+                                    ),
                                   ),
                                 );
+                                refresh();
+                                if (data != null) {
+                                  editApplication(snapshot.data, data[0],
+                                      data[1], data[2], data[3]);
+                                  loading(context);
+                                }
                               },
                             )
                           ],
@@ -1530,11 +1673,14 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                                   children: appChips,
                                 ),
                               )
-                            : Text(
-                                'No Application Information',
-                                style: TextStyle(
-                                  color: Colors.black54,
-                                  fontSize: 12,
+                            : Padding(
+                                padding: EdgeInsets.only(left: 1),
+                                child: Text(
+                                  'No Application Information',
+                                  style: TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: 12,
+                                  ),
                                 ),
                               ),
                       ),
@@ -1545,7 +1691,7 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                                 children: deadlines,
                               )
                             : Padding(
-                                padding: EdgeInsets.only(left: 20, top: 5),
+                                padding: EdgeInsets.only(left: 21, top: 5),
                                 child: Text(
                                   'No Application Deadlines',
                                   style: TextStyle(
@@ -2546,14 +2692,44 @@ class _EditTestingState extends State<EditTesting> {
 }
 
 class EditApplication extends StatefulWidget {
+  final int applicationFee;
+  final bool commonApp;
+  final bool coalition;
+  final Map applicationTypes;
+  EditApplication(
+      {@required this.applicationFee,
+      @required this.commonApp,
+      @required this.coalition,
+      @required this.applicationTypes});
   @override
   _EditApplicationState createState() => _EditApplicationState();
 }
 
 class _EditApplicationState extends State<EditApplication> {
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  TextEditingController _fee = TextEditingController();
+  TextEditingController _earlyActionController = TextEditingController();
+  TextEditingController _earlyDecisionController = TextEditingController();
+  TextEditingController _regularDecisionController = TextEditingController();
+
+  Map _applicationTypes;
+  bool _commonApp;
+  bool _coalition;
+  DateTime _earlyAction;
+  DateTime _earlyDecision;
+  DateTime _regularDecision;
+
   @override
   void initState() {
     super.initState();
+    _fee.text = widget.applicationFee.toString();
+    _commonApp = widget.commonApp ?? false;
+    _coalition = widget.coalition ?? false;
+    _applicationTypes = widget.applicationTypes ?? {};
+    _earlyActionController.text = _applicationTypes['Early Action'] ?? '';
+    _earlyDecisionController.text = _applicationTypes['Early Decision'] ?? '';
+    _regularDecisionController.text =
+        _applicationTypes['Regular Decision'] ?? '';
   }
 
   @override
@@ -2570,13 +2746,455 @@ class _EditApplicationState extends State<EditApplication> {
                   TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
             ),
             onPressed: () {
-              Navigator.pop(context);
+              if (_formKey.currentState.validate()) {
+                List data = [
+                  int.parse(_fee.text),
+                  _commonApp,
+                  _coalition,
+                  _applicationTypes
+                ];
+                Navigator.pop(context, data);
+              }
             },
           )
         ],
-        title: Text('Edit App & Dates', maxLines: 1),
+        title: Text('Edit Application Info', maxLines: 1),
       ),
-      body: Container(),
+      body: Form(
+        key: _formKey,
+        child: ListView(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(left: 25, top: 30),
+              child: Text(
+                'Application Fee',
+                style: TextStyle(fontSize: 20, color: Colors.black87),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 25, right: 25, top: 0),
+              child: Theme(
+                data: ThemeData(primaryColor: Color(0xff005fa8)),
+                child: TextFormField(
+                  cursorColor: Color(0xff005fa8),
+                  keyboardType: TextInputType.number,
+                  controller: _fee,
+                  decoration: InputDecoration(
+                    border: UnderlineInputBorder(
+                      borderSide:
+                          BorderSide(color: Color(0xff005fa8), width: 0.0),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'This field is required';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 25, top: 30),
+              child: Text(
+                'Application Modes',
+                style: TextStyle(fontSize: 20, color: Colors.black87),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Material(
+                color: Colors.transparent,
+                child: ListTile(
+                    key: Key('Common App'),
+                    leading: Checkbox(
+                      activeColor: Color(0xff005fa8),
+                      value: _commonApp,
+                      onChanged: (newValue) {
+                        _commonApp = !_commonApp;
+                        setState(() {});
+                      },
+                    ),
+                    title: CachedNetworkImage(
+                      alignment: Alignment.centerLeft,
+                      height: 35,
+                      fit: BoxFit.fitHeight,
+                      imageUrl:
+                          'https://membersupport.commonapp.org/servlet/rtaImage?eid=ka10V000001DsVb&feoid=00N0V000008rTCP&refid=0EM0V0000017WaN',
+                    ),
+                    onTap: () {
+                      _commonApp = !_commonApp;
+                      setState(() {});
+                    }),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Material(
+                color: Colors.transparent,
+                child: ListTile(
+                    key: Key('Coalition'),
+                    leading: Checkbox(
+                      activeColor: Color(0xff005fa8),
+                      value: _coalition,
+                      onChanged: (newValue) {
+                        _coalition = !_coalition;
+                        setState(() {});
+                      },
+                    ),
+                    title: CachedNetworkImage(
+                      alignment: Alignment.centerLeft,
+                      height: 35,
+                      fit: BoxFit.fitHeight,
+                      imageUrl:
+                          'https://thebiz.bentley.edu/wp-content/uploads/2016/10/coalition-logo-simple-horz-color-01.png',
+                    ),
+                    onTap: () {
+                      _coalition = !_coalition;
+                      setState(() {});
+                    }),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 25, top: 30),
+              child: Text(
+                'Application Dates',
+                style: TextStyle(fontSize: 20, color: Colors.black87),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 10, top: 15),
+              child: Material(
+                color: Colors.transparent,
+                child: ListTile(
+                    key: Key('Early Action'),
+                    leading: Checkbox(
+                      activeColor: Color(0xff005fa8),
+                      value: _applicationTypes.containsKey('Early Action'),
+                      onChanged: (newValue) {
+                        if (_applicationTypes.containsKey('Early Action')) {
+                          _applicationTypes.remove('Early Action');
+                        } else {
+                          _applicationTypes['Early Action'] =
+                              _earlyActionController.text;
+                        }
+                        setState(() {});
+                      },
+                    ),
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text('Early Action',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w500)),
+                        Padding(
+                          padding: EdgeInsets.only(right: 30),
+                          child: Theme(
+                            data: ThemeData(primaryColor: Color(0xff005fa8)),
+                            child: DateTimeField(
+                              validator: (value) {
+                                if (value == null &&
+                                    _applicationTypes
+                                        .containsKey('Early Action')) {
+                                  return 'You must specify a date';
+                                }
+                                return null;
+                              },
+                              cursorColor: Color(0xff005fa8),
+                              initialValue: DateTime.now(),
+                              controller: _earlyActionController,
+                              decoration: InputDecoration(
+                                border: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Color(0xff005fa8), width: 0.0),
+                                ),
+                              ),
+                              format: DateFormat.MMMMd(),
+                              onChanged: (value) {
+                                setState(() {
+                                  _earlyAction = value;
+                                  if (_applicationTypes
+                                      .containsKey('Early Action')) {
+                                    _applicationTypes['Early Action'] =
+                                        DateFormat.MMMMd().format(_earlyAction);
+                                    ;
+                                  }
+                                  setState(() {});
+                                });
+                              },
+                              onShowPicker: (context, currentValue) async {
+                                final _date = await showDatePicker(
+                                  context: context,
+                                  firstDate: DateTime(1900),
+                                  initialDate: currentValue ?? DateTime.now(),
+                                  lastDate: DateTime(2150),
+                                  builder: (context, child) {
+                                    return Theme(
+                                      data: ThemeData(
+                                          colorScheme: ColorScheme(
+                                              brightness: Brightness.light,
+                                              error: Color(0xff005fa8),
+                                              onError: Colors.red,
+                                              background: Color(0xff005fa8),
+                                              primary: Color(0xff005fa8),
+                                              primaryVariant: Color(0xff005fa8),
+                                              secondary: Color(0xff005fa8),
+                                              secondaryVariant:
+                                                  Color(0xff005fa8),
+                                              onPrimary: Colors.white,
+                                              surface: Color(0xff005fa8),
+                                              onSecondary: Colors.black,
+                                              onSurface: Colors.black,
+                                              onBackground: Colors.black)),
+                                      child: child,
+                                    );
+                                  },
+                                );
+                                if (_date != null) {
+                                  return _date;
+                                } else {
+                                  return currentValue;
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      if (_applicationTypes.containsKey('Early Action')) {
+                        _applicationTypes.remove('Early Action');
+                      } else {
+                        _applicationTypes['Early Action'] =
+                            _earlyActionController.text;
+                      }
+                      setState(() {});
+                    }),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 10, top: 15),
+              child: Material(
+                color: Colors.transparent,
+                child: ListTile(
+                    key: Key('Early Decision'),
+                    leading: Checkbox(
+                      activeColor: Color(0xff005fa8),
+                      value: _applicationTypes.containsKey('Early Decision'),
+                      onChanged: (newValue) {
+                        if (_applicationTypes.containsKey('Early Decision')) {
+                          _applicationTypes.remove('Early Decision');
+                        } else {
+                          _applicationTypes['Early Decision'] =
+                              _earlyDecisionController.text;
+                        }
+                        setState(() {});
+                      },
+                    ),
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text('Early Decision',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w500)),
+                        Padding(
+                          padding: EdgeInsets.only(right: 30),
+                          child: Theme(
+                            data: ThemeData(primaryColor: Color(0xff005fa8)),
+                            child: DateTimeField(
+                              validator: (value) {
+                                if (value == null &&
+                                    _applicationTypes
+                                        .containsKey('Early Decision')) {
+                                  return 'You must specify a date';
+                                }
+                                return null;
+                              },
+                              cursorColor: Color(0xff005fa8),
+                              initialValue: DateTime.now(),
+                              controller: _earlyDecisionController,
+                              decoration: InputDecoration(
+                                border: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Color(0xff005fa8), width: 0.0),
+                                ),
+                              ),
+                              format: DateFormat.MMMMd(),
+                              onChanged: (value) {
+                                setState(() {
+                                  _earlyDecision = value;
+                                  if (_applicationTypes
+                                      .containsKey('Early Decision')) {
+                                    _applicationTypes['Early Decision'] =
+                                        _earlyDecisionController.text;
+                                  }
+                                });
+                              },
+                              onShowPicker: (context, currentValue) async {
+                                final _date = await showDatePicker(
+                                  context: context,
+                                  firstDate: DateTime(1900),
+                                  initialDate: currentValue ?? DateTime.now(),
+                                  lastDate: DateTime(2150),
+                                  builder: (context, child) {
+                                    return Theme(
+                                      data: ThemeData(
+                                          colorScheme: ColorScheme(
+                                              brightness: Brightness.light,
+                                              error: Color(0xff005fa8),
+                                              onError: Colors.red,
+                                              background: Color(0xff005fa8),
+                                              primary: Color(0xff005fa8),
+                                              primaryVariant: Color(0xff005fa8),
+                                              secondary: Color(0xff005fa8),
+                                              secondaryVariant:
+                                                  Color(0xff005fa8),
+                                              onPrimary: Colors.white,
+                                              surface: Color(0xff005fa8),
+                                              onSecondary: Colors.black,
+                                              onSurface: Colors.black,
+                                              onBackground: Colors.black)),
+                                      child: child,
+                                    );
+                                  },
+                                );
+                                if (_date != null) {
+                                  return _date;
+                                } else {
+                                  return currentValue;
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      if (_applicationTypes.containsKey('Early Decision')) {
+                        _applicationTypes.remove('Early Decision');
+                      } else {
+                        _applicationTypes['Early Decision'] =
+                            _earlyDecisionController.text;
+                      }
+                      setState(() {});
+                    }),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 10, top: 15, bottom: 20),
+              child: Material(
+                color: Colors.transparent,
+                child: ListTile(
+                    key: Key('Regular Decision'),
+                    leading: Checkbox(
+                      activeColor: Color(0xff005fa8),
+                      value: _applicationTypes.containsKey('Regular Decision'),
+                      onChanged: (newValue) {
+                        if (_applicationTypes.containsKey('Regular Decision')) {
+                          _applicationTypes.remove('Regular Decision');
+                        } else {
+                          _applicationTypes['Regular Decision'] =
+                              _regularDecisionController.text;
+                        }
+                        setState(() {});
+                      },
+                    ),
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text('Regular Decision',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w500)),
+                        Padding(
+                          padding: EdgeInsets.only(right: 30),
+                          child: Theme(
+                            data: ThemeData(primaryColor: Color(0xff005fa8)),
+                            child: DateTimeField(
+                              validator: (value) {
+                                if (value == null &&
+                                    _applicationTypes
+                                        .containsKey('Regular Decision')) {
+                                  return 'You must specify a date';
+                                }
+                                return null;
+                              },
+                              cursorColor: Color(0xff005fa8),
+                              initialValue: DateTime.now(),
+                              controller: _regularDecisionController,
+                              decoration: InputDecoration(
+                                border: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Color(0xff005fa8), width: 0.0),
+                                ),
+                              ),
+                              format: DateFormat.MMMMd(),
+                              onChanged: (value) {
+                                setState(() {
+                                  _regularDecision = value;
+                                  if (_applicationTypes
+                                      .containsKey('Regular Decision')) {
+                                    _applicationTypes['Regular Decision'] =
+                                        DateFormat.MMMMd()
+                                            .format(_regularDecision);
+                                  }
+                                });
+                              },
+                              onShowPicker: (context, currentValue) async {
+                                final _date = await showDatePicker(
+                                  context: context,
+                                  firstDate: DateTime(1900),
+                                  initialDate: currentValue ?? DateTime.now(),
+                                  lastDate: DateTime(2150),
+                                  builder: (context, child) {
+                                    return Theme(
+                                      data: ThemeData(
+                                          colorScheme: ColorScheme(
+                                              brightness: Brightness.light,
+                                              error: Color(0xff005fa8),
+                                              onError: Colors.red,
+                                              background: Color(0xff005fa8),
+                                              primary: Color(0xff005fa8),
+                                              primaryVariant: Color(0xff005fa8),
+                                              secondary: Color(0xff005fa8),
+                                              secondaryVariant:
+                                                  Color(0xff005fa8),
+                                              onPrimary: Colors.white,
+                                              surface: Color(0xff005fa8),
+                                              onSecondary: Colors.black,
+                                              onSurface: Colors.black,
+                                              onBackground: Colors.black)),
+                                      child: child,
+                                    );
+                                  },
+                                );
+                                if (_date != null) {
+                                  return _date;
+                                } else {
+                                  return currentValue;
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      if (_applicationTypes.containsKey('Regular Decision')) {
+                        _applicationTypes.remove('Regular Decision');
+                      } else {
+                        _applicationTypes['Regular Decision'] =
+                            _regularDecisionController.text;
+                      }
+                      setState(() {});
+                    }),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
