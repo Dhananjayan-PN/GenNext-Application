@@ -362,7 +362,7 @@ class _DashBoardState extends State<DashBoard> {
                             ],
                           ),
                           Padding(
-                            padding: EdgeInsets.only(bottom: 8, top: 15),
+                            padding: EdgeInsets.only(bottom: 8, top: 20),
                             child: Container(
                               width: 75,
                               height: 75,
