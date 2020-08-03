@@ -3,6 +3,7 @@ export 'package:back_button_interceptor/back_button_interceptor.dart';
 export 'package:quill_zefyr_bijection/quill_zefyr_bijection.dart';
 export 'package:cached_network_image/cached_network_image.dart';
 export 'package:searchable_dropdown/searchable_dropdown.dart';
+export 'package:clipboard_manager/clipboard_manager.dart';
 export 'package:percent_indicator/percent_indicator.dart';
 export 'package:page_transition/page_transition.dart';
 export 'package:flutter_spinkit/flutter_spinkit.dart';

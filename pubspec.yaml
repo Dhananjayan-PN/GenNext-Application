@@ -33,6 +33,7 @@ dependencies:
   expand_widget: ^1.0.0+1
   file_picker: ^1.12.0
   dio: ^3.0.9
+  clipboard_manager: ^0.0.1
 
 dev_dependencies:
   flutter_driver:

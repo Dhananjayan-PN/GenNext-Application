@@ -230,56 +230,48 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
                     ),
                   );
                 } else {
-                  return Column(
-                    children: <Widget>[
-                      Expanded(
-                        child: Scrollbar(
-                          child: ListView.builder(
-                            primary: true,
-                            scrollDirection: Axis.vertical,
-                            itemCount: snapshot.data.length + 1,
-                            itemBuilder: (BuildContext context, int index) {
-                              if (index == 0) {
-                                return Padding(
-                                  padding: EdgeInsets.only(
-                                      top: 5, left: 18, right: 30, bottom: 20),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Padding(
-                                        padding:
-                                            EdgeInsets.only(top: 5, right: 6),
-                                        child: Icon(
-                                          Icons.search,
-                                          size: 30,
-                                          color: Colors.black54,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: TextField(
-                                          cursorColor: Color(0xff005fa8),
-                                          decoration: InputDecoration(
-                                              labelText: "Search",
-                                              contentPadding:
-                                                  EdgeInsets.all(2)),
-                                          controller: controller,
-                                        ),
-                                      ),
-                                    ],
+                  return Scrollbar(
+                    child: ListView.builder(
+                      primary: true,
+                      scrollDirection: Axis.vertical,
+                      itemCount: snapshot.data.length + 1,
+                      itemBuilder: (BuildContext context, int index) {
+                        if (index == 0) {
+                          return Padding(
+                            padding: EdgeInsets.only(
+                                top: 5, left: 18, right: 30, bottom: 20),
+                            child: Row(
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.only(top: 5, right: 6),
+                                  child: Icon(
+                                    Icons.search,
+                                    size: 30,
+                                    color: Colors.black54,
                                   ),
-                                );
-                              }
-                              return filter == null || filter == ""
-                                  ? buildCard(snapshot.data[index - 1])
-                                  : snapshot.data[index - 1]['university_name']
-                                          .toLowerCase()
-                                          .contains(filter)
-                                      ? buildCard(snapshot.data[index - 1])
-                                      : Container();
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
+                                ),
+                                Expanded(
+                                  child: TextField(
+                                    cursorColor: Color(0xff005fa8),
+                                    decoration: InputDecoration(
+                                        labelText: "Search",
+                                        contentPadding: EdgeInsets.all(2)),
+                                    controller: controller,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                        return filter == null || filter == ""
+                            ? buildCard(snapshot.data[index - 1])
+                            : snapshot.data[index - 1]['university_name']
+                                    .toLowerCase()
+                                    .contains(filter)
+                                ? buildCard(snapshot.data[index - 1])
+                                : Container();
+                      },
+                    ),
                   );
                 }
               }
