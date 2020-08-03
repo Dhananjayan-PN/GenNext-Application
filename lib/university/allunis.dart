@@ -23,7 +23,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
     BackButtonInterceptor.add(myInterceptor);
     controller.addListener(() {
       setState(() {
-        filter = controller.text;
+        filter = controller.text.toLowerCase();
       });
     });
     allUniList = getAllUniversities();
