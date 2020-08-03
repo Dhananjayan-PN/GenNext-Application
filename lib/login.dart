@@ -276,7 +276,7 @@ class _LoginPageState extends State<LoginPage> {
       value: SystemUiOverlayStyle(
         systemNavigationBarIconBrightness: Brightness.dark,
         systemNavigationBarColor: Colors.white,
-        statusBarColor: Color(0xff005fa8).withAlpha(200),
+        statusBarColor: Colors.black.withOpacity(0.3),
       ),
       child: WillPopScope(
         onWillPop: () async => Future.value(false),

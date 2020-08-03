@@ -228,7 +228,7 @@ class _NavDrawerState extends State<NavDrawer> {
         padding: EdgeInsets.zero,
         children: <Widget>[
           Container(
-            height: 210,
+            height: 195,
             child: UserAccountsDrawerHeader(
               decoration: BoxDecoration(
                 color: Color(0xff005fa8),
@@ -473,8 +473,9 @@ class _UniHomeScreenState extends State<UniHomeScreen> {
     curPage = UniHomeScreen(user: newUser);
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.dark,
         systemNavigationBarColor: Colors.white,
-        statusBarColor: Color(0xff005fa8).withAlpha(200),
+        statusBarColor: Colors.black.withOpacity(0.3),
       ),
       child: PageView(
         controller: _controller,

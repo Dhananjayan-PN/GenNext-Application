@@ -221,26 +221,29 @@ class NavDrawer extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          UserAccountsDrawerHeader(
-            decoration: BoxDecoration(color: Color(0xff005fa8)),
-            accountName:
-                Text(name, style: TextStyle(color: Colors.white, fontSize: 18)),
-            accountEmail: Text(email,
-                style: TextStyle(color: Colors.white, fontSize: 12)),
-            currentAccountPicture: CircleAvatar(
-              backgroundImage: CachedNetworkImageProvider(newUser.dp),
-              backgroundColor: Colors.blue[400],
-              radius: 30,
+          Container(
+            height: 195,
+            child: UserAccountsDrawerHeader(
+              decoration: BoxDecoration(color: Color(0xff005fa8)),
+              accountName: Text(name,
+                  style: TextStyle(color: Colors.white, fontSize: 18)),
+              accountEmail: Text(email,
+                  style: TextStyle(color: Colors.white, fontSize: 12)),
+              currentAccountPicture: CircleAvatar(
+                backgroundImage: CachedNetworkImageProvider(newUser.dp),
+                backgroundColor: Colors.blue[400],
+                radius: 30,
+              ),
+              onDetailsPressed: () {
+                Navigator.pop(context);
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  PageTransition(
+                      type: PageTransitionType.fade, child: ProfileScreen()),
+                  (Route<dynamic> route) => false,
+                );
+              },
             ),
-            onDetailsPressed: () {
-              Navigator.pop(context);
-              Navigator.pushAndRemoveUntil(
-                context,
-                PageTransition(
-                    type: PageTransitionType.fade, child: ProfileScreen()),
-                (Route<dynamic> route) => false,
-              );
-            },
           ),
           Column(mainAxisSize: MainAxisSize.min, children: navlist),
           Padding(
@@ -473,8 +476,9 @@ class _CounselorHomeScreenState extends State<CounselorHomeScreen> {
     newUser = widget.user;
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.dark,
         systemNavigationBarColor: Colors.white,
-        statusBarColor: Color(0xff0072BC).withAlpha(150),
+        statusBarColor: Colors.black.withOpacity(0.3),
       ),
       child: PageView(
         controller: _controller,

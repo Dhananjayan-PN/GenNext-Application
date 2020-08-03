@@ -124,30 +124,36 @@ class _LandingPageState extends State<LandingPage> {
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.top]);
     route();
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Padding(
-        padding: EdgeInsets.only(bottom: 90),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding:
-                  EdgeInsets.only(top: 45, right: 20, left: 8, bottom: 100),
-              child: Image.asset(
-                'images/CollegeGenieLogo-2.png',
-                height: 165,
-                width: 190,
-                fit: BoxFit.contain,
-                colorBlendMode: BlendMode.darken,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        systemNavigationBarIconBrightness: Brightness.dark,
+        statusBarColor: Colors.black.withOpacity(0.3),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Padding(
+          padding: EdgeInsets.only(bottom: 90),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding:
+                    EdgeInsets.only(top: 45, right: 20, left: 8, bottom: 100),
+                child: Image.asset(
+                  'images/CollegeGenieLogo-2.png',
+                  height: 165,
+                  width: 190,
+                  fit: BoxFit.contain,
+                  colorBlendMode: BlendMode.darken,
+                ),
               ),
-            ),
-            SpinKitWave(
-              color: Colors.black38,
-              size: 30,
-            ),
-          ],
+              SpinKitWave(
+                color: Colors.black38,
+                size: 30,
+              ),
+            ],
+          ),
         ),
       ),
     );
