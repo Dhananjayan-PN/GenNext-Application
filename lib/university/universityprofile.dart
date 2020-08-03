@@ -672,30 +672,32 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                 documentChips.add(
                   InkWell(
                     child: Card(
+                      margin: EdgeInsets.all(1),
                       shape: StadiumBorder(
                         side: BorderSide(color: Color(0xff005fa8), width: 0.0),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Padding(
                             padding:
-                                EdgeInsets.only(top: 5, left: 10, bottom: 5),
+                                EdgeInsets.only(top: 5, left: 11, bottom: 6),
                             child: Text(
                               snapshot.data['document_data'][i]
                                   ['document_title'],
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 13.5,
                                 color: Colors.black.withOpacity(0.8),
                               ),
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(right: 5, left: 1),
+                            padding: EdgeInsets.only(right: 5, left: 1, top: 1),
                             child: InkWell(
                               child: Icon(
                                 Icons.close,
-                                size: 21,
+                                size: 19,
                               ),
                               onTap: () {
                                 _deleteDocument(
@@ -1740,7 +1742,7 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                       ),
                       Padding(
                         padding: EdgeInsets.only(
-                            left: 20, top: 3, right: 1, bottom: 25),
+                            left: 18, top: 3, right: 10, bottom: 25),
                         child: documentChips.isNotEmpty
                             ? Wrap(
                                 spacing: 4,
