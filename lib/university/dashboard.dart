@@ -21,12 +21,14 @@ class _DashBoardState extends State<DashBoard> {
 
   Future repNotes;
   Future stats;
+  Future requests;
 
   @override
   void initState() {
     super.initState();
     repNotes = getRepNotes();
     stats = getStats();
+    requests = getRequests();
   }
 
   Future<void> getRepNotes() async {
@@ -144,12 +146,76 @@ class _DashBoardState extends State<DashBoard> {
     }
   }
 
+  Future<void> getRequests() async {
+    String tok = await getToken();
+    final response = await http.get(
+      dom + 'api/university/get-pending-counselor-reqs',
+      headers: {HttpHeaders.authorizationHeader: "Token $tok"},
+    );
+    if (response.statusCode == 200) {
+      return json.decode(response.body)['pending_counselor_reqs_data'];
+    } else {
+      throw 'failed';
+    }
+  }
+
+  Future<void> sendRequestDecision(int id, String decision) async {
+    String tok = await getToken();
+    final response = await http.put(
+      dom + 'api/university/decision-for-counselor-req/$id/$decision',
+      headers: {
+        HttpHeaders.authorizationHeader: "Token $tok",
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    ).timeout(Duration(seconds: 10));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (decision == 'A' &&
+          data['Response'] == 'Counselor request successfully accepted.') {
+        Navigator.pop(context);
+        refresh();
+        Scaffold.of(context).showSnackBar(
+          SnackBar(
+              content: Text(
+            'Request Accepted',
+            textAlign: TextAlign.center,
+          )),
+        );
+      } else if (decision == 'R' &&
+          data['Response'] == 'Counselor request successfully denied.') {
+        Navigator.pop(context);
+        refresh();
+        Scaffold.of(context).showSnackBar(
+          SnackBar(
+              content: Text(
+            'Request Denied',
+            textAlign: TextAlign.center,
+          )),
+        );
+      } else {
+        Navigator.pop(context);
+        error(context);
+      }
+    } else {
+      Navigator.pop(context);
+      error(context);
+    }
+  }
+
   _editRepNotes() {
     setState(() {
       saved = false;
       saving = true;
     });
     editRepNotes();
+  }
+
+  void refresh() {
+    setState(() {
+      repNotes = getRepNotes();
+      stats = getStats();
+      requests = getRequests();
+    });
   }
 
   @override
@@ -468,6 +534,217 @@ class _DashBoardState extends State<DashBoard> {
               ),
             ],
           ),
+        ),
+        FutureBuilder(
+          future: requests.timeout(Duration(seconds: 10)),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Padding(
+                padding: EdgeInsets.only(left: 25, right: 25),
+                child: Card(
+                  margin: EdgeInsets.only(top: 20, bottom: 20),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  elevation: 6,
+                  child: Padding(
+                    padding:
+                        EdgeInsets.only(left: 3, right: 3, top: 30, bottom: 30),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 10),
+                          child: Icon(
+                            Icons.error_outline,
+                            size: 35,
+                            color: Colors.red.withOpacity(0.6),
+                          ),
+                        ),
+                        Text(
+                          'Unable to establish a connection\nwith our servers.\nCheck your connection and try again later.',
+                          style: TextStyle(color: Colors.black54),
+                          textAlign: TextAlign.center,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }
+            if (snapshot.hasData) {
+              if (snapshot.data.length == 0) {
+                return Padding(
+                  padding: EdgeInsets.only(left: 25, right: 25),
+                  child: Card(
+                    margin: EdgeInsets.only(top: 20, bottom: 30),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                    elevation: 6,
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 28, bottom: 28),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 10),
+                            child: Icon(
+                              Icons.thumb_up,
+                              size: 35,
+                              color: Colors.black.withOpacity(0.75),
+                            ),
+                          ),
+                          Text(
+                            "No pending counselor requests",
+                            style: TextStyle(color: Colors.black54),
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            "Enjoy your day!",
+                            style: TextStyle(color: Colors.black54),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              } else {
+                return Container(
+                  height: 185,
+                  child: Swiper(
+                    loop: false,
+                    pagination: snapshot.data.length == 1
+                        ? null
+                        : SwiperPagination(margin: EdgeInsets.all(0)),
+                    itemCount: snapshot.data.length,
+                    viewportFraction: 0.83,
+                    scale: 0.9,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Card(
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        margin: EdgeInsets.only(top: 20, bottom: 30),
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        elevation: 6,
+                        child: Padding(
+                          padding:
+                              EdgeInsets.only(top: 10, left: 15, right: 15),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(top: 5, bottom: 5),
+                                child: Row(
+                                  children: <Widget>[
+                                    CircleAvatar(
+                                      radius: 27,
+                                      backgroundImage:
+                                          CachedNetworkImageProvider(
+                                              snapshot.data[index]
+                                                  ['profile_image_url']),
+                                      backgroundColor: Color(0xff005fa8),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 10),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                top: 2, bottom: 2),
+                                            child: Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.55,
+                                              child: Text(
+                                                snapshot.data[index]['name'],
+                                                style:
+                                                    TextStyle(fontSize: 15.5),
+                                              ),
+                                            ),
+                                          ),
+                                          Text(
+                                            '@' +
+                                                snapshot.data[index]
+                                                    ['username'],
+                                            style: TextStyle(
+                                                color: Color(0xff005fa8),
+                                                fontSize: 13),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Spacer(),
+                              Padding(
+                                padding: EdgeInsets.only(bottom: 15),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    ClipOval(
+                                      child: Material(
+                                        color: Colors.transparent,
+                                        child: InkWell(
+                                          child: Icon(
+                                            Icons.check,
+                                            color: Colors.green,
+                                            size: 33,
+                                          ),
+                                          onTap: () {
+                                            sendRequestDecision(
+                                                snapshot.data[index]['user_id'],
+                                                'A');
+                                            loading(context);
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                    VerticalDivider(),
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 25),
+                                      child: ClipOval(
+                                        child: Material(
+                                          color: Colors.transparent,
+                                          child: InkWell(
+                                            child: Icon(
+                                              Icons.close,
+                                              color: Colors.red,
+                                              size: 33,
+                                            ),
+                                            onTap: () {
+                                              sendRequestDecision(
+                                                  snapshot.data[index]
+                                                      ['user_id'],
+                                                  'R');
+                                              loading(context);
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                );
+              }
+            }
+            return DashCardSkeleton(
+              padding: 20,
+            );
+          },
         ),
         Padding(
           padding: EdgeInsets.only(top: 20),

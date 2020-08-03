@@ -165,11 +165,16 @@ error(context) {
   );
 }
 
-class NavDrawer extends StatelessWidget {
+class NavDrawer extends StatefulWidget {
   final String name;
   final String email;
   NavDrawer({this.name, this.email});
 
+  @override
+  _NavDrawerState createState() => _NavDrawerState();
+}
+
+class _NavDrawerState extends State<NavDrawer> {
   @override
   Widget build(BuildContext context) {
     List<Widget> navlist = [];
@@ -220,12 +225,12 @@ class NavDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: <Widget>[
           Container(
-            height: 195,
+            height: 210,
             child: UserAccountsDrawerHeader(
               decoration: BoxDecoration(color: Color(0xff005fa8)),
-              accountName: Text(name,
+              accountName: Text(widget.name,
                   style: TextStyle(color: Colors.white, fontSize: 18)),
-              accountEmail: Text(email,
+              accountEmail: Text(widget.email,
                   style: TextStyle(color: Colors.white, fontSize: 12)),
               currentAccountPicture: CircleAvatar(
                 backgroundImage: CachedNetworkImageProvider(newUser.dp),

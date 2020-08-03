@@ -226,7 +226,7 @@ class _NavDrawerState extends State<NavDrawer> {
         padding: EdgeInsets.zero,
         children: <Widget>[
           Container(
-            height: 195,
+            height: 210,
             child: UserAccountsDrawerHeader(
               decoration: BoxDecoration(
                 color: Color(0xff005fa8),

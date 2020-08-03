@@ -1742,10 +1742,11 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                       ),
                       Padding(
                         padding: EdgeInsets.only(
-                            left: 18, top: 3, right: 10, bottom: 25),
+                            left: 19, top: 5, right: 20, bottom: 25),
                         child: documentChips.isNotEmpty
                             ? Wrap(
                                 spacing: 4,
+                                runSpacing: 8,
                                 direction: Axis.horizontal,
                                 children: documentChips,
                               )
