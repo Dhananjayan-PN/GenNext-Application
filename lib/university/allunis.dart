@@ -592,7 +592,7 @@ class _UniversityPageState extends State<UniversityPage> {
                           children: <Widget>[
                             Spacer(),
                             Padding(
-                              padding: EdgeInsets.only(bottom: 35, right: 20),
+                              padding: EdgeInsets.only(bottom: 30, right: 20),
                               child: CircleAvatar(
                                 backgroundImage: CachedNetworkImageProvider(
                                     widget.university['logo_url']),
@@ -602,60 +602,75 @@ class _UniversityPageState extends State<UniversityPage> {
                             ),
                           ],
                         ),
-                        Row(
-                          children: <Widget>[
-                            Spacer(),
-                            Padding(
-                              padding: EdgeInsets.only(right: 11, bottom: 125),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                        Padding(
+                          padding: EdgeInsets.only(right: 32),
+                          child: Row(
+                            children: <Widget>[
+                              Spacer(),
+                              Row(
                                 children: <Widget>[
-                                  Row(
-                                    children: <Widget>[
-                                      Material(
-                                        color: Colors.transparent,
-                                        child: Text(
-                                          widget.university['acceptance_rate']
-                                              .toString()
-                                              .split('.')
-                                              .first,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.white,
-                                            fontSize: 23,
-                                          ),
-                                        ),
+                                  Material(
+                                    color: Colors.transparent,
+                                    child: Text(
+                                      widget.university['acceptance_rate']
+                                          .toString()
+                                          .split('.')
+                                          .first,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.white,
+                                        fontSize: 23,
                                       ),
-                                      Material(
-                                        color: Colors.transparent,
-                                        child: Text(
-                                          '%',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.white,
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      )
-                                    ],
+                                    ),
                                   ),
                                   Material(
                                     color: Colors.transparent,
                                     child: Text(
-                                      widget.university['selectivity']
-                                          .toString()
-                                          .toUpperCase(),
+                                      '%',
                                       style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         color: Colors.white,
-                                        fontSize: 9,
+                                        fontSize: 14,
                                       ),
                                     ),
                                   )
                                 ],
-                              ),
-                            )
-                          ],
+                              )
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              right: widget.university['selectivity']
+                                          .toString()
+                                          .toUpperCase() ==
+                                      'MOST SELECTIVE'
+                                  ? 14
+                                  : widget.university['selectivity']
+                                              .toString()
+                                              .toUpperCase() ==
+                                          'MORE SELECTIVE'
+                                      ? 16
+                                      : 30,
+                              bottom: 120),
+                          child: Row(
+                            children: <Widget>[
+                              Spacer(),
+                              Material(
+                                color: Colors.transparent,
+                                child: Text(
+                                  widget.university['selectivity']
+                                      .toString()
+                                      .toUpperCase(),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                    fontSize: 9,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                         Container(
                           height: 30,

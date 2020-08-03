@@ -79,15 +79,15 @@ class _StudentEngagementScreenState extends State<StudentEngagementScreen> {
           leading: CircleAvatar(
             radius: 25,
             backgroundImage:
-                CachedNetworkImageProvider(student['profile_image']),
+                CachedNetworkImageProvider(student['profile_pic_url']),
             backgroundColor: Color(0xff005fa8),
           ),
           title: Padding(
             padding: EdgeInsets.only(top: 2, bottom: 2),
-            child: Text('${student['first_name']} ${student['last_name']}'),
+            child: Text('${student['student_name']}'),
           ),
           subtitle: Text(
-            '@' + student['username'],
+            '@' + student['student_username'],
             style: TextStyle(
               color: Color(0xff005fa8),
             ),
@@ -334,18 +334,16 @@ class _StudentEngagementScreenState extends State<StudentEngagementScreen> {
                                 ),
                               );
                             } else {
-                              String studentName = snapshot.data[index - 1]
-                                      ['first_name'] +
-                                  ' ' +
-                                  snapshot.data[index - 1]['last_name'];
-
                               return filter2 == null || filter2 == ""
                                   ? buildInterestedCard(
                                       snapshot.data[index - 1])
-                                  : studentName.toLowerCase().contains(filter2)
+                                  : snapshot.data[index - 1]['student_name']
+                                          .toLowerCase()
+                                          .contains(filter2)
                                       ? buildInterestedCard(
                                           snapshot.data[index - 1])
-                                      : snapshot.data[index - 1]['username']
+                                      : snapshot.data[index - 1]
+                                                  ['student_username']
                                               .toLowerCase()
                                               .contains(filter2)
                                           ? buildInterestedCard(
