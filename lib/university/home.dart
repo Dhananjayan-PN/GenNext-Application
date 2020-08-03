@@ -9,12 +9,10 @@ import 'repprofile.dart';
 import 'universityprofile.dart';
 import 'dashboard.dart';
 import 'notifications.dart';
-import 'chat.dart';
 
 User newUser;
 String dom = domain;
-Widget curPage = UniHomeScreen(user: newUser);
-PageController _controller;
+Widget curPage;
 
 Future<String> getToken() async {
   final directory = await getApplicationDocumentsDirectory();
@@ -389,57 +387,51 @@ class HomeAppBarState extends State<HomeAppBar> {
       title: Text('Home'),
       backgroundColor: Color(0xff005fa8),
       actions: <Widget>[
-        Stack(
-          children: <Widget>[
-            IconButton(
-                icon: Icon(Icons.notifications, size: 28),
-                alignment: Alignment.bottomLeft,
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          type: PageTransitionType.fade,
-                          child: NotificationScreen()));
-                }),
-            counter != 0
-                ? Positioned(
-                    right: 11,
-                    top: 11,
-                    child: Container(
-                      padding: EdgeInsets.all(2),
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      constraints: BoxConstraints(
-                        minWidth: 14,
-                        minHeight: 14,
-                      ),
-                      child: Text(
-                        '$counter',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 8,
+        Padding(
+          padding: EdgeInsets.only(right: 4),
+          child: Stack(
+            children: <Widget>[
+              IconButton(
+                  icon: Icon(Icons.notifications),
+                  alignment: Alignment.bottomLeft,
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        PageTransition(
+                            type: PageTransitionType.fade,
+                            child: NotificationScreen()));
+                  }),
+              counter != 0
+                  ? Positioned(
+                      right: 12.5,
+                      top: 12.5,
+                      child: Container(
+                        padding: EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        textAlign: TextAlign.center,
+                        constraints: BoxConstraints(
+                          minWidth: 14,
+                          minHeight: 14,
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 1),
+                          child: Text(
+                            '$counter',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 8,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
                       ),
-                    ),
-                  )
-                : Container()
-          ],
+                    )
+                  : Container()
+            ],
+          ),
         ),
-        IconButton(
-          icon: Icon(Icons.chat, size: 28),
-          onPressed: () {
-            setState(
-              () {
-                _controller.animateToPage(1,
-                    duration: Duration(milliseconds: 600),
-                    curve: Curves.easeInOut);
-              },
-            );
-          },
-        )
       ],
     );
   }
@@ -454,20 +446,6 @@ class UniHomeScreen extends StatefulWidget {
 
 class _UniHomeScreenState extends State<UniHomeScreen> {
   @override
-  void initState() {
-    super.initState();
-    _controller = PageController(
-      initialPage: 0,
-    );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _controller.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     newUser = widget.user;
     curPage = UniHomeScreen(user: newUser);
@@ -477,20 +455,15 @@ class _UniHomeScreenState extends State<UniHomeScreen> {
         systemNavigationBarColor: Colors.white,
         statusBarColor: Colors.black.withOpacity(0.3),
       ),
-      child: PageView(
-        controller: _controller,
-        children: [
-          Scaffold(
-              backgroundColor: Colors.white,
-              drawer: NavDrawer(
-                user: widget.user,
-                name: '${widget.user.firstname} ${widget.user.lastname}',
-                email: widget.user.email,
-              ),
-              appBar: HomeAppBar(),
-              body: DashBoard(user: widget.user)),
-          AllChats(pgcontroller: _controller)
-        ],
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        drawer: NavDrawer(
+          user: widget.user,
+          name: '${widget.user.firstname} ${widget.user.lastname}',
+          email: widget.user.email,
+        ),
+        appBar: HomeAppBar(),
+        body: DashBoard(user: widget.user),
       ),
     );
   }
