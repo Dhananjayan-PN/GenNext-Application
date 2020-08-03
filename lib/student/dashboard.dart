@@ -1082,59 +1082,59 @@ class _DashBoardState extends State<DashBoard> {
                   ),
                   Divider(thickness: 0, indent: 25, endIndent: 25),
                   FutureBuilder(
-                      future: studentNotes.timeout(Duration(seconds: 10)),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError) {
-                          saving = false;
-                          savingfailed = true;
-                          return Padding(
-                            padding: EdgeInsets.only(
-                                top: 20, left: 20, right: 20, bottom: 30),
-                            child: Text(
-                              'Unable to load your notes. Try again later',
-                              style: TextStyle(
-                                  fontSize: 12, color: Colors.black54),
-                              textAlign: TextAlign.center,
-                            ),
-                          );
-                        }
-                        if (snapshot.hasData) {
-                          saving = false;
-                          saved = true;
-                          return Padding(
-                            padding: EdgeInsets.only(
-                                top: 0, left: 20, right: 20, bottom: 30),
-                            child: TextField(
-                              cursorColor: Color(0xff005fa8),
-                              controller: studentnotes,
-                              autocorrect: true,
-                              maxLines: null,
-                              decoration: InputDecoration(
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.black87),
-                                    borderRadius: BorderRadius.circular(10)),
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                                hintText:
-                                    'Take note of your tasks, plans, thoughts...',
-                                hintStyle: TextStyle(
-                                    color: Colors.black54, fontSize: 14),
-                              ),
-                              onChanged: (value) => _editStudentNotes(),
-                            ),
-                          );
-                        }
+                    future: studentNotes.timeout(Duration(seconds: 10)),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        saving = false;
+                        savingfailed = true;
                         return Padding(
                           padding: EdgeInsets.only(
-                              top: 30, left: 20, right: 20, bottom: 50),
-                          child: Center(
-                              child: SpinKitWave(
-                            color: Colors.grey.withOpacity(0.4),
-                            size: 30,
-                          )),
+                              top: 20, left: 20, right: 20, bottom: 30),
+                          child: Text(
+                            'Unable to load your notes. Try again later',
+                            style:
+                                TextStyle(fontSize: 12, color: Colors.black54),
+                            textAlign: TextAlign.center,
+                          ),
                         );
-                      })
+                      }
+                      if (snapshot.hasData) {
+                        saving = false;
+                        saved = true;
+                        return Padding(
+                          padding: EdgeInsets.only(
+                              top: 0, left: 20, right: 20, bottom: 30),
+                          child: TextField(
+                            cursorColor: Color(0xff005fa8),
+                            controller: studentnotes,
+                            autocorrect: true,
+                            maxLines: null,
+                            decoration: InputDecoration(
+                              focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.black87),
+                                  borderRadius: BorderRadius.circular(10)),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10)),
+                              hintText:
+                                  'Take note of your tasks, plans, thoughts...',
+                              hintStyle: TextStyle(
+                                  color: Colors.black54, fontSize: 14),
+                            ),
+                            onChanged: (value) => _editStudentNotes(),
+                          ),
+                        );
+                      }
+                      return Padding(
+                        padding: EdgeInsets.only(
+                            top: 30, left: 20, right: 20, bottom: 50),
+                        child: Center(
+                            child: SpinKitWave(
+                          color: Colors.grey.withOpacity(0.4),
+                          size: 30,
+                        )),
+                      );
+                    },
+                  )
                 ],
               ),
             ),
