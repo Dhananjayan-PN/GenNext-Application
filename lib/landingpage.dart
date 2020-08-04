@@ -23,7 +23,8 @@ class _LandingPageState extends State<LandingPage> {
       Navigator.pop(context);
       Route route = homepageRoute(user.usertype, user);
       if (route != null) {
-        Navigator.of(context).push(route);
+        Navigator.of(context)
+            .pushAndRemoveUntil(route, (Route<dynamic> route) => false);
       } else {
         _error();
       }

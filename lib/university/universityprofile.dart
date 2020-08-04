@@ -912,7 +912,7 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                                   Spacer(),
                                   Padding(
                                     padding:
-                                        EdgeInsets.only(bottom: 42, right: 20),
+                                        EdgeInsets.only(bottom: 40, right: 20),
                                     child: Stack(
                                       children: <Widget>[
                                         CircleAvatar(
@@ -961,69 +961,82 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                                   ),
                                 ],
                               ),
-                              Row(
-                                children: <Widget>[
-                                  Spacer(),
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.only(right: 11, bottom: 45),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
+                              Padding(
+                                padding: EdgeInsets.only(right: 33.5),
+                                child: Row(
+                                  children: <Widget>[
+                                    Spacer(),
+                                    Row(
                                       children: <Widget>[
-                                        Row(
-                                          children: <Widget>[
-                                            Material(
-                                              color: Colors.transparent,
-                                              child: Text(
-                                                snapshot.data['acceptance_rate']
-                                                    .toString()
-                                                    .split('.')
-                                                    .first,
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.white,
-                                                  fontSize: 23,
-                                                ),
-                                              ),
+                                        Material(
+                                          color: Colors.transparent,
+                                          child: Text(
+                                            snapshot.data['acceptance_rate']
+                                                .toString()
+                                                .split('.')
+                                                .first,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.white,
+                                              fontSize: 23,
                                             ),
-                                            Material(
-                                              color: Colors.transparent,
-                                              child: Text(
-                                                '%',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.white,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                            )
-                                          ],
+                                          ),
                                         ),
                                         Material(
                                           color: Colors.transparent,
                                           child: Text(
-                                            snapshot.data['selectivity']
-                                                .toString()
-                                                .toUpperCase(),
+                                            '%',
                                             style: TextStyle(
                                               fontWeight: FontWeight.w500,
                                               color: Colors.white,
-                                              fontSize: 9,
+                                              fontSize: 14,
                                             ),
                                           ),
                                         )
                                       ],
-                                    ),
-                                  )
-                                ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    right: snapshot.data['selectivity']
+                                                .toString()
+                                                .toUpperCase() ==
+                                            'MOST SELECTIVE'
+                                        ? 14
+                                        : snapshot.data['selectivity']
+                                                    .toString()
+                                                    .toUpperCase() ==
+                                                'MORE SELECTIVE'
+                                            ? 16
+                                            : 30,
+                                    bottom: 38),
+                                child: Row(
+                                  children: <Widget>[
+                                    Spacer(),
+                                    Material(
+                                      color: Colors.transparent,
+                                      child: Text(
+                                        snapshot.data['selectivity']
+                                            .toString()
+                                            .toUpperCase(),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.white,
+                                          fontSize: 9,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
                               Row(
                                 children: <Widget>[
                                   Spacer(),
                                   Padding(
                                     padding:
-                                        EdgeInsets.only(right: 28, bottom: 20),
+                                        EdgeInsets.only(right: 28, bottom: 18),
                                     child: ClipOval(
                                       child: Material(
                                         shape: CircleBorder(),
@@ -1374,13 +1387,10 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.8,
-                              child: Text(
-                                'Top Majors',
-                                style: TextStyle(
-                                    color: Colors.black87, fontSize: 20),
-                              ),
+                            Text(
+                              'Top Majors',
+                              style: TextStyle(
+                                  color: Colors.black87, fontSize: 20),
                             ),
                             Spacer(),
                             InkWell(
@@ -1542,13 +1552,10 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.8,
-                              child: Text(
-                                'Testing',
-                                style: TextStyle(
-                                    color: Colors.black87, fontSize: 20),
-                              ),
+                            Text(
+                              'Testing',
+                              style: TextStyle(
+                                  color: Colors.black87, fontSize: 20),
                             ),
                             Spacer(),
                             InkWell(
@@ -1604,13 +1611,10 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.8,
-                              child: Text(
-                                'Application & Dates',
-                                style: TextStyle(
-                                    color: Colors.black87, fontSize: 20),
-                              ),
+                            Text(
+                              'Application & Dates',
+                              style: TextStyle(
+                                  color: Colors.black87, fontSize: 20),
                             ),
                             Spacer(),
                             InkWell(
@@ -1708,13 +1712,10 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.8,
-                              child: Text(
-                                'Documents',
-                                style: TextStyle(
-                                    color: Colors.black87, fontSize: 20),
-                              ),
+                            Text(
+                              'Documents',
+                              style: TextStyle(
+                                  color: Colors.black87, fontSize: 20),
                             ),
                             Spacer(),
                             InkWell(

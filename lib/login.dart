@@ -93,7 +93,8 @@ class _LoginPageState extends State<LoginPage> {
           Navigator.pop(context);
           Route route = homepageRoute(user.usertype);
           if (route != null) {
-            Navigator.of(context).push(route);
+            Navigator.of(context)
+                .pushAndRemoveUntil(route, (Route<dynamic> route) => false);
           } else {
             username.clear();
             password.clear();

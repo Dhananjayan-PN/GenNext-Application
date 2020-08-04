@@ -584,14 +584,14 @@ class _UniversityPageState extends State<UniversityPage> {
                                           .toString()
                                           .toUpperCase() ==
                                       'MOST SELECTIVE'
-                                  ? 14
+                                  ? 15
                                   : widget.university['selectivity']
                                               .toString()
                                               .toUpperCase() ==
                                           'MORE SELECTIVE'
-                                      ? 16
+                                      ? 15
                                       : 30,
-                              bottom: 32),
+                              bottom: 31),
                           child: Row(
                             children: <Widget>[
                               Spacer(),
@@ -615,7 +615,7 @@ class _UniversityPageState extends State<UniversityPage> {
                           children: <Widget>[
                             Spacer(),
                             Padding(
-                              padding: EdgeInsets.only(right: 24, bottom: 18),
+                              padding: EdgeInsets.only(right: 25, bottom: 18),
                               child: CircularPercentIndicator(
                                 footer: Text(
                                   'MATCH',

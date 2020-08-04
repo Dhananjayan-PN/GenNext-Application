@@ -106,7 +106,6 @@ class _DashBoardState extends State<DashBoard> {
       dom + 'api/university/get-interested-students',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
     );
-    print(response1.body);
     if (response1.statusCode == 200) {
       data['interested_students'] =
           json.decode(response1.body)['interested_students'].length;
@@ -114,7 +113,6 @@ class _DashBoardState extends State<DashBoard> {
         dom + 'api/university/get-applications',
         headers: {HttpHeaders.authorizationHeader: "Token $tok"},
       );
-      print(response2.body);
       if (response2.statusCode == 200) {
         data['applying_students'] =
             json.decode(response2.body)['application_data'].length;
@@ -129,7 +127,6 @@ class _DashBoardState extends State<DashBoard> {
             dom + 'api/university/profile',
             headers: {HttpHeaders.authorizationHeader: "Token $tok"},
           );
-          print(data);
           if (response4.statusCode == 200) {
             data['image_url'] =
                 json.decode(response4.body)['university_data']['image_url'];
@@ -487,10 +484,13 @@ class _DashBoardState extends State<DashBoard> {
                   child: CachedNetworkImage(
                     imageUrl: snapshot.data['image_url'] ??
                         'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
-                    placeholder: (context, url) => SpinKitWave(
-                      type: SpinKitWaveType.start,
-                      color: Colors.grey.withOpacity(0.20),
-                      size: 40,
+                    placeholder: (context, url) => Padding(
+                      padding: EdgeInsets.only(top: 30, bottom: 30),
+                      child: SpinKitWave(
+                        type: SpinKitWaveType.start,
+                        color: Colors.grey.withOpacity(0.20),
+                        size: 40,
+                      ),
                     ),
                     errorWidget: (context, url, error) => cardData(null, true),
                     imageBuilder: (context, imageProvider) =>

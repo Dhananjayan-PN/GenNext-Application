@@ -592,7 +592,7 @@ class _UniversityPageState extends State<UniversityPage> {
                           children: <Widget>[
                             Spacer(),
                             Padding(
-                              padding: EdgeInsets.only(bottom: 30, right: 20),
+                              padding: EdgeInsets.only(bottom: 30, right: 22.5),
                               child: CircleAvatar(
                                 backgroundImage: CachedNetworkImageProvider(
                                     widget.university['logo_url']),
@@ -603,7 +603,7 @@ class _UniversityPageState extends State<UniversityPage> {
                           ],
                         ),
                         Padding(
-                          padding: EdgeInsets.only(right: 32),
+                          padding: EdgeInsets.only(right: 33.5),
                           child: Row(
                             children: <Widget>[
                               Spacer(),

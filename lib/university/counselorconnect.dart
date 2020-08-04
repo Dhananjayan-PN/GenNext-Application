@@ -23,6 +23,7 @@ class _CounselorConnectScreenState extends State<CounselorConnectScreen> {
   @override
   void initState() {
     super.initState();
+    BackButtonInterceptor.add(myInterceptor);
     requests = getCounselorRequests();
     connected = getConnectedCounselors();
     controller.addListener(() {
@@ -30,6 +31,27 @@ class _CounselorConnectScreenState extends State<CounselorConnectScreen> {
         filter = controller.text.toLowerCase();
       });
     });
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    BackButtonInterceptor.remove(myInterceptor);
+    super.dispose();
+  }
+
+  bool myInterceptor(bool stopDefaultButtonEvent) {
+    curPage = UniHomeScreen(user: newUser);
+    Navigator.push(
+      context,
+      PageTransition(
+        type: PageTransitionType.fade,
+        child: UniHomeScreen(
+          user: newUser,
+        ),
+      ),
+    );
+    return true;
   }
 
   Future<void> getCounselorRequests() async {
