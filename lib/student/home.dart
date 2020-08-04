@@ -18,6 +18,18 @@ User newUser;
 String dom = domain;
 Widget curPage;
 
+final navlistelements = [
+  ['Counselling', CounsellingScreen(), Icons.people],
+  ['Schedule', ScheduleScreen(), Icons.date_range],
+  ['Explore Universities', AllUniversitiesScreen(), Icons.explore],
+  ['My Profile', ProfileScreen(), Icons.account_box],
+  ['My Universities', MyUniversitiesScreen(), Icons.account_balance],
+  ['My Applications', ApplicationsScreen(), Icons.assignment],
+  ['My Essays', EssaysScreen(), Icons.edit],
+  ['My Test Scores', TestScoresScreen(), Icons.assessment],
+  ['My Documents', DocumentsScreen(), Icons.description],
+];
+
 Future<String> getToken() async {
   final directory = await getApplicationDocumentsDirectory();
   String tok = await File('${directory.path}/tok.txt').readAsString();
@@ -174,18 +186,6 @@ class NavDrawer extends StatefulWidget {
 class _NavDrawerState extends State<NavDrawer> {
   @override
   Widget build(BuildContext context) {
-    final navlistelements = [
-      ['Home', StudentHomeScreen(user: widget.user), Icons.home],
-      ['Counselling', CounsellingScreen(), Icons.people],
-      ['Schedule', ScheduleScreen(), Icons.date_range],
-      ['Explore Universities', AllUniversitiesScreen(), Icons.explore],
-      ['My Profile', ProfileScreen(), Icons.account_box],
-      ['My Universities', MyUniversitiesScreen(), Icons.account_balance],
-      ['My Applications', ApplicationsScreen(), Icons.assignment],
-      ['My Essays', EssaysScreen(), Icons.edit],
-      ['My Test Scores', TestScoresScreen(), Icons.assessment],
-      ['My Documents', DocumentsScreen(), Icons.description],
-    ];
     List<Widget> navlist = [];
     for (var i = 0; i < navlistelements.length; i++) {
       var element = navlistelements[i];
@@ -453,10 +453,17 @@ class StudentHomeScreen extends StatefulWidget {
 class _StudentHomeScreenState extends State<StudentHomeScreen> {
   @override
   Widget build(BuildContext context) {
+    newUser = widget.user;
+    if (navlistelements.length == 10) {
+    } else {
+      navlistelements.insert(
+        0,
+        ['Home', StudentHomeScreen(user: widget.user), Icons.home],
+      );
+    }
     SystemChrome.setEnabledSystemUIOverlays(
         [SystemUiOverlay.top, SystemUiOverlay.bottom]);
     curPage = StudentHomeScreen(user: widget.user);
-    newUser = widget.user;
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.dark,

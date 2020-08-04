@@ -457,6 +457,8 @@ class _CounselorHomeScreenState extends State<CounselorHomeScreen> {
   @override
   Widget build(BuildContext context) {
     newUser = widget.user;
+    SystemChrome.setEnabledSystemUIOverlays(
+        [SystemUiOverlay.top, SystemUiOverlay.bottom]);
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.dark,
