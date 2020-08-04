@@ -460,9 +460,12 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
     });
   }
 
-  Widget buildCard(uni, bool starred) {
+  Widget buildCard(uni, bool starred, bool list) {
     if (starred != null) {
       uni['favorited_status'] = starred;
+    }
+    if (list != null) {
+      uni['in_college_list'] = list;
     }
     Widget cardData(ImageProvider imageProvider, bool isError) => Container(
           decoration: BoxDecoration(
@@ -674,7 +677,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                       List<ChecklistItemView> subItems = [];
                       for (var j = 0; j < snapshot.data[i].length; j++) {
                         subItems.add(ChecklistItemView(
-                          title: buildCard(snapshot.data[i][j], null),
+                          title: buildCard(snapshot.data[i][j], null, true),
                           onStartDragItem: (listIndex, itemIndex, state) {},
                           canDrag: true,
                           onDropItem: (oldListIndex, oldItemIndex, listIndex,
@@ -847,12 +850,13 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                                 );
                               }
                               return filter == null || filter == ""
-                                  ? buildCard(snapshot.data[index - 1], true)
+                                  ? buildCard(
+                                      snapshot.data[index - 1], true, null)
                                   : snapshot.data[index - 1]['university_name']
                                           .toLowerCase()
                                           .contains(filter)
                                       ? buildCard(
-                                          snapshot.data[index - 1], true)
+                                          snapshot.data[index - 1], true, null)
                                       : Container();
                             }),
                       );
