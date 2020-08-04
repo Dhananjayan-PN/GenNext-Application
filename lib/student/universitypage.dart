@@ -40,6 +40,7 @@ class _UniversityPageState extends State<UniversityPage> {
   }
 
   bool myInterceptor(bool stopDefaultButtonEvent) {
+    Navigator.pop(context);
     return true;
   }
 

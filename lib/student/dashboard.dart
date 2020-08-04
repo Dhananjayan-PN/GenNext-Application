@@ -398,7 +398,8 @@ class _DashBoardState extends State<DashBoard> {
                                     ),
                                     Spacer(),
                                     Padding(
-                                      padding: EdgeInsets.only(left: 15),
+                                      padding:
+                                          EdgeInsets.only(left: 15, right: 5),
                                       child: Text(
                                         snapshot.data[index]['university_name'],
                                         style: TextStyle(

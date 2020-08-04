@@ -49,14 +49,6 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
   }
 
   bool myInterceptor(bool stopDefaultButtonEvent) {
-    curPage = StudentHomeScreen(user: newUser);
-    Navigator.push(
-        context,
-        PageTransition(
-            type: PageTransitionType.fade,
-            child: StudentHomeScreen(
-              user: newUser,
-            )));
     return true;
   }
 

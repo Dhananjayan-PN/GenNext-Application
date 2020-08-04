@@ -32,12 +32,6 @@ class _EssaysScreenState extends State<EssaysScreen> {
   }
 
   bool myInterceptor(bool stopDefaultButtonEvent) {
-    curPage = StudentHomeScreen(user: newUser);
-    Navigator.push(
-        context,
-        PageTransition(
-            type: PageTransitionType.fade,
-            child: StudentHomeScreen(user: newUser)));
     return true;
   }
 

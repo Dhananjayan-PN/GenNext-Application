@@ -20,12 +20,6 @@ class ProfileScreenState extends State<ProfileScreen> {
   }
 
   bool myInterceptor(bool stopDefaultButtonEvent) {
-    curPage = StudentHomeScreen(user: newUser);
-    Navigator.push(
-        context,
-        PageTransition(
-            type: PageTransitionType.fade,
-            child: StudentHomeScreen(user: newUser)));
     return true;
   }
 
