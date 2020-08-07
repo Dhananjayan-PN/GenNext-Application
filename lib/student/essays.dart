@@ -31,7 +31,7 @@ class _EssaysScreenState extends State<EssaysScreen> {
     super.dispose();
   }
 
-  bool myInterceptor(bool stopDefaultButtonEvent) {
+  bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
     return true;
   }
 
@@ -751,7 +751,7 @@ class _EssayEditorState extends State<EssayEditor> {
     super.dispose();
   }
 
-  bool myInterceptor(bool stopDefaultButtonEvent) {
+  bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
     Navigator.pop(context);
     return true;
   }

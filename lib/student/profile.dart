@@ -19,7 +19,7 @@ class ProfileScreenState extends State<ProfileScreen> {
     super.dispose();
   }
 
-  bool myInterceptor(bool stopDefaultButtonEvent) {
+  bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
     return true;
   }
 

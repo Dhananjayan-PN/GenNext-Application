@@ -28,7 +28,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
     super.dispose();
   }
 
-  bool myInterceptor(bool stopDefaultButtonEvent) {
+  bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
     return true;
   }
 

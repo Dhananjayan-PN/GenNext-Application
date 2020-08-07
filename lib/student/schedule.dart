@@ -43,7 +43,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     super.dispose();
   }
 
-  bool myInterceptor(bool stopDefaultButtonEvent) {
+  bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
     return true;
   }
 

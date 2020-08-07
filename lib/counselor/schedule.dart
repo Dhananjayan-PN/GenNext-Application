@@ -55,7 +55,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     super.dispose();
   }
 
-  bool myInterceptor(bool stopDefaultButtonEvent) {
+  bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
     print("BACK BUTTON!");
     Navigator.push(
         context,

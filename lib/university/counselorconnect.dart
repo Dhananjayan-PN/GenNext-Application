@@ -40,7 +40,7 @@ class _CounselorConnectScreenState extends State<CounselorConnectScreen> {
     super.dispose();
   }
 
-  bool myInterceptor(bool stopDefaultButtonEvent) {
+  bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
     curPage = UniHomeScreen(user: newUser);
     Navigator.push(
       context,

@@ -49,7 +49,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
     super.dispose();
   }
 
-  bool myInterceptor(bool stopDefaultButtonEvent) {
+  bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
     return true;
   }
 

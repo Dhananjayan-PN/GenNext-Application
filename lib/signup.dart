@@ -22,7 +22,7 @@ class SignUpPage extends StatefulWidget {
 class SignUpPageState extends State<SignUpPage>
     with SingleTickerProviderStateMixin {
   /*
-  bool myInterceptor(bool stopDefaultButtonEvent) {
+  bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
     return true;
   } */
   //remove ^^^ comment in production

@@ -39,7 +39,7 @@ class _UniversityPageState extends State<UniversityPage> {
     super.dispose();
   }
 
-  bool myInterceptor(bool stopDefaultButtonEvent) {
+  bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
     Navigator.pop(context);
     return true;
   }

@@ -100,7 +100,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     super.dispose();
   }
 
-  bool myInterceptor(bool stopDefaultButtonEvent) {
+  bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
     curPage = StudentHomeScreen(user: newUser);
     Navigator.push(
         context,

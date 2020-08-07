@@ -26,7 +26,7 @@ class _EssaysScreenState extends State<EssaysScreen> {
     super.dispose();
   }
 
-  bool myInterceptor(bool stopDefaultButtonEvent) {
+  bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
     print("BACK BUTTON!");
     Navigator.push(
         context,
@@ -86,7 +86,7 @@ class _EssayEditorState extends State<EssayEditor> {
     super.dispose();
   }
 
-  bool myInterceptor(bool stopDefaultButtonEvent) {
+  bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
     print("BACK BUTTON!");
     Navigator.pop(context);
     return true;

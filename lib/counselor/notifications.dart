@@ -102,7 +102,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     super.dispose();
   }
 
-  bool myInterceptor(bool stopDefaultButtonEvent) {
+  bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
     print("BACK BUTTON!");
     Navigator.push(
         context,
