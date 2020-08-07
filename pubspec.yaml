@@ -22,16 +22,15 @@ dependencies:
   flutter_swiper: ^1.1.6
   zefyr:
     git:
-      url: git://github.com/winwisely99/zefyr.git
-      path: packages/zefyr/
-      commit: 9b032d8
+      url: https://github.com/memspace/zefyr.git
+      path: packages/zefyr
   quill_zefyr_bijection: ^0.3.0
-  url_launcher: ^5.4.11
+  url_launcher: ^5.5.0
   percent_indicator: "^2.1.5"
   flutter_spinkit: "^4.1.2"
   checklist: ^0.1.4
   expand_widget: ^1.0.0+1
-  file_picker: ^1.12.0
+  file_picker: ^1.13.2
   dio: ^3.0.9
   clipboard_manager: ^0.0.1
 

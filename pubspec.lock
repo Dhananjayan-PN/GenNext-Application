@@ -783,12 +783,12 @@ packages:
   zefyr:
     dependency: "direct main"
     description:
-      path: "packages/zefyr/"
+      path: "packages/zefyr"
       ref: HEAD
-      resolved-ref: "220e2d453df6bc7d7a1d7d89788c0985645db092"
-      url: "git://github.com/winwisely99/zefyr.git"
+      resolved-ref: "0d69499582ee9ded8afa23b5ba3b0be8c51b7aed"
+      url: "https://github.com/memspace/zefyr.git"
     source: git
-    version: "0.10.0"
+    version: "0.11.0"
 sdks:
   dart: ">=2.9.0-14.0.dev <3.0.0"
   flutter: ">=1.12.13+hotfix.5 <2.0.0"
