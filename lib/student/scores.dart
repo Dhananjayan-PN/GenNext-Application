@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+import 'user.dart' as studentglobals;
 import 'package:dio/dio.dart' as dio;
 import 'package:intl/intl.dart';
 import '../imports.dart';
@@ -76,7 +77,7 @@ class _TestScoresScreenState extends State<TestScoresScreen> {
       'Content-Type': 'application/x-www-form-urlencoded',
     };
     var formData = dio.FormData.fromMap({
-      "user_id": newUser.id,
+      "user_id": studentglobals.user.id,
       "test_type": type,
       "date_of_test": testDate.toIso8601String().substring(0, 10),
       "score": score,
@@ -359,10 +360,7 @@ class _TestScoresScreenState extends State<TestScoresScreen> {
           maxLines: 1,
         ),
       ),
-      drawer: NavDrawer(
-          user: newUser,
-          name: newUser.firstname + ' ' + newUser.lastname,
-          email: newUser.email),
+      drawer: NavDrawer(),
       body: RefreshIndicator(
         key: refreshKey,
         onRefresh: () {

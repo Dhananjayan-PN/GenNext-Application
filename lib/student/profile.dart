@@ -1,3 +1,4 @@
+import 'user.dart' as studentglobals;
 import '../imports.dart';
 import 'home.dart';
 
@@ -26,10 +27,7 @@ class ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      drawer: NavDrawer(
-          user: newUser,
-          name: newUser.firstname + ' ' + newUser.lastname,
-          email: newUser.email),
+      drawer: NavDrawer(),
       appBar: CustomAppBar('Profile'),
       body: Padding(
         padding: EdgeInsets.only(top: 15, left: 10, right: 10),
@@ -42,14 +40,17 @@ class ProfileScreenState extends State<ProfileScreen> {
             children: <Widget>[
               ListTile(
                 leading: CircleAvatar(
-                  backgroundImage: CachedNetworkImageProvider(newUser.dp),
+                  backgroundImage:
+                      CachedNetworkImageProvider(studentglobals.user.dp),
                   backgroundColor: Colors.blue[800],
                   radius: 29,
                 ),
                 title: Padding(
                   padding: EdgeInsets.only(top: 5),
                   child: Text(
-                    newUser.firstname + ' ' + newUser.lastname,
+                    studentglobals.user.firstname +
+                        ' ' +
+                        studentglobals.user.lastname,
                     style: TextStyle(fontSize: 17),
                   ),
                 ),
@@ -78,7 +79,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                       'Username: ',
                     ),
                     Text(
-                      '@' + newUser.username,
+                      '@' + studentglobals.user.username,
                       style: TextStyle(color: Colors.black54),
                     )
                   ],
@@ -92,7 +93,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                       'Email ID: ',
                     ),
                     Text(
-                      newUser.email,
+                      studentglobals.user.email,
                       style: TextStyle(color: Colors.black54),
                     )
                   ],
@@ -106,7 +107,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                       'Date of Birth: ',
                     ),
                     Text(
-                      newUser.dob,
+                      studentglobals.user.dob,
                       style: TextStyle(color: Colors.black54),
                     )
                   ],
@@ -120,7 +121,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                       'Country: ',
                     ),
                     Text(
-                      newUser.country,
+                      studentglobals.user.country,
                       style: TextStyle(color: Colors.black54),
                     )
                   ],

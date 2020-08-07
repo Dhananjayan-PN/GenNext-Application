@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+import 'user.dart' as studentglobals;
 import '../imports.dart';
 import 'home.dart';
 
@@ -21,6 +22,7 @@ class _UniversityPageState extends State<UniversityPage> {
   List<Widget> topMajors;
   List<Widget> testingReqs;
   List<Widget> documentChips;
+  Object heroTag;
   String educationString = '';
   bool isStarred;
   bool inList;
@@ -149,7 +151,7 @@ class _UniversityPageState extends State<UniversityPage> {
           'Content-Type': 'application/json; charset=UTF-8'
         },
         body: jsonEncode(<String, dynamic>{
-          'student_id': newUser.id,
+          'student_id': studentglobals.user.id,
           'university_id': id,
           'college_category': category
         }));
@@ -474,6 +476,13 @@ class _UniversityPageState extends State<UniversityPage> {
         );
       }
     }
+    if (widget.starred != null && widget.starred) {
+      heroTag = widget.university['university_id'].toString() + 'starred';
+    } else if (widget.rec != null && widget.rec) {
+      heroTag = widget.university['university_id'].toString() + 'rec';
+    } else {
+      heroTag = widget.university['university_id'].toString();
+    }
     return Scaffold(
       key: _scafKey,
       backgroundColor: Colors.white,
@@ -485,11 +494,7 @@ class _UniversityPageState extends State<UniversityPage> {
             elevation: 0,
             expandedHeight: 300,
             flexibleSpace: Hero(
-              tag: widget.starred != null
-                  ? widget.university['university_id'].toString() + 'starred'
-                  : widget.rec != null
-                      ? widget.university['university_id'].toString() + 'rec'
-                      : widget.university['university_id'],
+              tag: heroTag,
               child: Stack(
                 children: <Widget>[
                   Positioned(

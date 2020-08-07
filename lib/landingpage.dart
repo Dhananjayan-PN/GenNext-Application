@@ -1,9 +1,12 @@
+import 'university/user.dart' as universityglobals;
+import 'counselor/user.dart' as counselorglobals;
+import 'student/user.dart' as studentglobals;
 import 'package:http/http.dart' as http;
-import 'student/home.dart';
-import 'counselor/home.dart';
 import 'university/home.dart';
-import 'login.dart';
+import 'counselor/home.dart';
+import 'student/home.dart';
 import 'imports.dart';
+import 'login.dart';
 
 String domain = "https://gennext.ml/";
 
@@ -35,15 +38,22 @@ class _LandingPageState extends State<LandingPage> {
 
   Route homepageRoute(String role, User user) {
     return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => role == 'S'
-          ? StudentHomeScreen(user: user)
-          : role == 'C'
-              ? CounselorHomeScreen(user: user)
-              : role == 'R'
-                  ? UniHomeScreen(user: user)
-                  : role == 'A'
-                      ? Container() //Admin Page
-                      : null,
+      pageBuilder: (context, animation, secondaryAnimation) {
+        if (role == 'S') {
+          studentglobals.user = user;
+          return StudentHomeScreen();
+        } else if (role == 'C') {
+          counselorglobals.user = user;
+          return CounselorHomeScreen(user: user);
+        } else if (role == 'R') {
+          universityglobals.user = user;
+          return UniHomeScreen(user: user);
+        } else if (role == 'A') {
+          return Container();
+        } else {
+          return null;
+        }
+      },
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         var begin = Offset(0.0, 1.0);
         var end = Offset.zero;

@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+import 'user.dart' as studentglobals;
 import 'universitypage.dart';
 import '../imports.dart';
 import 'home.dart';
@@ -184,7 +185,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
       },
       body: jsonEncode(
         <String, dynamic>{
-          'student_id': newUser.id,
+          'student_id': studentglobals.user.id,
           'university_id': id,
           'college_category': category
         },
@@ -240,7 +241,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
       },
       body: jsonEncode(
         <String, dynamic>{
-          'student_id': newUser.id,
+          'student_id': studentglobals.user.id,
           'university_id': id,
           'new_college_category': category
         },
@@ -548,9 +549,9 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
           ),
         );
     return Hero(
-      tag: starred != null
+      tag: starred
           ? uni['university_id'].toString() + 'starred'
-          : uni['university_id'],
+          : uni['university_id'].toString(),
       child: Card(
         margin: EdgeInsets.only(top: 7, left: 15, right: 15, bottom: 7),
         clipBehavior: Clip.antiAlias,
@@ -576,10 +577,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
       child: Scaffold(
         key: _scafKey,
         backgroundColor: Colors.white,
-        drawer: NavDrawer(
-            user: newUser,
-            name: newUser.firstname + ' ' + newUser.lastname,
-            email: newUser.email),
+        drawer: NavDrawer(),
         appBar: AppBar(
           backgroundColor: Color(0xff005fa8),
           elevation: 6,
@@ -669,7 +667,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                       List<ChecklistItemView> subItems = [];
                       for (var j = 0; j < snapshot.data[i].length; j++) {
                         subItems.add(ChecklistItemView(
-                          title: buildCard(snapshot.data[i][j], null, true),
+                          title: buildCard(snapshot.data[i][j], false, true),
                           onStartDragItem: (listIndex, itemIndex, state) {},
                           canDrag: true,
                           onDropItem: (oldListIndex, oldItemIndex, listIndex,
@@ -843,12 +841,12 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                               }
                               return filter == null || filter == ""
                                   ? buildCard(
-                                      snapshot.data[index - 1], true, null)
+                                      snapshot.data[index - 1], true, false)
                                   : snapshot.data[index - 1]['university_name']
                                           .toLowerCase()
                                           .contains(filter)
                                       ? buildCard(
-                                          snapshot.data[index - 1], true, null)
+                                          snapshot.data[index - 1], true, false)
                                       : Container();
                             }),
                       );

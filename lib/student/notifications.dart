@@ -101,15 +101,15 @@ class _NotificationScreenState extends State<NotificationScreen> {
   }
 
   bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
-    curPage = StudentHomeScreen(user: newUser);
+    curPage = StudentHomeScreen();
     Navigator.push(
-        context,
-        PageTransition(
-            duration: Duration(milliseconds: 500),
-            type: PageTransitionType.leftToRight,
-            child: StudentHomeScreen(
-              user: newUser,
-            )));
+      context,
+      PageTransition(
+        duration: Duration(milliseconds: 500),
+        type: PageTransitionType.leftToRight,
+        child: StudentHomeScreen(),
+      ),
+    );
     return true;
   }
 

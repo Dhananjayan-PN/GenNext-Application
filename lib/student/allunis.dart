@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+import 'user.dart' as studentglobals;
 import 'universitypage.dart';
 import '../imports.dart';
 import 'home.dart';
@@ -165,7 +166,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
           'Content-Type': 'application/json; charset=UTF-8'
         },
         body: jsonEncode(<String, dynamic>{
-          'student_id': newUser.id,
+          'student_id': studentglobals.user.id,
           'university_id': id,
           'college_category': category
         }));
@@ -361,6 +362,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
                     type: PageTransitionType.fade,
                     child: UniversityPage(
                       university: unis[index],
+                      rec: rec,
                     ),
                   ),
                 );
@@ -372,7 +374,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
     return Hero(
       tag: rec
           ? unis[index]['university_id'].toString() + 'rec'
-          : unis[index]['university_id'],
+          : unis[index]['university_id'].toString(),
       child: Card(
         margin: EdgeInsets.only(top: 7, left: 15, right: 15, bottom: 7),
         clipBehavior: Clip.antiAlias,
@@ -399,10 +401,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
       child: Scaffold(
         key: _scafKey,
         backgroundColor: Colors.white,
-        drawer: NavDrawer(
-            user: newUser,
-            name: newUser.firstname + ' ' + newUser.lastname,
-            email: newUser.email),
+        drawer: NavDrawer(),
         appBar: AppBar(
           backgroundColor: Color(0xff005fa8),
           elevation: 6,

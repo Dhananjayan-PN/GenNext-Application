@@ -61,10 +61,7 @@ class _CounsellingScreenState extends State<CounsellingScreen> {
     return Scaffold(
       key: _scafKey,
       backgroundColor: Colors.white,
-      drawer: NavDrawer(
-          user: newUser,
-          name: newUser.firstname + ' ' + newUser.lastname,
-          email: newUser.email),
+      drawer: NavDrawer(),
       appBar: CustomAppBar('Counselling'),
       body: RefreshIndicator(
         key: refreshKey,

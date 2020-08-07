@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+import 'user.dart' as studentglobals;
 import '../imports.dart';
 import 'home.dart';
 
@@ -157,7 +158,7 @@ class _EssaysScreenState extends State<EssaysScreen> {
               'Content-Type': 'application/json; charset=UTF-8',
             },
             body: jsonEncode(<String, dynamic>{
-              'user_id': newUser.id,
+              'user_id': studentglobals.user.id,
               'essay_title': title,
               'essay_prompt': prompt,
               'student_essay_content': '',
@@ -444,10 +445,7 @@ class _EssaysScreenState extends State<EssaysScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      drawer: NavDrawer(
-          user: newUser,
-          name: newUser.firstname + ' ' + newUser.lastname,
-          email: newUser.email),
+      drawer: NavDrawer(),
       appBar: AppBar(
         backgroundColor: Color(0xff005fa8),
         actions: <Widget>[

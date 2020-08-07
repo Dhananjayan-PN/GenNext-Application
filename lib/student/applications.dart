@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+import 'user.dart' as studentglobals;
 import 'package:dio/dio.dart' as dio;
 import 'package:intl/intl.dart';
 import '../imports.dart';
@@ -192,7 +193,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
       },
       body: json.encode(
         <String, dynamic>{
-          "student_id": newUser.id,
+          "student_id": studentglobals.user.id,
           "university_id": uniIds[uniName],
           "application_deadline": deadline.toIso8601String().substring(0, 10),
           "application_notes": notes,
@@ -462,10 +463,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
       child: Scaffold(
         key: _scafKey,
         backgroundColor: Colors.white,
-        drawer: NavDrawer(
-            user: newUser,
-            name: newUser.firstname + ' ' + newUser.lastname,
-            email: newUser.email),
+        drawer: NavDrawer(),
         appBar: AppBar(
           backgroundColor: Color(0xff005fa8),
           elevation: 6,
@@ -1214,7 +1212,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                   'Content-Type': 'application/json; charset=UTF-8',
                 },
                 body: jsonEncode(<String, dynamic>{
-                  'user_id': newUser.id,
+                  'user_id': studentglobals.user.id,
                   'essay_title': data[0],
                   'essay_prompt': data[1],
                   'student_essay_content': '',
@@ -1243,7 +1241,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
           'Content-Type': 'application/x-www-form-urlencoded',
         };
         var formData = dio.FormData.fromMap({
-          "user_id": newUser.id,
+          "user_id": studentglobals.user.id,
           "transcript_grade": data[1],
           "transcript_title": data[0],
           "transcript_special_circumstances": data[2],
@@ -1279,7 +1277,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
           'Content-Type': 'application/x-www-form-urlencoded',
         };
         var formData = dio.FormData.fromMap({
-          "user_id": newUser.id,
+          "user_id": studentglobals.user.id,
           "misc_title": data[0],
           "misc_doc_type": data[1],
           "misc_is_flagged": false,

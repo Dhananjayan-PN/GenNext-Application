@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+import 'user.dart' as studentglobals;
 import 'package:dio/dio.dart' as dio;
 import 'package:intl/intl.dart';
 import '../imports.dart';
@@ -79,7 +80,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
       'Content-Type': 'application/x-www-form-urlencoded',
     };
     var formData = dio.FormData.fromMap({
-      "user_id": newUser.id,
+      "user_id": studentglobals.user,
       "transcript_grade": grade,
       "transcript_title": title,
       "transcript_special_circumstances": spec,
@@ -136,7 +137,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
             },
             body: json.encode(
               <String, dynamic>{
-                "user_id": newUser.id,
+                "user_id": studentglobals.user.id,
                 "ec_title": title,
                 "ec_start_date": startDate.toIso8601String().substring(0, 10),
                 "ec_end_date": endDate.toIso8601String().substring(0, 10),
@@ -153,7 +154,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
             },
             body: json.encode(
               <String, dynamic>{
-                "user_id": newUser.id,
+                "user_id": studentglobals.user.id,
                 "ec_id": id,
                 "ec_title": title,
                 "ec_start_date": startDate.toIso8601String().substring(0, 10),
@@ -195,7 +196,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
       'Content-Type': 'application/x-www-form-urlencoded',
     };
     var formData = dio.FormData.fromMap({
-      "user_id": newUser.id,
+      "user_id": studentglobals.user.id,
       "misc_title": title,
       "misc_doc_type": type,
       "misc_is_flagged": false,
@@ -582,10 +583,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: CustomAppBar('My Documents'),
-      drawer: NavDrawer(
-          user: newUser,
-          name: newUser.firstname + ' ' + newUser.lastname,
-          email: newUser.email),
+      drawer: NavDrawer(),
       body: FutureBuilder(
         future: documents.timeout(Duration(seconds: 10)),
         builder: (context, snapshot) {

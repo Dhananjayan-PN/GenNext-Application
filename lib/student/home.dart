@@ -1,7 +1,6 @@
 import '../imports.dart';
 import '../login.dart';
 import '../landingpage.dart';
-import '../usermodel.dart';
 import 'dashboard.dart';
 import 'notifications.dart';
 import 'essays.dart';
@@ -13,12 +12,14 @@ import 'allunis.dart';
 import 'applications.dart';
 import 'counselor.dart';
 import 'schedule.dart';
+import 'user.dart' as studentglobals;
 
-User newUser;
+// User newUser;
 String dom = domain;
 Widget curPage;
 
 final navlistelements = [
+  ['Home', StudentHomeScreen(), Icons.home],
   ['Counselling', CounsellingScreen(), Icons.people],
   ['Schedule', ScheduleScreen(), Icons.date_range],
   ['Explore Universities', AllUniversitiesScreen(), Icons.explore],
@@ -174,11 +175,6 @@ success(BuildContext context, String message) {
 }
 
 class NavDrawer extends StatefulWidget {
-  final String name;
-  final String email;
-  final User user;
-  NavDrawer({this.user, this.name, this.email});
-
   @override
   _NavDrawerState createState() => _NavDrawerState();
 }
@@ -237,18 +233,22 @@ class _NavDrawerState extends State<NavDrawer> {
             height: 210,
             child: UserAccountsDrawerHeader(
               decoration: BoxDecoration(color: Color(0xff005fa8)),
-              accountName: Text(widget.name,
+              accountName: Text(
+                  studentglobals.user.firstname +
+                      ' ' +
+                      studentglobals.user.lastname,
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
                       fontWeight: FontWeight.w400)),
-              accountEmail: Text(widget.email,
+              accountEmail: Text(studentglobals.user.email,
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 12,
                       fontWeight: FontWeight.w300)),
               currentAccountPicture: CircleAvatar(
-                backgroundImage: CachedNetworkImageProvider(newUser.dp),
+                backgroundImage:
+                    CachedNetworkImageProvider(studentglobals.user.dp),
                 backgroundColor: Colors.blue[800],
                 radius: 30,
               ),
@@ -340,6 +340,7 @@ class _NavDrawerState extends State<NavDrawer> {
                                 await getApplicationDocumentsDirectory();
                             final file = File('${directory.path}/tok.txt');
                             file.delete();
+                            studentglobals.user = null;
                           } catch (_) {
                             print('Error');
                           }
@@ -444,8 +445,6 @@ class HomeAppBarState extends State<HomeAppBar> {
 }
 
 class StudentHomeScreen extends StatefulWidget {
-  final User user;
-  StudentHomeScreen({this.user});
   @override
   _StudentHomeScreenState createState() => _StudentHomeScreenState();
 }
@@ -453,17 +452,9 @@ class StudentHomeScreen extends StatefulWidget {
 class _StudentHomeScreenState extends State<StudentHomeScreen> {
   @override
   Widget build(BuildContext context) {
-    newUser = widget.user;
-    if (navlistelements.length == 10) {
-    } else {
-      navlistelements.insert(
-        0,
-        ['Home', StudentHomeScreen(user: widget.user), Icons.home],
-      );
-    }
     SystemChrome.setEnabledSystemUIOverlays(
         [SystemUiOverlay.top, SystemUiOverlay.bottom]);
-    curPage = StudentHomeScreen(user: widget.user);
+    curPage = StudentHomeScreen();
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.dark,
@@ -472,13 +463,9 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
       ),
       child: Scaffold(
         backgroundColor: Colors.white,
-        drawer: NavDrawer(
-          user: widget.user,
-          name: '${widget.user.firstname} ${widget.user.lastname}',
-          email: widget.user.email,
-        ),
+        drawer: NavDrawer(),
         appBar: HomeAppBar(),
-        body: DashBoard(user: widget.user),
+        body: DashBoard(user: studentglobals.user),
       ),
     );
   }

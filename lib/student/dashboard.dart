@@ -965,7 +965,7 @@ class _DashBoardState extends State<DashBoard> {
                             ),
                           );
                       return Hero(
-                        tag: snapshot.data[index]['university_id'],
+                        tag: snapshot.data[index]['university_id'].toString(),
                         child: Card(
                           clipBehavior: Clip.antiAliasWithSaveLayer,
                           margin: EdgeInsets.only(top: 20, bottom: 30),

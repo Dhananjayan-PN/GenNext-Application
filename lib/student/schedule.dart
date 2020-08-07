@@ -839,10 +839,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
       key: _scafKey,
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
-      drawer: NavDrawer(
-          user: newUser,
-          name: newUser.firstname + ' ' + newUser.lastname,
-          email: newUser.email),
+      drawer: NavDrawer(),
       appBar: CustomAppBar('Schedule'),
       body: FutureBuilder(
         future: sessions.timeout(Duration(seconds: 10)),

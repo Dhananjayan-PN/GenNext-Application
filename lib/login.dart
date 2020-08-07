@@ -6,6 +6,9 @@ import 'counselor/home.dart';
 import 'university/home.dart';
 import 'signup.dart';
 import 'usermodel.dart';
+import 'student/user.dart' as studentglobals;
+import 'counselor/user.dart' as counselorglobals;
+import 'university/user.dart' as universityglobals;
 
 Route logoutRoute() {
   return PageRouteBuilder(
@@ -36,24 +39,30 @@ class _LoginPageState extends State<LoginPage> {
 
   String _username;
   String _password;
-  User user;
 
   @override
   void initState() {
     super.initState();
   }
 
-  Route homepageRoute(String role) {
+  Route homepageRoute(String role, User user) {
     return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => role == 'S'
-          ? StudentHomeScreen(user: user)
-          : role == 'C'
-              ? CounselorHomeScreen(user: user)
-              : role == 'R'
-                  ? UniHomeScreen(user: user)
-                  : role == 'A'
-                      ? Container() //Admin Page
-                      : null,
+      pageBuilder: (context, animation, secondaryAnimation) {
+        if (role == 'S') {
+          studentglobals.user = user;
+          return StudentHomeScreen();
+        } else if (role == 'C') {
+          counselorglobals.user = user;
+          return CounselorHomeScreen(user: user);
+        } else if (role == 'R') {
+          universityglobals.user = user;
+          return UniHomeScreen(user: user);
+        } else if (role == 'A') {
+          return Container();
+        } else {
+          return null;
+        }
+      },
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         var begin = Offset(0.0, 1.0);
         var end = Offset.zero;
@@ -89,9 +98,9 @@ class _LoginPageState extends State<LoginPage> {
           headers: {HttpHeaders.authorizationHeader: "Token $token"},
         );
         if (response.statusCode == 200) {
-          user = User.fromJson(json.decode(response.body));
+          User user = User.fromJson(json.decode(response.body));
           Navigator.pop(context);
-          Route route = homepageRoute(user.usertype);
+          Route route = homepageRoute(user.usertype, user);
           if (route != null) {
             Navigator.of(context)
                 .pushAndRemoveUntil(route, (Route<dynamic> route) => false);
