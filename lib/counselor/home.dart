@@ -1,7 +1,6 @@
 import '../imports.dart';
 import '../login.dart';
 import '../landingpage.dart';
-import '../usermodel.dart';
 import 'dashboard.dart';
 import 'notifications.dart';
 import 'mystudents.dart';
@@ -10,13 +9,12 @@ import 'myuniversities.dart';
 import 'profile.dart';
 import 'schedule.dart';
 import 'connectwithunis.dart';
+import 'user.dart' as counselorglobals;
 
-User newUser;
 String dom = domain;
 Widget curPage;
-
-final navlistelements = [
-  ['Home', CounselorHomeScreen(user: newUser), Icons.home],
+List navlistelements = [
+  ['Home', CounselorHomeScreen(), Icons.home],
   ['My Students', MyStudentsScreen(), Icons.group],
   ['Essays', EssaysScreen(), Icons.edit],
   ['My Profile', ProfileScreen(), Icons.account_box],
@@ -166,10 +164,6 @@ error(context) {
 }
 
 class NavDrawer extends StatefulWidget {
-  final String name;
-  final String email;
-  NavDrawer({this.name, this.email});
-
   @override
   _NavDrawerState createState() => _NavDrawerState();
 }
@@ -228,17 +222,22 @@ class _NavDrawerState extends State<NavDrawer> {
             height: 210,
             child: UserAccountsDrawerHeader(
               decoration: BoxDecoration(color: Color(0xff005fa8)),
-              accountName: Text(widget.name,
+              accountName: Text(
+                  counselorglobals.user.firstname +
+                      " " +
+                      counselorglobals.user.lastname,
                   style: TextStyle(color: Colors.white, fontSize: 18)),
-              accountEmail: Text(widget.email,
+              accountEmail: Text(counselorglobals.user.email,
                   style: TextStyle(color: Colors.white, fontSize: 12)),
               currentAccountPicture: CircleAvatar(
-                backgroundImage: CachedNetworkImageProvider(newUser.dp),
+                backgroundImage:
+                    CachedNetworkImageProvider(counselorglobals.user.dp),
                 backgroundColor: Colors.blue[400],
                 radius: 30,
               ),
               onDetailsPressed: () {
                 Navigator.pop(context);
+                curPage = ProfileScreen();
                 Navigator.pushAndRemoveUntil(
                   context,
                   PageTransition(
@@ -324,6 +323,7 @@ class _NavDrawerState extends State<NavDrawer> {
                                 await getApplicationDocumentsDirectory();
                             final file = File('${directory.path}/tok.txt');
                             file.delete();
+                            counselorglobals.user = null;
                           } catch (_) {
                             print('Error');
                           }
@@ -447,8 +447,6 @@ class HomeAppBarState extends State<HomeAppBar> {
 }
 
 class CounselorHomeScreen extends StatefulWidget {
-  final User user;
-  CounselorHomeScreen({this.user});
   @override
   _CounselorHomeScreenState createState() => _CounselorHomeScreenState();
 }
@@ -456,7 +454,6 @@ class CounselorHomeScreen extends StatefulWidget {
 class _CounselorHomeScreenState extends State<CounselorHomeScreen> {
   @override
   Widget build(BuildContext context) {
-    newUser = widget.user;
     SystemChrome.setEnabledSystemUIOverlays(
         [SystemUiOverlay.top, SystemUiOverlay.bottom]);
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -467,12 +464,9 @@ class _CounselorHomeScreenState extends State<CounselorHomeScreen> {
       ),
       child: Scaffold(
         backgroundColor: Colors.white,
-        drawer: NavDrawer(
-          name: '${widget.user.firstname} ${widget.user.lastname}',
-          email: widget.user.email,
-        ),
+        drawer: NavDrawer(),
         appBar: HomeAppBar(),
-        body: DashBoard(user: widget.user),
+        body: DashBoard(user: counselorglobals.user),
       ),
     );
   }

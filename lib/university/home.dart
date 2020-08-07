@@ -1,7 +1,6 @@
 import '../imports.dart';
 import '../login.dart';
 import '../landingpage.dart';
-import '../usermodel.dart';
 import 'allunis.dart';
 import 'counselorconnect.dart';
 import 'engagement.dart';
@@ -9,10 +8,18 @@ import 'repprofile.dart';
 import 'universityprofile.dart';
 import 'dashboard.dart';
 import 'notifications.dart';
+import 'user.dart' as universityglobals;
 
-User newUser;
 String dom = domain;
 Widget curPage;
+List navlistelements = [
+  ['Home', UniHomeScreen(), Icons.home],
+  ['My Profile', RepProfileScreen(), Icons.account_box],
+  ['University Profile', UniProfileScreen(), Icons.account_balance],
+  ['All Universities', AllUniversitiesScreen(), Icons.all_inclusive],
+  ['Counselor Connect', CounselorConnectScreen(), Icons.link],
+  ['Student Engagement', StudentEngagementScreen(), Icons.group],
+];
 
 Future<String> getToken() async {
   final directory = await getApplicationDocumentsDirectory();
@@ -158,11 +165,6 @@ success(BuildContext context, String message) {
 }
 
 class NavDrawer extends StatefulWidget {
-  final String name;
-  final String email;
-  final User user;
-  NavDrawer({@required this.user, this.name, this.email});
-
   @override
   _NavDrawerState createState() => _NavDrawerState();
 }
@@ -170,14 +172,6 @@ class NavDrawer extends StatefulWidget {
 class _NavDrawerState extends State<NavDrawer> {
   @override
   Widget build(BuildContext context) {
-    final navlistelements = [
-      ['Home', UniHomeScreen(user: widget.user), Icons.home],
-      ['My Profile', RepProfileScreen(), Icons.account_box],
-      ['University Profile', UniProfileScreen(), Icons.account_balance],
-      ['All Universities', AllUniversitiesScreen(), Icons.all_inclusive],
-      ['Counselor Connect', CounselorConnectScreen(), Icons.link],
-      ['Student Engagement', StudentEngagementScreen(), Icons.group],
-    ];
     List<Widget> navlist = [];
     for (var i = 0; i < navlistelements.length; i++) {
       var element = navlistelements[i];
@@ -231,18 +225,22 @@ class _NavDrawerState extends State<NavDrawer> {
               decoration: BoxDecoration(
                 color: Color(0xff005fa8),
               ),
-              accountName: Text(widget.name,
+              accountName: Text(
+                  universityglobals.user.firstname +
+                      ' ' +
+                      universityglobals.user.lastname,
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
                       fontWeight: FontWeight.w400)),
-              accountEmail: Text(widget.email,
+              accountEmail: Text(universityglobals.user.email,
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 12,
                       fontWeight: FontWeight.w300)),
               currentAccountPicture: CircleAvatar(
-                backgroundImage: CachedNetworkImageProvider(newUser.dp),
+                backgroundImage:
+                    CachedNetworkImageProvider(universityglobals.user.dp),
                 backgroundColor: Colors.blue[800],
                 radius: 30,
               ),
@@ -334,6 +332,7 @@ class _NavDrawerState extends State<NavDrawer> {
                                 await getApplicationDocumentsDirectory();
                             final file = File('${directory.path}/tok.txt');
                             file.delete();
+                            universityglobals.user = null;
                           } catch (_) {
                             print('Error');
                           }
@@ -438,8 +437,6 @@ class HomeAppBarState extends State<HomeAppBar> {
 }
 
 class UniHomeScreen extends StatefulWidget {
-  final User user;
-  UniHomeScreen({@required this.user});
   @override
   _UniHomeScreenState createState() => _UniHomeScreenState();
 }
@@ -447,8 +444,7 @@ class UniHomeScreen extends StatefulWidget {
 class _UniHomeScreenState extends State<UniHomeScreen> {
   @override
   Widget build(BuildContext context) {
-    newUser = widget.user;
-    curPage = UniHomeScreen(user: newUser);
+    curPage = UniHomeScreen();
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.dark,
@@ -457,13 +453,9 @@ class _UniHomeScreenState extends State<UniHomeScreen> {
       ),
       child: Scaffold(
         backgroundColor: Colors.white,
-        drawer: NavDrawer(
-          user: widget.user,
-          name: '${widget.user.firstname} ${widget.user.lastname}',
-          email: widget.user.email,
-        ),
+        drawer: NavDrawer(),
         appBar: HomeAppBar(),
-        body: DashBoard(user: widget.user),
+        body: DashBoard(user: universityglobals.user),
       ),
     );
   }

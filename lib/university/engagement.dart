@@ -25,6 +25,7 @@ class _StudentEngagementScreenState extends State<StudentEngagementScreen> {
   @override
   void initState() {
     super.initState();
+    BackButtonInterceptor.add(myInterceptor);
     interested = getInterested();
     applying = getApplying();
     controller1.addListener(() {
@@ -37,6 +38,16 @@ class _StudentEngagementScreenState extends State<StudentEngagementScreen> {
         filter2 = controller2.text.toLowerCase();
       });
     });
+  }
+
+  @override
+  void dispose() {
+    BackButtonInterceptor.remove(myInterceptor);
+    super.dispose();
+  }
+
+  bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
+    return true;
   }
 
   Future<void> getInterested() async {
@@ -203,10 +214,7 @@ class _StudentEngagementScreenState extends State<StudentEngagementScreen> {
       child: Scaffold(
         key: _scafKey,
         backgroundColor: Colors.white,
-        drawer: NavDrawer(
-            user: newUser,
-            name: newUser.firstname + ' ' + newUser.lastname,
-            email: newUser.email),
+        drawer: NavDrawer(),
         appBar: AppBar(
           backgroundColor: Color(0xff005fa8),
           elevation: 6,

@@ -1,3 +1,4 @@
+import 'user.dart' as universityglobals;
 import '../imports.dart';
 import 'home.dart';
 
@@ -20,22 +21,13 @@ class _RepProfileScreenState extends State<RepProfileScreen> {
   }
 
   bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
-    curPage = UniHomeScreen(user: newUser);
-    Navigator.push(
-        context,
-        PageTransition(
-            type: PageTransitionType.fade,
-            child: UniHomeScreen(user: newUser)));
     return true;
   }
 
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      drawer: NavDrawer(
-          user: newUser,
-          name: newUser.firstname + ' ' + newUser.lastname,
-          email: newUser.email),
+      drawer: NavDrawer(),
       appBar: CustomAppBar('Profile'),
       body: Padding(
         padding: EdgeInsets.only(top: 15, left: 10, right: 10),
@@ -51,14 +43,17 @@ class _RepProfileScreenState extends State<RepProfileScreen> {
             children: <Widget>[
               ListTile(
                 leading: CircleAvatar(
-                  backgroundImage: CachedNetworkImageProvider(newUser.dp),
+                  backgroundImage:
+                      CachedNetworkImageProvider(universityglobals.user.dp),
                   backgroundColor: Colors.blue[800],
                   radius: 29,
                 ),
                 title: Padding(
                   padding: EdgeInsets.only(top: 5),
                   child: Text(
-                    newUser.firstname + ' ' + newUser.lastname,
+                    universityglobals.user.firstname +
+                        ' ' +
+                        universityglobals.user.lastname,
                     style: TextStyle(fontSize: 17),
                   ),
                 ),
@@ -87,7 +82,7 @@ class _RepProfileScreenState extends State<RepProfileScreen> {
                       'Username: ',
                     ),
                     Text(
-                      '@' + newUser.username,
+                      '@' + universityglobals.user.username,
                       style: TextStyle(color: Colors.black54),
                     )
                   ],
@@ -101,7 +96,7 @@ class _RepProfileScreenState extends State<RepProfileScreen> {
                       'Email ID: ',
                     ),
                     Text(
-                      newUser.email,
+                      universityglobals.user.email,
                       style: TextStyle(color: Colors.black54),
                     )
                   ],
@@ -115,7 +110,7 @@ class _RepProfileScreenState extends State<RepProfileScreen> {
                       'Date of Birth: ',
                     ),
                     Text(
-                      newUser.dob,
+                      universityglobals.user.dob,
                       style: TextStyle(color: Colors.black54),
                     )
                   ],
@@ -129,7 +124,7 @@ class _RepProfileScreenState extends State<RepProfileScreen> {
                       'Country: ',
                     ),
                     Text(
-                      newUser.country,
+                      universityglobals.user.country,
                       style: TextStyle(color: Colors.black54),
                     )
                   ],

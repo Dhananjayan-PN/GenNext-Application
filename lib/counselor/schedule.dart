@@ -1,14 +1,6 @@
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-import 'package:flutter/material.dart';
-import 'package:back_button_interceptor/back_button_interceptor.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:searchable_dropdown/searchable_dropdown.dart';
+import '../imports.dart';
 import 'package:http/http.dart' as http;
-import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 import 'home.dart';
 
 class ScheduleScreen extends StatefulWidget {
@@ -56,12 +48,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   }
 
   bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
-    print("BACK BUTTON!");
-    Navigator.push(
-        context,
-        PageTransition(
-            type: PageTransitionType.fade,
-            child: CounselorHomeScreen(user: newUser)));
     return true;
   }
 
@@ -848,9 +834,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
       key: _scafKey,
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
-      drawer: NavDrawer(
-          name: newUser.firstname + ' ' + newUser.lastname,
-          email: newUser.email),
+      drawer: NavDrawer(),
       appBar: CustomAppBar('Schedule'),
       body: FutureBuilder(
         future: sessions.timeout(Duration(seconds: 10)),

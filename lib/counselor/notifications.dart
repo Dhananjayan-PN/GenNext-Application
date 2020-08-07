@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:back_button_interceptor/back_button_interceptor.dart';
+import '../imports.dart';
 import 'home.dart';
 
 final notifications = ['Are you future ready?'];
@@ -103,15 +101,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   }
 
   bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
-    print("BACK BUTTON!");
-    Navigator.push(
-        context,
-        PageTransition(
-            duration: Duration(milliseconds: 500),
-            type: PageTransitionType.leftToRight,
-            child: CounselorHomeScreen(
-              user: newUser,
-            )));
+    Navigator.pop(context);
     return true;
   }
 

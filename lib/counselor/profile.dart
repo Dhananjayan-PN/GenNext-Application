@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:back_button_interceptor/back_button_interceptor.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:page_transition/page_transition.dart';
+import 'user.dart' as counselorglobals;
+import '../imports.dart';
 import 'home.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -23,21 +21,13 @@ class ProfileScreenState extends State<ProfileScreen> {
   }
 
   bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
-    print("BACK BUTTON!");
-    Navigator.push(
-        context,
-        PageTransition(
-            type: PageTransitionType.fade,
-            child: CounselorHomeScreen(user: newUser)));
     return true;
   }
 
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      drawer: NavDrawer(
-          name: newUser.firstname + ' ' + newUser.lastname,
-          email: newUser.email),
+      drawer: NavDrawer(),
       appBar: CustomAppBar('My Profile'),
       body: Padding(
         padding: EdgeInsets.only(top: 15, left: 10, right: 10),
@@ -50,12 +40,15 @@ class ProfileScreenState extends State<ProfileScreen> {
             children: <Widget>[
               ListTile(
                 leading: CircleAvatar(
-                  backgroundImage: CachedNetworkImageProvider(newUser.dp),
+                  backgroundImage:
+                      CachedNetworkImageProvider(counselorglobals.user.dp),
                   backgroundColor: Colors.blue[400],
                   radius: 30,
                 ),
                 title: Text(
-                  newUser.firstname + ' ' + newUser.lastname,
+                  counselorglobals.user.firstname +
+                      ' ' +
+                      counselorglobals.user.lastname,
                   style: TextStyle(fontSize: 17),
                 ),
                 subtitle: Text('Counselor'),
@@ -83,7 +76,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                       'Username: ',
                     ),
                     Text(
-                      '@' + newUser.username,
+                      '@' + counselorglobals.user.username,
                       style: TextStyle(color: Colors.black54),
                     )
                   ],
@@ -97,7 +90,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                       'Email ID: ',
                     ),
                     Text(
-                      newUser.email,
+                      counselorglobals.user.email,
                       style: TextStyle(color: Colors.black54),
                     )
                   ],
@@ -111,7 +104,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                       'Date of Birth: ',
                     ),
                     Text(
-                      newUser.dob,
+                      counselorglobals.user.dob,
                       style: TextStyle(color: Colors.black54),
                     )
                   ],
@@ -125,7 +118,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                       'Country: ',
                     ),
                     Text(
-                      newUser.country,
+                      counselorglobals.user.country,
                       style: TextStyle(color: Colors.black54),
                     )
                   ],

@@ -53,10 +53,10 @@ class _LoginPageState extends State<LoginPage> {
           return StudentHomeScreen();
         } else if (role == 'C') {
           counselorglobals.user = user;
-          return CounselorHomeScreen(user: user);
+          return CounselorHomeScreen();
         } else if (role == 'R') {
           universityglobals.user = user;
-          return UniHomeScreen(user: user);
+          return UniHomeScreen();
         } else if (role == 'A') {
           return Container();
         } else {

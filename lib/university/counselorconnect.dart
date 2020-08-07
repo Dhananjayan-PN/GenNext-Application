@@ -41,16 +41,6 @@ class _CounselorConnectScreenState extends State<CounselorConnectScreen> {
   }
 
   bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
-    curPage = UniHomeScreen(user: newUser);
-    Navigator.push(
-      context,
-      PageTransition(
-        type: PageTransitionType.fade,
-        child: UniHomeScreen(
-          user: newUser,
-        ),
-      ),
-    );
     return true;
   }
 
@@ -267,10 +257,7 @@ class _CounselorConnectScreenState extends State<CounselorConnectScreen> {
       child: Scaffold(
         key: _scafKey,
         backgroundColor: Colors.white,
-        drawer: NavDrawer(
-            user: newUser,
-            name: newUser.firstname + ' ' + newUser.lastname,
-            email: newUser.email),
+        drawer: NavDrawer(),
         appBar: AppBar(
           backgroundColor: Color(0xff005fa8),
           elevation: 6,

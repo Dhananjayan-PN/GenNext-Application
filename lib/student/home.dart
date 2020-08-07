@@ -14,11 +14,10 @@ import 'counselor.dart';
 import 'schedule.dart';
 import 'user.dart' as studentglobals;
 
-// User newUser;
 String dom = domain;
 Widget curPage;
 
-final navlistelements = [
+List navlistelements = [
   ['Home', StudentHomeScreen(), Icons.home],
   ['Counselling', CounsellingScreen(), Icons.people],
   ['Schedule', ScheduleScreen(), Icons.date_range],

@@ -1,11 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:back_button_interceptor/back_button_interceptor.dart';
-import 'package:quill_delta/quill_delta.dart';
+import '../imports.dart';
+import 'user.dart' as counselorglobals;
 import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'dart:io';
-import 'package:zefyr/zefyr.dart';
 import 'home.dart';
 
 class EssaysScreen extends StatefulWidget {
@@ -27,21 +22,13 @@ class _EssaysScreenState extends State<EssaysScreen> {
   }
 
   bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
-    print("BACK BUTTON!");
-    Navigator.push(
-        context,
-        PageTransition(
-            type: PageTransitionType.fade,
-            child: CounselorHomeScreen(user: newUser)));
     return true;
   }
 
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      drawer: NavDrawer(
-          name: newUser.firstname + ' ' + newUser.lastname,
-          email: newUser.email),
+      drawer: NavDrawer(),
       appBar: CustomAppBar('Essays'),
       body: Center(
         child: FlatButton(
@@ -100,9 +87,6 @@ class _EssayEditorState extends State<EssayEditor> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      drawer: NavDrawer(
-          name: newUser.firstname + ' ' + newUser.lastname,
-          email: newUser.email),
       appBar: AppBar(
         backgroundColor: Color(0xff005fa8),
         leading: IconButton(

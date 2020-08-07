@@ -37,16 +37,6 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
   }
 
   bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
-    curPage = UniHomeScreen(user: newUser);
-    Navigator.push(
-      context,
-      PageTransition(
-        type: PageTransitionType.fade,
-        child: UniHomeScreen(
-          user: newUser,
-        ),
-      ),
-    );
     return true;
   }
 
@@ -147,10 +137,7 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
       child: Scaffold(
         key: _scafKey,
         backgroundColor: Colors.white,
-        drawer: NavDrawer(
-            user: newUser,
-            name: newUser.firstname + ' ' + newUser.lastname,
-            email: newUser.email),
+        drawer: NavDrawer(),
         appBar: AppBar(
           backgroundColor: Color(0xff005fa8),
           elevation: 6,
@@ -310,6 +297,18 @@ class _UniversityPageState extends State<UniversityPage> {
   @override
   void initState() {
     super.initState();
+    BackButtonInterceptor.add(myInterceptor);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    BackButtonInterceptor.remove(myInterceptor);
+  }
+
+  bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
+    Navigator.pop(context);
+    return true;
   }
 
   @override

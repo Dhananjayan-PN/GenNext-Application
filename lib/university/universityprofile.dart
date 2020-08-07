@@ -37,12 +37,6 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
   }
 
   bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
-    curPage = UniHomeScreen(user: newUser);
-    Navigator.push(
-        context,
-        PageTransition(
-            type: PageTransitionType.fade,
-            child: UniHomeScreen(user: newUser)));
     return true;
   }
 
@@ -552,22 +546,14 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
     return Scaffold(
       key: _scafKey,
       backgroundColor: Colors.white,
-      drawer: NavDrawer(
-        user: newUser,
-        name: newUser.firstname + ' ' + newUser.lastname,
-        email: newUser.email,
-      ),
+      drawer: NavDrawer(),
       body: FutureBuilder(
         future: uniData,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Scaffold(
               backgroundColor: Colors.white,
-              drawer: NavDrawer(
-                user: newUser,
-                name: newUser.firstname + ' ' + newUser.lastname,
-                email: newUser.email,
-              ),
+              drawer: NavDrawer(),
               appBar: CustomAppBar('University Profile'),
               body: Padding(
                 padding: EdgeInsets.only(bottom: 40.0),
