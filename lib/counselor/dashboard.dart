@@ -58,18 +58,7 @@ class _DashBoardState extends State<DashBoard> {
       HttpHeaders.authorizationHeader: 'Token $tok',
     });
     if (response.statusCode == 200) {
-      List requests = json.decode(response.body)['incoming_reqs'];
-      if (requests.length == 0) {
-        return <Widget>[];
-      } else {
-        List<Widget> requestList = [
-          Divider(indent: 25, endIndent: 25, thickness: 0)
-        ];
-        for (var i = 0; i < requests.length; i++) {
-          requestList.add(requestBuilder(requests[i]));
-        }
-        return requestList;
-      }
+      return json.decode(response.body)['incoming_reqs'];
     } else {
       throw ('error');
     }
@@ -620,7 +609,7 @@ class _DashBoardState extends State<DashBoard> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Text(
-                'Counselling Requests',
+                'Counseling Requests',
                 style: TextStyle(color: Colors.black87, fontSize: 19),
               ),
             ],
@@ -702,7 +691,7 @@ class _DashBoardState extends State<DashBoard> {
                 );
               } else {
                 return Container(
-                  height: 185,
+                  height: 190,
                   child: Swiper(
                     loop: false,
                     pagination: snapshot.data.length == 1
@@ -716,8 +705,10 @@ class _DashBoardState extends State<DashBoard> {
                         clipBehavior: Clip.antiAliasWithSaveLayer,
                         margin: EdgeInsets.only(top: 20, bottom: 30),
                         shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
+                          ),
+                        ),
                         elevation: 6,
                         child: Padding(
                           padding:
@@ -729,16 +720,17 @@ class _DashBoardState extends State<DashBoard> {
                                 padding: EdgeInsets.only(top: 5, bottom: 5),
                                 child: Row(
                                   children: <Widget>[
-                                    CircleAvatar(
-                                      radius: 27,
-                                      backgroundImage:
-                                          CachedNetworkImageProvider(
-                                              snapshot.data[index]
-                                                  ['profile_image_url']),
-                                      backgroundColor: Color(0xff005fa8),
-                                    ),
                                     Padding(
                                       padding: EdgeInsets.only(left: 10),
+                                      child: CircleAvatar(
+                                        radius: 27,
+                                        backgroundImage: CachedNetworkImageProvider(
+                                            'https://images.newindianexpress.com/uploads/user/imagelibrary/2019/3/7/w900X450/Take_in_the_Scenery.jpg'),
+                                        backgroundColor: Color(0xff005fa8),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 18),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -750,21 +742,40 @@ class _DashBoardState extends State<DashBoard> {
                                               width: MediaQuery.of(context)
                                                       .size
                                                       .width *
-                                                  0.55,
+                                                  0.50,
                                               child: Text(
-                                                snapshot.data[index]['name'],
+                                                snapshot.data[index]
+                                                    ['student_name'],
                                                 style:
                                                     TextStyle(fontSize: 15.5),
                                               ),
                                             ),
                                           ),
-                                          Text(
-                                            '@' +
-                                                snapshot.data[index]
-                                                    ['username'],
-                                            style: TextStyle(
-                                                color: Color(0xff005fa8),
-                                                fontSize: 13),
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                'Assigned By: ',
+                                                style: TextStyle(
+                                                    color: Colors.black54,
+                                                    fontSize: 13),
+                                              ),
+                                              Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    0.3,
+                                                child: Text(
+                                                  '@' +
+                                                      snapshot.data[index]
+                                                          ['assigner_admin'],
+                                                  style: TextStyle(
+                                                      color: Color(0xff005fa8),
+                                                      fontSize: 13),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
@@ -788,7 +799,12 @@ class _DashBoardState extends State<DashBoard> {
                                             color: Colors.green,
                                             size: 33,
                                           ),
-                                          onTap: () {},
+                                          onTap: () {
+                                            // sendRequestDecision(
+                                            //     snapshot.data[index]['user_id'],
+                                            //     'A');
+                                            // loading(context);
+                                          },
                                         ),
                                       ),
                                     ),
@@ -804,7 +820,13 @@ class _DashBoardState extends State<DashBoard> {
                                               color: Colors.red,
                                               size: 33,
                                             ),
-                                            onTap: () {},
+                                            onTap: () {
+                                              // sendRequestDecision(
+                                              //     snapshot.data[index]
+                                              //         ['user_id'],
+                                              //     'R');
+                                              // loading(context);
+                                            },
                                           ),
                                         ),
                                       ),
