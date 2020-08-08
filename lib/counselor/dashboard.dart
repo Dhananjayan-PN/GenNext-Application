@@ -1,6 +1,8 @@
-import '../imports.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
+import '../imports.dart';
 import 'home.dart';
+import 'schedule.dart';
 
 class DashBoard extends StatefulWidget {
   final User user;
@@ -14,19 +16,19 @@ class _DashBoardState extends State<DashBoard> {
   TextEditingController _reason = TextEditingController();
   TextEditingController counselornotes = TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  int index = 0;
+  bool savingfailed = false;
   bool saved = false;
   bool saving = true;
-  bool savingfailed = false;
+  int index = 0;
 
-  Future upcomingsession;
-  Future assignmentrequests;
+  Future upcomingSessions;
+  Future incomingRequests;
   Future counselorNotes;
 
   @override
   void initState() {
-    upcomingsession = getUpcomingSession();
-    assignmentrequests = getAssignmentRequests();
+    upcomingSessions = getUpcomingSession();
+    incomingRequests = getAssignmentRequests();
     counselorNotes = getCounselorNotes();
     super.initState();
   }
@@ -353,8 +355,8 @@ class _DashBoardState extends State<DashBoard> {
 
   refresh() {
     setState(() {
-      upcomingsession = getUpcomingSession();
-      assignmentrequests = getAssignmentRequests();
+      upcomingSessions = getUpcomingSession();
+      incomingRequests = getAssignmentRequests();
       counselorNotes = getCounselorNotes();
     });
   }
@@ -362,6 +364,468 @@ class _DashBoardState extends State<DashBoard> {
   Widget build(BuildContext context) {
     return ListView(
       children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(left: 20, top: 18),
+          child: Text(
+            'Hello,',
+            style: TextStyle(
+                color: Colors.black54,
+                fontSize: 24,
+                fontWeight: FontWeight.w300),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 20),
+          child: Text(
+            '${widget.user.firstname}',
+            style: TextStyle(
+                color: Colors.black87,
+                fontSize: 25,
+                fontWeight: FontWeight.w400),
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'Upcoming Sessions',
+                style: TextStyle(color: Colors.black87, fontSize: 19),
+              ),
+              Spacer(),
+              InkWell(
+                child: Text(
+                  'See all',
+                  style: TextStyle(color: Color(0xff005fa8), fontSize: 15),
+                ),
+                onTap: () {
+                  curPage = ScheduleScreen();
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    PageTransition(
+                        type: PageTransitionType.fade, child: ScheduleScreen()),
+                    (Route<dynamic> route) => false,
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+        FutureBuilder(
+          future: upcomingSessions.timeout(Duration(seconds: 10)),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Padding(
+                padding: EdgeInsets.only(left: 25, right: 25),
+                child: Card(
+                  margin: EdgeInsets.only(top: 20, bottom: 20),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  elevation: 6,
+                  child: Padding(
+                    padding:
+                        EdgeInsets.only(left: 3, right: 3, top: 30, bottom: 30),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 10),
+                          child: Icon(
+                            Icons.error_outline,
+                            size: 35,
+                            color: Colors.red.withOpacity(0.6),
+                          ),
+                        ),
+                        Text(
+                          'Unable to establish a connection\nwith our servers.\nCheck your connection and try again later.',
+                          style: TextStyle(color: Colors.black54),
+                          textAlign: TextAlign.center,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }
+            if (snapshot.hasData) {
+              if (snapshot.data.length == 0) {
+                return Padding(
+                  padding: EdgeInsets.only(left: 25, right: 25),
+                  child: Card(
+                    margin: EdgeInsets.only(top: 20, bottom: 30),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                    elevation: 6,
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 50, bottom: 50),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 10),
+                            child: Icon(
+                              Icons.schedule,
+                              size: 35,
+                              color: Colors.black.withOpacity(0.75),
+                            ),
+                          ),
+                          Text(
+                            "No upcoming sessions",
+                            style: TextStyle(color: Colors.black54),
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            "Enjoy your day!",
+                            style: TextStyle(color: Colors.black54),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              } else {
+                return Container(
+                  height: 230,
+                  child: Swiper(
+                    loop: false,
+                    pagination: snapshot.data.length == 1
+                        ? null
+                        : SwiperPagination(margin: EdgeInsets.all(0)),
+                    itemCount: snapshot.data.length,
+                    viewportFraction: 0.83,
+                    scale: 0.9,
+                    itemBuilder: (BuildContext context, int index) {
+                      DateTime sessionDateTime = DateTime.parse(
+                              snapshot.data[index]['session_timestamp'])
+                          .toLocal();
+                      final int hour =
+                          snapshot.data[index]['session_duration'] ~/ 60;
+                      final int minutes =
+                          snapshot.data[index]['session_duration'] % 60;
+                      return Card(
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        margin: EdgeInsets.only(top: 20, bottom: 30),
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        elevation: 6,
+                        child: Padding(
+                          padding:
+                              EdgeInsets.only(top: 10, left: 20, right: 20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: <Widget>[
+                                  Text(
+                                    DateFormat.d().format(sessionDateTime),
+                                    style: TextStyle(
+                                        color: Colors.black87,
+                                        fontSize: 38,
+                                        fontWeight: FontWeight.w200),
+                                  ),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.only(left: 2, bottom: 2.9),
+                                    child: Text(
+                                      DateFormat.MMM()
+                                          .format(sessionDateTime)
+                                          .toUpperCase(),
+                                      style: TextStyle(
+                                          color: Colors.black87,
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.w400),
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.only(left: 2, bottom: 12),
+                                    child: Text(
+                                      hour == 0
+                                          ? minutes.toString() + 'm'
+                                          : hour.toString() +
+                                              'h ' +
+                                              minutes.toString() +
+                                              'm',
+                                      style: TextStyle(
+                                          color: Color(0xff005fa8),
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w200),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 3, bottom: 0),
+                                child: Text(
+                                  DateFormat.jm()
+                                      .format(sessionDateTime)
+                                      .toUpperCase(),
+                                  style: TextStyle(
+                                      color: Colors.black87,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w200),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 2, top: 13),
+                                child: Text(
+                                  snapshot.data[index]['subject_of_session'],
+                                  style: TextStyle(
+                                      color: Colors.black87,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ),
+                              snapshot.data[index]['session_notes'] == ''
+                                  ? Container()
+                                  : Padding(
+                                      padding: EdgeInsets.only(
+                                          left: 3, top: 3, right: 8),
+                                      child: Text(
+                                        snapshot.data[index]['session_notes'],
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            color:
+                                                Colors.black.withOpacity(0.6),
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w300),
+                                      ),
+                                    ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                );
+              }
+            }
+            return DashCardSkeleton(
+              padding: 20,
+            );
+          },
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 5, left: 20, right: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'Counselling Requests',
+                style: TextStyle(color: Colors.black87, fontSize: 19),
+              ),
+            ],
+          ),
+        ),
+        FutureBuilder(
+          future: incomingRequests.timeout(Duration(seconds: 10)),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Padding(
+                padding: EdgeInsets.only(left: 25, right: 25),
+                child: Card(
+                  margin: EdgeInsets.only(top: 20, bottom: 20),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  elevation: 6,
+                  child: Padding(
+                    padding:
+                        EdgeInsets.only(left: 3, right: 3, top: 30, bottom: 30),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 10),
+                          child: Icon(
+                            Icons.error_outline,
+                            size: 35,
+                            color: Colors.red.withOpacity(0.6),
+                          ),
+                        ),
+                        Text(
+                          'Unable to establish a connection\nwith our servers.\nCheck your connection and try again later.',
+                          style: TextStyle(color: Colors.black54),
+                          textAlign: TextAlign.center,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }
+            if (snapshot.hasData) {
+              if (snapshot.data.length == 0) {
+                return Padding(
+                  padding: EdgeInsets.only(left: 25, right: 25),
+                  child: Card(
+                    margin: EdgeInsets.only(top: 20, bottom: 30),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                    elevation: 6,
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 28, bottom: 28),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 10),
+                            child: Icon(
+                              Icons.thumb_up,
+                              size: 35,
+                              color: Colors.black.withOpacity(0.75),
+                            ),
+                          ),
+                          Text(
+                            "No pending counselor requests",
+                            style: TextStyle(color: Colors.black54),
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            "Enjoy your day!",
+                            style: TextStyle(color: Colors.black54),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              } else {
+                return Container(
+                  height: 185,
+                  child: Swiper(
+                    loop: false,
+                    pagination: snapshot.data.length == 1
+                        ? null
+                        : SwiperPagination(margin: EdgeInsets.all(0)),
+                    itemCount: snapshot.data.length,
+                    viewportFraction: 0.83,
+                    scale: 0.9,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Card(
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        margin: EdgeInsets.only(top: 20, bottom: 30),
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        elevation: 6,
+                        child: Padding(
+                          padding:
+                              EdgeInsets.only(top: 10, left: 15, right: 15),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(top: 5, bottom: 5),
+                                child: Row(
+                                  children: <Widget>[
+                                    CircleAvatar(
+                                      radius: 27,
+                                      backgroundImage:
+                                          CachedNetworkImageProvider(
+                                              snapshot.data[index]
+                                                  ['profile_image_url']),
+                                      backgroundColor: Color(0xff005fa8),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 10),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                top: 2, bottom: 2),
+                                            child: Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.55,
+                                              child: Text(
+                                                snapshot.data[index]['name'],
+                                                style:
+                                                    TextStyle(fontSize: 15.5),
+                                              ),
+                                            ),
+                                          ),
+                                          Text(
+                                            '@' +
+                                                snapshot.data[index]
+                                                    ['username'],
+                                            style: TextStyle(
+                                                color: Color(0xff005fa8),
+                                                fontSize: 13),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Spacer(),
+                              Padding(
+                                padding: EdgeInsets.only(bottom: 15),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    ClipOval(
+                                      child: Material(
+                                        color: Colors.transparent,
+                                        child: InkWell(
+                                          child: Icon(
+                                            Icons.check,
+                                            color: Colors.green,
+                                            size: 33,
+                                          ),
+                                          onTap: () {},
+                                        ),
+                                      ),
+                                    ),
+                                    VerticalDivider(),
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 25),
+                                      child: ClipOval(
+                                        child: Material(
+                                          color: Colors.transparent,
+                                          child: InkWell(
+                                            child: Icon(
+                                              Icons.close,
+                                              color: Colors.red,
+                                              size: 33,
+                                            ),
+                                            onTap: () {},
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                );
+              }
+            }
+            return DashCardSkeleton(
+              padding: 20,
+            );
+          },
+        ),
         Padding(
           padding: EdgeInsets.only(top: 20),
           child: Container(
@@ -500,7 +964,7 @@ class _DashBoardState extends State<DashBoard> {
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }

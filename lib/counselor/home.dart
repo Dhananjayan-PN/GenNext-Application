@@ -378,7 +378,7 @@ class HomeAppBar extends StatefulWidget with PreferredSizeWidget {
 }
 
 class HomeAppBarState extends State<HomeAppBar> {
-  int counter = notifications.length;
+  int counter = 300;
 
   @override
   void initState() {

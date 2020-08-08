@@ -14,13 +14,10 @@ class DashBoard extends StatefulWidget {
   DashBoard({this.user});
 
   @override
-  _DashBoardState createState() => _DashBoardState(user: user);
+  _DashBoardState createState() => _DashBoardState();
 }
 
 class _DashBoardState extends State<DashBoard> {
-  final User user;
-  _DashBoardState({this.user});
-
   TextEditingController studentnotes = TextEditingController();
   bool saved = false;
   bool saving = true;
@@ -202,7 +199,7 @@ class _DashBoardState extends State<DashBoard> {
         Padding(
           padding: EdgeInsets.only(left: 20),
           child: Text(
-            '${user.firstname}',
+            '${widget.user.firstname}',
             style: TextStyle(
                 color: Colors.black87,
                 fontSize: 25,

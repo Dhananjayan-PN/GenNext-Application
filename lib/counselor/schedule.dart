@@ -1,6 +1,6 @@
-import '../imports.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import '../imports.dart';
 import 'home.dart';
 
 class ScheduleScreen extends StatefulWidget {
@@ -819,23 +819,24 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
-          tooltip: 'Create session',
-          elevation: 10,
-          backgroundColor: Colors.blue,
-          splashColor: Colors.blue[900],
-          child: Icon(
-            Icons.add,
-            size: 28,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            _createSession();
-          }),
+        tooltip: 'Create session',
+        elevation: 10,
+        backgroundColor: Color(0xff005fa8),
+        splashColor: Colors.blue[900],
+        child: Icon(
+          Icons.add,
+          size: 28,
+          color: Colors.white,
+        ),
+        onPressed: () {
+          _createSession();
+        },
+      ),
       key: _scafKey,
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       drawer: NavDrawer(),
-      appBar: CustomAppBar('Schedule'),
+      appBar: CustomAppBar('Calendar'),
       body: FutureBuilder(
         future: sessions.timeout(Duration(seconds: 10)),
         builder: (context, snapshot) {
