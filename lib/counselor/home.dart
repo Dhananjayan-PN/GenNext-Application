@@ -20,7 +20,7 @@ List navlistelements = [
   ['My Profile', ProfileScreen(), Icons.account_box],
   ['Sessions Calendar', ScheduleScreen(), Icons.date_range],
   ['My Universities', MyUniversitiesScreen(), Icons.account_balance],
-  ['Connect with Universities', ConnectUniversitiesScreen(), Icons.link]
+  ['University Connect', ConnectUniversitiesScreen(), Icons.link]
 ];
 
 Future<String> getToken() async {
@@ -223,12 +223,21 @@ class _NavDrawerState extends State<NavDrawer> {
             child: UserAccountsDrawerHeader(
               decoration: BoxDecoration(color: Color(0xff005fa8)),
               accountName: Text(
-                  counselorglobals.user.firstname +
-                      " " +
-                      counselorglobals.user.lastname,
-                  style: TextStyle(color: Colors.white, fontSize: 18)),
-              accountEmail: Text(counselorglobals.user.email,
-                  style: TextStyle(color: Colors.white, fontSize: 12)),
+                counselorglobals.user.firstname +
+                    " " +
+                    counselorglobals.user.lastname,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w400),
+              ),
+              accountEmail: Text(
+                counselorglobals.user.email,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w300),
+              ),
               currentAccountPicture: CircleAvatar(
                 backgroundImage:
                     CachedNetworkImageProvider(counselorglobals.user.dp),
@@ -390,10 +399,7 @@ class HomeAppBarState extends State<HomeAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Container(
-        margin: EdgeInsets.only(left: 0, top: 3, bottom: 3),
-        child: Image.asset('images/gennextlonglogo-4.png'),
-      ),
+      title: Text('Home'),
       backgroundColor: Color(0xff005fa8),
       actions: <Widget>[
         Padding(

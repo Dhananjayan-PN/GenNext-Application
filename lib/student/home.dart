@@ -16,7 +16,6 @@ import 'user.dart' as studentglobals;
 
 String dom = domain;
 Widget curPage;
-
 List navlistelements = [
   ['Home', StudentHomeScreen(), Icons.home],
   ['Counselling', CounsellingScreen(), Icons.people],
@@ -233,18 +232,21 @@ class _NavDrawerState extends State<NavDrawer> {
             child: UserAccountsDrawerHeader(
               decoration: BoxDecoration(color: Color(0xff005fa8)),
               accountName: Text(
-                  studentglobals.user.firstname +
-                      ' ' +
-                      studentglobals.user.lastname,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400)),
-              accountEmail: Text(studentglobals.user.email,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w300)),
+                studentglobals.user.firstname +
+                    ' ' +
+                    studentglobals.user.lastname,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w400),
+              ),
+              accountEmail: Text(
+                studentglobals.user.email,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w300),
+              ),
               currentAccountPicture: CircleAvatar(
                 backgroundImage:
                     CachedNetworkImageProvider(studentglobals.user.dp),

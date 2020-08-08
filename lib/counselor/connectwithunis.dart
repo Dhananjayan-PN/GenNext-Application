@@ -579,7 +579,7 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
       key: _scafKey,
       backgroundColor: Colors.white,
       drawer: NavDrawer(),
-      appBar: CustomAppBar('Connect'),
+      appBar: CustomAppBar('University Connect'),
       body: RefreshIndicator(
         key: refreshKey,
         onRefresh: () {

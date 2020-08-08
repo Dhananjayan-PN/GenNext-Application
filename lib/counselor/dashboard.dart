@@ -1,14 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import '../imports.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
-import 'schedule.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
-import 'dart:async';
-import 'dart:convert';
-import '../usermodel.dart';
-import 'dart:io';
 import 'home.dart';
 
 class DashBoard extends StatefulWidget {
@@ -16,18 +7,14 @@ class DashBoard extends StatefulWidget {
   DashBoard({this.user});
 
   @override
-  _DashBoardState createState() => _DashBoardState(user: user);
+  _DashBoardState createState() => _DashBoardState();
 }
 
 class _DashBoardState extends State<DashBoard> {
-  final User user;
-  _DashBoardState({this.user});
-
   TextEditingController _reason = TextEditingController();
   TextEditingController counselornotes = TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   int index = 0;
-  int userId;
   bool saved = false;
   bool saving = true;
   bool savingfailed = false;
@@ -155,17 +142,16 @@ class _DashBoardState extends State<DashBoard> {
   Future<void> getCounselorNotes() async {
     String tok = await getToken();
     saving = true;
-    final response =
-        await http.get(dom + 'api/counselor/get-counselor-notes', headers: {
+    final response = await http.get(dom + 'authenticate/get-notes', headers: {
       HttpHeaders.authorizationHeader: 'Token $tok',
     });
     if (response.statusCode == 200) {
+      String notes = json.decode(response.body)['notes'];
       setState(() {
+        counselornotes.text = notes;
         saving = false;
         saved = true;
       });
-      userId = json.decode(response.body)['counselor_id'];
-      String notes = json.decode(response.body)['counselor_notes'];
       return notes;
     } else {
       setState(() {
@@ -179,13 +165,16 @@ class _DashBoardState extends State<DashBoard> {
   Future<void> editCounselorNotes() async {
     String tok = await getToken();
     final response = await http.put(
-      dom + 'api/counselor/edit-counselor-notes',
+      dom + 'authenticate/edit-notes',
       headers: {
         HttpHeaders.authorizationHeader: "Token $tok",
         'Content-Type': 'application/json; charset=UTF-8'
       },
       body: jsonEncode(
-        <String, dynamic>{"user_id": userId, "notes": counselornotes.text},
+        <String, dynamic>{
+          "user_id": widget.user.id,
+          "notes": counselornotes.text
+        },
       ),
     );
     if (response.statusCode == 200) {
@@ -374,338 +363,98 @@ class _DashBoardState extends State<DashBoard> {
     return ListView(
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(top: 30, bottom: 0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(right: 5),
-                child: Icon(
-                  Icons.access_time,
-                  color: Colors.black.withOpacity(0.8),
-                ),
+          padding: EdgeInsets.only(top: 20),
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border(
+                top: BorderSide(width: 0.2, color: Colors.black54),
               ),
-              Text(
-                'Upcoming Sessions',
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w800,
-                    color: Colors.black.withOpacity(0.8)),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
-        FutureBuilder(
-          future: upcomingsession,
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(
-                      Icons.error_outline,
-                      size: 30,
-                      color: Colors.red.withOpacity(0.9),
-                    ),
-                    Text(
-                      'Unable to establish a connection with our servers.\nCheck your connection and try again later.',
-                      style: TextStyle(color: Colors.black54),
-                      textAlign: TextAlign.center,
-                    )
-                  ],
-                ),
-              );
-            }
-            if (snapshot.hasData) {
-              if (snapshot.data.length == 0) {
-                return Padding(
-                  padding: EdgeInsets.only(left: 20, right: 20),
-                  child: Card(
-                    margin: EdgeInsets.only(top: 20, bottom: 30),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(15))),
-                    elevation: 10,
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 20, bottom: 30),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(
-                            Icons.sentiment_neutral,
-                            size: 40,
-                          ),
-                          Text(
-                            "Looks like you haven't scheduled\nany sessions yet",
-                            style: TextStyle(color: Colors.black54),
-                            textAlign: TextAlign.center,
-                          ),
-                          Text(
-                            "Head over to the Schedule section to\nget started!",
-                            style: TextStyle(color: Colors.black54),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              } else {
-                return Container(
-                  height: 270,
-                  child: Swiper(
-                    loop: false,
-                    pagination: SwiperPagination(margin: EdgeInsets.all(0)),
-                    itemCount: snapshot.data.length,
-                    viewportFraction: 0.8,
-                    scale: 0.9,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Card(
-                        margin: EdgeInsets.only(top: 20, bottom: 30),
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(15))),
-                        elevation: 10,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(top: 10, bottom: 5),
-                              child: CircleAvatar(
-                                radius: 28,
-                                backgroundImage: CachedNetworkImageProvider(
-                                    'https://onetwostream.com/blog/wp-content/uploads/2019/10/sunset_beach.jpg'),
-                                backgroundColor: Colors.blue[400],
-                              ),
-                            ),
-                            Text(
-                              snapshot.data[index]['student_name'],
-                              style: TextStyle(fontSize: 20),
-                            ),
-                            Text(
-                              '@' + snapshot.data[index]['student_username'],
-                              style: TextStyle(color: Colors.blue),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 15),
-                              child: Text(
-                                DateFormat.yMMMMd('en_US').add_jm().format(
-                                    DateTime.parse(snapshot.data[index]
-                                            ['session_timestamp'])
-                                        .toLocal()),
-                                style: TextStyle(fontSize: 18),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 5),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Text(
-                                    'Subject - ',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                  Text(
-                                    snapshot.data[index]['subject_of_session'],
-                                    style: TextStyle(color: Colors.black54),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 14),
-                              child: InkWell(
-                                child: Text(
-                                  'View',
-                                  style: TextStyle(
-                                      color: Colors.blue, fontSize: 17),
-                                ),
-                                onTap: () {
-                                  Navigator.pushAndRemoveUntil(
-                                    context,
-                                    PageTransition(
-                                        type: PageTransitionType.fade,
-                                        child: ScheduleScreen()),
-                                    (Route<dynamic> route) => false,
-                                  );
-                                },
-                              ),
-                            )
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                );
-              }
-            }
-            return Container(
-                height: 270, child: Center(child: CircularProgressIndicator()));
-          },
-        ),
-        Padding(
-          padding: EdgeInsets.only(top: 20, left: 10, right: 10),
-          child: FutureBuilder(
-              future: assignmentrequests,
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Container(
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(
-                            Icons.error_outline,
-                            size: 30,
-                            color: Colors.red.withOpacity(0.9),
-                          ),
-                          Text(
-                            'Unable to establish a connection with our servers.\nCheck your connection and try again later.',
-                            style: TextStyle(color: Colors.black54),
-                            textAlign: TextAlign.center,
-                          )
-                        ],
-                      ),
-                    ),
-                  );
-                }
-                if (snapshot.hasData) {
-                  return Card(
-                    clipBehavior: Clip.antiAlias,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(15))),
-                    elevation: 10,
-                    child: ExpansionTile(
-                      initiallyExpanded: true,
-                      title: Padding(
-                        padding: EdgeInsets.only(left: 20),
-                        child: Row(
+            ),
+            child: Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              elevation: 0,
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: 10, bottom: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Spacer(),
+                        Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Padding(
                               padding: EdgeInsets.only(right: 5),
                               child: Icon(
-                                Icons.group,
+                                Icons.edit,
                                 color: Colors.black.withOpacity(0.8),
                               ),
                             ),
                             Text(
-                              'Incoming Requests',
+                              'Notepad',
                               style: TextStyle(
                                   fontSize: 20,
-                                  fontWeight: FontWeight.w800,
+                                  fontWeight: FontWeight.w400,
                                   color: Colors.black.withOpacity(0.8)),
                               textAlign: TextAlign.center,
                             ),
                           ],
                         ),
-                      ),
-                      children: snapshot.data.length == 0
-                          ? [
-                              Padding(
-                                padding: EdgeInsets.only(bottom: 15),
-                                child: Text(
-                                  'All requests have been taken care of!',
-                                  style: TextStyle(color: Colors.black54),
-                                  textAlign: TextAlign.center,
+                        Spacer(),
+                        saved
+                            ? Padding(
+                                padding: EdgeInsets.only(right: 13),
+                                child: Icon(
+                                  Icons.check,
+                                  color: Colors.green,
                                 ),
                               )
-                            ]
-                          : snapshot.data,
+                            : saving
+                                ? Padding(
+                                    padding: EdgeInsets.only(right: 17),
+                                    child: SizedBox(
+                                        height: 20,
+                                        width: 20,
+                                        child: SpinKitThreeBounce(
+                                            color: Colors.black87, size: 10)),
+                                  )
+                                : savingfailed
+                                    ? Padding(
+                                        padding: EdgeInsets.only(right: 10),
+                                        child: Icon(
+                                          Icons.priority_high,
+                                          color: Colors.red,
+                                        ),
+                                      )
+                                    : Container(),
+                      ],
                     ),
-                  );
-                }
-                return Center(child: CircularProgressIndicator());
-              }),
-        ),
-        Padding(
-          padding: EdgeInsets.only(bottom: 20, top: 30, left: 10, right: 10),
-          child: Card(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(15))),
-            elevation: 10,
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(top: 10, bottom: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Spacer(),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(right: 5),
-                            child: Icon(
-                              Icons.edit,
-                              color: Colors.black.withOpacity(0.8),
-                            ),
-                          ),
-                          Text(
-                            'Notepad',
-                            style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w800,
-                                color: Colors.black.withOpacity(0.8)),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                      Spacer(),
-                      saved
-                          ? Padding(
-                              padding: EdgeInsets.only(right: 10),
-                              child: Icon(
-                                Icons.check,
-                                color: Colors.green,
-                              ),
-                            )
-                          : saving
-                              ? Padding(
-                                  padding: EdgeInsets.only(right: 14),
-                                  child: SizedBox(
-                                    height: 20,
-                                    width: 20,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 3,
-                                    ),
-                                  ),
-                                )
-                              : savingfailed
-                                  ? Padding(
-                                      padding: EdgeInsets.only(right: 10),
-                                      child: Icon(
-                                        Icons.priority_high,
-                                        color: Colors.red,
-                                      ),
-                                    )
-                                  : Container(),
-                    ],
                   ),
-                ),
-                Text(
-                  "Changes will be synced across devices",
-                  style: TextStyle(color: Colors.black54, fontSize: 10),
-                  textAlign: TextAlign.center,
-                ),
-                Divider(thickness: 0, indent: 25, endIndent: 25),
-                FutureBuilder(
-                    future: counselorNotes,
+                  Text(
+                    "Changes will be synced across devices",
+                    style: TextStyle(
+                        color: Colors.black54,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w400),
+                    textAlign: TextAlign.center,
+                  ),
+                  Divider(thickness: 0, indent: 25, endIndent: 25),
+                  FutureBuilder(
+                    future: counselorNotes.timeout(Duration(seconds: 10)),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
                         saving = false;
                         savingfailed = true;
                         return Padding(
                           padding: EdgeInsets.only(
-                              top: 00, left: 20, right: 20, bottom: 15),
+                              top: 20, left: 20, right: 20, bottom: 30),
                           child: Text(
                             'Unable to load your notes. Try again later',
-                            style: TextStyle(fontSize: 12, color: Colors.red),
+                            style:
+                                TextStyle(fontSize: 12, color: Colors.black54),
                             textAlign: TextAlign.center,
                           ),
                         );
@@ -715,7 +464,7 @@ class _DashBoardState extends State<DashBoard> {
                         saved = true;
                         return Padding(
                           padding: EdgeInsets.only(
-                              top: 10, left: 20, right: 20, bottom: 10),
+                              top: 0, left: 20, right: 20, bottom: 30),
                           child: TextField(
                             cursorColor: Color(0xff005fa8),
                             controller: counselornotes,
@@ -738,11 +487,17 @@ class _DashBoardState extends State<DashBoard> {
                       }
                       return Padding(
                         padding: EdgeInsets.only(
-                            top: 10, left: 20, right: 20, bottom: 10),
-                        child: Center(child: CircularProgressIndicator()),
+                            top: 30, left: 20, right: 20, bottom: 50),
+                        child: Center(
+                            child: SpinKitWave(
+                          color: Colors.grey.withOpacity(0.4),
+                          size: 30,
+                        )),
                       );
-                    })
-              ],
+                    },
+                  )
+                ],
+              ),
             ),
           ),
         )

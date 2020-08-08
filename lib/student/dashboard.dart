@@ -22,7 +22,6 @@ class _DashBoardState extends State<DashBoard> {
   _DashBoardState({this.user});
 
   TextEditingController studentnotes = TextEditingController();
-  int userId;
   bool saved = false;
   bool saving = true;
   bool savingfailed = false;
@@ -116,7 +115,6 @@ class _DashBoardState extends State<DashBoard> {
     });
     if (response.statusCode == 200) {
       final result = json.decode(response.body);
-      userId = json.decode(response.body)['user_id'];
       if (result['response'] == 'Access Denied.') {
         setState(() {
           saving = false;
@@ -150,7 +148,10 @@ class _DashBoardState extends State<DashBoard> {
         'Content-Type': 'application/json; charset=UTF-8'
       },
       body: jsonEncode(
-        <String, dynamic>{"user_id": userId, "notes": studentnotes.text},
+        <String, dynamic>{
+          "user_id": widget.user.id,
+          "notes": studentnotes.text
+        },
       ),
     );
     if (response.statusCode == 200) {
