@@ -80,10 +80,10 @@ class _DashBoardState extends State<DashBoard> {
         },
       ),
     );
+    print(response.body);
     if (response.statusCode == 200) {
       if (json.decode(response.body)['response'] == 'Decision Registered.') {
         Navigator.pop(context);
-        success(context);
         refresh();
       } else {
         Navigator.pop(context);
@@ -115,15 +115,17 @@ class _DashBoardState extends State<DashBoard> {
     );
     if (response.statusCode == 200) {
       if (json.decode(response.body)['response'] == 'Decision Registered.') {
+        _reason.clear();
         Navigator.pop(context);
-        success(context);
         refresh();
       } else {
+        _reason.clear();
         Navigator.pop(context);
         error(context);
         refresh();
       }
     } else {
+      _reason.clear();
       Navigator.pop(context);
       error(context);
       refresh();
@@ -199,7 +201,7 @@ class _DashBoardState extends State<DashBoard> {
     editCounselorNotes();
   }
 
-  _deny(String decision, int id) {
+  _deny(int id) {
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -209,10 +211,16 @@ class _DashBoardState extends State<DashBoard> {
           contentPadding: EdgeInsets.all(0),
           elevation: 20,
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+            borderRadius: BorderRadius.all(
+              Radius.circular(10.0),
+            ),
+          ),
           title: Center(
-              child: Text('Reject',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))),
+            child: Text(
+              'Reject Request',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+            ),
+          ),
           content: Container(
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
@@ -227,14 +235,6 @@ class _DashBoardState extends State<DashBoard> {
                   Padding(
                     padding: EdgeInsets.only(top: 5, left: 20, right: 20),
                     child: Divider(thickness: 0),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Text(
-                      'Provide a reason for your rejection',
-                      style: TextStyle(fontSize: 12, color: Colors.black54),
-                      textAlign: TextAlign.center,
-                    ),
                   ),
                   Padding(
                     padding: EdgeInsets.only(left: 25, right: 25),
@@ -275,70 +275,19 @@ class _DashBoardState extends State<DashBoard> {
             FlatButton(
               child: Text(
                 'Send',
-                style: TextStyle(color: Colors.blue),
+                style: TextStyle(color: Color(0xff005fa8)),
               ),
               onPressed: () {
                 if (_formKey.currentState.validate()) {
-                  _reason.clear();
                   Navigator.pop(context);
-                  loading(context);
                   deny(id);
+                  loading(context);
                 }
               },
             ),
           ],
         );
       },
-    );
-  }
-
-  requestBuilder(Map<String, dynamic> request) {
-    return Padding(
-      padding: EdgeInsets.only(left: 20, right: 15, bottom: 5),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(request['student_name'], style: TextStyle(fontSize: 18)),
-              Row(
-                children: <Widget>[
-                  Text('Sent by: '),
-                  Text('@' + request['assigner_admin'],
-                      style: TextStyle(color: Colors.blue)),
-                ],
-              )
-            ],
-          ),
-          Row(
-            children: <Widget>[
-              IconButton(
-                icon: Icon(
-                  Icons.check_circle,
-                  size: 30,
-                  color: Colors.green,
-                ),
-                onPressed: () {
-                  loading(context);
-                  accept(request['student_id']);
-                },
-              ),
-              IconButton(
-                icon: Icon(
-                  Icons.cancel,
-                  size: 30,
-                  color: Colors.red,
-                ),
-                onPressed: () {
-                  _deny('R', request['student_id']);
-                },
-              )
-            ],
-          )
-        ],
-      ),
     );
   }
 
@@ -800,10 +749,9 @@ class _DashBoardState extends State<DashBoard> {
                                             size: 33,
                                           ),
                                           onTap: () {
-                                            // sendRequestDecision(
-                                            //     snapshot.data[index]['user_id'],
-                                            //     'A');
-                                            // loading(context);
+                                            accept(snapshot.data[index]
+                                                ['student_id']);
+                                            loading(context);
                                           },
                                         ),
                                       ),
@@ -821,11 +769,8 @@ class _DashBoardState extends State<DashBoard> {
                                               size: 33,
                                             ),
                                             onTap: () {
-                                              // sendRequestDecision(
-                                              //     snapshot.data[index]
-                                              //         ['user_id'],
-                                              //     'R');
-                                              // loading(context);
+                                              _deny(snapshot.data[index]
+                                                  ['student_id']);
                                             },
                                           ),
                                         ),
