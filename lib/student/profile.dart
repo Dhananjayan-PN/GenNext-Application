@@ -42,7 +42,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                 leading: CircleAvatar(
                   backgroundImage:
                       CachedNetworkImageProvider(studentglobals.user.dp),
-                  backgroundColor: Colors.blue[800],
+                  backgroundColor: Color(0xff005fa8),
                   radius: 29,
                 ),
                 title: Padding(

@@ -13,7 +13,7 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
   String filter;
   List students;
 
-  Future mystudents;
+  Future myStudents;
 
   @override
   void initState() {
@@ -21,10 +21,10 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
     BackButtonInterceptor.add(myInterceptor);
     controller.addListener(() {
       setState(() {
-        filter = controller.text;
+        filter = controller.text.toLowerCase();
       });
     });
-    mystudents = getMyStudents();
+    myStudents = getMyStudents();
   }
 
   @override
@@ -45,8 +45,7 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
     );
     if (response.statusCode == 200) {
-      List mystudents = json.decode(response.body)['counseled_students'];
-      return mystudents;
+      return json.decode(response.body)['counseled_students'];
     } else {
       throw 'failed';
     }
@@ -54,199 +53,42 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
 
   void refresh() {
     setState(() {
-      mystudents = getMyStudents();
+      myStudents = getMyStudents();
     });
   }
 
-  Widget buildCard(AsyncSnapshot snapshot, int index) {
-    students = snapshot.data;
-    List<Widget> collegelist = [];
-    for (var i = 0; i < students[index]['college_list'].length; i++) {
-      collegelist.add(
-        Padding(
-          padding: EdgeInsets.only(right: 3),
-          child: Chip(
-            labelPadding: EdgeInsets.only(left: 3, right: 3, top: 1, bottom: 1),
-            elevation: 5,
-            backgroundColor: Colors.transparent,
-            shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
-            label: Text(
-              students[index]['college_list'][i],
-              style: TextStyle(fontSize: 13, color: Colors.black),
-            ),
-          ),
-        ),
-      );
-    }
+  Widget buildCard(student) {
     return Padding(
       padding: EdgeInsets.only(top: 5, left: 10, right: 10),
       child: Card(
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(15))),
-        elevation: 10,
-        child: ExpansionTile(
+          borderRadius: BorderRadius.all(
+            Radius.circular(10),
+          ),
+        ),
+        elevation: 6,
+        child: ListTile(
           leading: CircleAvatar(
             radius: 25,
-            backgroundImage: CachedNetworkImageProvider(
+            backgroundImage: CachedNetworkImageProvider(student[
+                    'profile_pic'] ??
                 'https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png'),
-            backgroundColor: Colors.blue[400],
+            backgroundColor: Color(0xff005fa8),
           ),
-          title: Text(students[index]['student_name']),
+          title: Text(student['student_name']),
           subtitle: Text(
-            '@' + students[index]['student_username'],
-            style: TextStyle(color: Colors.blue),
+            '@' + student['student_username'],
+            style: TextStyle(color: Color(0xff005fa8)),
           ),
-          children: <Widget>[
-            Divider(
-              indent: 10,
-              endIndent: 10,
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 5, left: 20),
-              child: Row(
-                children: <Widget>[
-                  Text(
-                    'Date of Birth: ',
-                  ),
-                  Text(
-                    students[index]['student_dob'],
-                    style: TextStyle(color: Colors.black54),
-                  )
-                ],
+          onTap: () async {
+            List data = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => StudentProfileScreen(),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 5, left: 20),
-              child: Row(
-                children: <Widget>[
-                  Text(
-                    'Email ID: ',
-                  ),
-                  Text(
-                    students[index]['student_email'].toString(),
-                    style: TextStyle(color: Colors.black54),
-                  )
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 5, left: 20),
-              child: Row(
-                children: <Widget>[
-                  Text(
-                    'Degree Level: ',
-                  ),
-                  Text(
-                    students[index]['student_degree_level'].toString(),
-                    style: TextStyle(color: Colors.black54),
-                  )
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 5, left: 20),
-              child: Row(
-                children: <Widget>[
-                  Text(
-                    'Major: ',
-                  ),
-                  Text(
-                    students[index]['student_major'].toString(),
-                    style: TextStyle(color: Colors.black54),
-                  )
-                ],
-              ),
-            ),
-            if (students[index]['student_major'] == 'Undergraduate') ...[
-              Padding(
-                padding: EdgeInsets.only(top: 5, left: 20),
-                child: Row(
-                  children: <Widget>[
-                    Text(
-                      'School: ',
-                    ),
-                    Text(
-                      students[index]['student_school'].toString(),
-                      style: TextStyle(color: Colors.black54),
-                    )
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 5, left: 20),
-                child: Row(
-                  children: <Widget>[
-                    Text(
-                      'Grade: ',
-                    ),
-                    Text(
-                      students[index]['student_grade'].toString(),
-                      style: TextStyle(color: Colors.black54),
-                    )
-                  ],
-                ),
-              ),
-            ],
-            if (students[index]['student_major'] == 'Graduate') ...[
-              Padding(
-                padding: EdgeInsets.only(top: 5, left: 20),
-                child: Row(
-                  children: <Widget>[
-                    Text(
-                      'University: ',
-                    ),
-                    Text(
-                      students[index]['student_university'].toString(),
-                      style: TextStyle(color: Colors.black54),
-                    )
-                  ],
-                ),
-              ),
-            ],
-            Padding(
-              padding: EdgeInsets.only(top: 5, left: 20),
-              child: Row(
-                children: <Widget>[
-                  Text(
-                    'Country: ',
-                  ),
-                  Text(
-                    students[index]['student_country'].toString(),
-                    style: TextStyle(color: Colors.black54),
-                  )
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 5, left: 20),
-              child: Row(
-                children: <Widget>[
-                  Text(
-                    'College List: ',
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding:
-                  EdgeInsets.only(left: 20.0, right: 20, top: 5, bottom: 10),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  height: 50,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: <Widget>[
-                      Row(
-                        children: collegelist,
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );
@@ -261,10 +103,10 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
         key: refreshKey,
         onRefresh: () {
           refresh();
-          return mystudents;
+          return myStudents;
         },
         child: FutureBuilder(
-          future: mystudents.timeout(Duration(seconds: 10)),
+          future: myStudents.timeout(Duration(seconds: 10)),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Padding(
@@ -328,60 +170,75 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
                   ),
                 );
               } else {
-                return Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(top: 5, left: 18, right: 30),
-                      child: Row(
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(top: 5, right: 6),
-                            child: Icon(
-                              Icons.search,
-                              size: 30,
-                              color: Colors.black54,
-                            ),
+                return Scrollbar(
+                  child: ListView.builder(
+                    primary: true,
+                    itemCount: snapshot.data.length + 1,
+                    itemBuilder: (BuildContext context, int index) {
+                      if (index == 0) {
+                        return Padding(
+                          padding: EdgeInsets.only(
+                              top: 5, left: 18, right: 30, bottom: 25),
+                          child: Row(
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(top: 5, right: 6),
+                                child: Icon(
+                                  Icons.search,
+                                  size: 30,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                              Expanded(
+                                child: TextField(
+                                  cursorColor: Color(0xff005fa8),
+                                  decoration: InputDecoration(
+                                      labelText: "Search",
+                                      contentPadding: EdgeInsets.all(2)),
+                                  controller: controller,
+                                ),
+                              ),
+                            ],
                           ),
-                          Expanded(
-                            child: TextField(
-                              cursorColor: Color(0xff005fa8),
-                              decoration: InputDecoration(
-                                  labelText: "Search",
-                                  contentPadding: EdgeInsets.all(2)),
-                              controller: controller,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 20),
-                        child: Scrollbar(
-                          child: ListView.builder(
-                              itemCount: snapshot.data.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return filter == null || filter == ""
-                                    ? buildCard(snapshot, index)
-                                    : snapshot.data[index]['student_name']
-                                            .toLowerCase()
-                                            .contains(filter)
-                                        ? buildCard(snapshot, index)
-                                        : Container();
-                              }),
-                        ),
-                      ),
-                    ),
-                  ],
+                        );
+                      }
+                      return filter == null || filter == ""
+                          ? buildCard(snapshot.data[index - 1])
+                          : snapshot.data[index - 1]['student_name']
+                                  .toLowerCase()
+                                  .contains(filter)
+                              ? buildCard(snapshot.data[index - 1])
+                              : Container();
+                    },
+                  ),
                 );
               }
             }
             return Center(
-              child: CircularProgressIndicator(),
+              child: SpinKitWave(color: Colors.grey, size: 40),
             );
           },
         ),
       ),
+    );
+  }
+}
+
+class StudentProfileScreen extends StatefulWidget {
+  @override
+  _StudentProfileScreenState createState() => _StudentProfileScreenState();
+}
+
+class _StudentProfileScreenState extends State<StudentProfileScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Color(0xff005fa8),
+        title: Text('Student Profile'),
+      ),
+      body: Container(),
     );
   }
 }

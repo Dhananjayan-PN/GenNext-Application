@@ -33,8 +33,8 @@ class ProfileScreenState extends State<ProfileScreen> {
         padding: EdgeInsets.only(top: 15, left: 10, right: 10),
         child: Card(
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(15))),
-          elevation: 20,
+              borderRadius: BorderRadius.all(Radius.circular(10))),
+          elevation: 6,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -42,23 +42,23 @@ class ProfileScreenState extends State<ProfileScreen> {
                 leading: CircleAvatar(
                   backgroundImage:
                       CachedNetworkImageProvider(counselorglobals.user.dp),
-                  backgroundColor: Colors.blue[400],
-                  radius: 30,
+                  backgroundColor: Color(0xff005fa8),
+                  radius: 29,
                 ),
-                title: Text(
-                  counselorglobals.user.firstname +
-                      ' ' +
-                      counselorglobals.user.lastname,
-                  style: TextStyle(fontSize: 17),
+                title: Padding(
+                  padding: EdgeInsets.only(top: 5),
+                  child: Text(
+                    counselorglobals.user.firstname +
+                        ' ' +
+                        counselorglobals.user.lastname,
+                    style: TextStyle(fontSize: 17),
+                  ),
                 ),
                 subtitle: Text('Counselor'),
                 trailing: Padding(
                   padding: EdgeInsets.all(0),
                   child: IconButton(
-                    icon: Icon(
-                      Icons.edit,
-                      color: Colors.blue,
-                    ),
+                    icon: Icon(Icons.edit, color: Color(0xff005fa8)),
                     onPressed: () {},
                   ),
                 ),

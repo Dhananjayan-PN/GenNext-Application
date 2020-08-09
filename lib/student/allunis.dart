@@ -626,48 +626,47 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
                     } else {
                       return Scrollbar(
                         child: ListView.builder(
-                            primary: true,
-                            scrollDirection: Axis.vertical,
-                            itemCount: snapshot.data.length + 1,
-                            itemBuilder: (BuildContext context, int index) {
-                              if (index == 0) {
-                                return Padding(
-                                  padding: EdgeInsets.only(
-                                      top: 5, left: 18, right: 30, bottom: 25),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Padding(
-                                        padding:
-                                            EdgeInsets.only(top: 5, right: 6),
-                                        child: Icon(
-                                          Icons.search,
-                                          size: 30,
-                                          color: Colors.black54,
-                                        ),
+                          primary: true,
+                          scrollDirection: Axis.vertical,
+                          itemCount: snapshot.data.length + 1,
+                          itemBuilder: (BuildContext context, int index) {
+                            if (index == 0) {
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                    top: 5, left: 18, right: 30, bottom: 25),
+                                child: Row(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.only(top: 5, right: 6),
+                                      child: Icon(
+                                        Icons.search,
+                                        size: 30,
+                                        color: Colors.black54,
                                       ),
-                                      Expanded(
-                                        child: TextField(
-                                          cursorColor: Color(0xff005fa8),
-                                          decoration: InputDecoration(
-                                              labelText: "Search",
-                                              contentPadding:
-                                                  EdgeInsets.all(2)),
-                                          controller: controller2,
-                                        ),
+                                    ),
+                                    Expanded(
+                                      child: TextField(
+                                        cursorColor: Color(0xff005fa8),
+                                        decoration: InputDecoration(
+                                            labelText: "Search",
+                                            contentPadding: EdgeInsets.all(2)),
+                                        controller: controller2,
                                       ),
-                                    ],
-                                  ),
-                                );
-                              }
-                              return filter2 == null || filter2 == ""
-                                  ? buildCard(snapshot.data, index - 1, false)
-                                  : snapshot.data[index - 1]['university_name']
-                                          .toLowerCase()
-                                          .contains(filter2)
-                                      ? buildCard(
-                                          snapshot.data, index - 1, false)
-                                      : Container();
-                            }),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                            return filter2 == null || filter2 == ""
+                                ? buildCard(snapshot.data, index - 1, false)
+                                : snapshot.data[index - 1]['university_name']
+                                        .toLowerCase()
+                                        .contains(filter2)
+                                    ? buildCard(snapshot.data, index - 1, false)
+                                    : Container();
+                          },
+                        ),
                       );
                     }
                   }
