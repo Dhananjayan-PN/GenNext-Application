@@ -86,7 +86,9 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
             List data = await Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => StudentProfileScreen(),
+                builder: (context) => StudentProfileScreen(
+                  student: student,
+                ),
               ),
             );
           },
@@ -226,6 +228,8 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
 }
 
 class StudentProfileScreen extends StatefulWidget {
+  final Map student;
+  StudentProfileScreen({@required this.student});
   @override
   _StudentProfileScreenState createState() => _StudentProfileScreenState();
 }
@@ -239,7 +243,256 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
         backgroundColor: Color(0xff005fa8),
         title: Text('Student Profile'),
       ),
-      body: Container(),
+      body: ListView(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 15, left: 10, right: 10),
+            child: Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              elevation: 6,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  ListTile(
+                    leading: CircleAvatar(
+                      backgroundImage: CachedNetworkImageProvider(
+                        widget.student['profile_pic'] ??
+                            'https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png',
+                      ),
+                      backgroundColor: Color(0xff005fa8),
+                      radius: 29,
+                    ),
+                    title: Padding(
+                      padding: EdgeInsets.only(top: 5),
+                      child: Text(
+                        widget.student['student_name'],
+                        style: TextStyle(fontSize: 17),
+                      ),
+                    ),
+                    subtitle: Text(
+                      '@' + widget.student['student_username'],
+                      style: TextStyle(
+                        color: Color(0xff005fa8),
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    thickness: 1,
+                    indent: 20,
+                    endIndent: 20,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 5, left: 21),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(top: 2.5),
+                          child: Text(
+                            'EMAIL ID: ',
+                            style:
+                                TextStyle(color: Colors.black54, fontSize: 12),
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.65,
+                          child: Text(
+                            widget.student['student_email'],
+                            style:
+                                TextStyle(color: Colors.black87, fontSize: 15),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10, left: 21),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(top: 2.5),
+                          child: Text(
+                            'DOB: ',
+                            style:
+                                TextStyle(color: Colors.black54, fontSize: 12),
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.65,
+                          child: Text(
+                            widget.student['student_dob'],
+                            style:
+                                TextStyle(color: Colors.black87, fontSize: 15),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10, left: 21),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(top: 2.5),
+                          child: Text(
+                            'GRADE: ',
+                            style:
+                                TextStyle(color: Colors.black54, fontSize: 12),
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.65,
+                          child: Text(
+                            widget.student['student_grade'],
+                            style:
+                                TextStyle(color: Colors.black87, fontSize: 15),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10, left: 21),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(top: 2.5),
+                          child: Text(
+                            'SCHOOL: ',
+                            style:
+                                TextStyle(color: Colors.black54, fontSize: 12),
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.65,
+                          child: Text(
+                            widget.student['student_school'],
+                            style: TextStyle(
+                                color: Colors.black87, fontSize: 14.5),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10, left: 21, bottom: 15),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(top: 2.5),
+                          child: Text(
+                            'COUNTRY: ',
+                            style:
+                                TextStyle(color: Colors.black54, fontSize: 12),
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.65,
+                          child: Text(
+                            widget.student['student_country'],
+                            style:
+                                TextStyle(color: Colors.black87, fontSize: 15),
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 15, left: 10, right: 10),
+            child: Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              elevation: 6,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(left: 22, top: 15, bottom: 5),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.contact_mail,
+                          size: 18,
+                          color: Color(0xff005fa8).withOpacity(0.8),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 10),
+                          child: Text(
+                            'Student Preferences',
+                            style: TextStyle(fontSize: 17),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Divider(
+                    thickness: 1,
+                    indent: 20,
+                    endIndent: 20,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 5, left: 21),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(top: 2),
+                          child: Text(
+                            'MAJOR: ',
+                            style:
+                                TextStyle(color: Colors.black54, fontSize: 12),
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.65,
+                          child: Text(
+                            widget.student['student_major'],
+                            style:
+                                TextStyle(color: Colors.black87, fontSize: 15),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 5, left: 21, bottom: 15),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(top: 2),
+                          child: Text(
+                            'DEGREE LEVEL: ',
+                            style:
+                                TextStyle(color: Colors.black54, fontSize: 12),
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.55,
+                          child: Text(
+                            widget.student['student_degree_level'],
+                            style:
+                                TextStyle(color: Colors.black87, fontSize: 15),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
