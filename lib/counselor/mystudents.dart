@@ -71,9 +71,10 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
         child: ListTile(
           leading: CircleAvatar(
             radius: 25,
-            backgroundImage: CachedNetworkImageProvider(student[
-                    'profile_pic'] ??
-                'https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png'),
+            backgroundImage: CachedNetworkImageProvider(
+              student['profile_pic'] ??
+                  'https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png',
+            ),
             backgroundColor: Color(0xff005fa8),
           ),
           title: Text(student['student_name']),
