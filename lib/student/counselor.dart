@@ -50,6 +50,29 @@ class _CounsellingScreenState extends State<CounsellingScreen> {
     }
   }
 
+  Future<void> requestCounselling() async {
+    String tok = await getToken();
+    final response = await http.put(
+      dom + 'api/student/send-counselor-request',
+      headers: {HttpHeaders.authorizationHeader: "Token $tok"},
+    );
+    if (response.statusCode == 200) {
+      if (json.decode(response.body)['Response'] ==
+          'Request successfully sent.') {
+        Navigator.pop(context);
+        success(context,
+            'Request has been successfully sent.\nA counselor will be assigned soon.');
+        refresh();
+      } else {
+        Navigator.pop(context);
+        error(context);
+      }
+    } else {
+      Navigator.pop(context);
+      error(context);
+    }
+  }
+
   refresh() {
     setState(() {
       counselorInfo = getCounselorInfo();
@@ -155,7 +178,10 @@ class _CounsellingScreenState extends State<CounsellingScreen> {
                                 side: BorderSide(
                                     color: Color(0xff005fa8), width: 0.0)),
                             label: Text('Request Counselling'),
-                            onPressed: () {},
+                            onPressed: () {
+                              loading(context);
+                              requestCounselling();
+                            },
                           ),
                         )
                       ],
