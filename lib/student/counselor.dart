@@ -52,7 +52,7 @@ class _CounsellingScreenState extends State<CounsellingScreen> {
 
   refresh() {
     setState(() {
-      //add future call here
+      counselorInfo = getCounselorInfo();
     });
   }
 
@@ -130,7 +130,7 @@ class _CounsellingScreenState extends State<CounsellingScreen> {
                           padding:
                               EdgeInsets.only(top: 15, left: 30, right: 30),
                           child: Text(
-                            "You haven't requested for counselling yet.",
+                            "You haven't requested for counselling.",
                             style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 13.5,
@@ -139,7 +139,7 @@ class _CounsellingScreenState extends State<CounsellingScreen> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(top: 2, bottom: 20),
+                          padding: EdgeInsets.only(top: 2, bottom: 10),
                           child: Text("Click the button to get started!",
                               style: TextStyle(
                                   color: Colors.black,
@@ -147,13 +147,16 @@ class _CounsellingScreenState extends State<CounsellingScreen> {
                                   fontWeight: FontWeight.w500),
                               textAlign: TextAlign.center),
                         ),
-                        ActionChip(
-                          backgroundColor: Colors.white,
-                          shape: StadiumBorder(
-                              side: BorderSide(
-                                  color: Color(0xff005fa8), width: 0.0)),
-                          label: Text('Request Counselling'),
-                          onPressed: () {},
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 10),
+                          child: ActionChip(
+                            backgroundColor: Colors.white,
+                            shape: StadiumBorder(
+                                side: BorderSide(
+                                    color: Color(0xff005fa8), width: 0.0)),
+                            label: Text('Request Counselling'),
+                            onPressed: () {},
+                          ),
                         )
                       ],
                     ),

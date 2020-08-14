@@ -85,9 +85,13 @@ class _DashBoardState extends State<DashBoard> {
         HttpHeaders.authorizationHeader: 'Token $tok',
       },
     );
+    print(response.body);
     if (response.statusCode == 200) {
       if (jsonDecode(response.body)['Response'] ==
           'Student yet to be connected with a counselor.') {
+        return 'No Counselor';
+      } else if (jsonDecode(response.body)['Response'] ==
+          "Student hasn't requested for counseling.") {
         return 'No Counselor';
       } else {
         List sessions = json.decode(response.body)['session_data'];

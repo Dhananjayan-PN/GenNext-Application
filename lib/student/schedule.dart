@@ -33,6 +33,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     _events = {};
     _calendarController = CalendarController();
     BackButtonInterceptor.add(myInterceptor);
+    fabVisible = false;
     _selectedEvents = [];
   }
 
@@ -56,6 +57,12 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       if (data['Response'] == 'Student yet to be connected with a counselor.') {
+        setState(() {
+          fabVisible = false;
+        });
+        return 'No counselor';
+      } else if (data['Response'] ==
+          "Student hasn't requested for counseling.") {
         setState(() {
           fabVisible = false;
         });
