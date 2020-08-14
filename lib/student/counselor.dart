@@ -226,9 +226,9 @@ class _CounsellingScreenState extends State<CounsellingScreen> {
                           padding:
                               EdgeInsets.only(top: 15, left: 10, right: 10),
                           child: Text(
-                            "We have received you're request",
+                            "We have received you're request.",
                             style: TextStyle(
-                                color: Colors.black,
+                                color: Colors.black87,
                                 fontSize: 13.5,
                                 fontWeight: FontWeight.w500),
                             textAlign: TextAlign.center,
@@ -240,8 +240,8 @@ class _CounsellingScreenState extends State<CounsellingScreen> {
                           child: Text(
                             "Please be patient while we assign you a counselor.",
                             style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 13.5,
+                                color: Colors.black87,
+                                fontSize: 13,
                                 fontWeight: FontWeight.w500),
                             textAlign: TextAlign.center,
                           ),
