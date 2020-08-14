@@ -371,11 +371,14 @@ class _DashBoardState extends State<DashBoard> {
                                         children: <Widget>[
                                           Spacer(),
                                           CircularPercentIndicator(
-                                            footer: Text('Match',
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w300,
-                                                    color: Colors.white,
-                                                    fontSize: 10)),
+                                            footer: Text(
+                                              'MATCH',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                color: Colors.white,
+                                                fontSize: 8.5,
+                                              ),
+                                            ),
                                             radius: 45.0,
                                             lineWidth: 2.5,
                                             animation: true,
@@ -385,13 +388,14 @@ class _DashBoardState extends State<DashBoard> {
                                             center: Text(
                                               " ${snapshot.data[index]["match_rating"].toString().substring(0, 4)}%",
                                               style: TextStyle(
-                                                  fontWeight: FontWeight.w300,
-                                                  color: Colors.white,
-                                                  fontSize: 11.5),
+                                                fontWeight: FontWeight.w500,
+                                                color: Colors.white,
+                                                fontSize: 11.3,
+                                              ),
                                             ),
                                             circularStrokeCap:
                                                 CircularStrokeCap.round,
-                                            backgroundColor: Colors.transparent,
+                                            backgroundColor: Colors.white54,
                                             progressColor: colorPicker(snapshot
                                                 .data[index]["match_rating"]),
                                           ),
