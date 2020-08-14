@@ -72,7 +72,7 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
           leading: CircleAvatar(
             radius: 25,
             backgroundImage: CachedNetworkImageProvider(
-              student['profile_pic'] ??
+              student['student_profile_img'] ??
                   'https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png',
             ),
             backgroundColor: Color(0xff005fa8),
@@ -257,7 +257,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                   ListTile(
                     leading: CircleAvatar(
                       backgroundImage: CachedNetworkImageProvider(
-                        widget.student['profile_pic'] ??
+                        widget.student['student_profile_img'] ??
                             'https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png',
                       ),
                       backgroundColor: Color(0xff005fa8),
@@ -410,28 +410,20 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
             padding: EdgeInsets.only(top: 15, left: 10, right: 10),
             child: Card(
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
+              ),
               elevation: 6,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.only(left: 22, top: 15, bottom: 5),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.contact_mail,
-                          size: 18,
-                          color: Color(0xff005fa8).withOpacity(0.8),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 10),
-                          child: Text(
-                            'Student Preferences',
-                            style: TextStyle(fontSize: 17),
-                          ),
-                        ),
-                      ],
+                    padding: EdgeInsets.only(left: 20, top: 14, bottom: 4),
+                    child: Text(
+                      'Preferences',
+                      style: TextStyle(fontSize: 17),
                     ),
                   ),
                   Divider(
@@ -486,6 +478,88 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                         )
                       ],
                     ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 15, left: 10, right: 10),
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
+              ),
+              elevation: 6,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(left: 20, top: 14, bottom: 4),
+                    child: Text(
+                      'Documents',
+                      style: TextStyle(fontSize: 17),
+                    ),
+                  ),
+                  Divider(
+                    thickness: 1,
+                    indent: 20,
+                    endIndent: 20,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 21, top: 2, bottom: 4),
+                    child: Text(
+                      'Transcripts',
+                      style: TextStyle(
+                          fontSize: 15, color: Colors.black.withOpacity(0.7)),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 21, top: 5, bottom: 4),
+                    child: Text(
+                      'Extracurriculars',
+                      style: TextStyle(
+                          fontSize: 15, color: Colors.black.withOpacity(0.7)),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 21, top: 5, bottom: 14),
+                    child: Text(
+                      'Misc',
+                      style: TextStyle(
+                          fontSize: 15, color: Colors.black.withOpacity(0.7)),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 15, left: 10, right: 10),
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
+              ),
+              elevation: 6,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(left: 20, top: 15, bottom: 4),
+                    child: Text(
+                      'Test Scores',
+                      style: TextStyle(fontSize: 17),
+                    ),
+                  ),
+                  Divider(
+                    thickness: 1,
+                    indent: 20,
+                    endIndent: 20,
                   ),
                 ],
               ),
