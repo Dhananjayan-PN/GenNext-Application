@@ -61,7 +61,7 @@ class _CounsellingScreenState extends State<CounsellingScreen> {
           'Request successfully sent.') {
         Navigator.pop(context);
         success(context,
-            'Request has been successfully sent.\nA counselor will be assigned soon.');
+            'Request has been successfully sent.\nNew counselor will be assigned soon.');
         refresh();
       } else {
         Navigator.pop(context);
@@ -251,117 +251,127 @@ class _CounsellingScreenState extends State<CounsellingScreen> {
                   ),
                 );
               } else {
-                return Column(
-                  children: <Widget>[
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 25, left: 25),
-                        child: Text(
-                          'My Counselor',
-                          style: TextStyle(fontSize: 21),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 12, left: 10, right: 10),
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
-                        elevation: 6,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            ListTile(
-                              contentPadding: EdgeInsets.only(left: 20, top: 5),
-                              leading: CircleAvatar(
-                                backgroundImage: CachedNetworkImageProvider(
-                                    snapshot.data['counselor_profile_pic']),
-                                backgroundColor: Colors.blue[800],
-                                radius: 28,
-                              ),
-                              title: Text(
-                                snapshot.data['counselor_name'],
-                                style: TextStyle(fontSize: 17),
-                              ),
-                              subtitle: Text('Counselor'),
+                return ListView(
+                  children: [
+                    Column(
+                      children: <Widget>[
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 25, left: 25),
+                            child: Text(
+                              'My Counselor',
+                              style: TextStyle(fontSize: 21),
                             ),
-                            Divider(
-                              thickness: 1,
-                              indent: 20,
-                              endIndent: 20,
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 5, left: 20),
-                              child: Row(
-                                children: <Widget>[
-                                  Text(
-                                    'Username: ',
-                                  ),
-                                  Text(
-                                    '@' + snapshot.data['counselor_username'],
-                                    style: TextStyle(color: Colors.black54),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 15, left: 20),
-                              child: Row(
-                                children: <Widget>[
-                                  Text(
-                                    'Email ID: ',
-                                  ),
-                                  Text(
-                                    snapshot.data['counselor_email'],
-                                    style: TextStyle(color: Colors.black54),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  top: 15, left: 20, bottom: 15),
-                              child: Row(
-                                children: <Widget>[
-                                  Text(
-                                    'Country: ',
-                                  ),
-                                  Text(
-                                    snapshot.data['counselor_country'],
-                                    style: TextStyle(color: Colors.black54),
-                                  )
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 25),
-                      child: Text(
-                        'Not satisfied with your counselor?',
-                        style: TextStyle(
-                          fontSize: 15,
-                        ),
-                      ),
-                    ),
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        splashColor: Colors.blue[700],
-                        onTap: () {},
-                        child: Text(
-                          'Request for another',
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: Color(0xff005fa8),
                           ),
-                          textAlign: TextAlign.left,
                         ),
-                      ),
+                        Padding(
+                          padding:
+                              EdgeInsets.only(top: 12, left: 10, right: 10),
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
+                            elevation: 6,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                ListTile(
+                                  contentPadding:
+                                      EdgeInsets.only(left: 20, top: 5),
+                                  leading: CircleAvatar(
+                                    backgroundImage: CachedNetworkImageProvider(
+                                        snapshot.data['counselor_profile_pic']),
+                                    backgroundColor: Colors.blue[800],
+                                    radius: 28,
+                                  ),
+                                  title: Text(
+                                    snapshot.data['counselor_name'],
+                                    style: TextStyle(fontSize: 17),
+                                  ),
+                                  subtitle: Text('Counselor'),
+                                ),
+                                Divider(
+                                  thickness: 1,
+                                  indent: 20,
+                                  endIndent: 20,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 5, left: 20),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Text(
+                                        'Username: ',
+                                      ),
+                                      Text(
+                                        '@' +
+                                            snapshot.data['counselor_username'],
+                                        style: TextStyle(color: Colors.black54),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: 15, left: 20),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Text(
+                                        'Email ID: ',
+                                      ),
+                                      Text(
+                                        snapshot.data['counselor_email'],
+                                        style: TextStyle(color: Colors.black54),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 15, left: 20, bottom: 15),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Text(
+                                        'Country: ',
+                                      ),
+                                      Text(
+                                        snapshot.data['counselor_country'],
+                                        style: TextStyle(color: Colors.black54),
+                                      )
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 25),
+                          child: Text(
+                            'Not satisfied with your counselor?',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                          ),
+                        ),
+                        Material(
+                          child: InkWell(
+                            splashColor: Colors.blue[900],
+                            onTap: () {
+                              loading(context);
+                              requestCounselling();
+                            },
+                            child: Text(
+                              'Request for another',
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Color(0xff005fa8),
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 );
