@@ -705,12 +705,14 @@ class _DashBoardState extends State<DashBoard> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                'Assigned By: ',
+                                                'Assigned By:',
                                                 style: TextStyle(
                                                     color: Colors.black54,
                                                     fontSize: 13),
                                               ),
                                               Container(
+                                                margin:
+                                                    EdgeInsets.only(left: 1),
                                                 width: MediaQuery.of(context)
                                                         .size
                                                         .width *
