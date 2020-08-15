@@ -1,5 +1,6 @@
 import '../imports.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'home.dart';
 
 class MyStudentsScreen extends StatefulWidget {
@@ -235,6 +236,44 @@ class StudentProfileScreen extends StatefulWidget {
 }
 
 class _StudentProfileScreenState extends State<StudentProfileScreen> {
+  List<Widget> transcripts;
+  List<Widget> ecs;
+  List<Widget> misc;
+  List<Widget> scores;
+
+  Future documents;
+
+  @override
+  void initState() {
+    super.initState();
+    documents = getDocuments();
+  }
+
+  Future getDocuments() async {
+    String tok = await getToken();
+    Map docs = {};
+    final response = await http.get(
+      dom +
+          'api/counselor/get-student-documents/${widget.student['student_id']}',
+      headers: {HttpHeaders.authorizationHeader: "Token $tok"},
+    );
+    if (response.statusCode == 200) {
+      docs = json.decode(response.body);
+      final result = await http.get(
+        dom + 'api/counselor/get-test-scores/${widget.student['student_id']}',
+        headers: {HttpHeaders.authorizationHeader: "Token $tok"},
+      );
+      if (result.statusCode == 200) {
+        docs['test_scores'] = json.decode(result.body)['test_scores'];
+        return docs;
+      } else {
+        throw 'failed';
+      }
+    } else {
+      throw 'failed';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -250,7 +289,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
             child: Card(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(10))),
-              elevation: 6,
+              elevation: 4,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -421,7 +460,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                   Radius.circular(10),
                 ),
               ),
-              elevation: 6,
+              elevation: 4,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -493,59 +532,365 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                   Radius.circular(10),
                 ),
               ),
-              elevation: 6,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(left: 15, top: 10, bottom: 4),
-                    child: Text(
-                      'Transcripts',
-                      style: TextStyle(
-                          fontSize: 15, color: Colors.black.withOpacity(0.7)),
+              elevation: 4,
+              child: FutureBuilder(
+                future: documents.timeout(Duration(seconds: 10)),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Padding(
+                      padding: EdgeInsets.only(left: 25, right: 25),
+                      child: Card(
+                        margin: EdgeInsets.only(top: 20, bottom: 20),
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        elevation: 6,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                              left: 3, right: 3, top: 30, bottom: 30),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(bottom: 10),
+                                child: Icon(
+                                  Icons.error_outline,
+                                  size: 35,
+                                  color: Colors.red.withOpacity(0.6),
+                                ),
+                              ),
+                              Text(
+                                'Unable to establish a connection\nwith our servers.\nCheck your connection and try again later.',
+                                style: TextStyle(color: Colors.black54),
+                                textAlign: TextAlign.center,
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                  if (snapshot.hasData) {
+                    transcripts = [];
+                    ecs = [];
+                    misc = [];
+                    scores = [];
+                    for (int i = 0;
+                        i < snapshot.data['transcripts'].length;
+                        i++) {
+                      transcripts.add(
+                        Padding(
+                          padding: EdgeInsets.only(
+                              top: 4, left: 15, right: 25, bottom: 4),
+                          child: Card(
+                            clipBehavior: Clip.antiAlias,
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                                  color: Color(0xff005fa8), width: 0.8),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                            ),
+                            elevation: 2,
+                            child: Material(
+                              color: Colors.transparent,
+                              child: ListTile(
+                                dense: true,
+                                title: Text(
+                                  snapshot.data['transcripts'][i]['title'],
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  'Grade ${snapshot.data['transcripts'][i]['grade']}',
+                                  style: TextStyle(
+                                      color: Colors.black87,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                                onTap: () {
+                                  launch(snapshot.data['transcripts'][i]
+                                      ['transcript_file_path']);
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                    for (int i = 0;
+                        i < snapshot.data['extracurriculars'].length;
+                        i++) {
+                      final key = GlobalKey(
+                          debugLabel:
+                              snapshot.data['extracurriculars'][i].toString());
+                      ecs.add(
+                        Padding(
+                          padding: EdgeInsets.only(
+                              top: 4, left: 15, right: 25, bottom: 4),
+                          child: Card(
+                            clipBehavior: Clip.antiAlias,
+                            shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                    color: Color(0xff005fa8), width: 0.8),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
+                            elevation: 2,
+                            child: Material(
+                              color: Colors.transparent,
+                              child: Tooltip(
+                                padding: EdgeInsets.all(10),
+                                margin: EdgeInsets.all(5),
+                                key: key,
+                                message: 'Description: ' +
+                                    (snapshot.data['extracurriculars'][i]
+                                                ['ec_description'] !=
+                                            ''
+                                        ? snapshot.data['extracurriculars'][i]
+                                            ['ec_description']
+                                        : 'No description provided'),
+                                child: ListTile(
+                                  dense: true,
+                                  title: Text(
+                                    snapshot.data['extracurriculars'][i]
+                                        ['ec_title'],
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 15),
+                                  ),
+                                  subtitle: Text(
+                                    '${snapshot.data['extracurriculars'][i]['ec_start_date']} to ${snapshot.data['extracurriculars'][i]['ec_end_date']}',
+                                    style: TextStyle(
+                                        color: Colors.black87,
+                                        fontWeight: FontWeight.w400),
+                                  ),
+                                  onTap: () {
+                                    final dynamic tooltip = key.currentState;
+                                    tooltip.ensureTooltipVisible();
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                    for (int i = 0;
+                        i < snapshot.data['misc_docs'].length;
+                        i++) {
+                      misc.add(
+                        Padding(
+                          padding: EdgeInsets.only(
+                              top: 4, left: 15, right: 25, bottom: 4),
+                          child: Card(
+                            clipBehavior: Clip.antiAlias,
+                            shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                    color: Color(0xff005fa8), width: 0.8),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10))),
+                            elevation: 2,
+                            child: Material(
+                              color: Colors.transparent,
+                              child: ListTile(
+                                dense: true,
+                                title: Text(
+                                  snapshot.data['misc_docs'][i]['title'],
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 15),
+                                ),
+                                subtitle: Text(
+                                  snapshot.data['misc_docs'][i]
+                                      ['misc_doc_type'],
+                                  style: TextStyle(
+                                      color: Colors.black87,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                                onTap: () {
+                                  launch(snapshot.data['misc_docs'][i]
+                                      ['misc_doc_path']);
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                    for (int i = 0;
+                        i < snapshot.data['test_scores'].length;
+                        i++) {
+                      scores.add(
+                        Card(
+                          clipBehavior: Clip.antiAlias,
+                          elevation: 3,
+                          margin: EdgeInsets.only(
+                              top: 5, left: 19, right: 29, bottom: 4),
+                          shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                                  color: Color(0xff005fa8), width: 0.8),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          child: InkWell(
+                            child: Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 6),
+                                    child: Row(
+                                      children: <Widget>[
+                                        SizedBox(
+                                          width: 60,
+                                          child: Image.network(
+                                            snapshot.data['test_scores'][i]
+                                                        ['test_type'] ==
+                                                    'Advanced Placement'
+                                                ? 'https://d31kydh6n6r5j5.cloudfront.net/uploads/sites/202/2020/01/cb-ap-logo.png'
+                                                : snapshot.data['test_scores']
+                                                            [i]['test_type'] ==
+                                                        'SAT'
+                                                    ? 'https://p15cdn4static.sharpschool.com/UserFiles/Servers/Server_68836/Image/College%20Board%20SAT.jpg'
+                                                    : snapshot.data['test_scores'][i]
+                                                                ['test_type'] ==
+                                                            'ACT'
+                                                        ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTSaMTwrkbcLq4PZGW_Z8vcmrL8UEENzymwBA&usqp=CAU'
+                                                        : snapshot.data['test_scores'][i]['test_type'] == 'TOEFL'
+                                                            ? 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/TOEFL_Logo.svg/1280px-TOEFL_Logo.svg.png'
+                                                            : snapshot.data['test_scores'][i]['test_type'] == 'IELTS'
+                                                                ? 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/IELTS_logo.svg/1280px-IELTS_logo.svg.png'
+                                                                : snapshot.data['test_scores'][i]
+                                                                            ['test_type'] ==
+                                                                        'SAT Subject Test'
+                                                                    ? 'https://i.ibb.co/9hRGHBS/SUBJECT.png'
+                                                                    : null,
+                                            fit: BoxFit.contain,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 3, left: 6),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: <Widget>[
+                                        Text(
+                                          snapshot.data['test_scores'][i]
+                                                  ['score']
+                                              .toString(),
+                                          style: TextStyle(fontSize: 17),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(top: 2),
+                                          child: Text(
+                                            '/' +
+                                                snapshot.data['test_scores'][i]
+                                                        ['max_score']
+                                                    .toString(),
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                color: Colors.black54),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(top: 2, left: 7),
+                                    child: Text(
+                                      DateFormat.yMMMMd('en_US').format(
+                                        DateTime.parse(
+                                            snapshot.data['test_scores'][i]
+                                                    ['date_of_test'] +
+                                                'T00:00:00Z'),
+                                      ),
+                                      style: TextStyle(
+                                          fontSize: 11.5,
+                                          color: Colors.black87),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            onTap: () {
+                              launch(snapshot.data['test_scores'][i]
+                                  ['document_url']);
+                            },
+                          ),
+                        ),
+                      );
+                    }
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(left: 15, top: 14),
+                          child: Text(
+                            'Transcripts',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ),
+                        Column(
+                          children: transcripts,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 15, top: 8),
+                          child: Text(
+                            'Extracurriculars',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ),
+                        Column(
+                          children: ecs,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 15, top: 8),
+                          child: Text(
+                            'Misc',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ),
+                        Column(
+                          children: misc,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 15, top: 8),
+                          child: Text(
+                            'Test Scores',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 14),
+                          child: Column(
+                            children: scores,
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                  return Padding(
+                    padding: EdgeInsets.only(top: 30, bottom: 30),
+                    child: Center(
+                      child: SpinKitWave(color: Colors.grey, size: 30),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 15, top: 5, bottom: 4),
-                    child: Text(
-                      'Extracurriculars',
-                      style: TextStyle(
-                          fontSize: 15, color: Colors.black.withOpacity(0.7)),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 15, top: 5, bottom: 10),
-                    child: Text(
-                      'Misc',
-                      style: TextStyle(
-                          fontSize: 15, color: Colors.black.withOpacity(0.7)),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 20, top: 18),
-            child: Text(
-              'Transcripts',
-              style: TextStyle(fontSize: 20),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 15, left: 10, right: 10),
-            child: Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(10),
-                ),
-              ),
-              elevation: 6,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[],
+                  );
+                },
               ),
             ),
           ),
