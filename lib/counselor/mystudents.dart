@@ -407,7 +407,14 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 15, left: 10, right: 10),
+            padding: EdgeInsets.only(left: 20, top: 18),
+            child: Text(
+              'Preferences',
+              style: TextStyle(fontSize: 20),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 5, left: 14, right: 14),
             child: Card(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(
@@ -420,19 +427,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.only(left: 20, top: 14, bottom: 4),
-                    child: Text(
-                      'Preferences',
-                      style: TextStyle(fontSize: 17),
-                    ),
-                  ),
-                  Divider(
-                    thickness: 1,
-                    indent: 20,
-                    endIndent: 20,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 5, left: 21),
+                    padding: EdgeInsets.only(top: 10, left: 15),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -456,7 +451,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 5, left: 21, bottom: 15),
+                    padding: EdgeInsets.only(top: 5, left: 15, bottom: 10),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -484,7 +479,14 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 15, left: 10, right: 10),
+            padding: EdgeInsets.only(left: 20, top: 18),
+            child: Text(
+              'Documents',
+              style: TextStyle(fontSize: 20),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 5, left: 14, right: 14),
             child: Card(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(
@@ -497,19 +499,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.only(left: 20, top: 14, bottom: 4),
-                    child: Text(
-                      'Documents',
-                      style: TextStyle(fontSize: 17),
-                    ),
-                  ),
-                  Divider(
-                    thickness: 1,
-                    indent: 20,
-                    endIndent: 20,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 21, top: 2, bottom: 4),
+                    padding: EdgeInsets.only(left: 15, top: 10, bottom: 4),
                     child: Text(
                       'Transcripts',
                       style: TextStyle(
@@ -517,7 +507,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 21, top: 5, bottom: 4),
+                    padding: EdgeInsets.only(left: 15, top: 5, bottom: 4),
                     child: Text(
                       'Extracurriculars',
                       style: TextStyle(
@@ -525,7 +515,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 21, top: 5, bottom: 14),
+                    padding: EdgeInsets.only(left: 15, top: 5, bottom: 10),
                     child: Text(
                       'Misc',
                       style: TextStyle(
@@ -534,6 +524,13 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                   ),
                 ],
               ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 20, top: 18),
+            child: Text(
+              'Transcripts',
+              style: TextStyle(fontSize: 20),
             ),
           ),
           Padding(
@@ -548,20 +545,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(left: 20, top: 15, bottom: 4),
-                    child: Text(
-                      'Test Scores',
-                      style: TextStyle(fontSize: 17),
-                    ),
-                  ),
-                  Divider(
-                    thickness: 1,
-                    indent: 20,
-                    endIndent: 20,
-                  ),
-                ],
+                children: <Widget>[],
               ),
             ),
           ),
