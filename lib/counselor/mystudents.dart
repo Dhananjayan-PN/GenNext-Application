@@ -242,11 +242,13 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
   List<Widget> scores;
 
   Future documents;
+  Future collegeList;
 
   @override
   void initState() {
     super.initState();
     documents = getDocuments();
+    collegeList = getCollegeList();
   }
 
   Future getDocuments() async {
@@ -272,6 +274,10 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
     } else {
       throw 'failed';
     }
+  }
+
+  Future getCollegeList() async {
+    return [];
   }
 
   @override
@@ -514,6 +520,107 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                     ),
                   ),
                 ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 20, top: 18),
+            child: Text(
+              'College List',
+              style: TextStyle(fontSize: 20),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 5, left: 14, right: 14),
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
+              ),
+              elevation: 4,
+              child: FutureBuilder(
+                future: collegeList,
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Padding(
+                      padding: EdgeInsets.only(left: 25, right: 25),
+                      child: Card(
+                        margin: EdgeInsets.only(top: 20, bottom: 20),
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(10))),
+                        elevation: 6,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                              left: 3, right: 3, top: 30, bottom: 30),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(bottom: 10),
+                                child: Icon(
+                                  Icons.error_outline,
+                                  size: 35,
+                                  color: Colors.red.withOpacity(0.6),
+                                ),
+                              ),
+                              Text(
+                                'Unable to establish a connection\nwith our servers.\nCheck your connection and try again later.',
+                                style: TextStyle(color: Colors.black54),
+                                textAlign: TextAlign.center,
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                  if (snapshot.hasData) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(left: 15, top: 14),
+                          child: Text(
+                            'Reach',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 15, top: 8),
+                          child: Text(
+                            'Match',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 15, top: 8),
+                          child: Text(
+                            'Safety',
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                  return Padding(
+                    padding: EdgeInsets.only(top: 30, bottom: 30),
+                    child: Center(
+                      child: SpinKitWave(color: Colors.grey, size: 30),
+                    ),
+                  );
+                },
               ),
             ),
           ),
