@@ -15,12 +15,11 @@ String dom = domain;
 Widget curPage;
 List navlistelements = [
   ['Home', CounselorHomeScreen(), Icons.home],
-  ['My Students', MyStudentsScreen(), Icons.group],
-  ['Essays', EssaysScreen(), Icons.edit],
   ['My Profile', ProfileScreen(), Icons.account_box],
+  ['My Students', MyStudentsScreen(), Icons.group],
   ['Sessions Calendar', ScheduleScreen(), Icons.date_range],
-  ['My Universities', MyUniversitiesScreen(), Icons.account_balance],
-  ['University Connect', ConnectUniversitiesScreen(), Icons.link]
+  ['University Connect', ConnectUniversitiesScreen(), Icons.link],
+  ['Student Essays', EssaysScreen(), Icons.edit]
 ];
 
 Future<String> getToken() async {

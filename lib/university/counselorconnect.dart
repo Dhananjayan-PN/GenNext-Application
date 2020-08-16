@@ -265,25 +265,29 @@ class _CounselorConnectScreenState extends State<CounselorConnectScreen> {
           bottom: TabBar(
             tabs: [
               Tab(
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
                     Icon(Icons.hourglass_empty),
                     Padding(
                       padding: EdgeInsets.only(left: 3.0),
                       child: Text('Requests'),
                     )
-                  ])),
+                  ],
+                ),
+              ),
               Tab(
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
                     Icon(Icons.insert_link),
                     Padding(
                       padding: EdgeInsets.only(left: 3.0),
                       child: Text('Connected'),
                     )
-                  ])),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

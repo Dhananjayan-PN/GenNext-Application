@@ -1,6 +1,5 @@
 import '../imports.dart';
 import 'package:http/http.dart' as http;
-import '../custom_expansion_tile.dart' as custom;
 import 'home.dart';
 
 class ConnectUniversitiesScreen extends StatefulWidget {
@@ -11,9 +10,12 @@ class ConnectUniversitiesScreen extends StatefulWidget {
 
 class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
   GlobalKey<ScaffoldState> _scafKey = GlobalKey<ScaffoldState>();
-  var refreshKey = GlobalKey<RefreshIndicatorState>();
-  TextEditingController controller = TextEditingController();
-  String filter;
+  var refreshKey1 = GlobalKey<RefreshIndicatorState>();
+  var refreshKey2 = GlobalKey<RefreshIndicatorState>();
+  TextEditingController controller1 = TextEditingController();
+  TextEditingController controller2 = TextEditingController();
+  String filter1;
+  String filter2;
   List unis;
   Future getavailableuniversities;
 
@@ -21,9 +23,14 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
   void initState() {
     super.initState();
     BackButtonInterceptor.add(myInterceptor);
-    controller.addListener(() {
+    controller1.addListener(() {
       setState(() {
-        filter = controller.text;
+        filter1 = controller1.text.toLowerCase();
+      });
+    });
+    controller2.addListener(() {
+      setState(() {
+        filter2 = controller2.text.toLowerCase();
       });
     });
     getavailableuniversities = getAvailableUniversities();
@@ -31,7 +38,8 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
 
   @override
   void dispose() {
-    controller.dispose();
+    controller1.dispose();
+    controller2.dispose();
     BackButtonInterceptor.remove(myInterceptor);
     super.dispose();
   }
@@ -111,598 +119,380 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
     });
   }
 
-  Widget buildCard(AsyncSnapshot snapshot, int index) {
-    unis = snapshot.data;
-    unis[index]['request_failed'] = false;
-    unis[index]['requesting'] = false;
-    List<Widget> topmajors = [];
-    List<Widget> standoutfactors = [];
-    List<Widget> degreelevels = [];
-    List<Widget> testing = [];
-    for (var i = 0; i < unis[index]['top_majors'].length; i++) {
-      topmajors.add(
-        Padding(
-          padding: EdgeInsets.only(right: 3),
-          child: Theme(
-            data: ThemeData(canvasColor: Colors.transparent),
-            child: Chip(
-              labelPadding:
-                  EdgeInsets.only(left: 3, right: 3, top: 1, bottom: 1),
-              elevation: 5,
-              backgroundColor: Colors.black26,
-              shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
-              label: Text(
-                unis[index]['top_majors'][i],
-                style: TextStyle(fontSize: 13, color: Colors.white),
+  Widget buildCard(uni) {
+    Widget cardData(ImageProvider imageProvider, bool isError) => Container(
+          decoration: BoxDecoration(
+            color: isError ? Color(0xff005fa8) : null,
+            image: imageProvider != null
+                ? DecorationImage(
+                    alignment: Alignment.center,
+                    colorFilter: ColorFilter.mode(
+                        Colors.black.withAlpha(100), BlendMode.darken),
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  )
+                : DecorationImage(
+                    colorFilter: ColorFilter.mode(
+                        Colors.black.withOpacity(0.4), BlendMode.dstIn),
+                    image: NetworkImage(
+                        'https://www.shareicon.net/data/512x512/2016/08/18/814358_school_512x512.png',
+                        scale: 12),
+                  ),
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: ListTile(
+              key: Key(uni['university_id'].toString()),
+              title: Text(
+                uni['university_name'],
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500),
               ),
+              subtitle: Text(
+                uni['university_location'],
+                style: TextStyle(
+                    color: Colors.white.withOpacity(0.9), fontSize: 13.5),
+              ),
+              trailing: Wrap(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(left: 8),
+                    child: InkWell(
+                      child: true
+                          ? Icon(
+                              Icons.check,
+                              size: 26,
+                              color: Colors.green,
+                            )
+                          : Icon(
+                              Icons.add,
+                              size: 26,
+                              color: Colors.blue,
+                            ),
+                      onTap: () {
+                        // uni['in_college_list']
+                        //     ? removeFromList(
+                        //         uni['university_id'], uni['category'])
+                        //     : starred != null
+                        //         ? addToListFF(uni['university_id'],
+                        //             uni['university_name'])
+                        //         // ignore: unnecessary_statements
+                        //         : null;
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              onTap: () async {
+                // // ignore: unused_local_variable
+                // final data = await Navigator.push(
+                //   context,
+                //   PageTransition(
+                //       type: PageTransitionType.fade,
+                //       child: UniversityPage(university: uni, starred: starred)),
+                // );
+                refresh();
+              },
             ),
           ),
-        ),
-      );
-    }
-    for (var i = 0; i < unis[index]['stand_out_factors'].length; i++) {
-      standoutfactors.add(
-        Padding(
-          padding: EdgeInsets.only(right: 3),
-          child: Theme(
-            data: ThemeData(canvasColor: Colors.transparent),
-            child: Chip(
-              labelPadding:
-                  EdgeInsets.only(left: 3, right: 3, top: 1, bottom: 1),
-              elevation: 5,
-              backgroundColor: Colors.black26,
-              shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
-              label: Text(
-                unis[index]['stand_out_factors'][i],
-                style: TextStyle(fontSize: 13, color: Colors.white),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-    for (var i = 0; i < unis[index]['degree_levels'].length; i++) {
-      degreelevels.add(
-        Padding(
-          padding: EdgeInsets.only(right: 3),
-          child: Theme(
-            data: ThemeData(canvasColor: Colors.transparent),
-            child: Chip(
-              labelPadding:
-                  EdgeInsets.only(left: 3, right: 3, top: 1, bottom: 1),
-              elevation: 5,
-              backgroundColor: Colors.black26,
-              shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
-              label: Text(
-                unis[index]['degree_levels'][i],
-                style: TextStyle(fontSize: 13, color: Colors.white),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-    for (var i = 0; i < unis[index]['testing_requirements'].length; i++) {
-      testing.add(
-        Padding(
-          padding: EdgeInsets.only(right: 3),
-          child: Theme(
-            data: ThemeData(canvasColor: Colors.transparent),
-            child: Chip(
-              labelPadding:
-                  EdgeInsets.only(left: 3, right: 3, top: 1, bottom: 1),
-              elevation: 5,
-              backgroundColor: Colors.black26,
-              shape: StadiumBorder(side: BorderSide(color: Colors.blue)),
-              label: Text(
-                unis[index]['testing_requirements'][i],
-                style: TextStyle(fontSize: 13, color: Colors.white),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-    return Padding(
-      key: Key(unis[index]['university_id'].toString()),
-      padding: EdgeInsets.only(top: 5, left: 10, right: 10),
+        );
+    return Hero(
+      tag: uni['university_id'].toString(),
       child: Card(
+        margin: EdgeInsets.only(top: 7, left: 15, right: 15, bottom: 7),
         clipBehavior: Clip.antiAlias,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(15))),
-        elevation: 10,
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        elevation: 6,
         child: CachedNetworkImage(
-          imageUrl:
-              "https://luskinconferencecenter.ucla.edu/wp-content/uploads/2018/03/Blog_Luskin.jpg",
-          placeholder: (context, url) => Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Center(child: CircularProgressIndicator()),
-          ),
-          errorWidget: (context, url, error) {
-            _scafKey.currentState.showSnackBar(
-              SnackBar(
-                content: Text(
-                  'Failed to fetch data. Check your internet connection and try again',
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            );
-            return Icon(Icons.error);
-          },
-          imageBuilder: (context, imageProvider) => Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                alignment: Alignment.center,
-                colorFilter: ColorFilter.mode(
-                    Colors.black.withAlpha(160), BlendMode.darken),
-                image: imageProvider,
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: custom.ExpansionTile(
-              key: ValueKey(unis[index]['university_id'].toString()),
-              leading: Padding(
-                padding: EdgeInsets.only(left: 0.0),
-                child: InkWell(
-                    child: unis[index]['request_sent']
-                        ? Icon(
-                            Icons.check,
-                            color: Colors.green,
-                            size: 40,
-                          )
-                        : unis[index]['request_failed']
-                            ? Icon(
-                                Icons.priority_high,
-                                color: Colors.red,
-                                size: 40,
-                              )
-                            : unis[index]['requesting']
-                                ? CircularProgressIndicator()
-                                : Icon(
-                                    Icons.add,
-                                    color: Colors.blue,
-                                    size: 40,
-                                  ),
-                    onTap: () {
-                      if (unis[index]['request_sent']) {
-                        _scafKey.currentState.showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              'Request already sent',
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        );
-                      } else {
-                        unis[index]['requesting'] = true;
-                        requestSender(unis[index]['university_id'], index);
-                      }
-                    }),
-              ),
-              title: Text(
-                unis[index]['university_name'],
-                style: TextStyle(color: Colors.white),
-              ),
-              subtitle: Text(unis[index]['university_location'],
-                  style: TextStyle(color: Colors.white.withOpacity(0.8))),
-              children: <Widget>[
-                Divider(
-                  color: Colors.white70,
-                  indent: 10,
-                  endIndent: 10,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 5, left: 20),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        'University Rep: ',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w900),
-                      ),
-                      Text(
-                        '@' + unis[index]['university_rep'],
-                        style: TextStyle(color: Colors.blue),
-                      )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 5, left: 20),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        'US News Ranking: ',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w900),
-                      ),
-                      Text(
-                        unis[index]['usnews_ranking'].toString(),
-                        style: TextStyle(color: Colors.white.withOpacity(0.8)),
-                      )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 5, left: 20),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        'Location: ',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w900),
-                      ),
-                      Text(
-                        unis[index]['university_location'].toString(),
-                        style: TextStyle(color: Colors.white.withOpacity(0.8)),
-                      )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 5, left: 20),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        'In-State Cost: ',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w900),
-                      ),
-                      Text(
-                        r"$" + unis[index]['in_state_cost'].toString(),
-                        style: TextStyle(color: Colors.white.withOpacity(0.8)),
-                      )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 5, left: 20),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        'Out-of-State Cost: ',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w900),
-                      ),
-                      Text(
-                        r"$" + unis[index]['out_of_state_cost'].toString(),
-                        style: TextStyle(color: Colors.white.withOpacity(0.8)),
-                      )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 5, left: 20),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        'International Cost: ',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w900),
-                      ),
-                      Text(
-                        r"$" + unis[index]['international_cost'].toString(),
-                        style: TextStyle(color: Colors.white.withOpacity(0.8)),
-                      )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 5, left: 20),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        'Research Institute: ',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w900),
-                      ),
-                      Text(
-                        unis[index]['research_or_not'] ? 'Yes' : 'No',
-                        style: TextStyle(color: Colors.white.withOpacity(0.8)),
-                      )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 5, left: 20),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        'Top Majors: ',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w900),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20.0, right: 20, top: 5),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Wrap(
-                      runAlignment: WrapAlignment.start,
-                      children: topmajors.sublist(0, 2),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 5, bottom: 5, left: 25),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        splashColor: Colors.blue[900],
-                        child: Text('View more',
-                            style: TextStyle(
-                                fontSize: 15,
-                                color: Colors.blue,
-                                fontWeight: FontWeight.w900)),
-                        onTap: () {},
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 5, left: 20),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        'Stand Out Factors: ',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w900),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20.0, right: 20, top: 5),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      height: 50,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: <Widget>[
-                          Row(
-                            children: standoutfactors,
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 5, left: 20),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        'Degree Levels: ',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w900),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20.0, right: 20, top: 5),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      height: 50,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: <Widget>[Row(children: degreelevels)],
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 5, left: 20),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        'Testing Requirements: ',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w900),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20.0, right: 20, top: 5),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      height: 50,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: <Widget>[
-                          Row(
-                            children: testing,
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 5, bottom: 20),
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        splashColor: Colors.blue[900],
-                        child: Text('View profile',
-                            style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.blue,
-                                fontWeight: FontWeight.w900)),
-                        onTap: () {},
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          key: Key(uni['university_id'].toString()),
+          imageUrl: uni['image_url'] ??
+              'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
+          placeholder: (context, url) => CardPlaceHolder(),
+          errorWidget: (context, url, error) => cardData(null, true),
+          imageBuilder: (context, imageProvider) =>
+              cardData(imageProvider, false),
         ),
       ),
     );
   }
 
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scafKey,
-      backgroundColor: Colors.white,
-      drawer: NavDrawer(),
-      appBar: CustomAppBar('University Connect'),
-      body: RefreshIndicator(
-        key: refreshKey,
-        onRefresh: () {
-          refresh();
-          return getavailableuniversities;
-        },
-        child: FutureBuilder(
-            future: getavailableuniversities.timeout(Duration(seconds: 10)),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Padding(
-                  padding: EdgeInsets.only(bottom: 40.0),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(
-                          Icons.error_outline,
-                          size: 30,
-                          color: Colors.red.withOpacity(0.9),
-                        ),
-                        Text(
-                          'Unable to establish a connection with our servers.\nCheck your connection and try again later.',
-                          style: TextStyle(color: Colors.black54),
-                          textAlign: TextAlign.center,
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              }
-              if (snapshot.hasData) {
-                if (snapshot.data.length == 0) {
-                  return Padding(
-                    padding: EdgeInsets.only(bottom: 70),
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Opacity(
-                            opacity: 0.9,
-                            child: Image.asset(
-                              "images/snap.gif",
-                              height: 100.0,
-                              width: 100.0,
-                            ),
-                          ),
-                          Text(
-                            'Oh Snap!',
-                            style:
-                                TextStyle(fontSize: 18, color: Colors.black54),
-                          ),
-                          Padding(
-                              padding:
-                                  EdgeInsets.only(top: 5, left: 30, right: 30),
-                              child: Text(
-                                "Looks like there aren't any\navailable universites at the moment :(",
-                                style: TextStyle(color: Colors.black54),
-                                textAlign: TextAlign.center,
-                              )),
-                          Padding(
-                            padding: EdgeInsets.only(top: 3),
-                            child: Text(
-                                "Check back later to connect with them!",
-                                style: TextStyle(color: Colors.black54),
-                                textAlign: TextAlign.center),
-                          )
-                        ],
-                      ),
-                    ),
-                  );
-                } else {
-                  return Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(top: 5, left: 18, right: 30),
-                        child: Row(
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        key: _scafKey,
+        backgroundColor: Colors.white,
+        drawer: NavDrawer(),
+        appBar: AppBar(
+          backgroundColor: Color(0xff005fa8),
+          elevation: 6,
+          title: Text('University Connect'),
+          bottom: TabBar(
+            tabs: [
+              Tab(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(Icons.insert_link),
+                    Padding(
+                      padding: EdgeInsets.only(left: 3.5),
+                      child: Text('Connected'),
+                    )
+                  ],
+                ),
+              ),
+              Tab(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(Icons.all_inclusive),
+                    Padding(
+                      padding: EdgeInsets.only(left: 3.5),
+                      child: Text('Universities'),
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            RefreshIndicator(
+              key: refreshKey1,
+              onRefresh: () {
+                refresh();
+                return getavailableuniversities;
+              },
+              child: FutureBuilder(
+                future: getavailableuniversities.timeout(Duration(seconds: 10)),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: 40.0),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(top: 5, right: 6),
-                              child: Icon(
-                                Icons.search,
-                                size: 30,
-                                color: Colors.black54,
-                              ),
+                            Icon(
+                              Icons.error_outline,
+                              size: 30,
+                              color: Colors.red.withOpacity(0.9),
                             ),
-                            Expanded(
-                              child: TextField(
-                                cursorColor: Color(0xff005fa8),
-                                decoration: InputDecoration(
-                                    labelText: "Search",
-                                    contentPadding: EdgeInsets.all(2)),
-                                controller: controller,
-                              ),
-                            ),
+                            Text(
+                              'Unable to establish a connection with our servers.\nCheck your connection and try again later.',
+                              style: TextStyle(color: Colors.black54),
+                              textAlign: TextAlign.center,
+                            )
                           ],
                         ),
                       ),
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 10.0),
-                          child: Scrollbar(
-                            child: ListView.builder(
-                                scrollDirection: Axis.vertical,
-                                itemCount: snapshot.data.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return filter == null || filter == ""
-                                      ? buildCard(snapshot, index)
-                                      : snapshot.data[index]['university_name']
-                                              .toLowerCase()
-                                              .contains(filter.toLowerCase())
-                                          ? buildCard(snapshot, index)
-                                          : Container();
-                                }),
+                    );
+                  }
+                  if (snapshot.hasData) {
+                    if (snapshot.data.length == 0) {
+                      return Padding(
+                        padding: EdgeInsets.only(bottom: 70),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 5, left: 30, right: 30),
+                                  child: Text(
+                                    "Looks like there aren't any\navailable universites at the moment :(",
+                                    style: TextStyle(color: Colors.black54),
+                                    textAlign: TextAlign.center,
+                                  )),
+                              Padding(
+                                padding: EdgeInsets.only(top: 3),
+                                child: Text(
+                                    "Check back later to connect with them!",
+                                    style: TextStyle(color: Colors.black54),
+                                    textAlign: TextAlign.center),
+                              )
+                            ],
                           ),
                         ),
-                      ),
-                    ],
+                      );
+                    } else {
+                      return Scrollbar(
+                        child: ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          itemCount: snapshot.data.length + 1,
+                          itemBuilder: (BuildContext context, int index) {
+                            if (index == 0) {
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                    top: 5, left: 18, right: 30, bottom: 20),
+                                child: Row(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.only(top: 5, right: 6),
+                                      child: Icon(
+                                        Icons.search,
+                                        size: 30,
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: TextField(
+                                        cursorColor: Color(0xff005fa8),
+                                        decoration: InputDecoration(
+                                          labelText: "Search",
+                                          contentPadding: EdgeInsets.all(2),
+                                        ),
+                                        controller: controller1,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                            return filter1 == null || filter1 == ""
+                                ? buildCard(snapshot.data[index - 1])
+                                : snapshot.data[index]['university_name']
+                                        .toLowerCase()
+                                        .contains(filter1.toLowerCase())
+                                    ? buildCard(snapshot.data[index - 1])
+                                    : Container();
+                          },
+                        ),
+                      );
+                    }
+                  }
+                  return Padding(
+                    padding: EdgeInsets.only(top: 20),
+                    child: CardListSkeleton(
+                      isBottomLinesActive: false,
+                      length: 10,
+                    ),
                   );
-                }
-              }
-              return Center(child: CircularProgressIndicator());
-            }),
+                },
+              ),
+            ),
+            RefreshIndicator(
+              key: refreshKey2,
+              onRefresh: () {
+                refresh();
+                return getavailableuniversities;
+              },
+              child: FutureBuilder(
+                future: getavailableuniversities.timeout(Duration(seconds: 10)),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: 40.0),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(
+                              Icons.error_outline,
+                              size: 30,
+                              color: Colors.red.withOpacity(0.9),
+                            ),
+                            Text(
+                              'Unable to establish a connection with our servers.\nCheck your connection and try again later.',
+                              style: TextStyle(color: Colors.black54),
+                              textAlign: TextAlign.center,
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+                  if (snapshot.hasData) {
+                    if (snapshot.data.length == 0) {
+                      return Padding(
+                        padding: EdgeInsets.only(bottom: 70),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 5, left: 30, right: 30),
+                                  child: Text(
+                                    "Looks like there aren't any\navailable universites at the moment :(",
+                                    style: TextStyle(color: Colors.black54),
+                                    textAlign: TextAlign.center,
+                                  )),
+                              Padding(
+                                padding: EdgeInsets.only(top: 3),
+                                child: Text(
+                                    "Check back later to connect with them!",
+                                    style: TextStyle(color: Colors.black54),
+                                    textAlign: TextAlign.center),
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    } else {
+                      return Scrollbar(
+                        child: ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          itemCount: snapshot.data.length + 1,
+                          itemBuilder: (BuildContext context, int index) {
+                            if (index == 0) {
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                    top: 5, left: 18, right: 30, bottom: 20),
+                                child: Row(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.only(top: 5, right: 6),
+                                      child: Icon(
+                                        Icons.search,
+                                        size: 30,
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: TextField(
+                                        cursorColor: Color(0xff005fa8),
+                                        decoration: InputDecoration(
+                                          labelText: "Search",
+                                          contentPadding: EdgeInsets.all(2),
+                                        ),
+                                        controller: controller2,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                            return filter2 == null || filter2 == ""
+                                ? buildCard(snapshot.data[index - 1])
+                                : snapshot.data[index]['university_name']
+                                        .toLowerCase()
+                                        .contains(filter2.toLowerCase())
+                                    ? buildCard(snapshot.data[index - 1])
+                                    : Container();
+                          },
+                        ),
+                      );
+                    }
+                  }
+                  return Padding(
+                    padding: EdgeInsets.only(top: 20),
+                    child: CardListSkeleton(
+                      isBottomLinesActive: false,
+                      length: 10,
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
