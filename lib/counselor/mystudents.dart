@@ -944,7 +944,18 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                           ),
                         ),
                         Column(
-                          children: transcripts,
+                          children: transcripts.length == 0
+                              ? [
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 17),
+                                    child: Text(
+                                      'No Transcripts',
+                                      style: TextStyle(
+                                          color: Colors.black54, fontSize: 11),
+                                    ),
+                                  )
+                                ]
+                              : transcripts,
                         ),
                         Padding(
                           padding: EdgeInsets.only(left: 15, top: 8),
@@ -957,7 +968,18 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                           ),
                         ),
                         Column(
-                          children: ecs,
+                          children: ecs.length == 0
+                              ? [
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 15),
+                                    child: Text(
+                                      'No Extracurriculars',
+                                      style: TextStyle(
+                                          color: Colors.black54, fontSize: 11),
+                                    ),
+                                  )
+                                ]
+                              : ecs,
                         ),
                         Padding(
                           padding: EdgeInsets.only(left: 15, top: 8),
@@ -970,7 +992,18 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                           ),
                         ),
                         Column(
-                          children: misc,
+                          children: misc.length == 0
+                              ? [
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 15),
+                                    child: Text(
+                                      'No Misc Documents',
+                                      style: TextStyle(
+                                          color: Colors.black54, fontSize: 11),
+                                    ),
+                                  )
+                                ]
+                              : misc,
                         ),
                         Padding(
                           padding: EdgeInsets.only(left: 15, top: 8),
@@ -985,7 +1018,19 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                         Padding(
                           padding: EdgeInsets.only(bottom: 14),
                           child: Column(
-                            children: scores,
+                            children: scores.length == 0
+                                ? [
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 15),
+                                      child: Text(
+                                        'No Test Scores',
+                                        style: TextStyle(
+                                            color: Colors.black54,
+                                            fontSize: 11),
+                                      ),
+                                    )
+                                  ]
+                                : scores,
                           ),
                         ),
                       ],
