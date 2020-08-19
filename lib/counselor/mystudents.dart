@@ -1046,7 +1046,56 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
               ),
             ),
           ),
+          Padding(
+            padding: EdgeInsets.only(top: 15, bottom: 10, left: 18, right: 18),
+            child: OutlineButton(
+              borderSide: BorderSide(color: Color(0xff005fa8), width: 1),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+              child: Padding(
+                padding: EdgeInsets.only(top: 10, bottom: 10),
+                child: Text(
+                  'VIEW APPLICATIONS',
+                  style: TextStyle(color: Color(0xff005fa8), fontSize: 15),
+                ),
+              ),
+              onPressed: () async {
+                List data = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => StudentApplicationsScreen(
+                      id: widget.student['student_id'],
+                    ),
+                  ),
+                );
+              },
+            ),
+          )
         ],
+      ),
+    );
+  }
+}
+
+class StudentApplicationsScreen extends StatefulWidget {
+  final int id;
+  StudentApplicationsScreen({this.id});
+  @override
+  _StudentApplicationsScreenState createState() =>
+      _StudentApplicationsScreenState();
+}
+
+class _StudentApplicationsScreenState extends State<StudentApplicationsScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Color(0xff005fa8),
+        title: Text('Student Applications'),
+      ),
+      body: ListView(
+        children: [],
       ),
     );
   }
