@@ -5,7 +5,7 @@ import 'dashboard.dart';
 import 'notifications.dart';
 import 'mystudents.dart';
 import 'essays.dart';
-import 'myuniversities.dart';
+import 'studentapps.dart';
 import 'profile.dart';
 import 'schedule.dart';
 import 'connectwithunis.dart';
@@ -19,6 +19,7 @@ List navlistelements = [
   ['My Students', MyStudentsScreen(), Icons.group],
   ['Sessions Calendar', ScheduleScreen(), Icons.date_range],
   ['University Connect', ConnectUniversitiesScreen(), Icons.link],
+  ['Student Applications', StudentsScreen(), Icons.assignment],
   ['Student Essays', EssaysScreen(), Icons.edit]
 ];
 
