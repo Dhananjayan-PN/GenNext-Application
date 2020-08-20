@@ -173,10 +173,11 @@ class _DashBoardState extends State<DashBoard> {
         refresh();
         Scaffold.of(context).showSnackBar(
           SnackBar(
-              content: Text(
-            'Request Accepted',
-            textAlign: TextAlign.center,
-          )),
+            content: Text(
+              'Request Accepted',
+              textAlign: TextAlign.center,
+            ),
+          ),
         );
       } else if (decision == 'R' &&
           data['Response'] == 'Counselor request successfully denied.') {

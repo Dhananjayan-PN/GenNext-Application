@@ -16,18 +16,31 @@ class LandingPage extends StatefulWidget {
 }
 
 class _LandingPageState extends State<LandingPage> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   Future<void> getUserDetails(String token) async {
-    final response = await http.get(
-      domain + 'authenticate/details',
-      headers: {HttpHeaders.authorizationHeader: "Token $token"},
-    );
-    if (response.statusCode == 200) {
-      User user = User.fromJson(json.decode(response.body));
-      Navigator.pop(context);
-      Route route = homepageRoute(user.usertype, user);
-      if (route != null) {
-        Navigator.of(context)
-            .pushAndRemoveUntil(route, (Route<dynamic> route) => false);
+    try {
+      final response = await http.get(
+        domain + 'authenticate/details',
+        headers: {HttpHeaders.authorizationHeader: "Token $token"},
+      ).timeout(Duration(seconds: 10));
+      if (response.statusCode == 200) {
+        User user = User.fromJson(json.decode(response.body));
+        Navigator.pop(context);
+        Route route = homepageRoute(user.usertype, user);
+        if (route != null) {
+          Navigator.of(context)
+              .pushAndRemoveUntil(route, (Route<dynamic> route) => false);
+        } else {
+          Navigator.pushAndRemoveUntil(
+            context,
+            PageTransition(type: PageTransitionType.fade, child: LoginPage()),
+            (Route<dynamic> route) => false,
+          );
+        }
       } else {
         Navigator.pushAndRemoveUntil(
           context,
@@ -35,7 +48,7 @@ class _LandingPageState extends State<LandingPage> {
           (Route<dynamic> route) => false,
         );
       }
-    } else {
+    } catch (e) {
       Navigator.pushAndRemoveUntil(
         context,
         PageTransition(type: PageTransitionType.fade, child: LoginPage()),
