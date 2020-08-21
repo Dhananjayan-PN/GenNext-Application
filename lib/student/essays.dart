@@ -508,13 +508,21 @@ class _EssaysScreenState extends State<EssaysScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Padding(
-                            padding:
-                                EdgeInsets.only(top: 5, left: 30, right: 30),
-                            child: Text(
-                              "You haven't added any essays yet",
-                              style: TextStyle(color: Colors.black54),
-                              textAlign: TextAlign.center,
-                            )),
+                          padding: EdgeInsets.only(bottom: 10),
+                          child: Icon(
+                            Icons.edit,
+                            size: 35,
+                            color: Colors.black.withOpacity(0.75),
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 5, left: 30, right: 30),
+                          child: Text(
+                            "You haven't added any essays yet.",
+                            style: TextStyle(color: Colors.black54),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
                         Padding(
                           padding: EdgeInsets.only(top: 3),
                           child: Text(
@@ -611,85 +619,86 @@ class _NewEssayScreenState extends State<NewEssayScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Color(0xff005fa8),
-          actions: <Widget>[
-            FlatButton(
-              child: Text(
-                widget.op == 'Edit' ? 'SAVE' : 'CREATE',
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
-              ),
-              onPressed: () {
-                if (_formKey.currentState.validate()) {
-                  List data = [_title.text, _prompt.text];
-                  Navigator.pop(context, data);
-                }
-              },
-            )
-          ],
-          title: Text(
-            widget.op == 'Edit' ? 'Edit Essay Details' : 'New Essay',
-            maxLines: 1,
-          ),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Color(0xff005fa8),
+        actions: <Widget>[
+          FlatButton(
+            child: Text(
+              widget.op == 'Edit' ? 'SAVE' : 'CREATE',
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+            ),
+            onPressed: () {
+              if (_formKey.currentState.validate()) {
+                List data = [_title.text, _prompt.text];
+                Navigator.pop(context, data);
+              }
+            },
+          )
+        ],
+        title: Text(
+          widget.op == 'Edit' ? 'Edit Essay Details' : 'New Essay',
+          maxLines: 1,
         ),
-        body: Padding(
-          padding: EdgeInsets.all(25),
-          child: Form(
-            key: _formKey,
-            child: ListView(
-              children: <Widget>[
-                Text(
-                  'Title',
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(25),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            children: <Widget>[
+              Text(
+                'Title',
+                style: TextStyle(fontSize: 25, color: Colors.black87),
+              ),
+              Theme(
+                data: ThemeData(primaryColor: Color(0xff005fa8)),
+                child: TextFormField(
+                  cursorColor: Color(0xff005fa8),
+                  controller: _title,
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Enter a title';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 20),
+                child: Text(
+                  'Prompt',
                   style: TextStyle(fontSize: 25, color: Colors.black87),
                 ),
-                Theme(
-                  data: ThemeData(primaryColor: Color(0xff005fa8)),
+              ),
+              Theme(
+                data: ThemeData(primaryColor: Color(0xff005fa8)),
+                child: Padding(
+                  padding: EdgeInsets.only(top: 20),
                   child: TextFormField(
                     cursorColor: Color(0xff005fa8),
-                    controller: _title,
+                    controller: _prompt,
+                    maxLines: null,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.red, width: 0.0),
+                      ),
+                    ),
                     validator: (value) {
                       if (value.isEmpty) {
-                        return 'Enter a title';
+                        return 'An essay without a prompt? Really?';
                       }
                       return null;
                     },
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(top: 20),
-                  child: Text(
-                    'Prompt',
-                    style: TextStyle(fontSize: 25, color: Colors.black87),
-                  ),
-                ),
-                Theme(
-                  data: ThemeData(primaryColor: Color(0xff005fa8)),
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 20),
-                    child: TextFormField(
-                      cursorColor: Color(0xff005fa8),
-                      controller: _prompt,
-                      maxLines: null,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.red, width: 0.0),
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'An essay without a prompt? Really?';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                )
-              ],
-            ),
+              )
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
 

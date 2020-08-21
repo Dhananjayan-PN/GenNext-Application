@@ -405,6 +405,14 @@ class _TestScoresScreenState extends State<TestScoresScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Padding(
+                          padding: EdgeInsets.only(bottom: 10),
+                          child: Icon(
+                            Icons.assessment,
+                            size: 35,
+                            color: Colors.black.withOpacity(0.75),
+                          ),
+                        ),
+                        Padding(
                             padding:
                                 EdgeInsets.only(top: 5, left: 30, right: 30),
                             child: Text(

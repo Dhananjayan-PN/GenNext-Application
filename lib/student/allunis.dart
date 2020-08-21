@@ -474,19 +474,26 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              Icon(Icons.sentiment_satisfied),
+                              Padding(
+                                padding: EdgeInsets.only(bottom: 10),
+                                child: Icon(
+                                  Icons.assessment,
+                                  size: 35,
+                                  color: Colors.black.withOpacity(0.75),
+                                ),
+                              ),
                               Padding(
                                   padding: EdgeInsets.only(
                                       top: 5, left: 30, right: 30),
                                   child: Text(
-                                    "There aren't any recommendations\nat the moment",
+                                    "There are no recommendations at the moment.",
                                     style: TextStyle(color: Colors.black54),
                                     textAlign: TextAlign.center,
                                   )),
                               Padding(
                                 padding: EdgeInsets.only(top: 3),
                                 child: Text(
-                                    "Come back later to explore your recommendations!",
+                                    "Come back later to see recommendations.",
                                     style: TextStyle(color: Colors.black54),
                                     textAlign: TextAlign.center),
                               )
@@ -591,31 +598,26 @@ class _AllUniversitiesScreenState extends State<AllUniversitiesScreen> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              Opacity(
-                                opacity: 0.9,
-                                child: Image.asset(
-                                  "images/snap.gif",
-                                  height: 100.0,
-                                  width: 100.0,
+                              Padding(
+                                padding: EdgeInsets.only(bottom: 10),
+                                child: Icon(
+                                  Icons.all_inclusive,
+                                  size: 35,
+                                  color: Colors.black.withOpacity(0.75),
                                 ),
                               ),
-                              Text(
-                                'Oh Snap!',
-                                style: TextStyle(
-                                    fontSize: 18, color: Colors.black54),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    top: 5, left: 30, right: 30),
+                                child: Text(
+                                  "There are no universities in our database.",
+                                  style: TextStyle(color: Colors.black54),
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
                               Padding(
-                                  padding: EdgeInsets.only(
-                                      top: 5, left: 30, right: 30),
-                                  child: Text(
-                                    "Looks like you haven't added\nany universites yet :(",
-                                    style: TextStyle(color: Colors.black54),
-                                    textAlign: TextAlign.center,
-                                  )),
-                              Padding(
                                 padding: EdgeInsets.only(top: 3),
-                                child: Text(
-                                    "Head over to the 'Explore Universities' section to get started!",
+                                child: Text("Come back later to see them all.",
                                     style: TextStyle(color: Colors.black54),
                                     textAlign: TextAlign.center),
                               )

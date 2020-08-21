@@ -666,66 +666,70 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                     for (var i = 0; i < snapshot.data.length; i++) {
                       List<ChecklistItemView> subItems = [];
                       for (var j = 0; j < snapshot.data[i].length; j++) {
-                        subItems.add(ChecklistItemView(
-                          title: buildCard(snapshot.data[i][j], false, true),
-                          onStartDragItem: (listIndex, itemIndex, state) {},
-                          canDrag: true,
-                          onDropItem: (oldListIndex, oldItemIndex, listIndex,
-                              itemIndex, state) {
-                            if (listIndex != oldListIndex) {
-                              Map uni = snapshot.data[i][j];
-                              changeCategory(
-                                  uni['university_id'],
-                                  listIndex == 0
-                                      ? 'R'
-                                      : listIndex == 1 ? 'M' : 'S');
-                            }
-                          },
-                        ));
+                        subItems.add(
+                          ChecklistItemView(
+                            title: buildCard(snapshot.data[i][j], false, true),
+                            onStartDragItem: (listIndex, itemIndex, state) {},
+                            canDrag: true,
+                            onDropItem: (oldListIndex, oldItemIndex, listIndex,
+                                itemIndex, state) {
+                              if (listIndex != oldListIndex) {
+                                Map uni = snapshot.data[i][j];
+                                changeCategory(
+                                    uni['university_id'],
+                                    listIndex == 0
+                                        ? 'R'
+                                        : listIndex == 1 ? 'M' : 'S');
+                              }
+                            },
+                          ),
+                        );
                       }
-                      checklistsViews.add(ChecklistView(
-                        items: subItems,
-                        isOpen: true,
-                        canDrag: false,
-                        onDropChecklist: (oldIndex, newIndex, state) {},
-                        title: Padding(
-                          padding:
-                              EdgeInsets.only(left: 20, top: 20, bottom: 3),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Text(
-                                categories[i],
-                                style: TextStyle(
-                                    color: Colors.black87,
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.w300),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 1, top: 2),
-                                child: Material(
-                                  color: Colors.transparent,
-                                  child: InkWell(
-                                    child: Icon(
-                                      Icons.add,
-                                      color: Color(0xff005fa8),
-                                    ),
-                                    onTap: () {
-                                      if (uniList.isNotEmpty) {
-                                        addToList(categories[i]);
-                                      } else {
-                                        error(context,
-                                            'There are no more universities available.\nCome back another time to try again.');
-                                      }
-                                    },
-                                  ),
+                      checklistsViews.add(
+                        ChecklistView(
+                          items: subItems,
+                          isOpen: true,
+                          canDrag: false,
+                          onDropChecklist: (oldIndex, newIndex, state) {},
+                          title: Padding(
+                            padding:
+                                EdgeInsets.only(left: 20, top: 20, bottom: 3),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  categories[i],
+                                  style: TextStyle(
+                                      color: Colors.black87,
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.w300),
                                 ),
-                              )
-                            ],
+                                Padding(
+                                  padding: EdgeInsets.only(left: 1, top: 2),
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      child: Icon(
+                                        Icons.add,
+                                        color: Color(0xff005fa8),
+                                      ),
+                                      onTap: () {
+                                        if (uniList.isNotEmpty) {
+                                          addToList(categories[i]);
+                                        } else {
+                                          error(context,
+                                              'There are no more universities available.\nCome back another time to try again.');
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
                         ),
-                      ));
+                      );
                     }
                     return Padding(
                       padding: EdgeInsets.only(top: 10),
@@ -785,13 +789,22 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               Padding(
-                                  padding: EdgeInsets.only(
-                                      top: 5, left: 30, right: 30),
-                                  child: Text(
-                                    "You haven't starred any universites yet.",
-                                    style: TextStyle(color: Colors.black54),
-                                    textAlign: TextAlign.center,
-                                  )),
+                                padding: EdgeInsets.only(bottom: 10),
+                                child: Icon(
+                                  Icons.star,
+                                  size: 35,
+                                  color: Colors.black.withOpacity(0.75),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    top: 5, left: 30, right: 30),
+                                child: Text(
+                                  "You haven't starred any universites yet.",
+                                  style: TextStyle(color: Colors.black54),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
                               Padding(
                                 padding: EdgeInsets.only(top: 3),
                                 child: Text(

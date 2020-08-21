@@ -299,12 +299,12 @@ class _DashBoardState extends State<DashBoard> {
                             ),
                           ),
                           Text(
-                            "No recommendations at the moment",
+                            "No recommendations at the moment.",
                             style: TextStyle(color: Colors.black54),
                             textAlign: TextAlign.center,
                           ),
                           Text(
-                            "Head over to the Explore section to\nexplore universities",
+                            "Head over to Explore to view all universities",
                             style: TextStyle(color: Colors.black54),
                             textAlign: TextAlign.center,
                           ),
@@ -615,7 +615,7 @@ class _DashBoardState extends State<DashBoard> {
                             ),
                           ),
                           Text(
-                            "No upcoming sessions",
+                            "There are no upcoming sessions",
                             style: TextStyle(color: Colors.black54),
                             textAlign: TextAlign.center,
                           ),
@@ -839,18 +839,18 @@ class _DashBoardState extends State<DashBoard> {
                           Padding(
                             padding: EdgeInsets.only(bottom: 10),
                             child: Icon(
-                              Icons.assessment,
+                              Icons.all_inclusive,
                               size: 35,
                               color: Colors.black.withOpacity(0.75),
                             ),
                           ),
                           Text(
-                            "There no universities at the moment",
+                            "No universities in our database.",
                             style: TextStyle(color: Colors.black54),
                             textAlign: TextAlign.center,
                           ),
                           Text(
-                            "Come back again to explore",
+                            "Come back later to see them all.",
                             style: TextStyle(color: Colors.black54),
                             textAlign: TextAlign.center,
                           ),

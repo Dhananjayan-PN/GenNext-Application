@@ -562,6 +562,14 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               Padding(
+                                padding: EdgeInsets.only(bottom: 10),
+                                child: Icon(
+                                  Icons.assignment_turned_in,
+                                  size: 35,
+                                  color: Colors.black.withOpacity(0.75),
+                                ),
+                              ),
+                              Padding(
                                   padding: EdgeInsets.only(
                                       top: 5, left: 30, right: 30),
                                   child: Text(
@@ -676,6 +684,14 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(bottom: 10),
+                                child: Icon(
+                                  Icons.assignment_late,
+                                  size: 35,
+                                  color: Colors.black.withOpacity(0.75),
+                                ),
+                              ),
                               Padding(
                                   padding: EdgeInsets.only(
                                       top: 5, left: 30, right: 30),

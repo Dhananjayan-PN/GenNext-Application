@@ -137,7 +137,7 @@ class _LandingPageState extends State<LandingPage> {
               ),
               SpinKitWave(
                 color: Colors.black38,
-                size: 30,
+                size: 40,
               ),
             ],
           ),
