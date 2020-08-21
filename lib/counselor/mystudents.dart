@@ -243,6 +243,8 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
   List<Widget> reach;
   List<Widget> match;
   List<Widget> safety;
+  String countryString;
+  String interestString;
 
   Future documents;
   Future collegeList;
@@ -294,6 +296,24 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    countryString = '';
+    interestString = '';
+    for (int i = 0; i < widget.student['student_interests'].length; i++) {
+      if (i == 0) {
+        interestString += widget.student['student_interests'][i];
+      } else {
+        interestString += ', ';
+        interestString += widget.student['student_interests'][i];
+      }
+    }
+    for (int i = 0; i < widget.student['country_pref'].length; i++) {
+      if (i == 0) {
+        countryString += widget.student['country_pref'][i];
+      } else {
+        countryString += ', ';
+        countryString += widget.student['country_pref'][i];
+      }
+    }
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -403,7 +423,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                         Container(
                           width: MediaQuery.of(context).size.width * 0.65,
                           child: Text(
-                            widget.student['student_grade'],
+                            widget.student['student_grade'].toString(),
                             style:
                                 TextStyle(color: Colors.black87, fontSize: 15),
                           ),
@@ -531,6 +551,126 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                       ],
                     ),
                   ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 15, bottom: 10),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(top: 2),
+                          child: Text(
+                            'AREA PREFERENCE: ',
+                            style:
+                                TextStyle(color: Colors.black54, fontSize: 12),
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.5,
+                          child: Text(
+                            widget.student['college_town_pref'],
+                            style:
+                                TextStyle(color: Colors.black87, fontSize: 15),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 15, bottom: 10),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(top: 2),
+                          child: Text(
+                            'BUDGET: ',
+                            style:
+                                TextStyle(color: Colors.black54, fontSize: 12),
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.5,
+                          child: Text(
+                            r'$' + widget.student['budget'].toString(),
+                            style:
+                                TextStyle(color: Colors.black87, fontSize: 15),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 15, bottom: 10),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(top: 2),
+                          child: Text(
+                            'COUNTRIES: ',
+                            style:
+                                TextStyle(color: Colors.black54, fontSize: 12),
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.5,
+                          child: Text(
+                            countryString,
+                            style:
+                                TextStyle(color: Colors.black87, fontSize: 15),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 15, bottom: 10),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(top: 2),
+                          child: Text(
+                            'RESEARCH INTEREST: ',
+                            style:
+                                TextStyle(color: Colors.black54, fontSize: 12),
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          child: Text(
+                            widget.student['researcher_status'] ? 'Yes' : 'No',
+                            style:
+                                TextStyle(color: Colors.black87, fontSize: 15),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 15, bottom: 10),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(top: 2),
+                          child: Text(
+                            'INTERESTS: ',
+                            style:
+                                TextStyle(color: Colors.black54, fontSize: 12),
+                          ),
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.6,
+                          child: Text(
+                            interestString,
+                            style:
+                                TextStyle(color: Colors.black87, fontSize: 15),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -556,35 +696,25 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     return Padding(
-                      padding: EdgeInsets.only(left: 25, right: 25),
-                      child: Card(
-                        margin: EdgeInsets.only(top: 20, bottom: 20),
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
-                        elevation: 6,
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                              left: 3, right: 3, top: 30, bottom: 30),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.only(bottom: 10),
-                                child: Icon(
-                                  Icons.error_outline,
-                                  size: 35,
-                                  color: Colors.red.withOpacity(0.6),
-                                ),
-                              ),
-                              Text(
-                                'Unable to establish a connection\nwith our servers.\nCheck your connection and try again later.',
-                                style: TextStyle(color: Colors.black54),
-                                textAlign: TextAlign.center,
-                              )
-                            ],
+                      padding: EdgeInsets.only(
+                          left: 3, right: 3, top: 30, bottom: 30),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 10),
+                            child: Icon(
+                              Icons.error_outline,
+                              size: 35,
+                              color: Colors.red.withOpacity(0.6),
+                            ),
                           ),
-                        ),
+                          Text(
+                            'Unable to establish a connection\nwith our servers.\nCheck your connection and try again later.',
+                            style: TextStyle(color: Colors.black54),
+                            textAlign: TextAlign.center,
+                          )
+                        ],
                       ),
                     );
                   }
@@ -717,35 +847,25 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
                     return Padding(
-                      padding: EdgeInsets.only(left: 25, right: 25),
-                      child: Card(
-                        margin: EdgeInsets.only(top: 20, bottom: 20),
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(10))),
-                        elevation: 6,
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                              left: 3, right: 3, top: 30, bottom: 30),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.only(bottom: 10),
-                                child: Icon(
-                                  Icons.error_outline,
-                                  size: 35,
-                                  color: Colors.red.withOpacity(0.6),
-                                ),
-                              ),
-                              Text(
-                                'Unable to establish a connection\nwith our servers.\nCheck your connection and try again later.',
-                                style: TextStyle(color: Colors.black54),
-                                textAlign: TextAlign.center,
-                              )
-                            ],
+                      padding: EdgeInsets.only(
+                          left: 3, right: 3, top: 30, bottom: 30),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 10),
+                            child: Icon(
+                              Icons.error_outline,
+                              size: 35,
+                              color: Colors.red.withOpacity(0.6),
+                            ),
                           ),
-                        ),
+                          Text(
+                            'Unable to establish a connection\nwith our servers.\nCheck your connection and try again later.',
+                            style: TextStyle(color: Colors.black54),
+                            textAlign: TextAlign.center,
+                          )
+                        ],
                       ),
                     );
                   }
