@@ -240,6 +240,9 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
   List<Widget> ecs;
   List<Widget> misc;
   List<Widget> scores;
+  List<Widget> reach;
+  List<Widget> match;
+  List<Widget> safety;
 
   Future documents;
   Future collegeList;
@@ -277,7 +280,16 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
   }
 
   Future getCollegeList() async {
-    return [];
+    String tok = await getToken();
+    final response = await http.get(
+      dom + 'api/counselor/get-college-list/${widget.student['student_id']}',
+      headers: {HttpHeaders.authorizationHeader: "Token $tok"},
+    );
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw 'failed';
+    }
   }
 
   @override
@@ -542,6 +554,18 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
               child: FutureBuilder(
                 future: collegeList,
                 builder: (context, snapshot) {
+                  reach = [];
+                  match = [];
+                  safety = [];
+                  for (int i = 0;
+                      i < snapshot.data['reach_college_list_data'].length;
+                      i++) {}
+                  for (int i = 0;
+                      i < snapshot.data['match_college_list_data'].length;
+                      i++) {}
+                  for (int i = 0;
+                      i < snapshot.data['safety_college_list_data'].length;
+                      i++) {}
                   if (snapshot.hasError) {
                     return Padding(
                       padding: EdgeInsets.only(left: 25, right: 25),
@@ -577,41 +601,89 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                     );
                   }
                   if (snapshot.hasData) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(left: 15, top: 14),
-                          child: Text(
-                            'Reach',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.black87,
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(left: 15, top: 10),
+                            child: Text(
+                              'Reach',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.black87,
+                              ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 15, top: 8),
-                          child: Text(
-                            'Match',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.black87,
+                          Column(
+                            children: reach.length == 0
+                                ? [
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 15),
+                                      child: Text(
+                                        'No Universities Added',
+                                        style: TextStyle(
+                                            color: Colors.black54,
+                                            fontSize: 11),
+                                      ),
+                                    )
+                                  ]
+                                : reach,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 15, top: 8),
+                            child: Text(
+                              'Match',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.black87,
+                              ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 15, top: 8),
-                          child: Text(
-                            'Safety',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.black87,
+                          Column(
+                            children: match.length == 0
+                                ? [
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 15),
+                                      child: Text(
+                                        'No Universities Added',
+                                        style: TextStyle(
+                                            color: Colors.black54,
+                                            fontSize: 11),
+                                      ),
+                                    )
+                                  ]
+                                : match,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 15, top: 8),
+                            child: Text(
+                              'Safety',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.black87,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                          Column(
+                            children: safety.length == 0
+                                ? [
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 15),
+                                      child: Text(
+                                        'No Universities Added',
+                                        style: TextStyle(
+                                            color: Colors.black54,
+                                            fontSize: 11),
+                                      ),
+                                    )
+                                  ]
+                                : safety,
+                          ),
+                        ],
+                      ),
                     );
                   }
                   return Padding(
@@ -1021,7 +1093,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                             children: scores.length == 0
                                 ? [
                                     Padding(
-                                      padding: EdgeInsets.only(left: 15),
+                                      padding: EdgeInsets.only(left: 17),
                                       child: Text(
                                         'No Test Scores',
                                         style: TextStyle(

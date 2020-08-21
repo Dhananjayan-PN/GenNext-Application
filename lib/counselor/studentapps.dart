@@ -102,7 +102,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       drawer: NavDrawer(),
-      appBar: CustomAppBar('My Students'),
+      appBar: CustomAppBar('Applications'),
       body: RefreshIndicator(
         key: refreshKey,
         onRefresh: () {
