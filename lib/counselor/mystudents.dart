@@ -554,18 +554,6 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
               child: FutureBuilder(
                 future: collegeList,
                 builder: (context, snapshot) {
-                  reach = [];
-                  match = [];
-                  safety = [];
-                  for (int i = 0;
-                      i < snapshot.data['reach_college_list_data'].length;
-                      i++) {}
-                  for (int i = 0;
-                      i < snapshot.data['match_college_list_data'].length;
-                      i++) {}
-                  for (int i = 0;
-                      i < snapshot.data['safety_college_list_data'].length;
-                      i++) {}
                   if (snapshot.hasError) {
                     return Padding(
                       padding: EdgeInsets.only(left: 25, right: 25),
@@ -601,6 +589,18 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                     );
                   }
                   if (snapshot.hasData) {
+                    reach = [];
+                    match = [];
+                    safety = [];
+                    for (int i = 0;
+                        i < snapshot.data['reach_college_list_data'].length;
+                        i++) {}
+                    for (int i = 0;
+                        i < snapshot.data['match_college_list_data'].length;
+                        i++) {}
+                    for (int i = 0;
+                        i < snapshot.data['safety_college_list_data'].length;
+                        i++) {}
                     return Padding(
                       padding: EdgeInsets.only(bottom: 10),
                       child: Column(

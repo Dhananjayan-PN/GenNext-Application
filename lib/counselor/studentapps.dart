@@ -237,6 +237,29 @@ class StudentApplicationsScreen extends StatefulWidget {
 }
 
 class _StudentApplicationsScreenState extends State<StudentApplicationsScreen> {
+  List<Widget> pending;
+  List<Widget> completed;
+  Future applications;
+
+  @override
+  void initState() {
+    super.initState();
+    applications = getApplications();
+  }
+
+  Future<void> getApplications() async {
+    String tok = await getToken();
+    final response = await http.get(
+      dom + 'api/counselor/get-applications/${widget.id}',
+      headers: {HttpHeaders.authorizationHeader: "Token $tok"},
+    );
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw 'failed';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -245,8 +268,93 @@ class _StudentApplicationsScreenState extends State<StudentApplicationsScreen> {
         backgroundColor: Color(0xff005fa8),
         title: Text('Student Applications'),
       ),
-      body: ListView(
-        children: [],
+      body: FutureBuilder(
+        future: applications,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Padding(
+              padding: EdgeInsets.only(bottom: 40.0),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Icon(
+                      Icons.error_outline,
+                      size: 30,
+                      color: Colors.red.withOpacity(0.9),
+                    ),
+                    Text(
+                      'Unable to establish a connection with our servers.\nCheck your connection and try again later.',
+                      style: TextStyle(color: Colors.black54),
+                      textAlign: TextAlign.center,
+                    )
+                  ],
+                ),
+              ),
+            );
+          }
+          if (snapshot.hasData) {
+            pending = [];
+            completed = [];
+            for (int i = 0;
+                i < snapshot.data['incomplete_application_data'].length;
+                i++) {}
+            for (int i = 0;
+                i < snapshot.data['completed_application_data'].length;
+                i++) {}
+            return ListView(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 15, top: 20),
+                  child: Text(
+                    'Pending',
+                    style: TextStyle(color: Colors.black87, fontSize: 24),
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: pending.length == 0
+                      ? [
+                          Padding(
+                            padding: EdgeInsets.only(left: 16),
+                            child: Text(
+                              'No Pending Applications',
+                              style: TextStyle(
+                                  color: Colors.black54, fontSize: 14),
+                            ),
+                          )
+                        ]
+                      : pending,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 15, top: 20),
+                  child: Text(
+                    'Completed',
+                    style: TextStyle(color: Colors.black87, fontSize: 24),
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: completed.length == 0
+                      ? [
+                          Padding(
+                            padding: EdgeInsets.only(left: 16),
+                            child: Text(
+                              'No Completed Applications',
+                              style: TextStyle(
+                                  color: Colors.black54, fontSize: 14),
+                            ),
+                          )
+                        ]
+                      : completed,
+                ),
+              ],
+            );
+          }
+          return Center(
+            child: SpinKitWave(color: Colors.grey, size: 40),
+          );
+        },
       ),
     );
   }

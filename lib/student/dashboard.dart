@@ -285,7 +285,7 @@ class _DashBoardState extends State<DashBoard> {
                         borderRadius: BorderRadius.all(Radius.circular(10))),
                     elevation: 6,
                     child: Padding(
-                      padding: EdgeInsets.only(top: 50, bottom: 50),
+                      padding: EdgeInsets.only(top: 55, bottom: 55),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -294,7 +294,7 @@ class _DashBoardState extends State<DashBoard> {
                             padding: EdgeInsets.only(bottom: 10),
                             child: Icon(
                               Icons.assessment,
-                              size: 35,
+                              size: 37,
                               color: Colors.black.withOpacity(0.75),
                             ),
                           ),
@@ -610,7 +610,7 @@ class _DashBoardState extends State<DashBoard> {
                             padding: EdgeInsets.only(bottom: 10),
                             child: Icon(
                               Icons.schedule,
-                              size: 35,
+                              size: 37,
                               color: Colors.black.withOpacity(0.75),
                             ),
                           ),
@@ -828,10 +828,13 @@ class _DashBoardState extends State<DashBoard> {
                   child: Card(
                     margin: EdgeInsets.only(top: 20, bottom: 25),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10))),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                    ),
                     elevation: 6,
                     child: Padding(
-                      padding: EdgeInsets.only(top: 50, bottom: 50),
+                      padding: EdgeInsets.only(top: 55, bottom: 55),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -840,12 +843,12 @@ class _DashBoardState extends State<DashBoard> {
                             padding: EdgeInsets.only(bottom: 10),
                             child: Icon(
                               Icons.all_inclusive,
-                              size: 35,
+                              size: 37,
                               color: Colors.black.withOpacity(0.75),
                             ),
                           ),
                           Text(
-                            "No universities in our database.",
+                            "There are no universities in our database.",
                             style: TextStyle(color: Colors.black54),
                             textAlign: TextAlign.center,
                           ),

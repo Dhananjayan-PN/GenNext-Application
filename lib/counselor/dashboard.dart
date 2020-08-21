@@ -406,12 +406,12 @@ class _DashBoardState extends State<DashBoard> {
                             padding: EdgeInsets.only(bottom: 10),
                             child: Icon(
                               Icons.schedule,
-                              size: 35,
+                              size: 37,
                               color: Colors.black.withOpacity(0.75),
                             ),
                           ),
                           Text(
-                            "No upcoming sessions",
+                            "There are no upcoming sessions",
                             style: TextStyle(color: Colors.black54),
                             textAlign: TextAlign.center,
                           ),
@@ -610,7 +610,7 @@ class _DashBoardState extends State<DashBoard> {
                         borderRadius: BorderRadius.all(Radius.circular(10))),
                     elevation: 6,
                     child: Padding(
-                      padding: EdgeInsets.only(top: 28, bottom: 28),
+                      padding: EdgeInsets.only(top: 30, bottom: 30),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -624,12 +624,12 @@ class _DashBoardState extends State<DashBoard> {
                             ),
                           ),
                           Text(
-                            "No pending counselor requests",
+                            "No pending counselling requests",
                             style: TextStyle(color: Colors.black54),
                             textAlign: TextAlign.center,
                           ),
                           Text(
-                            "Enjoy your day!",
+                            "Check back later to see them!",
                             style: TextStyle(color: Colors.black54),
                             textAlign: TextAlign.center,
                           ),

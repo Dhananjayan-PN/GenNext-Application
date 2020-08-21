@@ -1059,7 +1059,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
               );
             }
           }
-          return Center(child: SpinKitWave(color: Colors.grey[400], size: 30));
+          return Center(
+            child: SpinKitWave(color: Colors.grey, size: 40),
+          );
         },
       ),
     );
