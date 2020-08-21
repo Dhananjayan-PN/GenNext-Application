@@ -8,7 +8,7 @@ import 'student/home.dart';
 import 'imports.dart';
 import 'login.dart';
 
-String domain = "https://gennext.ml/";
+String domain = "https://gennext.tk/";
 
 class LandingPage extends StatefulWidget {
   @override
