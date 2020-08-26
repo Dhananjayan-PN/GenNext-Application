@@ -349,7 +349,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           contentPadding: EdgeInsets.all(0),
           elevation: 20,
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
           title: Center(
               child: Text('Create Session',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))),
@@ -405,7 +405,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       decoration: InputDecoration(
                         border: UnderlineInputBorder(
                           borderSide:
-                              BorderSide(color: Colors.blue, width: 0.0),
+                              BorderSide(color: Color(0xff005fa8), width: 0.0),
                         ),
                         labelText: 'Date and Time',
                         labelStyle: TextStyle(color: Colors.black54),
@@ -418,16 +418,60 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       },
                       onShowPicker: (context, currentValue) async {
                         final _date = await showDatePicker(
-                            context: context,
-                            firstDate: DateTime(1900),
-                            initialDate: currentValue ?? _selectedDay,
-                            lastDate: DateTime(2150));
+                          context: context,
+                          firstDate: DateTime.now(),
+                          initialDate: currentValue ?? _selectedDay,
+                          lastDate: DateTime(2150),
+                          builder: (context, child) {
+                            return Theme(
+                              data: ThemeData(
+                                colorScheme: ColorScheme(
+                                    brightness: Brightness.light,
+                                    error: Color(0xff005fa8),
+                                    onError: Colors.red,
+                                    background: Color(0xff005fa8),
+                                    primary: Color(0xff005fa8),
+                                    primaryVariant: Color(0xff005fa8),
+                                    secondary: Color(0xff005fa8),
+                                    secondaryVariant: Color(0xff005fa8),
+                                    onPrimary: Colors.white,
+                                    surface: Color(0xff005fa8),
+                                    onSecondary: Colors.black,
+                                    onSurface: Colors.black,
+                                    onBackground: Colors.black),
+                              ),
+                              child: child,
+                            );
+                          },
+                        );
                         if (_date != null) {
                           final _time = await showTimePicker(
-                            context: context,
-                            initialTime: TimeOfDay.fromDateTime(
-                                currentValue ?? _selectedDay),
-                          );
+                              context: context,
+                              initialTime: TimeOfDay.fromDateTime(
+                                  currentValue ?? _selectedDay),
+                              builder: (context, child) {
+                                return Theme(
+                                  data: ThemeData(
+                                    primaryColor: Color(0xff005fa8),
+                                    accentColor: Color(0xff005fa8),
+                                    colorScheme: ColorScheme(
+                                        brightness: Brightness.light,
+                                        error: Color(0xff005fa8),
+                                        onError: Colors.red,
+                                        background: Color(0xff005fa8),
+                                        primary: Color(0xff005fa8),
+                                        primaryVariant: Color(0xff005fa8),
+                                        secondary: Color(0xff005fa8),
+                                        secondaryVariant: Color(0xff005fa8),
+                                        onPrimary: Colors.white,
+                                        surface: Color(0xff005fa8),
+                                        onSecondary: Colors.black,
+                                        onSurface: Colors.black,
+                                        onBackground: Colors.black),
+                                  ),
+                                  child: child,
+                                );
+                              });
                           return DateTimeField.combine(_date, _time);
                         } else {
                           return currentValue;
@@ -443,7 +487,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       decoration: InputDecoration(
                         border: UnderlineInputBorder(
                           borderSide:
-                              BorderSide(color: Colors.blue, width: 0.0),
+                              BorderSide(color: Color(0xff005fa8), width: 0.0),
                         ),
                         labelText: 'Subject',
                         labelStyle: TextStyle(color: Colors.black54),
@@ -465,7 +509,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       decoration: InputDecoration(
                         border: UnderlineInputBorder(
                           borderSide:
-                              BorderSide(color: Colors.blue, width: 0.0),
+                              BorderSide(color: Color(0xff005fa8), width: 0.0),
                         ),
                         labelText: 'Session Duration (mins)',
                         labelStyle: TextStyle(color: Colors.black54),
@@ -488,7 +532,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderSide:
-                              BorderSide(color: Colors.blue, width: 0.0),
+                              BorderSide(color: Color(0xff005fa8), width: 0.0),
                         ),
                         labelText: 'Session Notes',
                         labelStyle: TextStyle(color: Colors.black54),
@@ -515,7 +559,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
             FlatButton(
               child: Text(
                 'Create',
-                style: TextStyle(color: Colors.blue),
+                style: TextStyle(color: Color(0xff005fa8)),
               ),
               onPressed: () {
                 Navigator.pop(context);
@@ -540,7 +584,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
           contentPadding: EdgeInsets.all(0),
           elevation: 20,
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0))),
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
           title: Center(
               child: Text('Edit Session',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500))),
@@ -575,7 +619,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       decoration: InputDecoration(
                         border: UnderlineInputBorder(
                           borderSide:
-                              BorderSide(color: Colors.blue, width: 0.0),
+                              BorderSide(color: Color(0xff005fa8), width: 0.0),
                         ),
                         labelText: 'Date and Time',
                         labelStyle: TextStyle(color: Colors.black54),
@@ -588,15 +632,60 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       },
                       onShowPicker: (context, currentValue) async {
                         final _date = await showDatePicker(
-                            context: context,
-                            firstDate: DateTime(1900),
-                            initialDate: currentValue ?? time,
-                            lastDate: DateTime(2150));
+                          context: context,
+                          firstDate: DateTime.now(),
+                          initialDate: currentValue ?? time,
+                          lastDate: DateTime(2150),
+                          builder: (context, child) {
+                            return Theme(
+                              data: ThemeData(
+                                colorScheme: ColorScheme(
+                                    brightness: Brightness.light,
+                                    error: Color(0xff005fa8),
+                                    onError: Colors.red,
+                                    background: Color(0xff005fa8),
+                                    primary: Color(0xff005fa8),
+                                    primaryVariant: Color(0xff005fa8),
+                                    secondary: Color(0xff005fa8),
+                                    secondaryVariant: Color(0xff005fa8),
+                                    onPrimary: Colors.white,
+                                    surface: Color(0xff005fa8),
+                                    onSecondary: Colors.black,
+                                    onSurface: Colors.black,
+                                    onBackground: Colors.black),
+                              ),
+                              child: child,
+                            );
+                          },
+                        );
                         if (_date != null) {
                           final _time = await showTimePicker(
                             context: context,
                             initialTime:
                                 TimeOfDay.fromDateTime(currentValue ?? time),
+                            builder: (context, child) {
+                              return Theme(
+                                data: ThemeData(
+                                  primaryColor: Color(0xff005fa8),
+                                  accentColor: Color(0xff005fa8),
+                                  colorScheme: ColorScheme(
+                                      brightness: Brightness.light,
+                                      error: Color(0xff005fa8),
+                                      onError: Colors.red,
+                                      background: Color(0xff005fa8),
+                                      primary: Color(0xff005fa8),
+                                      primaryVariant: Color(0xff005fa8),
+                                      secondary: Color(0xff005fa8),
+                                      secondaryVariant: Color(0xff005fa8),
+                                      onPrimary: Colors.white,
+                                      surface: Color(0xff005fa8),
+                                      onSecondary: Colors.black,
+                                      onSurface: Colors.black,
+                                      onBackground: Colors.black),
+                                ),
+                                child: child,
+                              );
+                            },
                           );
                           return DateTimeField.combine(_date, _time);
                         } else {
@@ -613,7 +702,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       decoration: InputDecoration(
                         border: UnderlineInputBorder(
                           borderSide:
-                              BorderSide(color: Colors.blue, width: 0.0),
+                              BorderSide(color: Color(0xff005fa8), width: 0.0),
                         ),
                         labelText: 'Subject',
                         labelStyle: TextStyle(color: Colors.black54),
@@ -635,7 +724,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       decoration: InputDecoration(
                         border: UnderlineInputBorder(
                           borderSide:
-                              BorderSide(color: Colors.blue, width: 0.0),
+                              BorderSide(color: Color(0xff005fa8), width: 0.0),
                         ),
                         labelText: 'Session Duration (mins)',
                         labelStyle: TextStyle(color: Colors.black54),
@@ -658,7 +747,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderSide:
-                              BorderSide(color: Colors.blue, width: 0.0),
+                              BorderSide(color: Color(0xff005fa8), width: 0.0),
                         ),
                         labelText: 'Session Notes',
                         labelStyle: TextStyle(color: Colors.black54),
@@ -685,7 +774,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
             FlatButton(
               child: Text(
                 'Save',
-                style: TextStyle(color: Colors.blue),
+                style: TextStyle(color: Color(0xff005fa8)),
               ),
               onPressed: () {
                 if (_formKey.currentState.validate()) {
@@ -848,8 +937,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                   },
                   calendarStyle: CalendarStyle(
                     markersColor: Colors.red,
-                    weekdayStyle: TextStyle(color: Colors.blue),
-                    weekendStyle: TextStyle(color: Colors.blue),
+                    weekdayStyle: TextStyle(color: Color(0xff005fa8)),
+                    weekendStyle: TextStyle(color: Color(0xff005fa8)),
                     outsideStyle: TextStyle(color: Colors.black45),
                     unavailableStyle: TextStyle(color: Colors.black45),
                     outsideWeekendStyle: TextStyle(color: Colors.black45),
@@ -897,7 +986,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       return Container(
                         margin: EdgeInsets.all(6.0),
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.blue),
+                          border: Border.all(color: Color(0xff005fa8)),
                           shape: BoxShape.circle,
                         ),
                         width: 100,
@@ -907,7 +996,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                             '${date.day}',
                             style: TextStyle(
                                 fontSize: 17.0,
-                                color: Colors.blue,
+                                color: Color(0xff005fa8),
                                 fontWeight: FontWeight.w900),
                           ),
                         ),
@@ -916,17 +1005,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                     selectedDayBuilder: (context, date, _) {
                       return Container(
                         decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black45,
-                              blurRadius: 10,
-                              offset: Offset(
-                                3.0,
-                                3.0,
-                              ),
-                            )
-                          ],
-                          color: Colors.blue,
+                          boxShadow: kElevationToShadow[4],
+                          color: Color(0xff005fa8),
                           shape: BoxShape.circle,
                         ),
                         margin: EdgeInsets.all(2.0),
@@ -962,7 +1042,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                             clipBehavior: Clip.antiAlias,
                             shape: RoundedRectangleBorder(
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(15))),
+                                    BorderRadius.all(Radius.circular(10))),
                             elevation: 5,
                             child: ExpansionTile(
                               initiallyExpanded: expanded ?? false,
@@ -1129,7 +1209,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                               color: Colors.white),
                                         ),
                                         elevation: 3,
-                                        backgroundColor: Colors.blue,
+                                        backgroundColor: Color(0xff005fa8),
                                         label: Text(
                                           'Edit',
                                           style: TextStyle(color: Colors.white),
@@ -1154,28 +1234,29 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                         },
                                       ),
                                       Padding(
-                                          padding: EdgeInsets.only(left: 10),
-                                          child: ActionChip(
-                                            pressElevation: 5,
-                                            labelPadding: EdgeInsets.only(
-                                                left: 3, right: 4),
-                                            avatar: Padding(
-                                              padding: EdgeInsets.only(left: 2),
-                                              child: Icon(Icons.delete,
-                                                  color: Colors.white),
-                                            ),
-                                            elevation: 3,
-                                            backgroundColor: Colors.red,
-                                            label: Text(
-                                              'Delete',
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                            onPressed: () {
-                                              _deleteSession(
-                                                  _selectedEvents[index][0]);
-                                            },
-                                          ))
+                                        padding: EdgeInsets.only(left: 10),
+                                        child: ActionChip(
+                                          pressElevation: 5,
+                                          labelPadding: EdgeInsets.only(
+                                              left: 3, right: 4),
+                                          avatar: Padding(
+                                            padding: EdgeInsets.only(left: 2),
+                                            child: Icon(Icons.delete,
+                                                color: Colors.white),
+                                          ),
+                                          elevation: 3,
+                                          backgroundColor: Colors.red,
+                                          label: Text(
+                                            'Delete',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          onPressed: () {
+                                            _deleteSession(
+                                                _selectedEvents[index][0]);
+                                          },
+                                        ),
+                                      )
                                     ],
                                   ),
                                 ),
