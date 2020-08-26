@@ -80,7 +80,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
       'Content-Type': 'application/x-www-form-urlencoded',
     };
     var formData = dio.FormData.fromMap({
-      "user_id": studentglobals.user,
+      "user_id": studentglobals.user.id,
       "transcript_grade": grade,
       "transcript_title": title,
       "transcript_special_circumstances": spec,
@@ -102,6 +102,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
             dom + 'api/student/edit-document',
             data: formData,
           );
+    print(response.data);
     if (response.statusCode == 200) {
       if (op == 'edit' &&
           response.data['Response'] == 'Document successfully edited.') {
@@ -914,7 +915,7 @@ class _TranscriptScreenState extends State<TranscriptScreen> {
                   _grade != null &&
                   _spec != null &&
                   transcript != null) {
-                final data = [
+                final List data = [
                   _title.text,
                   int.parse(_grade.text),
                   _spec.text,
