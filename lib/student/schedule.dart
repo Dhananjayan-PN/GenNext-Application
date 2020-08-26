@@ -23,7 +23,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   List _selectedEvents;
   DateTime today;
   int studentId;
-  bool fabVisible = true;
+  bool fabVisible;
   Future sessions;
 
   @override
@@ -69,6 +69,9 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         return 'No counselor';
       } else {
         studentId = json.decode(response.body)['student_id'];
+        setState(() {
+          fabVisible = true;
+        });
         return json.decode(response.body)['session_data'];
       }
     } else {
@@ -830,18 +833,19 @@ class ScheduleScreenState extends State<ScheduleScreen> {
       floatingActionButton: Visibility(
         visible: fabVisible,
         child: FloatingActionButton(
-            tooltip: 'Request session',
-            elevation: 8,
-            backgroundColor: Color(0xff005fa8),
-            splashColor: Colors.blue[900],
-            child: Icon(
-              Icons.add,
-              size: 28,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              _requestSession();
-            }),
+          tooltip: 'Request session',
+          elevation: 8,
+          backgroundColor: Color(0xff005fa8),
+          splashColor: Colors.blue[900],
+          child: Icon(
+            Icons.add,
+            size: 28,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            _requestSession();
+          },
+        ),
       ),
       key: _scafKey,
       resizeToAvoidBottomInset: false,
