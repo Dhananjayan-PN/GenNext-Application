@@ -17,7 +17,7 @@ List navlistelements = [
   ['Home', CounselorHomeScreen(), Icons.home],
   ['My Profile', ProfileScreen(), Icons.account_box],
   ['My Students', MyStudentsScreen(), Icons.group],
-  ['Sessions Calendar', ScheduleScreen(), Icons.date_range],
+  ['Calendar', ScheduleScreen(), Icons.date_range],
   ['University Connect', ConnectUniversitiesScreen(), Icons.link],
   ['Student Applications', StudentsScreen(), Icons.assignment],
   ['Student Essays', EssaysScreen(), Icons.edit]

@@ -294,6 +294,78 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
     }
   }
 
+  Widget buildCard(uni) {
+    Widget cardData(ImageProvider imageProvider, bool isError) => Container(
+          decoration: BoxDecoration(
+            color: isError ? Color(0xff005fa8) : null,
+            image: imageProvider != null
+                ? DecorationImage(
+                    alignment: Alignment.center,
+                    colorFilter: ColorFilter.mode(
+                        Colors.black.withAlpha(100), BlendMode.darken),
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  )
+                : DecorationImage(
+                    colorFilter: ColorFilter.mode(
+                        Colors.black.withOpacity(0.35), BlendMode.dstIn),
+                    image: NetworkImage(
+                        'https://www.shareicon.net/data/512x512/2016/08/18/814358_school_512x512.png',
+                        scale: 12),
+                  ),
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: ListTile(
+              dense: true,
+              title: Text(
+                uni['university_name'],
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500),
+              ),
+              subtitle: Text(
+                uni['university_location'],
+                style: TextStyle(
+                    color: Colors.white.withOpacity(0.9), fontSize: 13.5),
+              ),
+              onTap: () async {
+                // ignore: unused_local_variable
+                // final data = await Navigator.push(
+                //   context,
+                //   PageTransition(
+                //     type: PageTransitionType.fade,
+                //     child: UniversityPage(
+                //       university: uni,
+                //     ),
+                //   ),
+                // );
+              },
+            ),
+          ),
+        );
+    return Hero(
+      tag: uni['university_id'].toString(),
+      child: Card(
+        margin: EdgeInsets.only(top: 3, left: 18, right: 18, bottom: 3),
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        elevation: 3,
+        child: CachedNetworkImage(
+          key: Key(uni['university_id'].toString()),
+          imageUrl: uni['image_url'] ??
+              'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Black_flag.svg/1200px-Black_flag.svg.png',
+          placeholder: (context, url) => CardPlaceHolder(),
+          errorWidget: (context, url, error) => cardData(null, true),
+          imageBuilder: (context, imageProvider) =>
+              cardData(imageProvider, false),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     countryString = '';
@@ -724,13 +796,22 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                     safety = [];
                     for (int i = 0;
                         i < snapshot.data['reach_college_list_data'].length;
-                        i++) {}
+                        i++) {
+                      reach.add(buildCard(
+                          snapshot.data['reach_college_list_data'][i]));
+                    }
                     for (int i = 0;
                         i < snapshot.data['match_college_list_data'].length;
-                        i++) {}
+                        i++) {
+                      match.add(buildCard(
+                          snapshot.data['match_college_list_data'][i]));
+                    }
                     for (int i = 0;
                         i < snapshot.data['safety_college_list_data'].length;
-                        i++) {}
+                        i++) {
+                      safety.add(buildCard(
+                          snapshot.data['safety_college_list_data'][i]));
+                    }
                     return Padding(
                       padding: EdgeInsets.only(bottom: 10),
                       child: Column(
@@ -738,11 +819,12 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           Padding(
-                            padding: EdgeInsets.only(left: 15, top: 10),
+                            padding:
+                                EdgeInsets.only(left: 15, top: 10, bottom: 3),
                             child: Text(
                               'Reach',
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 18.5,
                                 color: Colors.black87,
                               ),
                             ),
@@ -763,11 +845,12 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                                 : reach,
                           ),
                           Padding(
-                            padding: EdgeInsets.only(left: 15, top: 8),
+                            padding:
+                                EdgeInsets.only(left: 15, top: 8, bottom: 3),
                             child: Text(
                               'Match',
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 18.5,
                                 color: Colors.black87,
                               ),
                             ),
@@ -788,11 +871,12 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                                 : match,
                           ),
                           Padding(
-                            padding: EdgeInsets.only(left: 15, top: 8),
+                            padding:
+                                EdgeInsets.only(left: 15, top: 8, bottom: 3),
                             child: Text(
                               'Safety',
                               style: TextStyle(
-                                fontSize: 18,
+                                fontSize: 18.5,
                                 color: Colors.black87,
                               ),
                             ),
