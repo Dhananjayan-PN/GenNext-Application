@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:http/http.dart' as http;
 import 'user.dart' as studentglobals;
 import 'package:dio/dio.dart' as dio;
@@ -102,7 +104,7 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
             dom + 'api/student/edit-document',
             data: formData,
           );
-    print(response.data);
+    log(response.data);
     if (response.statusCode == 200) {
       if (op == 'edit' &&
           response.data['Response'] == 'Document successfully edited.') {
