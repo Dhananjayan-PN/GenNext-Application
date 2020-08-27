@@ -142,14 +142,6 @@ class _EssaysScreenState extends State<EssaysScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Opacity(
-                          opacity: 0.9,
-                          child: Image.asset(
-                            "images/snap.gif",
-                            height: 100.0,
-                            width: 100.0,
-                          ),
-                        ),
                         Text(
                           'Oh Snap!',
                           style: TextStyle(fontSize: 18, color: Colors.black54),
