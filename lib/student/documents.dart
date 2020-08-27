@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:http/http.dart' as http;
 import 'user.dart' as studentglobals;
 import 'package:dio/dio.dart' as dio;
@@ -76,18 +74,21 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
   Future<void> uploadTranscript(String op, int id, String title, int grade,
       String spec, File transcript) async {
     String tok = await getToken();
+    String gra = grade.toString();
     var dioRequest = dio.Dio();
     dioRequest.options.headers = {
       HttpHeaders.authorizationHeader: "Token $tok",
       'Content-Type': 'application/x-www-form-urlencoded',
     };
-    var formData = dio.FormData.fromMap({
-      "user_id": studentglobals.user.id,
-      "transcript_grade": grade,
-      "transcript_title": title,
-      "transcript_special_circumstances": spec,
-      "transcript_is_flagged": false,
-    });
+    var formData = dio.FormData.fromMap(
+      {
+        "user_id": studentglobals.user.id,
+        "transcript_grade": gra,
+        "transcript_title": title,
+        "transcript_special_circumstances": spec,
+        "transcript_is_flagged": false,
+      },
+    );
     if (op == 'edit') {
       formData.fields.add(MapEntry('transcript_id', id.toString()));
     }
@@ -104,7 +105,6 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
             dom + 'api/student/edit-document',
             data: formData,
           );
-    log(response.data);
     if (response.statusCode == 200) {
       if (op == 'edit' &&
           response.data['Response'] == 'Document successfully edited.') {
