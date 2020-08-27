@@ -1201,8 +1201,10 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
                             padding: EdgeInsets.only(left: 22, top: 5),
                             child: Icon(
                               snapshot.data['research_or_not']
-                                  ? IconData(0xF0093, fontFamily: 'maticons')
-                                  : IconData(0xF13F4, fontFamily: 'maticons'),
+                                  ? const IconData(0xF0093,
+                                      fontFamily: 'maticons')
+                                  : const IconData(0xF13F4,
+                                      fontFamily: 'maticons'),
                               color: Colors.black54,
                               size: 22,
                             ),
@@ -1985,7 +1987,7 @@ class _EditUniDetailsState extends State<EditUniDetails> {
                         Padding(
                           padding: EdgeInsets.only(left: 5, right: 5),
                           child: Icon(
-                            IconData(0xF0093, fontFamily: 'maticons'),
+                            const IconData(0xF0093, fontFamily: 'maticons'),
                             color: Colors.black87,
                           ),
                         ),
@@ -2002,8 +2004,10 @@ class _EditUniDetailsState extends State<EditUniDetails> {
                       children: <Widget>[
                         Padding(
                           padding: EdgeInsets.only(left: 5, right: 5),
-                          child: Icon(IconData(0xF13F4, fontFamily: 'maticons'),
-                              color: Colors.black87),
+                          child: Icon(
+                            const IconData(0xF13F4, fontFamily: 'maticons'),
+                            color: Colors.black87,
+                          ),
                         ),
                         Text(
                           'No Research',

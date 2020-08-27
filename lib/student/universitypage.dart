@@ -802,8 +802,8 @@ class _UniversityPageState extends State<UniversityPage> {
                       padding: EdgeInsets.only(left: 22, top: 5),
                       child: Icon(
                         widget.university['research_or_not']
-                            ? IconData(0xF0093, fontFamily: 'maticons')
-                            : IconData(0xF13F4, fontFamily: 'maticons'),
+                            ? const IconData(0xF0093, fontFamily: 'maticons')
+                            : const IconData(0xF13F4, fontFamily: 'maticons'),
                         color: Colors.black54,
                         size: 22,
                       ),
