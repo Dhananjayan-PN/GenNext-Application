@@ -813,7 +813,7 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Color(0xff005fa8),
-        title: Text('Manage Application'),
+        title: Text('Student Application'),
       ),
       body: ListView(
         children: <Widget>[
