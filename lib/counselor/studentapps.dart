@@ -988,33 +988,6 @@ class _SingleAppScreenState extends State<SingleAppScreen> {
                           ],
                         ),
                         Spacer(),
-                        saved
-                            ? Padding(
-                                padding: EdgeInsets.only(right: 13),
-                                child: Icon(
-                                  Icons.check,
-                                  color: Colors.green,
-                                ),
-                              )
-                            : saving
-                                ? Padding(
-                                    padding:
-                                        EdgeInsets.only(right: 17, top: 4.0),
-                                    child: SizedBox(
-                                        height: 20,
-                                        width: 20,
-                                        child: SpinKitThreeBounce(
-                                            color: Colors.black87, size: 11)),
-                                  )
-                                : savingfailed
-                                    ? Padding(
-                                        padding: EdgeInsets.only(right: 10),
-                                        child: Icon(
-                                          Icons.priority_high,
-                                          color: Colors.red,
-                                        ),
-                                      )
-                                    : Container(),
                       ],
                     ),
                   ),
