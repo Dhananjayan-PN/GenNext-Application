@@ -427,7 +427,7 @@ class _DashBoardState extends State<DashBoard> {
                 );
               } else {
                 return Container(
-                  height: 230,
+                  height: 250,
                   child: Swiper(
                     loop: false,
                     pagination: snapshot.data.length == 1
@@ -512,12 +512,24 @@ class _DashBoardState extends State<DashBoard> {
                                 ),
                               ),
                               Padding(
-                                padding: EdgeInsets.only(left: 2, top: 13),
+                                padding: EdgeInsets.only(left: 2, top: 6),
+                                child: Text(
+                                  snapshot.data[index]['student_name'],
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      color: Color(0xff005fa8),
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 2, top: 4),
                                 child: Text(
                                   snapshot.data[index]['subject_of_session'],
                                   style: TextStyle(
                                       color: Colors.black87,
-                                      fontSize: 20,
+                                      fontSize: 18.5,
                                       fontWeight: FontWeight.w400),
                                 ),
                               ),
@@ -525,15 +537,15 @@ class _DashBoardState extends State<DashBoard> {
                                   ? Container()
                                   : Padding(
                                       padding: EdgeInsets.only(
-                                          left: 3, top: 3, right: 8),
+                                          left: 3, top: 2, right: 8),
                                       child: Text(
                                         snapshot.data[index]['session_notes'],
                                         overflow: TextOverflow.ellipsis,
-                                        maxLines: 2,
+                                        maxLines: 4,
                                         style: TextStyle(
                                             color:
                                                 Colors.black.withOpacity(0.6),
-                                            fontSize: 15,
+                                            fontSize: 12.5,
                                             fontWeight: FontWeight.w300),
                                       ),
                                     ),
