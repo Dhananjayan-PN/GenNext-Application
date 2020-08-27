@@ -449,7 +449,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 35, left: 55, right: 55),
+                    padding: EdgeInsets.only(top: 35),
                     child: Container(
                       alignment: Alignment.topRight,
                       height: 25,
@@ -457,9 +457,9 @@ class _LoginPageState extends State<LoginPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            'Your first time here? ',
+                            "Don't have an account yet? ",
                             style: TextStyle(
-                              fontSize: 17,
+                              fontSize: 16,
                               color: Colors.black54,
                             ),
                           ),
@@ -467,18 +467,20 @@ class _LoginPageState extends State<LoginPage> {
                             color: Colors.transparent,
                             child: InkWell(
                               splashColor: Color(0xff005fa8),
-                              onTap: () {
+                              onTap: () async {
                                 formKey.currentState.reset();
-                                Navigator.push(
-                                    context,
-                                    PageTransition(
-                                        type: PageTransitionType.rightToLeft,
-                                        child: SignUpPage()));
+                                final data = await Navigator.push(
+                                  context,
+                                  PageTransition(
+                                    type: PageTransitionType.downToUp,
+                                    child: SignUpPage(),
+                                  ),
+                                );
                               },
                               child: Text(
-                                'Register',
+                                'Sign Up',
                                 style: TextStyle(
-                                  fontSize: 17,
+                                  fontSize: 16,
                                   color: Color(0xff005fa8),
                                 ),
                                 textAlign: TextAlign.left,
