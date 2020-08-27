@@ -668,7 +668,8 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                       for (var j = 0; j < snapshot.data[i].length; j++) {
                         subItems.add(
                           ChecklistItemView(
-                            title: buildCard(snapshot.data[i][j], false, true),
+                            title: buildCard(snapshot.data[i][j],
+                                snapshot.data[i][j]['favorited_status'], true),
                             onStartDragItem: (listIndex, itemIndex, state) {},
                             canDrag: true,
                             onDropItem: (oldListIndex, oldItemIndex, listIndex,
