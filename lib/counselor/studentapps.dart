@@ -73,7 +73,7 @@ class _StudentsScreenState extends State<StudentsScreen> {
           leading: CircleAvatar(
             radius: 25,
             backgroundImage: CachedNetworkImageProvider(
-              student['student_profile_img'] ??
+              student['student_profile_url'] ??
                   'https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png',
             ),
             backgroundColor: Color(0xff005fa8),
