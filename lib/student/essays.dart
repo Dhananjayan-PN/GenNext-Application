@@ -152,20 +152,25 @@ class _EssaysScreenState extends State<EssaysScreen> {
   Future<void> createEssay(String title, String prompt) async {
     String tok = await getToken();
     final response = await http
-        .post(dom + 'api/student/create-essay/',
-            headers: {
-              HttpHeaders.authorizationHeader: "Token $tok",
-              'Content-Type': 'application/json; charset=UTF-8',
-            },
-            body: jsonEncode(<String, dynamic>{
+        .post(
+          dom + 'api/student/create-essay/',
+          headers: {
+            HttpHeaders.authorizationHeader: "Token $tok",
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(
+            <String, dynamic>{
               'user_id': studentglobals.user.id,
               'essay_title': title,
               'essay_prompt': prompt,
-              'student_essay_content': '',
-              'counselor_essay_content': ''
-            }))
-        .timeout(Duration(seconds: 10));
-    print(response.body);
+              // 'student_essay_content': '',
+              // 'counselor_essay_content': ''
+            },
+          ),
+        )
+        .timeout(
+          Duration(seconds: 10),
+        );
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       if (data['Response'] == 'Essay successfully created.') {
