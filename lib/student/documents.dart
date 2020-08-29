@@ -167,7 +167,6 @@ class _DocumentsScreenState extends State<DocumentsScreen> {
               },
             ),
           );
-    print(response.body);
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       if (op == 'edit' && data['Response'] == 'Document successfully edited.') {
@@ -1103,7 +1102,12 @@ class _ECScreenState extends State<ECScreen> {
                   _desc != null &&
                   _startDate != null &&
                   _endDate != null) {
-                final data = [_title.text, _startDate, _endDate, _desc.text];
+                final List data = [
+                  _title.text,
+                  _startDate,
+                  _endDate,
+                  _desc.text
+                ];
                 Navigator.pop(context, data);
               }
             },
