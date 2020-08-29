@@ -409,7 +409,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
             FlatButton(
               child: Text(
                 'Add',
-                style: TextStyle(color: Colors.blue),
+                style: TextStyle(color: Color(0xff005fa8)),
               ),
               onPressed: () {
                 if (uniName != null) {
@@ -733,7 +733,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                       );
                     }
                     return Padding(
-                      padding: EdgeInsets.only(top: 10),
+                      padding: EdgeInsets.only(top: 10, bottom: 10),
                       child: ChecklistListView(
                         controller: scrollController,
                         checklists: checklistsViews,
