@@ -1,5 +1,4 @@
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 import '../imports.dart';
 import 'home.dart';
 
@@ -84,6 +83,7 @@ class _EssaysScreenState extends State<EssaysScreen> {
             style: TextStyle(color: Color(0xff005fa8)),
           ),
           onTap: () async {
+            // ignore: unused_local_variable
             List data = await Navigator.push(
               context,
               MaterialPageRoute(
@@ -298,6 +298,7 @@ class _StudentEssaysState extends State<StudentEssays> {
                                   essay['counselor_essay_content'] == null
                               ? '[{\"attributes\":{\"align\":\"justify\"},\"insert\":\"\\n\"},{\"insert\":\"\\n\"}]'
                               : essay['counselor_essay_content'];
+                          // ignore: unused_local_variable
                           final editedEssayContent = await Navigator.push(
                             context,
                             MaterialPageRoute(

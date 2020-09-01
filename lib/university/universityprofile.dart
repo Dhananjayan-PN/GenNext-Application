@@ -52,9 +52,9 @@ class _UniProfileScreenState extends State<UniProfileScreen> {
         headers: {HttpHeaders.authorizationHeader: "Token $tok"},
       );
       if (result.statusCode == 200) {
-        Map uni_data = json.decode(response.body)['university_data'];
-        uni_data['document_data'] = json.decode(result.body)['document_data'];
-        return uni_data;
+        Map uniData = json.decode(response.body)['university_data'];
+        uniData['document_data'] = json.decode(result.body)['document_data'];
+        return uniData;
       } else {
         throw 'failed';
       }
@@ -2710,6 +2710,7 @@ class _EditApplicationState extends State<EditApplication> {
   bool _commonApp;
   bool _coalition;
   DateTime _earlyAction;
+  // ignore: unused_field
   DateTime _earlyDecision;
   DateTime _regularDecision;
 
@@ -2912,7 +2913,6 @@ class _EditApplicationState extends State<EditApplication> {
                                       .containsKey('Early Action')) {
                                     _applicationTypes['Early Action'] =
                                         DateFormat.MMMMd().format(_earlyAction);
-                                    ;
                                   }
                                   setState(() {});
                                 });

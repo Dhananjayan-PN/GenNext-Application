@@ -37,7 +37,9 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController username = TextEditingController();
   final TextEditingController password = TextEditingController();
 
+  // ignore: unused_field
   String _username;
+  // ignore: unused_field
   String _password;
 
   @override
@@ -469,6 +471,7 @@ class _LoginPageState extends State<LoginPage> {
                               splashColor: Color(0xff005fa8),
                               onTap: () async {
                                 formKey.currentState.reset();
+                                // ignore: unused_local_variable
                                 final data = await Navigator.push(
                                   context,
                                   PageTransition(

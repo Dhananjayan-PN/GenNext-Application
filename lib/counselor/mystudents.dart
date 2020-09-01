@@ -84,6 +84,7 @@ class _MyStudentsScreenState extends State<MyStudentsScreen> {
             style: TextStyle(color: Color(0xff005fa8)),
           ),
           onTap: () async {
+            // ignore: unused_local_variable
             List data = await Navigator.push(
               context,
               MaterialPageRoute(
