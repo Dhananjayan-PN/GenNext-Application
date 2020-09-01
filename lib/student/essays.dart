@@ -163,8 +163,8 @@ class _EssaysScreenState extends State<EssaysScreen> {
               'user_id': studentglobals.user.id,
               'essay_title': title,
               'essay_prompt': prompt,
-              // 'student_essay_content': '',
-              // 'counselor_essay_content': ''
+              'student_essay_content': '',
+              'counselor_essay_content': ''
             },
           ),
         )

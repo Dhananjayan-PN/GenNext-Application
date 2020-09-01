@@ -636,7 +636,7 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                     }
                   }
                   return Padding(
-                    padding: EdgeInsets.only(top: 60),
+                    padding: EdgeInsets.only(top: 20),
                     child: CardListSkeleton(
                       isBottomLinesActive: false,
                       length: 10,
@@ -757,9 +757,12 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                       );
                     }
                   }
-                  return CardListSkeleton(
-                    isBottomLinesActive: false,
-                    length: 10,
+                  return Padding(
+                    padding: EdgeInsets.only(top: 20),
+                    child: CardListSkeleton(
+                      isBottomLinesActive: false,
+                      length: 10,
+                    ),
                   );
                 },
               ),

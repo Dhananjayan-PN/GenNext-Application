@@ -1426,7 +1426,6 @@ class _MiscDocsScreenState extends State<MiscDocsScreen> {
                 onChanged: (value) {
                   setState(() {
                     _type = value;
-                    print(_type);
                   });
                 },
               ),
