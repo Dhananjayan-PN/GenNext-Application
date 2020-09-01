@@ -861,10 +861,11 @@ class _DashBoardState extends State<DashBoard> {
                                 ? Padding(
                                     padding: EdgeInsets.only(right: 17),
                                     child: SizedBox(
-                                        height: 20,
-                                        width: 20,
-                                        child: SpinKitThreeBounce(
-                                            color: Colors.black87, size: 10)),
+                                      height: 20,
+                                      width: 20,
+                                      child: SpinKitThreeBounce(
+                                          color: Colors.black87, size: 10),
+                                    ),
                                   )
                                 : savingfailed
                                     ? Padding(

@@ -1,17 +1,25 @@
 import '../imports.dart';
-import 'home.dart';
-
-final notifications = ['Are you future ready?'];
+import 'package:intl/intl.dart';
 
 class BodyBuilder extends StatefulWidget {
+  final List notifications;
+  BodyBuilder({@required this.notifications});
   @override
   State<StatefulWidget> createState() => BodyBuilderState();
 }
 
 class BodyBuilderState extends State<BodyBuilder> {
+  List notifs;
+
+  @override
+  void initState() {
+    super.initState();
+    notifs = widget.notifications;
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (notifications.length == 0) {
+    if (notifs.length == 0) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -35,28 +43,47 @@ class BodyBuilderState extends State<BodyBuilder> {
         child: Column(
           children: <Widget>[
             ListView.builder(
+              padding: EdgeInsets.only(top: 5),
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
-              itemCount: notifications.length,
+              itemCount: notifs.length,
               itemBuilder: (context, index) {
                 return Dismissible(
-                  key: Key('$index' + '$notifications[index]'),
+                  key: Key('$index' + '$notifs[index]'),
                   background: Container(
                       child: Icon(Icons.delete), color: Colors.red[400]),
                   child: Card(
-                    elevation: 8,
+                    clipBehavior: Clip.antiAlias,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    elevation: 4,
                     child: InkWell(
                       splashColor: Color(0xff005fa8),
                       onTap: () {
                         //Take to the page containing information regarding notification
                       },
                       child: ListTile(
-                        title: Text(notifications[index]),
+                        title: Text(notifs[index]['alert'],
+                            style: TextStyle(fontWeight: FontWeight.w400)),
+                        subtitle: Padding(
+                          padding: EdgeInsets.only(left: 2, top: 3),
+                          child: Text(
+                            DateFormat.jm().format(
+                                    DateTime.parse(notifs[index]['timestamp'])
+                                        .toLocal()) +
+                                ' ' +
+                                DateFormat.yMMMd('en_US').format(
+                                    DateTime.parse(notifs[index]['timestamp'])
+                                        .toLocal()),
+                            style: TextStyle(fontWeight: FontWeight.w300),
+                          ),
+                        ),
                       ),
                     ),
                   ),
                   onDismissed: (direction) {
-                    notifications.removeAt(index);
+                    notifs.removeAt(index);
                     setState(() {});
                     Scaffold.of(context).showSnackBar(
                       SnackBar(
@@ -83,6 +110,8 @@ class BodyBuilderState extends State<BodyBuilder> {
 }
 
 class NotificationScreen extends StatefulWidget {
+  final List notifications;
+  NotificationScreen({@required this.notifications});
   @override
   _NotificationScreenState createState() => _NotificationScreenState();
 }
@@ -101,29 +130,33 @@ class _NotificationScreenState extends State<NotificationScreen> {
   }
 
   bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
+    Navigator.pop(context);
     return true;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Color(0xff005fa8),
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Color(0xff005fa8),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.white,
           ),
-          title: Text(
-            'Notifications',
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
-        body: BodyBuilder());
+        title: Text(
+          'Notifications',
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+      ),
+      body: BodyBuilder(
+        notifications: widget.notifications,
+      ),
+    );
   }
 }

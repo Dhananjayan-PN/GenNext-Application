@@ -1,3 +1,4 @@
+import 'package:http/http.dart' as http;
 import '../imports.dart';
 import '../login.dart';
 import '../landingpage.dart';
@@ -386,31 +387,102 @@ class HomeAppBar extends StatefulWidget with PreferredSizeWidget {
 }
 
 class HomeAppBarState extends State<HomeAppBar> {
-  int counter = 300;
+  Future notifications;
+
+  @override
+  void initState() {
+    super.initState();
+    BackButtonInterceptor.add(myInterceptor);
+    notifications = getNotifications();
+  }
+
+  @override
+  void dispose() {
+    BackButtonInterceptor.remove(myInterceptor);
+    super.dispose();
+  }
+
+  bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
+    return true;
+  }
+
+  Future<void> getNotifications() async {
+    String tok = await getToken();
+    final response = await http.get(dom + 'authenticate/get-alerts', headers: {
+      HttpHeaders.authorizationHeader: 'Token $tok',
+    });
+    print(response.body);
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body)['alert_data'];
+    } else {
+      throw ('error');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      elevation: 6,
       title: Text('Home'),
       backgroundColor: Color(0xff005fa8),
       actions: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(right: 4),
-          child: Stack(
-            children: <Widget>[
-              IconButton(
-                  icon: Icon(Icons.notifications),
-                  alignment: Alignment.bottomLeft,
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        PageTransition(
-                            type: PageTransitionType.fade,
-                            child: NotificationScreen()));
-                  }),
-              counter != 0
-                  ? Positioned(
+        FutureBuilder(
+          future: notifications,
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Padding(
+                padding: EdgeInsets.only(right: 4),
+                child: Stack(
+                  children: <Widget>[
+                    IconButton(
+                        icon: Icon(Icons.notifications),
+                        alignment: Alignment.bottomLeft,
+                        onPressed: () {}),
+                    Positioned(
+                      right: 12.5,
+                      top: 12.5,
+                      child: Container(
+                        padding: EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        constraints: BoxConstraints(
+                          minWidth: 14,
+                          minHeight: 14,
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 1),
+                          child: SizedBox(
+                            height: 10,
+                            width: 10,
+                            child: Icon(Icons.priority_high,
+                                color: Colors.white, size: 10),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+            if (snapshot.hasData) {
+              return Padding(
+                padding: EdgeInsets.only(right: 4),
+                child: Stack(
+                  children: <Widget>[
+                    IconButton(
+                        icon: Icon(Icons.notifications),
+                        alignment: Alignment.bottomLeft,
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => NotificationScreen(
+                                      notifications: snapshot.data,
+                                    )),
+                          );
+                        }),
+                    Positioned(
                       right: 12.5,
                       top: 12.5,
                       child: Container(
@@ -426,7 +498,7 @@ class HomeAppBarState extends State<HomeAppBar> {
                         child: Padding(
                           padding: EdgeInsets.only(top: 1),
                           child: Text(
-                            '$counter',
+                            snapshot.data.length.toString(),
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 8,
@@ -435,10 +507,47 @@ class HomeAppBarState extends State<HomeAppBar> {
                           ),
                         ),
                       ),
-                    )
-                  : Container()
-            ],
-          ),
+                    ),
+                  ],
+                ),
+              );
+            }
+            return Padding(
+              padding: EdgeInsets.only(right: 4),
+              child: Stack(
+                children: <Widget>[
+                  IconButton(
+                      icon: Icon(Icons.notifications),
+                      alignment: Alignment.bottomLeft,
+                      onPressed: () {}),
+                  Positioned(
+                    right: 12.5,
+                    top: 12.5,
+                    child: Container(
+                      padding: EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      constraints: BoxConstraints(
+                        minWidth: 14,
+                        minHeight: 14,
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 1),
+                        child: SizedBox(
+                          height: 10,
+                          width: 10,
+                          child:
+                              SpinKitThreeBounce(color: Colors.white, size: 5),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
         ),
       ],
     );
