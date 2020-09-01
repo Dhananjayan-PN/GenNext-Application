@@ -88,7 +88,7 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
           'Request successfully sent!') {
         Navigator.pop(context);
         success(context,
-            'Your connection request has been sent. Look forward to getting connected');
+            'Your connection request has been sent.\nLook forward to getting connected');
         refresh();
       } else {
         Navigator.pop(context);
@@ -147,7 +147,7 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
               ),
               trailing: Wrap(
                 children: <Widget>[
-                  !uni['request_sent']
+                  !connected
                       ? Padding(
                           padding: EdgeInsets.only(left: 8),
                           child: InkWell(

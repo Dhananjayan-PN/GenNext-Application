@@ -54,7 +54,8 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
               ),
               onPressed: () {
-                launch('https://gennext.tk/authenticate/student-registration',
+                launch(
+                    'https://collegegenie.org/authenticate/student-registration',
                     enableJavaScript: true);
               },
             ),
@@ -74,7 +75,8 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
               ),
               onPressed: () {
-                launch('https://gennext.tk/authenticate/counselor-registration',
+                launch(
+                    'https://collegegenie.org/authenticate/counselor-registration',
                     enableJavaScript: true);
               },
             ),
@@ -94,7 +96,8 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
               ),
               onPressed: () {
-                launch('https://gennext.tk/authenticate/university-lookup',
+                launch(
+                    'https://collegegenie.org/authenticate/university-lookup',
                     enableJavaScript: true);
               },
             ),
