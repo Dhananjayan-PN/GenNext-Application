@@ -82,13 +82,18 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
       dom + 'api/counselor/connect-with-unis/$id',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
     );
-    print(response.body);
     if (response.statusCode == 200) {
       if (json.decode(response.body)['Response'] ==
           'Request successfully sent!') {
         Navigator.pop(context);
         success(context,
-            'Your connection request has been sent.\nLook forward to getting connected');
+            'Your connection request has been sent.\nKindly wait for the rep to accept it');
+        refresh();
+      } else if (jsonDecode(response.body)['Reponse'] ==
+          'Request already sent!') {
+        Navigator.pop(context);
+        success(context,
+            'Your request has already been sent.\nKindly wait for the rep to accept it');
         refresh();
       } else {
         Navigator.pop(context);
