@@ -570,13 +570,14 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
                                 ),
                               ),
                               Padding(
-                                  padding: EdgeInsets.only(
-                                      top: 5, left: 30, right: 30),
-                                  child: Text(
-                                    "You haven't completed any applications yet.",
-                                    style: TextStyle(color: Colors.black54),
-                                    textAlign: TextAlign.center,
-                                  )),
+                                padding: EdgeInsets.only(
+                                    top: 5, left: 30, right: 30),
+                                child: Text(
+                                  "You haven't completed any applications yet.",
+                                  style: TextStyle(color: Colors.black54),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
                               Padding(
                                 padding: EdgeInsets.only(top: 3),
                                 child: Text(

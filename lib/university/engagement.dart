@@ -222,27 +222,31 @@ class _StudentEngagementScreenState extends State<StudentEngagementScreen> {
           bottom: TabBar(
             tabs: [
               Tab(
-                  child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
                     Icon(Icons.star),
                     Padding(
                       padding: EdgeInsets.only(left: 6, top: 2),
                       child: Text('Interested'),
                     )
-                  ])),
+                  ],
+                ),
+              ),
               Tab(
-                  child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
                     Icon(Icons.assignment),
                     Padding(
                       padding: EdgeInsets.only(left: 5),
                       child: Text('Applying'),
                     )
-                  ])),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -287,6 +291,14 @@ class _StudentEngagementScreenState extends State<StudentEngagementScreen> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(bottom: 10),
+                                child: Icon(
+                                  Icons.star,
+                                  size: 35,
+                                  color: Colors.black.withOpacity(0.75),
+                                ),
+                              ),
                               Padding(
                                 padding: EdgeInsets.only(
                                     top: 5, left: 30, right: 30),
@@ -412,6 +424,14 @@ class _StudentEngagementScreenState extends State<StudentEngagementScreen> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(bottom: 10),
+                                child: Icon(
+                                  Icons.assignment,
+                                  size: 35,
+                                  color: Colors.black.withOpacity(0.75),
+                                ),
+                              ),
                               Padding(
                                 padding: EdgeInsets.only(
                                     top: 5, left: 30, right: 30),

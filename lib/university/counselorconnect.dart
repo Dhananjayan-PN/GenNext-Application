@@ -333,6 +333,14 @@ class _CounselorConnectScreenState extends State<CounselorConnectScreen> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               Padding(
+                                padding: EdgeInsets.only(bottom: 10),
+                                child: Icon(
+                                  Icons.hourglass_empty,
+                                  size: 35,
+                                  color: Colors.black.withOpacity(0.75),
+                                ),
+                              ),
+                              Padding(
                                 padding: EdgeInsets.only(
                                     top: 5, left: 30, right: 30),
                                 child: Text(
@@ -414,6 +422,14 @@ class _CounselorConnectScreenState extends State<CounselorConnectScreen> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(bottom: 10),
+                                child: Icon(
+                                  Icons.insert_link,
+                                  size: 35,
+                                  color: Colors.black.withOpacity(0.75),
+                                ),
+                              ),
                               Padding(
                                 padding: EdgeInsets.only(
                                     top: 5, left: 30, right: 30),
