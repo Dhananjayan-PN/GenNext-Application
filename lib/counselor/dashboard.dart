@@ -80,7 +80,6 @@ class _DashBoardState extends State<DashBoard> {
         },
       ),
     );
-    print(response.body);
     if (response.statusCode == 200) {
       if (json.decode(response.body)['response'] == 'Decision Registered.') {
         Navigator.pop(context);

@@ -408,10 +408,12 @@ class HomeAppBarState extends State<HomeAppBar> {
 
   Future<void> getNotifications() async {
     String tok = await getToken();
-    final response = await http.get(dom + 'authenticate/get-alerts', headers: {
-      HttpHeaders.authorizationHeader: 'Token $tok',
-    });
-    print(response.body);
+    final response = await http.get(
+      dom + 'authenticate/get-alerts',
+      headers: {
+        HttpHeaders.authorizationHeader: 'Token $tok',
+      },
+    );
     if (response.statusCode == 200) {
       return jsonDecode(response.body)['alert_data'];
     } else {

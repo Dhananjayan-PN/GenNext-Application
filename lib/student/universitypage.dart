@@ -125,7 +125,6 @@ class _UniversityPageState extends State<UniversityPage> {
       dom + 'api/student/delete-college-from-list/$id/$category',
       headers: {HttpHeaders.authorizationHeader: "Token $tok"},
     );
-    print(response.body);
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       if (data['Response'] == 'University successfully deleted from list.') {
@@ -145,17 +144,20 @@ class _UniversityPageState extends State<UniversityPage> {
 
   Future<void> add(int id, String category) async {
     String tok = await getToken();
-    final response = await http.put(dom + 'api/student/college-list/add',
-        headers: {
-          HttpHeaders.authorizationHeader: "Token $tok",
-          'Content-Type': 'application/json; charset=UTF-8'
-        },
-        body: jsonEncode(<String, dynamic>{
+    final response = await http.put(
+      dom + 'api/student/college-list/add',
+      headers: {
+        HttpHeaders.authorizationHeader: "Token $tok",
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: jsonEncode(
+        <String, dynamic>{
           'student_id': studentglobals.user.id,
           'university_id': id,
           'college_category': category
-        }));
-    print(response.body);
+        },
+      ),
+    );
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       if (data['Response'] == 'University successfully added.') {
