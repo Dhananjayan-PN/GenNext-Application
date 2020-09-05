@@ -1,6 +1,6 @@
 name: gennextapp
 description: GenNext Education Application
-version: 1.0.0+9
+version: 1.0.0+10
 
 environment:
   sdk: ">=2.2.2 <3.0.0"
