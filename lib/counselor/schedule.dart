@@ -455,19 +455,20 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                     primaryColor: Color(0xff005fa8),
                                     accentColor: Color(0xff005fa8),
                                     colorScheme: ColorScheme(
-                                        brightness: Brightness.light,
-                                        error: Color(0xff005fa8),
-                                        onError: Colors.red,
-                                        background: Color(0xff005fa8),
-                                        primary: Color(0xff005fa8),
-                                        primaryVariant: Color(0xff005fa8),
-                                        secondary: Color(0xff005fa8),
-                                        secondaryVariant: Color(0xff005fa8),
-                                        onPrimary: Colors.white,
-                                        surface: Color(0xff005fa8),
-                                        onSecondary: Colors.black,
-                                        onSurface: Colors.black,
-                                        onBackground: Colors.black),
+                                      brightness: Brightness.light,
+                                      error: Color(0xff005fa8),
+                                      onError: Colors.red,
+                                      background: Colors.white,
+                                      primary: Color(0xff005fa8),
+                                      primaryVariant: Color(0xff004275),
+                                      secondary: Color(0xff005fa8),
+                                      secondaryVariant: Color(0xff004275),
+                                      onPrimary: Colors.white,
+                                      surface: Colors.white,
+                                      onSecondary: Colors.white,
+                                      onSurface: Color(0xff005fa8),
+                                      onBackground: Color(0xff005fa8),
+                                    ),
                                   ),
                                   child: child,
                                 );
@@ -669,19 +670,20 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                   primaryColor: Color(0xff005fa8),
                                   accentColor: Color(0xff005fa8),
                                   colorScheme: ColorScheme(
-                                      brightness: Brightness.light,
-                                      error: Color(0xff005fa8),
-                                      onError: Colors.red,
-                                      background: Color(0xff005fa8),
-                                      primary: Color(0xff005fa8),
-                                      primaryVariant: Color(0xff005fa8),
-                                      secondary: Color(0xff005fa8),
-                                      secondaryVariant: Color(0xff005fa8),
-                                      onPrimary: Colors.white,
-                                      surface: Color(0xff005fa8),
-                                      onSecondary: Colors.black,
-                                      onSurface: Colors.black,
-                                      onBackground: Colors.black),
+                                    brightness: Brightness.light,
+                                    error: Color(0xff005fa8),
+                                    onError: Colors.red,
+                                    background: Colors.white,
+                                    primary: Color(0xff005fa8),
+                                    primaryVariant: Color(0xff004275),
+                                    secondary: Color(0xff005fa8),
+                                    secondaryVariant: Color(0xff004275),
+                                    onPrimary: Colors.white,
+                                    surface: Colors.white,
+                                    onSecondary: Colors.white,
+                                    onSurface: Color(0xff005fa8),
+                                    onBackground: Color(0xff005fa8),
+                                  ),
                                 ),
                                 child: child,
                               );
@@ -1058,7 +1060,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                 children: <Widget>[
                                   Text(
                                     '@' + _selectedEvents[index][3],
-                                    style: TextStyle(color: Colors.blue),
+                                    style: TextStyle(color: Color(0xff005fa8)),
                                   ),
                                   if (completed == 'Yes') ...[
                                     Transform.scale(
@@ -1200,6 +1202,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       ActionChip(
+                                        visualDensity: VisualDensity.compact,
                                         pressElevation: 5,
                                         labelPadding:
                                             EdgeInsets.only(left: 5, right: 4),
@@ -1236,6 +1239,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                                       Padding(
                                         padding: EdgeInsets.only(left: 10),
                                         child: ActionChip(
+                                          visualDensity: VisualDensity.compact,
                                           pressElevation: 5,
                                           labelPadding: EdgeInsets.only(
                                               left: 3, right: 4),
