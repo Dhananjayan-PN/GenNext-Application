@@ -152,9 +152,43 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
               ),
               trailing: Wrap(
                 children: <Widget>[
+                  connected
+                      ? Padding(
+                          padding: EdgeInsets.only(right: 10),
+                          child: InkWell(
+                            child: Icon(
+                              Icons.mail,
+                              size: 26,
+                              color: Colors.blue,
+                            ),
+                            onTap: () async {
+                              if (await canLaunch(
+                                  'mailto:${uni['university_rep_email'] ?? 'help@collegegenie.org'}')) {
+                                launch(
+                                    'mailto:${uni['university_rep_email' ?? 'help@collegegenie.org']}');
+                              } else {
+                                await ClipboardManager.copyToClipBoard(
+                                    uni['university_rep_email'] ??
+                                        'help@collegegenie.org');
+                                _scafKey.currentState.showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Unable to open mail. Email copied to clipboard.',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                        )
+                      : SizedBox(
+                          height: 5,
+                          width: 5,
+                        ),
                   !connected
                       ? Padding(
-                          padding: EdgeInsets.only(left: 8),
+                          padding: EdgeInsets.only(left: 7, right: 2),
                           child: InkWell(
                             child: Icon(
                               Icons.add,
@@ -168,7 +202,7 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
                           ),
                         )
                       : Padding(
-                          padding: EdgeInsets.only(left: 8),
+                          padding: EdgeInsets.only(left: 7, right: 2),
                           child: Icon(
                             Icons.check,
                             size: 26,
@@ -192,9 +226,7 @@ class _ConnectUniversitiesScreenState extends State<ConnectUniversitiesScreen> {
           ),
         );
     return Hero(
-      tag: connected
-          ? '${uni['university_id'].toString()} connected'
-          : uni['university_id'].toString(),
+      tag: uni['university_id'].toString(),
       child: Card(
         margin: EdgeInsets.only(top: 7, left: 15, right: 15, bottom: 7),
         clipBehavior: Clip.antiAlias,
@@ -779,9 +811,7 @@ class _UniversityPageState extends State<UniversityPage> {
             elevation: 0,
             expandedHeight: 300,
             flexibleSpace: Hero(
-              tag: widget.connected
-                  ? '${widget.university['university_id'].toString()} connected'
-                  : widget.university['university_id'].toString(),
+              tag: widget.university['university_id'].toString(),
               child: Stack(
                 children: <Widget>[
                   Positioned(
