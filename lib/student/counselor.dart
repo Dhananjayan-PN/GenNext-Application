@@ -344,33 +344,6 @@ class _CounsellingScreenState extends State<CounsellingScreen> {
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 25),
-                          child: Text(
-                            'Not satisfied with your counselor?',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 15,
-                            ),
-                          ),
-                        ),
-                        Material(
-                          child: InkWell(
-                            splashColor: Colors.blue[900],
-                            onTap: () {
-                              loading(context);
-                              requestCounselling();
-                            },
-                            child: Text(
-                              'Request for another',
-                              style: TextStyle(
-                                fontSize: 15,
-                                color: Color(0xff005fa8),
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
                       ],
                     ),
                   ],
