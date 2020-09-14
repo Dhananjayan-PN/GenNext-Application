@@ -89,8 +89,9 @@ class _StudentEngagementScreenState extends State<StudentEngagementScreen> {
           key: Key(student['student_id'].toString()),
           leading: CircleAvatar(
             radius: 25,
-            backgroundImage:
-                CachedNetworkImageProvider(student['profile_pic_url']),
+            backgroundImage: CachedNetworkImageProvider(student[
+                    'profile_pic_url'] ??
+                'https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png'),
             backgroundColor: Color(0xff005fa8),
           ),
           title: Padding(
@@ -117,13 +118,15 @@ class _StudentEngagementScreenState extends State<StudentEngagementScreen> {
                     if (await canLaunch('mailto:${student['email']}')) {
                       launch('mailto:${student['email']}');
                     } else {
-                      await ClipboardManager.copyToClipBoard(student['email']);
+                      await ClipboardManager.copyToClipBoard(
+                          student['email'] ?? '');
                       _scafKey.currentState.showSnackBar(
                         SnackBar(
-                            content: Text(
-                          'Unable to open mail. Email copied to clipboard.',
-                          textAlign: TextAlign.center,
-                        )),
+                          content: Text(
+                            'Unable to open mail. Email copied to clipboard.',
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
                       );
                     }
                   },

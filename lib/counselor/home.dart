@@ -176,8 +176,8 @@ class _NavDrawerState extends State<NavDrawer> {
   @override
   Widget build(BuildContext context) {
     List<Widget> navlist = [];
-    for (var i = 0; i < navlistelements.length; i++) {
-      var element = navlistelements[i];
+    for (int i = 0; i < navlistelements.length; i++) {
+      List element = navlistelements[i];
       navlist.add(
         Padding(
           padding: EdgeInsets.only(left: 6),
@@ -561,6 +561,7 @@ class _CounselorHomeScreenState extends State<CounselorHomeScreen> {
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIOverlays(
         [SystemUiOverlay.top, SystemUiOverlay.bottom]);
+    curPage = CounselorHomeScreen();
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.dark,

@@ -555,6 +555,8 @@ class UniHomeScreen extends StatefulWidget {
 class _UniHomeScreenState extends State<UniHomeScreen> {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIOverlays(
+        [SystemUiOverlay.top, SystemUiOverlay.bottom]);
     curPage = UniHomeScreen();
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
