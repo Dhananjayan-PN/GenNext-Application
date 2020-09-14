@@ -4,11 +4,13 @@ import 'package:http/http.dart' as http;
 import 'student/home.dart';
 import 'counselor/home.dart';
 import 'university/home.dart';
+import 'admin/home.dart';
 import 'signup.dart';
 import 'usermodel.dart';
 import 'student/user.dart' as studentglobals;
 import 'counselor/user.dart' as counselorglobals;
 import 'university/user.dart' as universityglobals;
+import 'admin/user.dart' as adminglobals;
 
 Route logoutRoute() {
   return PageRouteBuilder(
@@ -60,49 +62,8 @@ class _LoginPageState extends State<LoginPage> {
           universityglobals.user = user;
           return UniHomeScreen();
         } else if (role == 'A') {
-          // showDialog(
-          //   context: context,
-          //   barrierDismissible: true,
-          //   builder: (BuildContext context) {
-          //     return AlertDialog(
-          //       contentPadding: EdgeInsets.all(0),
-          //       elevation: 20,
-          //       shape: RoundedRectangleBorder(
-          //           borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          //       content: Container(
-          //         height: 150,
-          //         width: 80,
-          //         decoration: BoxDecoration(
-          //           color: Color(0xff005fa8),
-          //           shape: BoxShape.rectangle,
-          //           borderRadius: BorderRadius.all(Radius.circular(10.0)),
-          //         ),
-          //         child: Center(
-          //           child: Column(
-          //             mainAxisSize: MainAxisSize.min,
-          //             mainAxisAlignment: MainAxisAlignment.center,
-          //             children: <Widget>[
-          //               Icon(
-          //                 Icons.check_circle_outline,
-          //                 size: 40,
-          //                 color: Colors.green,
-          //               ),
-          //               Padding(
-          //                 padding: EdgeInsets.only(top: 10),
-          //                 child: Text(
-          //                   'Hey, Admin!\nKindly use the web portal\nto access your dashboard',
-          //                   style: TextStyle(color: Colors.white, fontSize: 14),
-          //                   textAlign: TextAlign.center,
-          //                 ),
-          //               )
-          //             ],
-          //           ),
-          //         ),
-          //       ),
-          //     );
-          //   },
-          // );
-          return Container();
+          adminglobals.user = user;
+          return AdminHomeScreen();
         } else {
           return Container();
         }

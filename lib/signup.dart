@@ -40,7 +40,7 @@ class _SignUpPageState extends State<SignUpPage> {
             style: TextStyle(color: Colors.black87, fontSize: 12),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 60, left: 35, right: 35),
+            padding: EdgeInsets.only(top: 75, left: 40, right: 40),
             child: OutlineButton(
               borderSide: BorderSide(color: Color(0xff005fa8)),
               shape: RoundedRectangleBorder(
@@ -50,7 +50,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 padding: EdgeInsets.only(top: 15, bottom: 15),
                 child: Text(
                   "I'm a student",
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
                 ),
               ),
               onPressed: () {
@@ -61,7 +61,7 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 35, left: 35, right: 35),
+            padding: EdgeInsets.only(top: 35, left: 40, right: 40),
             child: OutlineButton(
               borderSide: BorderSide(color: Color(0xff005fa8)),
               shape: RoundedRectangleBorder(
@@ -71,7 +71,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 padding: EdgeInsets.only(top: 15, bottom: 15),
                 child: Text(
                   "I'm a counselor",
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
                 ),
               ),
               onPressed: () {
@@ -82,7 +82,7 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: 35, left: 35, right: 35),
+            padding: EdgeInsets.only(top: 35, left: 40, right: 40),
             child: OutlineButton(
               borderSide: BorderSide(color: Color(0xff005fa8)),
               shape: RoundedRectangleBorder(
@@ -92,7 +92,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 padding: EdgeInsets.only(top: 15, bottom: 15),
                 child: Text(
                   "I'm a representative",
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
                 ),
               ),
               onPressed: () {
