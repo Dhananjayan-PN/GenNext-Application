@@ -399,7 +399,7 @@ class _StudentProfileScreenState extends State<StudentProfileScreen> {
                   ListTile(
                     leading: CircleAvatar(
                       backgroundImage: CachedNetworkImageProvider(
-                        widget.student['student_profile_img'] ??
+                        widget.student['student_profile_url'] ??
                             'https://www.pngfind.com/pngs/m/610-6104451_image-placeholder-png-user-profile-placeholder-image-png.png',
                       ),
                       backgroundColor: Color(0xff005fa8),
