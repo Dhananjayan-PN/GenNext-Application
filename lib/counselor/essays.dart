@@ -249,6 +249,46 @@ class _StudentEssaysState extends State<StudentEssays> {
     }
   }
 
+  Future<void> editEssay(essay, String editedEssayContent) async {
+    String tok = await getToken();
+    final response = await http
+        .put(
+          dom + 'api/counselor/essays/editor/${essay['essay_id']}',
+          headers: {
+            HttpHeaders.authorizationHeader: "Token $tok",
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(
+            <String, dynamic>{
+              'essay_id': essay['essay_id'],
+              'essay_title': essay['essay_title'],
+              'essay_prompt': essay['essay_prompt'],
+              'counselor_essay_content': editedEssayContent,
+              'student_essay_content': essay['student_essay_content'] ??
+                  '[{\"attributes\":{\"align\":\"justify\"},\"insert\":\"\\n\"},{\"insert\":\"\\n\"}]',
+              'counselor_comments': essay['counselor_comments'],
+              'approval': essay['essay_approval_status']
+            },
+          ),
+        )
+        .timeout(Duration(seconds: 10));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      if (data['response'] == 'Essay Successfully edited!') {
+        Navigator.pop(context);
+        success(context,
+            'Your changes have been saved!\nThe student will be notified');
+        refresh();
+      } else {
+        Navigator.pop(context);
+        error(context);
+      }
+    } else {
+      Navigator.pop(context);
+      error(context);
+    }
+  }
+
   Widget buildEssayCard(essay) {
     return Card(
       margin: EdgeInsets.only(top: 7, left: 15, right: 15, bottom: 7),
@@ -260,70 +300,53 @@ class _StudentEssaysState extends State<StudentEssays> {
         color: Colors.transparent,
         child: ListTile(
           key: Key(essay['essay_id'].toString()),
-          title: Padding(
-            padding: EdgeInsets.only(top: 5),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(top: 5),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.65,
-                    child: Text(
-                      essay['essay_title'],
-                      style: TextStyle(color: Colors.black, fontSize: 17),
-                    ),
+          title: Text(
+            essay['essay_title'],
+            style: TextStyle(color: Colors.black, fontSize: 17),
+          ),
+          trailing: Padding(
+            padding: EdgeInsets.only(right: 10, bottom: 5),
+            child: ClipOval(
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  child: Icon(
+                    Icons.create,
+                    color: Colors.black.withOpacity(0.75),
                   ),
-                ),
-                Spacer(),
-                Padding(
-                  padding: EdgeInsets.only(top: 5, right: 10),
-                  child: ClipOval(
-                    child: Material(
-                      child: InkWell(
-                        child: Icon(
-                          Icons.create,
-                          color: Colors.black.withOpacity(0.75),
+                  onTap: () async {
+                    String studentString = essay['student_essay_content'] ==
+                                '' ||
+                            essay['student_essay_content'] == null
+                        ? '[{\"attributes\":{\"align\":\"justify\"},\"insert\":\"\\n\"},{\"insert\":\"\\n\"}]'
+                        : essay['student_essay_content'];
+                    String counselorString = essay['counselor_essay_content'] ==
+                                '' ||
+                            essay['counselor_essay_content'] == null
+                        ? '[{\"attributes\":{\"align\":\"justify\"},\"insert\":\"\\n\"},{\"insert\":\"\\n\"}]'
+                        : essay['counselor_essay_content'];
+                    final editedEssayContent = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EssayEditor(
+                          essayTitle: essay['essay_title'],
+                          essayPrompt: essay['essay_prompt'],
+                          studentEdit:
+                              QuillZefyrBijection.convertJSONToZefyrDelta(
+                                  '{\"ops\":' + studentString + '}'),
+                          counselorEdit:
+                              QuillZefyrBijection.convertJSONToZefyrDelta(
+                                  '{\"ops\":' + counselorString + '}'),
                         ),
-                        onTap: () async {
-                          String studentString = essay[
-                                          'student_essay_content'] ==
-                                      '' ||
-                                  essay['student_essay_content'] == null
-                              ? '[{\"attributes\":{\"align\":\"justify\"},\"insert\":\"\\n\"},{\"insert\":\"\\n\"}]'
-                              : essay['student_essay_content'];
-                          String counselorString = essay[
-                                          'counselor_essay_content'] ==
-                                      '' ||
-                                  essay['counselor_essay_content'] == null
-                              ? '[{\"attributes\":{\"align\":\"justify\"},\"insert\":\"\\n\"},{\"insert\":\"\\n\"}]'
-                              : essay['counselor_essay_content'];
-                          // ignore: unused_local_variable
-                          final editedEssayContent = await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => EssayEditor(
-                                essayTitle: essay['essay_title'],
-                                essayPrompt: essay['essay_prompt'],
-                                studentEdit:
-                                    QuillZefyrBijection.convertJSONToZefyrDelta(
-                                        '{\"ops\":' + studentString + '}'),
-                                counselorEdit:
-                                    QuillZefyrBijection.convertJSONToZefyrDelta(
-                                        '{\"ops\":' + counselorString + '}'),
-                              ),
-                            ),
-                          );
-                          // if (editedEssayContent != null) {
-                          //   editEssay(essay, editedEssayContent);
-                          //   loading(context);
-                          // }
-                        },
                       ),
-                    ),
-                  ),
+                    );
+                    if (editedEssayContent != null) {
+                      editEssay(essay, editedEssayContent);
+                      loading(context);
+                    }
+                  },
                 ),
-              ],
+              ),
             ),
           ),
           subtitle: Padding(
@@ -362,6 +385,12 @@ class _StudentEssaysState extends State<StudentEssays> {
         ),
       ),
     );
+  }
+
+  refresh() {
+    setState(() {
+      essayList = getEssays();
+    });
   }
 
   @override
