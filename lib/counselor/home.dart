@@ -477,6 +477,7 @@ class HomeAppBarState extends State<HomeAppBar> {
                       icon: Icon(Icons.notifications),
                       alignment: Alignment.bottomLeft,
                       onPressed: () async {
+                        // ignore: unused_local_variable
                         final data = await Navigator.push(
                           context,
                           MaterialPageRoute(
