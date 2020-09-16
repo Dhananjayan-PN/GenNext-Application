@@ -39,72 +39,68 @@ class BodyBuilderState extends State<BodyBuilder> {
         ),
       );
     } else {
-      return Center(
-        child: Column(
-          children: <Widget>[
-            ListView.builder(
-              padding: EdgeInsets.only(top: 5),
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: notifs.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: EdgeInsets.only(top: 3, left: 2, right: 2),
-                  child: Dismissible(
-                    key: Key('$index' + '$notifs[index]'),
-                    background: Container(
-                        child: Icon(Icons.delete), color: Colors.red[400]),
-                    child: Card(
-                      clipBehavior: Clip.antiAlias,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      elevation: 6,
-                      child: InkWell(
-                        splashColor: Color(0xff005fa8),
-                        onTap: () {},
-                        child: ListTile(
-                          title: Text(notifs[index]['alert'],
-                              style: TextStyle(fontWeight: FontWeight.w400)),
-                          subtitle: Padding(
-                            padding: EdgeInsets.only(left: 2, top: 3),
-                            child: Text(
-                              DateFormat.jm().format(
-                                      DateTime.parse(notifs[index]['timestamp'])
-                                          .toLocal()) +
-                                  ' ' +
-                                  DateFormat.yMMMd('en_US').format(
-                                      DateTime.parse(notifs[index]['timestamp'])
-                                          .toLocal()),
-                              style: TextStyle(fontWeight: FontWeight.w300),
-                            ),
-                          ),
-                        ),
+      return ListView.builder(
+        padding: EdgeInsets.only(top: 5),
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        itemCount: notifs.length + 1,
+        itemBuilder: (context, index) {
+          if (index == notifs.length) {
+            return Text(
+              '\nSwipe on a notification to dismiss',
+              style: TextStyle(fontSize: 11, color: Colors.black.withAlpha(99)),
+              textAlign: TextAlign.center,
+            );
+          }
+          return Padding(
+            padding: EdgeInsets.only(top: 3, left: 2, right: 2),
+            child: Dismissible(
+              key: Key('$index' + '$notifs[index]'),
+              background:
+                  Container(child: Icon(Icons.delete), color: Colors.red[400]),
+              child: Card(
+                clipBehavior: Clip.antiAlias,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                elevation: 6,
+                child: InkWell(
+                  splashColor: Color(0xff005fa8),
+                  onTap: () {},
+                  child: ListTile(
+                    title: Text(notifs[index]['alert'],
+                        style: TextStyle(fontWeight: FontWeight.w400)),
+                    subtitle: Padding(
+                      padding: EdgeInsets.only(left: 2, top: 3),
+                      child: Text(
+                        DateFormat.jm().format(
+                                DateTime.parse(notifs[index]['timestamp'])
+                                    .toLocal()) +
+                            ' ' +
+                            DateFormat.yMMMd('en_US').format(
+                                DateTime.parse(notifs[index]['timestamp'])
+                                    .toLocal()),
+                        style: TextStyle(fontWeight: FontWeight.w300),
                       ),
                     ),
-                    onDismissed: (direction) {
-                      notifs.removeAt(index);
-                      setState(() {});
-                      Scaffold.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            "Notification Dismissed",
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      );
-                    },
+                  ),
+                ),
+              ),
+              onDismissed: (direction) {
+                notifs.removeAt(index);
+                setState(() {});
+                Scaffold.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      "Notification Dismissed",
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                 );
               },
             ),
-            Text(
-              '\nSwipe on a notification to dismiss',
-              style: TextStyle(fontSize: 11, color: Colors.black.withAlpha(99)),
-              textAlign: TextAlign.center,
-            )
-          ],
-        ),
+          );
+        },
       );
     }
   }
