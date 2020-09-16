@@ -60,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
           return CounselorHomeScreen();
         } else if (role == 'R') {
           universityglobals.user = user;
-          return UniHomeScreen();
+          return UniLandingPage();
         } else if (role == 'A') {
           adminglobals.user = user;
           return AdminHomeScreen();

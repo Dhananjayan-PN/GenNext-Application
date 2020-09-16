@@ -573,3 +573,205 @@ class _UniHomeScreenState extends State<UniHomeScreen> {
     );
   }
 }
+
+class UniLandingPage extends StatefulWidget {
+  @override
+  _UniLandingPageState createState() => _UniLandingPageState();
+}
+
+class _UniLandingPageState extends State<UniLandingPage> {
+  GlobalKey<ScaffoldState> _scafKey = GlobalKey<ScaffoldState>();
+  Future status;
+
+  @override
+  void initState() {
+    super.initState();
+    status = getApprovalStatus();
+  }
+
+  Future<void> getApprovalStatus() async {
+    String tok = await getToken();
+    final response = await http.post(
+      dom + 'api/university/approval-status',
+      headers: {
+        HttpHeaders.authorizationHeader: 'Token $tok',
+      },
+    );
+    if (response.statusCode == 200) {
+      if (jsonDecode(response.body)['Response']) {
+        Navigator.of(context).pushAndRemoveUntil(
+          PageTransition(type: PageTransitionType.fade, child: UniHomeScreen()),
+          (Route<dynamic> route) => false,
+        );
+      } else {
+        return false;
+      }
+    } else {
+      throw ('error');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      key: _scafKey,
+      backgroundColor: Colors.white,
+      body: FutureBuilder(
+        future: status,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Icon(Icons.error);
+          }
+          if (snapshot.hasData) {
+            if (!snapshot.data) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 150, right: 20, left: 8),
+                    child: Image.asset(
+                      'images/CollegeGenieLogo-2.png',
+                      height: 175,
+                      width: 200,
+                      fit: BoxFit.contain,
+                      colorBlendMode: BlendMode.darken,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 50),
+                    child: Text(
+                      'Hey, ${universityglobals.user.firstname}!',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Colors.black87,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 25),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 8, left: 30, right: 30),
+                    child: Text(
+                      'Kindly wait as our team approves your\nsubmitted profile.\nWe greatly appreciate your patience.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.black54,
+                        fontWeight: FontWeight.w300,
+                        fontSize: 15,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 70, left: 100, right: 100),
+                    child: OutlineButton(
+                      borderSide: BorderSide(color: Color(0xff005fa8)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 10, bottom: 10),
+                        child: Text(
+                          'Sign Out',
+                          style: TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w400),
+                        ),
+                      ),
+                      onPressed: () async {
+                        try {
+                          final directory =
+                              await getApplicationDocumentsDirectory();
+                          final file = File('${directory.path}/tok.txt');
+                          file.delete();
+                          universityglobals.user = null;
+                        } catch (_) {
+                          print('Error');
+                        }
+                        Navigator.pop(context);
+                        Navigator.of(context).pushAndRemoveUntil(
+                            logoutRoute(), (route) => false);
+                      },
+                    ),
+                  ),
+                  Spacer(),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 60),
+                    child: Container(
+                      alignment: Alignment.topRight,
+                      height: 25,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(
+                            "Been waiting for too long? ",
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: Colors.black54,
+                              fontWeight: FontWeight.w300,
+                            ),
+                          ),
+                          Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              splashColor: Color(0xff005fa8),
+                              onTap: () async {
+                                if (await canLaunch(
+                                    'mailto:help@collegegenie.org')) {
+                                  launch('mailto:help@collegegenie.org');
+                                } else {
+                                  await ClipboardManager.copyToClipBoard(
+                                      'help@collegegenie.org');
+                                  _scafKey.currentState.showSnackBar(
+                                    SnackBar(
+                                        content: Text(
+                                      'Unable to open mail. Email copied to clipboard.',
+                                      textAlign: TextAlign.center,
+                                    )),
+                                  );
+                                }
+                              },
+                              child: Text(
+                                'Email Us',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Color(0xff005fa8),
+                                ),
+                                textAlign: TextAlign.left,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            }
+          }
+          return Padding(
+            padding: EdgeInsets.only(bottom: 90),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding:
+                      EdgeInsets.only(top: 45, right: 20, left: 8, bottom: 100),
+                  child: Image.asset(
+                    'images/CollegeGenieLogo-2.png',
+                    height: 165,
+                    width: 190,
+                    fit: BoxFit.contain,
+                    colorBlendMode: BlendMode.darken,
+                  ),
+                ),
+                SpinKitWave(
+                  color: Colors.black38,
+                  size: 40,
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}

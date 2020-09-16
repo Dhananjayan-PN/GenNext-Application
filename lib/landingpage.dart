@@ -68,7 +68,7 @@ class _LandingPageState extends State<LandingPage> {
           return CounselorHomeScreen();
         } else if (role == 'R') {
           universityglobals.user = user;
-          return UniHomeScreen();
+          return UniLandingPage();
         } else if (role == 'A') {
           return LoginPage();
         } else {
