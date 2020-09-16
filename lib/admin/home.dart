@@ -52,6 +52,25 @@ class AdminHomeScreen extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.only(top: 10, bottom: 10),
                 child: Text(
+                  'Launch Here',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
+                ),
+              ),
+              onPressed: () async {
+                launch('https://collegegenie.org');
+              },
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 10, left: 100, right: 100),
+            child: OutlineButton(
+              borderSide: BorderSide(color: Color(0xff005fa8)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Padding(
+                padding: EdgeInsets.only(top: 10, bottom: 10),
+                child: Text(
                   'Sign Out',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
                 ),
