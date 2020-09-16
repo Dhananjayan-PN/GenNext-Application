@@ -86,7 +86,6 @@ class _StudentEngagementScreenState extends State<StudentEngagementScreen> {
       child: Material(
         color: Colors.transparent,
         child: ListTile(
-          key: Key(student['student_id'].toString()),
           leading: CircleAvatar(
             radius: 25,
             backgroundImage: CachedNetworkImageProvider(student[
@@ -99,7 +98,7 @@ class _StudentEngagementScreenState extends State<StudentEngagementScreen> {
             child: Text('${student['student_name']}'),
           ),
           subtitle: Text(
-            '@' + student['student_username'],
+            '@' + student['username'],
             style: TextStyle(
               color: Color(0xff005fa8),
             ),
