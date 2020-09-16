@@ -498,12 +498,12 @@ class HomeAppBarState extends State<HomeAppBar> {
                           minHeight: 14,
                         ),
                         child: Padding(
-                          padding: EdgeInsets.only(top: 1),
+                          padding: EdgeInsets.only(right: 0.01),
                           child: Text(
                             snapshot.data.length.toString(),
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 8,
+                              fontSize: 9.5,
                             ),
                             textAlign: TextAlign.center,
                           ),

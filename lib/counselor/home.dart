@@ -416,6 +416,12 @@ class HomeAppBarState extends State<HomeAppBar> {
     }
   }
 
+  refreshNotifications() {
+    setState(() {
+      notifications = getNotifications();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -468,17 +474,20 @@ class HomeAppBarState extends State<HomeAppBar> {
                 child: Stack(
                   children: <Widget>[
                     IconButton(
-                        icon: Icon(Icons.notifications),
-                        alignment: Alignment.bottomLeft,
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => NotificationScreen(
-                                      notifications: snapshot.data,
-                                    )),
-                          );
-                        }),
+                      icon: Icon(Icons.notifications),
+                      alignment: Alignment.bottomLeft,
+                      onPressed: () async {
+                        final data = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => NotificationScreen(
+                              notifications: snapshot.data,
+                            ),
+                          ),
+                        );
+                        refreshNotifications();
+                      },
+                    ),
                     Positioned(
                       right: 12.5,
                       top: 12.5,
@@ -493,12 +502,12 @@ class HomeAppBarState extends State<HomeAppBar> {
                           minHeight: 14,
                         ),
                         child: Padding(
-                          padding: EdgeInsets.only(top: 1),
+                          padding: EdgeInsets.only(right: 0.01),
                           child: Text(
                             snapshot.data.length.toString(),
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 8,
+                              fontSize: 9.5,
                             ),
                             textAlign: TextAlign.center,
                           ),

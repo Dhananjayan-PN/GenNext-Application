@@ -57,7 +57,8 @@ class _RepProfileScreenState extends State<RepProfileScreen> {
                     style: TextStyle(fontSize: 17),
                   ),
                 ),
-                subtitle: Text('Student'),
+                subtitle: Text('University Representative'),
+                /*
                 trailing: Padding(
                   padding: EdgeInsets.all(0),
                   child: IconButton(
@@ -68,6 +69,7 @@ class _RepProfileScreenState extends State<RepProfileScreen> {
                     onPressed: () {},
                   ),
                 ),
+                */
               ),
               Divider(
                 thickness: 1,
@@ -97,20 +99,6 @@ class _RepProfileScreenState extends State<RepProfileScreen> {
                     ),
                     Text(
                       universityglobals.user.email,
-                      style: TextStyle(color: Colors.black54),
-                    )
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 15, left: 20),
-                child: Row(
-                  children: <Widget>[
-                    Text(
-                      'Date of Birth: ',
-                    ),
-                    Text(
-                      universityglobals.user.dob,
                       style: TextStyle(color: Colors.black54),
                     )
                   ],
