@@ -1,3 +1,4 @@
+import 'student-signup.dart';
 import 'imports.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -53,10 +54,15 @@ class _SignUpPageState extends State<SignUpPage> {
                   style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
                 ),
               ),
-              onPressed: () {
-                launch(
-                    'https://collegegenie.org/authenticate/student-registration',
-                    enableJavaScript: true);
+              onPressed: () async {
+                // ignore: unused_local_variable
+                final data = await Navigator.push(
+                  context,
+                  PageTransition(
+                    type: PageTransitionType.downToUp,
+                    child: StudentSignUpPage(),
+                  ),
+                );
               },
             ),
           ),
