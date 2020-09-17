@@ -453,7 +453,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
     });
   }
 
-  Widget buildCard(uni, bool starred, bool list) {
+  Widget buildCard(uni, bool starred, bool list, bool starredPage) {
     if (starred != null) {
       uni['favorited_status'] = starred;
     }
@@ -549,7 +549,7 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
           ),
         );
     return Hero(
-      tag: starred
+      tag: starredPage
           ? uni['university_id'].toString() + 'starred'
           : uni['university_id'].toString(),
       child: Card(
@@ -668,8 +668,11 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                       for (var j = 0; j < snapshot.data[i].length; j++) {
                         subItems.add(
                           ChecklistItemView(
-                            title: buildCard(snapshot.data[i][j],
-                                snapshot.data[i][j]['favorited_status'], true),
+                            title: buildCard(
+                                snapshot.data[i][j],
+                                snapshot.data[i][j]['favorited_status'],
+                                true,
+                                false),
                             onStartDragItem: (listIndex, itemIndex, state) {},
                             canDrag: true,
                             onDropItem: (oldListIndex, oldItemIndex, listIndex,
@@ -855,12 +858,20 @@ class MyUniversitiesScreenState extends State<MyUniversitiesScreen> {
                               }
                               return filter == null || filter == ""
                                   ? buildCard(
-                                      snapshot.data[index - 1], true, false)
+                                      snapshot.data[index - 1],
+                                      true,
+                                      snapshot.data[index - 1]
+                                          ['in_college_list'],
+                                      true)
                                   : snapshot.data[index - 1]['university_name']
                                           .toLowerCase()
                                           .contains(filter)
                                       ? buildCard(
-                                          snapshot.data[index - 1], true, false)
+                                          snapshot.data[index - 1],
+                                          true,
+                                          snapshot.data[index - 1]
+                                              ['in_college_list'],
+                                          true)
                                       : Container();
                             }),
                       );
