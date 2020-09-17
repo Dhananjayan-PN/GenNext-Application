@@ -55,7 +55,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 subtitle: Text('Student'),
-                trailing: Padding(
+                /*trailing: Padding(
                   padding: EdgeInsets.all(0),
                   child: IconButton(
                     icon: Icon(
@@ -64,7 +64,7 @@ class ProfileScreenState extends State<ProfileScreen> {
                     ),
                     onPressed: () {},
                   ),
-                ),
+                ),*/
               ),
               Divider(
                 thickness: 1,

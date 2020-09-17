@@ -55,13 +55,13 @@ class ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 subtitle: Text('Counselor'),
-                trailing: Padding(
+                /*trailing: Padding(
                   padding: EdgeInsets.all(0),
                   child: IconButton(
                     icon: Icon(Icons.edit, color: Color(0xff005fa8)),
                     onPressed: () {},
                   ),
-                ),
+                ),*/
               ),
               Divider(
                 thickness: 1,
@@ -91,20 +91,6 @@ class ProfileScreenState extends State<ProfileScreen> {
                     ),
                     Text(
                       counselorglobals.user.email,
-                      style: TextStyle(color: Colors.black54),
-                    )
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 15, left: 20),
-                child: Row(
-                  children: <Widget>[
-                    Text(
-                      'Date of Birth: ',
-                    ),
-                    Text(
-                      counselorglobals.user.dob,
                       style: TextStyle(color: Colors.black54),
                     )
                   ],
