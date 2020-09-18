@@ -117,6 +117,12 @@ class _LoginPageState extends State<LoginPage> {
             error(context);
           }
         }
+      }
+      if (result.statusCode == 521 || result.statusCode == 500) {
+        username.clear();
+        password.clear();
+        Navigator.pop(context);
+        error(context);
       } else {
         username.clear();
         password.clear();
@@ -214,6 +220,7 @@ class _LoginPageState extends State<LoginPage> {
             height: 150,
             width: 80,
             decoration: BoxDecoration(
+              color: Color(0xff005fa8),
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.all(Radius.circular(10.0)),
             ),
@@ -226,7 +233,7 @@ class _LoginPageState extends State<LoginPage> {
                     height: 50,
                     width: 50,
                     child: SpinKitWave(
-                      color: Colors.grey.withOpacity(0.8),
+                      color: Colors.white,
                       size: 25,
                     ),
                   ),
@@ -234,7 +241,7 @@ class _LoginPageState extends State<LoginPage> {
                     padding: EdgeInsets.only(top: 23.0),
                     child: Text(
                       "Creating your account",
-                      style: TextStyle(color: Colors.black, fontSize: 15),
+                      style: TextStyle(color: Colors.white, fontSize: 15),
                     ),
                   ),
                 ],
@@ -262,6 +269,7 @@ class _LoginPageState extends State<LoginPage> {
             height: 150,
             width: 80,
             decoration: BoxDecoration(
+              color: Color(0xff005fa8),
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.all(Radius.circular(10.0)),
             ),
@@ -273,14 +281,14 @@ class _LoginPageState extends State<LoginPage> {
                   Icon(
                     Icons.error_outline,
                     size: 40,
-                    color: Colors.red.withOpacity(0.9),
+                    color: Colors.red,
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 10),
                     child: Text(
                       message ??
                           'Something went wrong.\nCheck your connection and try again later.',
-                      style: TextStyle(color: Colors.black, fontSize: 12),
+                      style: TextStyle(color: Colors.white, fontSize: 12),
                       textAlign: TextAlign.center,
                     ),
                   )
@@ -307,6 +315,7 @@ class _LoginPageState extends State<LoginPage> {
             height: 150,
             width: 80,
             decoration: BoxDecoration(
+              color: Color(0xff005fa8),
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.all(Radius.circular(10.0)),
             ),
@@ -324,7 +333,7 @@ class _LoginPageState extends State<LoginPage> {
                     padding: EdgeInsets.only(top: 10),
                     child: Text(
                       message,
-                      style: TextStyle(color: Colors.black, fontSize: 14),
+                      style: TextStyle(color: Colors.white, fontSize: 14),
                       textAlign: TextAlign.center,
                     ),
                   )
