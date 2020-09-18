@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'landingpage.dart';
 import 'package:dio/dio.dart' as dio;
 import 'imports.dart';
@@ -117,8 +119,7 @@ class _LoginPageState extends State<LoginPage> {
             error(context);
           }
         }
-      }
-      if (result.statusCode == 521 || result.statusCode == 500) {
+      } else if (result.statusCode == 521 || result.statusCode == 500) {
         username.clear();
         password.clear();
         Navigator.pop(context);
@@ -156,6 +157,23 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> registerStudent(List data) async {
+    print(data[0]);
+    print(data[1]);
+    print(data[2]);
+    print(data[3]);
+    print(data[4]);
+    print(data[5]);
+    print(data[6]);
+    print(data[7]);
+    print(data[8]);
+    print(data[9]);
+    print(data[10]);
+    print(data[11]);
+    print(data[12]);
+    print(data[13]);
+    print(data[14]);
+    print(data[15]);
+    print(data[16]);
     // try {
     var dioRequest = dio.Dio();
     dioRequest.options.headers = {
@@ -165,14 +183,13 @@ class _LoginPageState extends State<LoginPage> {
       'first_name': data[0],
       'last_name': data[1],
       'password': data[2],
-      'confirm_pass': data[3],
+      'confirm_password': data[3],
       'username': data[4],
       'email': data[5],
       'country': data[6],
       'interests': data[7],
-      'student_interests': data[7],
       'countries': data[8],
-      'grade': 0,
+      'grade': 11,
       'dob': data[10],
       'school': data[11],
       'major': data[12],
@@ -189,7 +206,7 @@ class _LoginPageState extends State<LoginPage> {
       domain + 'authenticate/api-student-registration/',
       data: formData,
     );
-    print(response.data);
+    log(response.data);
     if (response.statusCode == 200) {
       if (response.data == 'User successfully created.') {
         Navigator.pop(context);
