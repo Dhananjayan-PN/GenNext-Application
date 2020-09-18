@@ -243,7 +243,7 @@ class _LoginPageState extends State<LoginPage> {
                   Padding(
                     padding: EdgeInsets.only(top: 23.0),
                     child: Text(
-                      "Creating your account",
+                      "Creating your account...",
                       style: TextStyle(color: Colors.white, fontSize: 15),
                     ),
                   ),
