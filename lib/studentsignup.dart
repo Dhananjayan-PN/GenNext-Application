@@ -1275,23 +1275,22 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
                                       countries[_countryprefindexes[i]].value);
                                 }
                               }
-                              print(_firstname);
-                              print(_lastname);
-                              print(_username);
-                              print(_email);
-                              print(_dob);
-                              print(_school);
-                              print(_country);
-                              print(_password);
-                              print(_confpassword);
-                              print(_major);
-                              print(_degreelevel);
-                              print(_interests);
-                              print(_countrypref);
-                              print(_countryprefindexes);
-                              print(_collegetownpref);
-                              print(_budgetamount);
-                              print(_research);
+                              // print(_firstname);
+                              // print(_lastname);
+                              // print(_username);
+                              // print(_email);
+                              // print(_dob);
+                              // print(_school);
+                              // print(_country);
+                              // print(_password);
+                              // print(_confpassword);
+                              // print(_major);
+                              // print(_degreelevel);
+                              // print(_interests);
+                              // print(_countrypref);
+                              // print(_collegetownpref);
+                              // print(_budgetamount);
+                              // print(_research);
                               List data = [
                                 _firstname,
                                 _lastname,
