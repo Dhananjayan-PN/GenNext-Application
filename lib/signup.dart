@@ -1,4 +1,4 @@
-import 'student-signup.dart';
+import 'studentsignup.dart';
 import 'imports.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -7,6 +7,11 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,7 +60,6 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
               ),
               onPressed: () async {
-                // ignore: unused_local_variable
                 final data = await Navigator.push(
                   context,
                   PageTransition(
@@ -63,6 +67,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     child: StudentSignUpPage(),
                   ),
                 );
+                Navigator.pop(context, data);
               },
             ),
           ),

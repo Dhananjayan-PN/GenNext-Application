@@ -1,8 +1,6 @@
 import 'imports.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
-//import 'package:back_button_interceptor/back_button_interceptor.dart'; //will be utilised in production
-//import 'student/home.dart';
 
 class StudentSignUpPage extends StatefulWidget {
   @override
@@ -11,12 +9,6 @@ class StudentSignUpPage extends StatefulWidget {
 
 class StudentSignUpPageState extends State<StudentSignUpPage>
     with SingleTickerProviderStateMixin {
-  /*
-  bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
-    return true;
-  } */
-  //remove ^^^ comment in production
-
   AnimationController _controller;
   Animation _animation1;
   Animation _animation2;
@@ -38,6 +30,7 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
   int _selectedIndex = 0;
   int _radioValue = -1;
 
+  File _profilepic;
   String _firstname;
   String _lastname;
   String _username;
@@ -60,7 +53,7 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
   @override
   void initState() {
     super.initState();
-    //BackButtonInterceptor.add(myInterceptor);
+    BackButtonInterceptor.add(myInterceptor);
     _fetchCountries = fetchCountries();
     _isOnTop = false;
     _scrollController = ScrollController();
@@ -68,11 +61,11 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
         AnimationController(vsync: this, duration: Duration(seconds: 6));
     _animation1 = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.0, 0.3, curve: Curves.fastOutSlowIn),
+      curve: Interval(0.0, 0.2, curve: Curves.fastOutSlowIn),
     );
     _animation2 = CurvedAnimation(
       parent: _controller,
-      curve: Interval(0.3, 0.4, curve: Curves.fastOutSlowIn),
+      curve: Interval(0.2, 0.4, curve: Curves.fastOutSlowIn),
     );
     _animation3 = CurvedAnimation(
       parent: _controller,
@@ -91,18 +84,14 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
 
   @override
   dispose() {
-    //BackButtonInterceptor.remove(myInterceptor);
+    BackButtonInterceptor.remove(myInterceptor);
     _scrollController.dispose();
     _controller.dispose();
     super.dispose();
   }
 
-  void registerUser() {
-    //talk to API and register user
-  }
-
-  void updateUserInfo() {
-    //talk to api and update personal profile information
+  bool myInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
+    return true;
   }
 
   _scrollToTop() {
@@ -251,7 +240,11 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
               opacity: _animation1,
               child: Padding(
                 padding: EdgeInsets.only(top: 50),
-                child: Icon(Icons.person, size: 55, color: Color(0xff005fa8)),
+                child: Icon(
+                  Icons.person,
+                  size: 55,
+                  color: Color(0xff005fa8),
+                ),
               ),
             ),
             FadeTransition(
@@ -274,10 +267,57 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
                 key: registerFormKey,
                 autovalidate: false,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.only(top: 30, left: 20, right: 50),
+                      padding: EdgeInsets.only(top: 40, right: 10),
+                      child: Stack(
+                        children: <Widget>[
+                          CircleAvatar(
+                            backgroundImage: _profilepic != null
+                                ? FileImage(_profilepic)
+                                : CachedNetworkImageProvider(
+                                    "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcRcmHDwB_4wghy1PoY5WOkxHK4wf4k3MJ-17g&usqp=CAU",
+                                  ),
+                            backgroundColor: Colors.white,
+                            radius: 45,
+                          ),
+                          ClipOval(
+                            child: Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                child: Container(
+                                  height: 90,
+                                  width: 90,
+                                  color: Colors.black.withOpacity(0.35),
+                                  child: Center(
+                                      child: Text(
+                                    'EDIT',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  )),
+                                ),
+                                onTap: () async {
+                                  File image = await FilePicker.getFile(
+                                    type: FileType.image,
+                                  );
+                                  if (image != null) {
+                                    setState(() {
+                                      _profilepic = image;
+                                    });
+                                  }
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 10, left: 20, right: 50),
                       child: TextFormField(
                         cursorColor: Color(0xff005fa8),
                         validator: (value) {
@@ -513,6 +553,8 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
                         obscureText: true,
                         decoration: InputDecoration(
                           icon: Icon(Icons.vpn_key),
+                          helperText:
+                              "Needless to say, don't forget this either",
                           labelText: 'Password',
                           labelStyle: TextStyle(
                             color: Colors.black54,
@@ -565,19 +607,27 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
                         onPressed: () {
                           setState(() {
                             if (registerFormKey.currentState.validate()) {
-                              if (_country != null) {
+                              if (_country != null && _profilepic != null) {
                                 print('valid');
-                                //registerUser();
                                 _controller.reset();
                                 _controller.duration = Duration(seconds: 8);
                                 _controller.forward();
                                 _selectedIndex += 1;
                                 _scrollToTop();
-                              } else {
+                              } else if (_country == null) {
                                 _scaffoldKey.currentState.showSnackBar(
                                   SnackBar(
                                     content: Text(
                                       'Selection of a country is required to proceed',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                _scaffoldKey.currentState.showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      "It'll be wonderful to have your profile pic",
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -624,8 +674,11 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
               opacity: _animation1,
               child: Padding(
                 padding: EdgeInsets.only(top: 50),
-                child: Icon(Icons.bubble_chart,
-                    size: 55, color: Color(0xff005fa8)),
+                child: Icon(
+                  Icons.bubble_chart,
+                  size: 55,
+                  color: Color(0xff005fa8),
+                ),
               ),
             ),
             FadeTransition(
@@ -791,9 +844,21 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
                       padding: EdgeInsets.only(top: 0, left: 48, right: 50),
                       child: TextFormField(
                         validator: (value) {
-                          return value.split(',').length < 3
-                              ? 'Add at least 3 interests'
-                              : null;
+                          if (value.split(',').length < 3) {
+                            return 'Add at least 3 interests';
+                          }
+                          for (int i = 0; i < value.split(',').length; i++) {
+                            if (value.split(',')[i] == '' ||
+                                value.split(',')[i] == ' ') {
+                              return 'Do not enter empty values';
+                            }
+                            if (value.split(',')[i].length > 1) {
+                              if (value.split(',')[i][1] == ' ') {
+                                return 'Do not enter empty values';
+                              }
+                            }
+                          }
+                          return null;
                         },
                         onSaved: (value) {
                           _interests = value.split(",");
@@ -894,13 +959,23 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
                         onPressed: () {
                           setState(() {
                             if (signupformKey1.currentState.validate()) {
-                              _controller.reset();
-                              _controller.duration = Duration(seconds: 8);
-                              _controller.forward();
-                              print('valid');
-                              //updateUser();
-                              _selectedIndex += 1;
-                              _scrollToTop();
+                              if (_research != null) {
+                                _controller.reset();
+                                _controller.duration = Duration(seconds: 8);
+                                _controller.forward();
+                                print('valid');
+                                _selectedIndex += 1;
+                                _scrollToTop();
+                              } else {
+                                _scaffoldKey.currentState.showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Pick an option for interest in research',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                );
+                              }
                             }
                           });
                         },
@@ -941,8 +1016,11 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
               opacity: _animation1,
               child: Padding(
                 padding: EdgeInsets.only(top: 50),
-                child: Icon(Icons.account_balance,
-                    size: 55, color: Color(0xff005fa8)),
+                child: Icon(
+                  Icons.account_balance,
+                  size: 55,
+                  color: Color(0xff005fa8),
+                ),
               ),
             ),
             FadeTransition(
@@ -1014,7 +1092,7 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
                                 style: TextStyle(
                                     color: Colors.black54, fontSize: 16),
                               ),
-                              searchHint: "Select countries",
+                              searchHint: "Search Countries",
                               onChanged: (value) {
                                 setState(() {
                                   _countryprefindexes = value;
@@ -1026,8 +1104,7 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
                                     : "Save without selection");
                               },
                               isExpanded: true,
-                              validator: (value) =>
-                                  value == null ? 'Select at least one' : null,
+                              validator: (value) => null,
                             );
                           } else if (snapshot.hasError) {
                             return Text("${snapshot.error}");
@@ -1106,7 +1183,7 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
                             });
                           },
                           validator: (value) {
-                            return value == null ? 'Choose at least one' : null;
+                            return value == null ? 'Select at least one' : null;
                           },
                         ),
                       ),
@@ -1128,13 +1205,15 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
                         padding: EdgeInsets.only(right: 50, left: 40),
                         child: TextFormField(
                           validator: (value) {
-                            return null;
-                          },
-                          onSaved: (value) {
-                            _budgetamount = int.parse(value);
+                            if (_budgetamount == null) {}
+                            return _budgetamount == null
+                                ? 'Enter a budget amount'
+                                : null;
+                            ;
                           },
                           onChanged: (value) {
-                            _budgetamount = int.parse(value);
+                            _budgetamount =
+                                value == '' ? null : int.parse(value);
                           },
                           style: TextStyle(
                             color: Colors.black,
@@ -1213,13 +1292,26 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
                               print(_collegetownpref);
                               print(_budgetamount);
                               print(_research);
-
-                              //updateUser();
-                              /*Navigator.pushAndRemoveUntil(
-                                  context,
-                                  PageTransition(type: PageTransitionType.fade, child: StudentHomeScreen()),
-                                  (Route<dynamic> route) => false,
-                                );*/
+                              List data = [
+                                _firstname,
+                                _lastname,
+                                _password,
+                                _confpassword,
+                                _username,
+                                _email,
+                                _country,
+                                _interests,
+                                _countrypref,
+                                _profilepic,
+                                _dob,
+                                _school,
+                                _major,
+                                _degreelevel,
+                                _research,
+                                _budgetamount,
+                                _collegetownpref
+                              ];
+                              Navigator.pop(context, data);
                             }
                           });
                         },
@@ -1251,7 +1343,6 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
         ),
       ),
     ];
-
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         systemNavigationBarIconBrightness: Brightness.dark,

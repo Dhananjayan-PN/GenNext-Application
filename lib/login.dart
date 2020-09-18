@@ -1,4 +1,5 @@
 import 'landingpage.dart';
+import 'package:dio/dio.dart' as dio;
 import 'imports.dart';
 import 'package:http/http.dart' as http;
 import 'student/home.dart';
@@ -113,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
             username.clear();
             password.clear();
             Navigator.pop(context);
-            _error();
+            error(context);
           }
         }
       } else {
@@ -126,7 +127,7 @@ class _LoginPageState extends State<LoginPage> {
       username.clear();
       password.clear();
       Navigator.pop(context);
-      _error();
+      error(context);
     }
   }
 
@@ -140,12 +141,200 @@ class _LoginPageState extends State<LoginPage> {
           username.clear();
           password.clear();
           Navigator.pop(context);
-          _error();
+          error(context);
         });
       });
     } else {
       print("Form Is Invalid");
     }
+  }
+
+  Future<void> registerStudent(List data) async {
+    try {
+      var dioRequest = dio.Dio();
+      dioRequest.options.headers = {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      };
+      var formData = dio.FormData.fromMap({
+        'first_name': data[0],
+        'last_name': data[1],
+        'password': data[2],
+        'confirm_pass': data[3],
+        'username': data[4],
+        'email': data[5],
+        'country': data[6],
+        'interests': data[7],
+        'countries': data[8],
+        'dob': data[10],
+        'school': data[11],
+        'major': data[12],
+        'degree_level': data[13],
+        'interested_in_research': data[14],
+        'budget': data[15],
+        'location_preferance': data[16],
+      });
+      var file = await dio.MultipartFile.fromFile(
+        data[9].path,
+      );
+      formData.files.add(MapEntry('profile_image', file));
+      var response = await dioRequest.post(
+        domain + 'authenticate/api-student-registration/',
+        data: formData,
+      );
+      if (response.statusCode == 200) {
+        if (response.data == 'User successfully created.') {
+          Navigator.pop(context);
+          success(context,
+              'Account successfully created!\nSign in with your credentials');
+        } else {
+          Navigator.pop(context);
+          error(context);
+        }
+      } else {
+        Navigator.pop(context);
+        error(context);
+      }
+    } catch (e) {
+      Navigator.pop(context);
+      error(context);
+    }
+  }
+
+  loading(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(0),
+          elevation: 20,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          content: Container(
+            height: 150,
+            width: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            ),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    height: 50,
+                    width: 50,
+                    child: SpinKitWave(
+                      color: Colors.grey.withOpacity(0.8),
+                      size: 25,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 23.0),
+                    child: Text(
+                      "Creating your account",
+                      style: TextStyle(color: Colors.black, fontSize: 15),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  error(BuildContext context,
+      [String message =
+          'Something went wrong.\nCheck your connection and try again later.']) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(0),
+          elevation: 20,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          content: Container(
+            height: 150,
+            width: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            ),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(
+                    Icons.error_outline,
+                    size: 40,
+                    color: Colors.red.withOpacity(0.9),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Text(
+                      message ??
+                          'Something went wrong.\nCheck your connection and try again later.',
+                      style: TextStyle(color: Colors.black, fontSize: 12),
+                      textAlign: TextAlign.center,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  success(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(0),
+          elevation: 20,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          content: Container(
+            height: 150,
+            width: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            ),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(
+                    Icons.check_circle_outline,
+                    size: 40,
+                    color: Colors.green,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Text(
+                      message,
+                      style: TextStyle(color: Colors.black, fontSize: 14),
+                      textAlign: TextAlign.center,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   _signingIn() {
@@ -186,51 +375,6 @@ class _LoginPageState extends State<LoginPage> {
                       style: TextStyle(color: Colors.white, fontSize: 15),
                     ),
                   ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  _error() {
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          contentPadding: EdgeInsets.all(0),
-          elevation: 20,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(10.0))),
-          content: Container(
-            height: 150,
-            width: 80,
-            decoration: BoxDecoration(
-              color: Color(0xff005fa8),
-              shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.all(Radius.circular(10.0)),
-            ),
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Icon(
-                    Icons.error_outline,
-                    size: 40,
-                    color: Colors.red,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Text(
-                      'Something went wrong.\nCheck your connection and try again later.',
-                      style: TextStyle(color: Colors.white, fontSize: 12),
-                      textAlign: TextAlign.center,
-                    ),
-                  )
                 ],
               ),
             ),
@@ -474,7 +618,6 @@ class _LoginPageState extends State<LoginPage> {
                               splashColor: Color(0xff005fa8),
                               onTap: () async {
                                 formKey.currentState.reset();
-                                // ignore: unused_local_variable
                                 final data = await Navigator.push(
                                   context,
                                   PageTransition(
@@ -482,6 +625,10 @@ class _LoginPageState extends State<LoginPage> {
                                     child: SignUpPage(),
                                   ),
                                 );
+                                if (data != null) {
+                                  registerStudent(data);
+                                  loading(context);
+                                }
                               },
                               child: Text(
                                 'Sign Up',
