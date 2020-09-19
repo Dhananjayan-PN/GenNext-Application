@@ -189,7 +189,7 @@ class _LoginPageState extends State<LoginPage> {
       'country': data[6],
       'interests': data[7].toString(),
       'countries': data[8].toString(),
-      'grade': 11,
+      'grade': data[17] ?? 0,
       'dob': data[10],
       'school': data[11],
       'major': data[12],

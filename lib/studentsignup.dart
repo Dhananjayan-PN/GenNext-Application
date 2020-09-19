@@ -1,3 +1,5 @@
+import 'package:gennextapp/landingpage.dart';
+
 import 'imports.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
@@ -41,6 +43,7 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
   String _confpassword;
   String _degreelevel;
   String _school;
+  int _grade;
   String _major;
   List<String> _interests;
   bool _research;
@@ -48,7 +51,9 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
   String _collegetownpref;
   List<int> _countryprefindexes = [];
   bool isChecked = false;
+  bool usernameCheck = false;
   int _budgetamount;
+  Widget usernameIcon;
 
   @override
   void initState() {
@@ -122,6 +127,14 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
       return json.decode(result.body);
     } else {
       throw Exception('Failed to load countries');
+    }
+  }
+
+  Future<bool> checkUsername(String username) async {
+    var response =
+        await http.get(domain + 'authenticate/api-username-lookup/$username');
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body)['Response'];
     }
   }
 
@@ -361,17 +374,69 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
                       padding: EdgeInsets.only(top: 30, left: 60, right: 50),
                       child: TextFormField(
                         cursorColor: Color(0xff005fa8),
+                        autovalidate: true,
                         validator: (value) {
-                          return value.isEmpty
-                              ? 'Enter desired username'
-                              : null;
+                          if (value.isEmpty) {
+                            return 'Enter desired username';
+                          } else {
+                            if (!usernameCheck) {
+                              return 'Username already taken';
+                            }
+                          }
+                          return null;
                         },
                         onSaved: (value) => _username = value,
-                        onChanged: (value) => _username = value,
+                        onChanged: (value) async {
+                          if (value.isEmpty) {
+                            _username = value;
+                          } else {
+                            _username = value;
+                            setState(() {
+                              usernameIcon = Padding(
+                                padding: EdgeInsets.only(top: 8, right: 5),
+                                child: SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2.0,
+                                  ),
+                                ),
+                              );
+                            });
+                            if (await checkUsername(value)) {
+                              setState(() {
+                                usernameCheck = true;
+                                usernameIcon = Padding(
+                                  padding: EdgeInsets.only(top: 8, right: 5),
+                                  child: Icon(
+                                    Icons.check,
+                                    size: 25,
+                                    color: Colors.green,
+                                  ),
+                                );
+                              });
+                            } else {
+                              setState(() {
+                                usernameCheck = false;
+                                usernameIcon = Padding(
+                                  padding: EdgeInsets.only(top: 8, right: 5),
+                                  child: Icon(
+                                    Icons.error,
+                                    size: 25,
+                                    color: Colors.red,
+                                  ),
+                                );
+                              });
+                            }
+                          }
+                        },
                         style: TextStyle(
                           color: Colors.black,
                         ),
                         decoration: InputDecoration(
+                          suffixIcon: usernameIcon,
+                          suffixIconConstraints:
+                              BoxConstraints(maxHeight: 30, maxWidth: 100),
                           helperText:
                               "Don't forget, you'll need this to sign in",
                           labelText: "Username",
@@ -463,7 +528,7 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
                         cursorColor: Color(0xff005fa8),
                         validator: (value) {
                           return value.isEmpty
-                              ? 'Enter name of last attended school'
+                              ? 'Enter name of last attended institution'
                               : null;
                         },
                         onSaved: (value) => _school = value,
@@ -474,6 +539,28 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
                         decoration: InputDecoration(
                           icon: Icon(Icons.school),
                           labelText: "School",
+                          labelStyle: TextStyle(
+                            color: Colors.black54,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          top: 22, right: 50, left: 60, bottom: 10),
+                      child: TextFormField(
+                        validator: (value) {
+                          return null;
+                        },
+                        onChanged: (value) {
+                          _grade = value == '' ? null : int.parse(value);
+                        },
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          labelText: "Grade (Optional)",
                           labelStyle: TextStyle(
                             color: Colors.black54,
                           ),
@@ -1308,7 +1395,8 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
                                 _degreelevel,
                                 _research,
                                 _budgetamount,
-                                _collegetownpref
+                                _collegetownpref,
+                                _grade
                               ];
                               Navigator.pop(context, data);
                             }
