@@ -1302,7 +1302,7 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
                                 _interests,
                                 _countrypref,
                                 _profilepic,
-                                _dob,
+                                _dob.toIso8601String().substring(0, 10),
                                 _school,
                                 _major,
                                 _degreelevel,

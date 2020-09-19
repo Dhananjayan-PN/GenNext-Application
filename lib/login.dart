@@ -183,32 +183,37 @@ class _LoginPageState extends State<LoginPage> {
       'first_name': data[0],
       'last_name': data[1],
       'password': data[2],
-      'confirm_password': data[3],
+      'confirm_pass': data[3],
       'username': data[4],
       'email': data[5],
       'country': data[6],
-      'interests': data[7],
-      'countries': data[8],
+      'interests': data[7].toString(),
+      'countries': data[8].toString(),
       'grade': 11,
       'dob': data[10],
       'school': data[11],
       'major': data[12],
       'degree_level': data[13],
       'interested_in_research': data[14],
-      'budget': data[15],
+      'budget': data[15] ?? 0,
       'location_preferance': data[16],
     });
     var file = await dio.MultipartFile.fromFile(
       data[9].path,
     );
     formData.files.add(MapEntry('profile_image', file));
-    var response = await dioRequest.post(
-      domain + 'authenticate/api-student-registration/',
-      data: formData,
-    );
-    log(response.data);
+    var response =
+        await dioRequest.post(domain + 'authenticate/api-student-registration/',
+            data: formData,
+            options: dio.Options(
+              followRedirects: false,
+              validateStatus: (status) {
+                return status < 500;
+              },
+            ));
+    print(response.data);
     if (response.statusCode == 200) {
-      if (response.data == 'User successfully created.') {
+      if (response.data['Response'] == 'User successfully created.') {
         Navigator.pop(context);
         success(context,
             'Account successfully created!\nSign in with your credentials');
