@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'landingpage.dart';
 import 'package:dio/dio.dart' as dio;
 import 'imports.dart';

@@ -135,6 +135,8 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
         await http.get(domain + 'authenticate/api-username-lookup/$username');
     if (response.statusCode == 200) {
       return jsonDecode(response.body)['Response'];
+    } else {
+      return false;
     }
   }
 
@@ -1292,11 +1294,9 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
                         padding: EdgeInsets.only(right: 50, left: 40),
                         child: TextFormField(
                           validator: (value) {
-                            if (_budgetamount == null) {}
                             return _budgetamount == null
                                 ? 'Enter a budget amount'
                                 : null;
-                            ;
                           },
                           onChanged: (value) {
                             _budgetamount =
