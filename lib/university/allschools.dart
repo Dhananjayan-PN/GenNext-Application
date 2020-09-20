@@ -259,6 +259,8 @@ class _AllSchoolsScreenState extends State<AllSchoolsScreen> {
                                     cursorColor: Color(0xff005fa8),
                                     decoration: InputDecoration(
                                         labelText: "Search",
+                                        hintText:
+                                            "Search by School, Counselor or Country",
                                         contentPadding: EdgeInsets.all(2)),
                                     controller: controller,
                                   ),
