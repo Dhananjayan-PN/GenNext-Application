@@ -131,30 +131,32 @@ class _AllSchoolsScreenState extends State<AllSchoolsScreen> {
               color: Colors.transparent,
               child: InkWell(
                 child: Icon(
-                  Icons.mail,
+                  Icons.mail_outline,
                   color: Color(0xff005fa8),
                   size: 30,
                 ),
-                onTap: () {},
+                onTap: () async {
+                  if (await canLaunch(
+                      'mailto:${school['counselor_email'] ?? ''}')) {
+                    launch('mailto:${school['counselor_email' ?? '']}');
+                  } else {
+                    await ClipboardManager.copyToClipBoard(
+                        school['counselor_email'] ?? '');
+                    _scafKey.currentState.showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'Unable to open mail. Email copied to clipboard.',
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    );
+                  }
+                },
               ),
             ),
           ),
         ),
-        onTap: () async {
-          if (await canLaunch('mailto:${school['counselor_email']}')) {
-            launch('mailto:${school['counselor_email']}');
-          } else {
-            await ClipboardManager.copyToClipBoard(school['counselor_email']);
-            _scafKey.currentState.showSnackBar(
-              SnackBar(
-                content: Text(
-                  'Unable to open mail. Email copied to clipboard.',
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            );
-          }
-        },
+        onTap: () async {},
       ),
     );
   }
