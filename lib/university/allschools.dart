@@ -71,7 +71,7 @@ class _AllSchoolsScreenState extends State<AllSchoolsScreen> {
         title: Padding(
           padding: EdgeInsets.only(left: 3.5, top: 5),
           child: Text(
-            school['school'] ?? '',
+            school['school'],
             style: TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.w500,
@@ -79,7 +79,7 @@ class _AllSchoolsScreenState extends State<AllSchoolsScreen> {
           ),
         ),
         subtitle: Padding(
-          padding: EdgeInsets.only(top: 4),
+          padding: EdgeInsets.only(top: 4, bottom: 5),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
