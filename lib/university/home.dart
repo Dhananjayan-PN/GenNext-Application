@@ -2,7 +2,7 @@ import 'package:http/http.dart' as http;
 import '../imports.dart';
 import '../login.dart';
 import '../landingpage.dart';
-import 'allunis.dart';
+import 'allschools.dart';
 import 'counselorconnect.dart';
 import 'engagement.dart';
 import 'repprofile.dart';
@@ -17,7 +17,7 @@ List navlistelements = [
   ['Home', UniHomeScreen(), Icons.home],
   ['My Profile', RepProfileScreen(), Icons.account_box],
   ['University Profile', UniProfileScreen(), Icons.account_balance],
-  ['All Universities', AllUniversitiesScreen(), Icons.all_inclusive],
+  ['All Schools', AllSchoolsScreen(), Icons.school],
   ['Counselor Connect', CounselorConnectScreen(), Icons.link],
   ['Student Engagement', StudentEngagementScreen(), Icons.group],
 ];
