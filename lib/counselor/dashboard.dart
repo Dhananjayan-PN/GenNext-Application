@@ -140,11 +140,11 @@ class _DashBoardState extends State<DashBoard> {
     if (response.statusCode == 200) {
       String notes = json.decode(response.body)['notes'];
       setState(() {
-        counselornotes.text = notes;
+        counselornotes.text = notes ?? '';
         saving = false;
         saved = true;
       });
-      return notes;
+      return notes ?? '';
     } else {
       setState(() {
         saving = false;

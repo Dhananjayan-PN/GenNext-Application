@@ -51,9 +51,9 @@ class _DashBoardState extends State<DashBoard> {
         setState(() {
           saving = false;
           saved = true;
-          studentnotes.text = notes;
+          studentnotes.text = notes ?? '';
         });
-        return notes;
+        return notes ?? '';
       }
     } else {
       setState(() {
