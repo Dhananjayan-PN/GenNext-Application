@@ -1,4 +1,4 @@
-import 'package:gennextapp/landingpage.dart';
+import 'landingpage.dart';
 
 import 'imports.dart';
 import 'package:intl/intl.dart';
@@ -551,6 +551,7 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
                       padding: EdgeInsets.only(
                           top: 22, right: 50, left: 60, bottom: 10),
                       child: TextFormField(
+                        cursorColor: Color(0xff005fa8),
                         validator: (value) {
                           return null;
                         },
@@ -612,7 +613,12 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
                                     value: _country,
                                     onChanged: (value) {
                                       setState(() {
-                                        _country = value;
+                                        if (value ==
+                                            "United Kingdom of Great Britain and Northern Ireland") {
+                                          _country = "United Kingdom";
+                                        } else {
+                                          _country = value;
+                                        }
                                       });
                                     },
                                     isExpanded: true,
@@ -630,9 +636,13 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
                     Padding(
                       padding: EdgeInsets.only(top: 30, left: 20, right: 50),
                       child: TextFormField(
+                        autovalidate: true,
+                        cursorColor: Color(0xff005fa8),
                         controller: _pass,
                         validator: (String value) {
-                          return value.isEmpty ? 'Enter a password' : null;
+                          return value.isEmpty
+                              ? 'Enter a password'
+                              : value.length < 8 ? 'Too short' : null;
                         },
                         onSaved: (value) => _password = value,
                         onChanged: (value) => _password = value,
@@ -654,6 +664,7 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
                     Padding(
                       padding: EdgeInsets.only(top: 30, left: 60, right: 50),
                       child: TextFormField(
+                        cursorColor: Color(0xff005fa8),
                         controller: _confirmpass,
                         validator: (String value) {
                           if (value.isEmpty) {
@@ -932,6 +943,7 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
                     Padding(
                       padding: EdgeInsets.only(top: 0, left: 48, right: 50),
                       child: TextFormField(
+                        cursorColor: Color(0xff005fa8),
                         validator: (value) {
                           if (value.split(',').length < 3) {
                             return 'Add at least 3 interests';
@@ -1232,7 +1244,7 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
                           hint: Padding(
                             padding: EdgeInsets.all(3.0),
                             child: Text(
-                              "Select College Town Preference",
+                              "Select Locale Preference",
                               style: TextStyle(
                                   color: Colors.black54, fontSize: 16),
                             ),
@@ -1293,6 +1305,7 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
                       Padding(
                         padding: EdgeInsets.only(right: 50, left: 40),
                         child: TextFormField(
+                          cursorColor: Color(0xff005fa8),
                           validator: (value) {
                             return _budgetamount == null
                                 ? 'Enter a budget amount'
@@ -1362,22 +1375,6 @@ class StudentSignUpPageState extends State<StudentSignUpPage>
                                       countries[_countryprefindexes[i]].value);
                                 }
                               }
-                              // print(_firstname);
-                              // print(_lastname);
-                              // print(_username);
-                              // print(_email);
-                              // print(_dob);
-                              // print(_school);
-                              // print(_country);
-                              // print(_password);
-                              // print(_confpassword);
-                              // print(_major);
-                              // print(_degreelevel);
-                              // print(_interests);
-                              // print(_countrypref);
-                              // print(_collegetownpref);
-                              // print(_budgetamount);
-                              // print(_research);
                               List data = [
                                 _firstname,
                                 _lastname,

@@ -155,23 +155,26 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> registerStudent(List data) async {
-    print(data[0]);
-    print(data[1]);
-    print(data[2]);
-    print(data[3]);
-    print(data[4]);
-    print(data[5]);
-    print(data[6]);
-    print(data[7]);
-    print(data[8]);
-    print(data[9]);
-    print(data[10]);
-    print(data[11]);
-    print(data[12]);
-    print(data[13]);
-    print(data[14]);
-    print(data[15]);
-    print(data[16]);
+    String interestString = "[";
+    String countriesString = "[";
+    for (int i = 0; i < data[7].length; i++) {
+      if (i != 0) {
+        interestString += ", ";
+      }
+      interestString += '"';
+      interestString += data[7][i].toString().trim();
+      interestString += '"';
+    }
+    for (int i = 0; i < data[8].length; i++) {
+      if (i != 0) {
+        countriesString += ", ";
+      }
+      countriesString += '"';
+      countriesString += data[8][i].toString().trim();
+      countriesString += '"';
+    }
+    interestString += "]";
+    countriesString += "]";
     // try {
     var dioRequest = dio.Dio();
     dioRequest.options.headers = {
@@ -185,8 +188,8 @@ class _LoginPageState extends State<LoginPage> {
       'username': data[4],
       'email': data[5],
       'country': data[6],
-      'interests': data[7].toString(),
-      'countries': data[8].toString(),
+      'interests': interestString,
+      'countries': countriesString,
       'grade': data[17] ?? 0,
       'dob': data[10],
       'school': data[11],
@@ -209,7 +212,6 @@ class _LoginPageState extends State<LoginPage> {
                 return status < 500;
               },
             ));
-    print(response.data);
     if (response.statusCode == 200) {
       if (response.data['Response'] == 'User successfully created.') {
         Navigator.pop(context);
