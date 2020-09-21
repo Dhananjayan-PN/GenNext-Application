@@ -184,33 +184,39 @@ class ApplicationsScreenState extends State<ApplicationsScreen> {
 
   Future<void> createApplication(
       String uniName, DateTime deadline, String notes) async {
-    String tok = await getToken();
-    final response = await http.post(
-      dom + 'api/student/create-application',
-      headers: <String, String>{
-        HttpHeaders.authorizationHeader: "Token $tok",
-        'Content-Type': 'application/json; charset=UTF-8'
-      },
-      body: json.encode(
-        <String, dynamic>{
-          "student_id": studentglobals.user.id,
-          "university_id": uniIds[uniName],
-          "application_deadline": deadline.toIso8601String().substring(0, 10),
-          "application_notes": notes,
+    try {
+      String tok = await getToken();
+      final response = await http.post(
+        dom + 'api/student/create-application',
+        headers: <String, String>{
+          HttpHeaders.authorizationHeader: "Token $tok",
+          'Content-Type': 'application/json; charset=UTF-8'
         },
-      ),
-    );
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      if (data['response'] == 'Application successfully created.') {
-        Navigator.pop(context);
-        success(context, 'Application successfully created\nGet working!');
-        refresh();
+        body: json.encode(
+          <String, dynamic>{
+            "student_id": studentglobals.user.id,
+            "university_id": uniIds[uniName],
+            "application_deadline": deadline.toIso8601String().substring(0, 10),
+            "application_notes": notes,
+          },
+        ),
+      );
+      print(response.body);
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        if (data['response'] == 'Application successfully created.') {
+          Navigator.pop(context);
+          success(context, 'Application successfully created\nGet working!');
+          refresh();
+        } else {
+          Navigator.pop(context);
+          error(context);
+        }
       } else {
         Navigator.pop(context);
         error(context);
       }
-    } else {
+    } catch (e) {
       Navigator.pop(context);
       error(context);
     }
