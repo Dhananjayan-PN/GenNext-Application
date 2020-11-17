@@ -1,5 +1,2 @@
 # GenNext-Application
-
-Private Repository for GenNext's Application
-
-![Build Status](https://travis-ci.com/Dhananjayan-PN/GenNext-Application.svg?token=qgq7FWj6Dbh95NB24zzi&branch=master)
+Repository for GenNext's Application
